@@ -9,6 +9,10 @@
 - 相关的数学推导和形式化尝试
 - Prompt 工程中踩过的坑和总结
 
+## 目录
+
+- [**hallucination/**](hallucination/) — LLM 幻觉的结构性分类与形式化证明（Type I–IV）
+
 内容比较碎片化，想到什么写什么，后续可能会整理。
 
 ## License
