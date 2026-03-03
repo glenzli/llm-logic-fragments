@@ -62,6 +62,8 @@ $$
 
 [Paged Context Protocol (PCP)](https://github.com/glenzli/paged-context-protocol) 将 LLM 上下文窗口视为**逻辑虚拟内存**的热缓存，通过独立 Router 模型管理页面调度，Worker 模型（主 LLM）只接收 Router 合成后的紧凑视图。
 
+> **PCP 角色速查**：**Router** 负责维护所有历史页面的索引并决定哪些页面展开进入 Worker 视野；**Worker** 是执行主任务的 LLM，始终在受控规模的上下文下工作；**Consolidator** 定期将旧页面压缩为摘要写回持久 Memory，延缓信息老化。本节后续分析均以这三个角色为基础。
+
 ---
 
 #### ✅ 严格推论

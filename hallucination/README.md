@@ -88,7 +88,7 @@ $$
 \frac{\partial \text{output}}{\partial s_0} = \underbrace{\alpha_{i,0}}_{\text{IV-a: 位置权重}} \cdot \underbrace{W_O^{(h^*)} W_V^{(h^*)}}_{\text{IV-b: 特征路由}}
 $$
 
-**IV-a. 位置注意力稀释**：Softmax 归一化使 $\alpha_{i,0} = O(1/N)$（需“有界竞争者”假设）。缓解：PCP / 上下文压缩。⚠️ 条件严格。
+**IV-a. 位置注意力稀释**：Softmax 归一化使 $\alpha_{i,0} = O(1/N)$（需“有界竞争者”假设）。缓解：[PCP](https://github.com/glenzli/paged-context-protocol)（Paged Context Protocol，分页上下文协议）/ 上下文压缩。⚠️ 条件严格。
 
 **IV-b. 特征注意力误路由**：幻觉触发的精确几何条件为 SNR $= |s|/|n| < 1$（信号被噪声 head 反向压制）。上下文依赖：不同 prompt 改变 Softmax 权重 → 改变 SNR。缓解：精确 prompting / Fine-tuning（✅ 条件严格）/ RAG / CoT（⚠️ 自举依赖）/ PCP（⚠️ 双向加速，含 Shelve/Purge 抑制机制）。⚠️/✅ 部分严格。
 
