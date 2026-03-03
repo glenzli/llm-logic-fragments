@@ -319,7 +319,7 @@ $$
 设 $v_{\text{ans}} \in \mathbb{R}^d$ 为正确答案 token 的 unembedding 方向（即 $W_U$ 对应行）。模型输出对两个实体的 logit 差为：
 
 $$
-\Delta_{\text{logit}}(x) = v_{\text{ans}}^\top \Delta_{\text{total}}(x) = \sum_{h=1}^{H} \underbrace{v_{\text{ans}}^\top W_O^{(h)} \delta_h(x)}_{\displaystyle =:\, c_h(x)}
+\Delta_{\text{logit}}(x) = v_{\text{ans}}^{\top} \Delta_{\text{total}}(x) = \sum_{h=1}^{H} \underbrace{v_{\text{ans}}^{\top} W_O^{(h)} \delta_h(x)}_{\displaystyle =:\, c_h(x)}
 $$
 
 #### 步骤二：误路由的精确几何条件——✅ 严格
@@ -362,10 +362,10 @@ $$
 其中注意力权重：
 
 $$
-\alpha^h_{i,j}(x) = \frac{\exp\bigl(x_i W_Q^h (x_j W_K^h)^\top / \sqrt{d_k}\bigr)}{\displaystyle\sum_{j'} \exp\bigl(x_i W_Q^h (x_{j'} W_K^h)^\top / \sqrt{d_k}\bigr)}
+\alpha^h_{i,j}(x) = \frac{\exp\bigl(x_i W_Q^h (x_j W_K^h)^{\top} / \sqrt{d_k}\bigr)}{\displaystyle\sum_{j'} \exp\bigl(x_i W_Q^h (x_{j'} W_K^h)^{\top} / \sqrt{d_k}\bigr)}
 $$
 
-**上下文依赖的精确来源**：不同的上下文 $x$ 改变 $\alpha^h_{i,j}(x)$ 的分布——进而改变 $\delta_h(x)$ 的方向和幅度——进而改变每个 $c_h(x) = v_{\text{ans}}^\top W_O^{(h)} \delta_h(x)$ 的符号和大小——最终决定 $\text{SNR}(x)$ 是否跌破 1。这是 IV-b 在不同 prompt 下行为不稳定的**精确数学根因**：不同上下文触发不同的 head 激活模式，导致 SNR 在不同 prompt 间波动，时而高于阈值（正确）时而低于（幻觉）。
+**上下文依赖的精确来源**：不同的上下文 $x$ 改变 $\alpha^h_{i,j}(x)$ 的分布——进而改变 $\delta_h(x)$ 的方向和幅度——进而改变每个 $c_h(x) = v_{\text{ans}}^{\top} W_O^{(h)} \delta_h(x)$ 的符号和大小——最终决定 $\text{SNR}(x)$ 是否跌破 1。这是 IV-b 在不同 prompt 下行为不稳定的**精确数学根因**：不同上下文触发不同的 head 激活模式，导致 SNR 在不同 prompt 间波动，时而高于阈值（正确）时而低于（幻觉）。
 
 #### 证明强度汇总
 
@@ -413,7 +413,7 @@ $$
 由此：
 
 $$
-|c_{h^*}(x^+)| = |v_{\text{ans}}^\top W_O^{(h^*)} \delta_{h^*}(x^+)| > |c_{h^*}(x^-)| \implies \text{SNR}(x^+) > \text{SNR}(x^-)
+|c_{h^*}(x^+)| = |v_{\text{ans}}^{\top} W_O^{(h^*)} \delta_{h^*}(x^+)| > |c_{h^*}(x^-)| \implies \text{SNR}(x^+) > \text{SNR}(x^-)
 $$
 
 **证明状态**：⚠️ 推论链本身是严格的（给定 $|\delta_{h^*}|$ 增大 → $|s|$ 增大 → SNR 提升），但"精确 prompt 能使 $|\delta_{h^*}|$ 增大"需要假设 head $h^*$ 对区分性特征有响应偏好（**head 特化假设**），这取决于训练。
@@ -429,17 +429,17 @@ $$
 信号项和噪声项均线性依赖 $W_O^{(h)}$：
 
 $$
-s(x) = v_{\text{ans}}^\top W_O^{(h^*)} \delta_{h^*}(x), \qquad c_h(x) = v_{\text{ans}}^\top W_O^{(h)} \delta_h(x)
+s(x) = v_{\text{ans}}^{\top} W_O^{(h^*)} \delta_{h^*}(x), \qquad c_h(x) = v_{\text{ans}}^{\top} W_O^{(h)} \delta_h(x)
 $$
 
 Fine-tuning 可以定向实现以下任意组合：
 
 1. **信号放大**：增大 $\|W_O^{(h^*)}\|$ 或令 $W_O^{(h^*)} \delta_{h^*}$ 与 $v_{\text{ans}}$ 更对齐（$\cos\theta^* \to 1$）
-2. **噪声抑制**：减小噪声 head 的 $|v_{\text{ans}}^\top W_O^{(h)} \delta_h|$（降低干扰贡献）
+2. **噪声抑制**：减小噪声 head 的 $|v_{\text{ans}}^{\top} W_O^{(h)} \delta_h|$（降低干扰贡献）
 
 两者均直接在 SNR 公式中体现为 $|s|$ 增大或 $|n|$ 减小，从而保证 SNR > 1。
 
-**证明状态**：✅ **条件严格**。给定优化目标为"在区分任务上最大化 $\Delta_{\text{logit}}$"，则梯度方向指向增大 $v_{\text{ans}}^\top W_O^{(h^*)} \delta_{h^*}$ 的方向——这是 SNR 提升的充分条件，直接从 SNR 定义导出，无额外假设。"条件"是优化需要成功收敛。Fine-tuning 是三种策略中**唯一作用于权重**的，也是唯一能持久改变 SNR 的。
+**证明状态**：✅ **条件严格**。给定优化目标为"在区分任务上最大化 $\Delta_{\text{logit}}$"，则梯度方向指向增大 $v_{\text{ans}}^{\top} W_O^{(h^*)} \delta_{h^*}$ 的方向——这是 SNR 提升的充分条件，直接从 SNR 定义导出，无额外假设。"条件"是优化需要成功收敛。Fine-tuning 是三种策略中**唯一作用于权重**的，也是唯一能持久改变 SNR 的。
 
 **局限**：需要高质量的区分性训练数据；过拟合可能在非目标实体对上引入新的误路由。
 
@@ -507,8 +507,7 @@ $$
 
 PCP 不同于 CoT 的关键在于：错误内容可以通过协议指令**逆向撤除**。
 
-- **Shelve**：Worker 将 $C_{\text{wrong}}$ 折叠回 Summary，噪声 token 数从 $|C_{\text{wrong}}|$ 压缩至 $\bar{s}$：
-$$|n| \propto |C_{\text{wrong}}| \xrightarrow{\text{Shelve}} \bar{s} \ll |C_{\text{wrong}}|$$
+- **Shelve**：Worker 将 $C_{\text{wrong}}$ 折叠回 Summary，噪声 token 数从 $|C_{\text{wrong}}|$ 压缩至 $\bar{s}$：$|n| \propto |C_{\text{wrong}}| \xrightarrow{\text{Shelve}} \bar{s} \ll |C_{\text{wrong}}|$
 
 - **Purge**：完全移除 $C_{\text{wrong}}$ + 施加负反馈权重，防止 Router 重复召回同一错误页面——阻断误路由的**再入循环**（CoT 没有等价机制）
 
