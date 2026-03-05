@@ -277,11 +277,15 @@ $$\bigl\|E_{r_i}(x) \cdot x \;-\; r_i(x)\bigr\| \leq \varepsilon_i \quad \forall
 
 > **注意**：逐点拟合弱于均匀拟合——每个 $x$ 可以对应不同的矩阵，因此集合 $\{E_{r_i}(x) : x \in \mathcal{X}\} \subset \langle F \rangle_\cdot$ 可以是整个子幺半群的无穷子集。对非线性 $r_i$，逐点拟合是一般情形下能做到的正确含义；均匀拟合是 $r_i$ 近似线性时的特例。
 
-**本文所采用的拟合定义**：除非特别说明，"$F$ 拟合 $R$"指逐点拟合，即对每个 $r_i \in R$：
+**本文所采用的拟合定义**：除非特别说明，"$F$ 拟合 $R$"指逐点拟合，即对每个 $r_i \in R$，**同时满足以下两个条件**：
 
-$$\exists\; E_{r_i}: \mathcal{X} \to \langle F \rangle_\cdot \quad \text{s.t.} \quad \|E_{r_i}(x)\cdot x - r_i(x)\| \leq \varepsilon_i \quad \forall x \in \mathcal{X}$$
+$$\text{（数值逼近）}\quad \exists\; E_{r_i}: \mathcal{X} \to \langle F \rangle_\cdot \quad \text{s.t.} \quad \|E_{r_i}(x)\cdot x - r_i(x)\| \leq \varepsilon_i \quad \forall x \in \mathcal{X}$$
 
-其中 $\varepsilon_i > 0$ 为允许的单步近似误差，$\|\cdot\|$ 为 $\mathbb{R}^d$ 上的标准 Euclidean 范数。
+$$\text{（Lipschitz 一致性）}\quad x \mapsto E_{r_i}(x)\cdot x \text{ 是 } L\text{-Lipschitz 函数，其中 } L = \max_j \|G_j\|_{\mathrm{Lip}}$$
+
+其中 $\varepsilon_i > 0$ 为允许的单步近似误差，$\|\cdot\|$ 为 $\mathbb{R}^d$ 上的标准 Euclidean 范数，$L$ 为§1.5.D 命题 1.1 定义的全局逐层 Lipschitz 上界。
+
+> **为何需要 Lipschitz 一致性**：§3.2 Telescope 展开的项（B）依赖 $r_{i_j}$ 是 $L$-Lipschitz（分析者视角）并由 $E_{r_i}$ 的 Lipschitz 常数代理（命题 3.4 步骤 3）。若某个 $E_c$ 的 Lipschitz 常数 $L_c \gg L$，则将其插入 f-chain 后误差传播速率变为 $L_c$ 而非 $L$，CAC 误差界中的 $L^l$ 项膨胀为 $L_c^l$，$l_{\max}$ 的 TSC 约束完全失效。**Lipschitz 一致性是 CAC 定理在 f-chain 复合下成立的必要条件，不是推论。**
 
 
 
@@ -389,7 +393,7 @@ $$\varepsilon_i \;\triangleq\; \sup_{x \in \mathcal{X}} \|E_{r_i}(x)\cdot x - r_
 
 $\varepsilon_i$ 是**定义量**，不是假设——对任意 $F$ 和任意 $r_i$，此上确界总是存在的。**万能逼近定理（UAT）** 保证：对 $\mathcal{X}$ 上的任意连续函数 $r_i$，当模型规模 $M$ 充分大时，$\varepsilon_i$ 可以被压制到任意小（存在性 + 精度控制，详见 §3.3）。
 
-设 $\varepsilon_{\max} = \max_i \varepsilon_i$，$L = \max_i \|G_i\|_{\mathrm{Lip}}$（最大逐层 Lipschitz 常数，由 §1.5.D）。
+设 $\varepsilon_{\max} = \max_i \varepsilon_i$，$L = \max_i \|G_i\|_{\mathrm{Lip}}$（最大逐层 Lipschitz 常数，由 §1.5.D）。$L$ 同时是以下两类函数的 Lipschitz 上界：（1）$r_i$ 的 Lipschitz 常数（语义变换的固有属性）；（2）$x \mapsto E_{r_i}(x)\cdot x$ 的 Lipschitz 常数（§1.6 拟合定义的 Lipschitz 一致性条件）。两者相等是 Telescope 展开（§3.2）在 f-chain 复合下给出统一界 $L^l$ 的隐含前提——凡是 $L_c > L$ 的内容路径（如逐字记忆，见 §25.1 定理 25.1a），CAC 定理在该路径上不适用，不构成合法的 $r_i \in R_{\text{tr}}$。
 
 **未见任务集**：由 $R_{\text{tr}}$ 的有限复合可以描述但未在训练分布中出现的任务：
 
