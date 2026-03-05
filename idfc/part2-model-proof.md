@@ -490,6 +490,12 @@ $$e_l \leq \varepsilon_{\max}(1 + L + L^2 + \cdots + L^{l-1}) = \varepsilon_{\ma
 
 > **注（证明的保守性）**：Telescope 展开对 $j$ 步的误差均取上界 $\varepsilon_{\max}$（而非各步实际的 $\varepsilon_{i_j}$），并对 Lipschitz 传播取全局最大 $L$。当各步误差和 Lipschitz 常数差异显著时，实际误差远低于此界。
 
+> **注（Telescope 界的紧性——存在性下界）**：上界在最坏情形下可达，与训练机制无关。构造：选取目标链 $q = r_{i_l} \circ \cdots \circ r_{i_1}$ 使每步近似误差向量 $\delta_j \triangleq \hat{f}_j(\hat{h}_{j-1}) - r_{i_j}(\hat{h}_{j-1})$ 与累积误差 $(\hat{h}_{j-1} - h_{j-1}^*)$ 方向一致（无抵消）。则 Telescope 递推中每个 $\leq$ 均取等，给出存在性下界：
+>
+> $$\exists\, x,\, q:\quad e_l \;\geq\; \varepsilon_{\min} \cdot \frac{L^l - 1}{L - 1}$$
+>
+> 此界仅依赖 $\varepsilon_{\min} > 0$（最小单步误差）和任意 $L > 0$，不涉及训练假设。TSC 对 $L$ 的约束（§3.4）决定了该下界的具体增长速率。
+
 ---
 
 ### 3.3 万能逼近定理（UAT）与误差收敛
@@ -556,15 +562,36 @@ $$l^* \;\triangleq\; \left\lfloor\frac{\ln(1/\varepsilon_{\max})}{\ln(1+\epsilon
 
 > $l^*$ 由两个量决定：模型深度 $k$（越深 $l^*$ 越大）和训练常数 $C$（越小越好）。不同的训练方法通过影响 $C$ 来影响最大可靠推理深度。
 
-**推论 3.3b（TSC 推理深度不可能性）**：设训练方法满足 TSC（$\epsilon > 0$）。则对任意固定的模型规模 $M$（对应 $\varepsilon_{\max} > 0$），不存在链长上界 $l^{**} < \infty$ 使得对**所有** $l \leq l^{**}$ 误差都有界——更强地，对任意 $l$ 足够大：
+**推论 3.3b（TSC 推理深度不可能性——测度论下界）**：设训练方法满足 TSC，从而 $\bar{L} > 1$。设 $\mathcal{X} = \mathbb{R}^d$，目标 $r$-链从自然语言任务中随机选取（服从任意绝对连续分布，不对齐到网络某个固定子空间）。则对几乎所有（Lebesgue 测度意义下）的目标链：
 
-$$e_l \;\geq\; \frac{(1+\epsilon)^l - 1}{\epsilon} \cdot \varepsilon_{\min} \;\xrightarrow{l \to \infty}\; +\infty$$
+$$\Pr\!\left[e_l \xrightarrow{l \to \infty} +\infty\right] = 1$$
 
-其中 $\varepsilon_{\min} > 0$ 为模型在任意非平凡输入上的最小单步误差（由量化噪声等物理限制保证）。
+**证明**：
 
-**证明**：由 CAC 下界：实际误差 $e_l \geq \varepsilon_{\min} \cdot \frac{(1+\epsilon)^l - 1}{\epsilon}$。因 $\epsilon > 0$，右端随 $l \to \infty$ 无界增大。TSC 保证 $\epsilon > 0$ 不可消除（命题 3.4 步骤 1 的数据下界），故结论对任意满足 TSC 的训练都成立。$\square$
+**步骤 1（奇异值分析）**：对每层 $G_j$，最大奇异值 $\sigma_{\max,j} = \|G_j\|_{\mathrm{Lip}}$。由 TSC 几何均值下界 $\bar{L} > 1$，至少一半层满足 $\sigma_{\max,j} > 1$（否则几何均值 $\leq 1$，矛盾）。
 
-> **不可能性的含义**：增大模型规模（减小 $\varepsilon_{\max}$）可以推高 $l^*$，但无法将 $l^*$ 推至无穷。**凡是能被训练出来的模型，都无法对任意长的推理链保持误差有界**——这是 TSC 与 CAC 联合给出的原理性上限，而非工程局限。
+**步骤 2（误差投影递推）**：设累积误差向量 $\mathbf{e}_l = \hat{h}_l - h_l^*$，$v_j$ 为第 $j$ 层最大奇异值对应的右奇异向量。沿 $v_j$ 方向投影：
+
+$$\langle \mathbf{e}_l,\, v_j \rangle \;\geq\; \sigma_{\max,j} \cdot \langle \mathbf{e}_{l-1},\, v_j \rangle - \varepsilon_j$$
+
+当投影超过阈值 $\varepsilon_j / (\sigma_{\max,j} - 1)$ 后，误差分量单调递增。
+
+**步骤 3（一般位置论证）**：使单步误差 $\delta_j$ 在所有扩张方向投影恒为零（$\langle \delta_j, v_j \rangle = 0$ 对所有步成立）的任务链集合，是 $\mathbb{R}^d$ 中余维度 $\geq 1$ 的代数流形，Lebesgue 测度为零。
+
+**步骤 4（结论）**：绝对连续分布的 $r$-链以概率 $1$ 不落在此零测集，故以概率 $1$ 存在某步 $j_0$ 使投影超过阈值，此后误差以 $\sigma_{\max}^{l - j_0}$ 指数增长趋于无穷。$\square$
+
+> **下界层级总结**：
+>
+> | 强度 | 陈述 | 位置 | 依赖 |
+> |---|---|---|---|
+> | 存在性 | $\exists$ 输入使 $e_l \to \infty$ | §3.2 紧性注 | $\varepsilon_{\min} > 0$，与训练无关 |
+> | **测度论** | **几乎所有任务 $e_l \to \infty$（概率 1）** | **推论 3.3b** | **TSC（$\bar{L} > 1$）** |
+> | 普遍性 | 所有输入 $e_l \to \infty$ | — | ❌ 不可证（零测集任务可规避）|
+>
+> TSC 通过测度论将不可能性从"最坏情形存在"升级为"几乎所有真实任务均受限"。能让误差有界的任务集合是零测集，实践中无法系统性构造。
+
+
+
 
 ---
 
