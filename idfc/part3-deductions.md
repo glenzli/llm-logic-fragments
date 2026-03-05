@@ -359,7 +359,7 @@ $$\lim_{M \to \infty} \lim_{t \to \infty} \text{Acc}(M, t, q) < 1 \implies q \no
 
 **语言**：模型对需要超过其网络层数的顺序递归任务系统性失败。
 
-**定义（$r$-chain 的顺序深度）**：称 $r$-chain $q = r_{i_l} \circ \cdots \circ r_{i_1}$ 的**顺序深度**为 $l$，若 $q$ 在 $R_{\\text{tr}}^*$ 上是不可约的（§7.1 意义下），且每步 $r_{i_j}$ 的计算依赖前一步的输出（自适应依赖）。
+**定义（$r$-chain 的顺序深度）**：称 $r$-chain $q = r_{i_l} \circ \cdots \circ r_{i_1}$ 的**顺序深度**为 $l$，若 $q$ 在 $R_{\text{tr}}^*$ 上是不可约的（§7.1 意义下），且每步 $r_{i_j}$ 的计算依赖前一步的输出（自适应依赖）。
 
 **命题 11.1（$f$-chain 长度的复杂度上界）**：设网络共 $k$ 层，则对任意输入 $x$，整个前向传播等价于至多 $k$ 步 $f$-chain：
 
@@ -410,7 +410,7 @@ $$l_{\max}(\delta_{\text{fail}}) = \left\lfloor \frac{\log\!\left(1 + \frac{\del
 
 **语言**：模型对长尾知识或相近概念的混淆，不因训练数据增加而消失。
 
-**前提**：设 $F$ 使用 $d$ 维嵌入空间表示 $N$ 个语义上独立的原语 $\{r_1, \ldots, r_N\} \subset R_{\\text{tr}}$，每个原语对应的有效算子 $E_{r_i} \in \mathcal{M}_d(\mathbb{R})$ 在对应的 unit-norm 表示向量空间中中占据一个方向 $\hat{v}_i \in \mathbb{R}^d$。
+**前提**：设 $F$ 使用 $d$ 维嵌入空间表示 $N$ 个语义上独立的原语 $\{r_1, \ldots, r_N\} \subset R_{\text{tr}}$，每个原语对应的有效算子 $E_{r_i} \in \mathcal{M}_d(\mathbb{R})$ 在对应的 unit-norm 表示向量空间中中占据一个方向 $\hat{v}_i \in \mathbb{R}^d$。
 
 **命题 11.3（$\varepsilon_{\max}$ 的 Welch 结构下界）**：当 $N > d$ 时，存在至少两个原语 $r_i, r_j$ 的表示，满足：
 
