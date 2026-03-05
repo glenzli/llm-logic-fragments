@@ -701,3 +701,162 @@ $$\Delta^* = \left\lfloor \frac{\log(\delta_{j^*} / \|v^*\|)}{\log \rho} \right\
 > **一句话**：Transformer、Mamba、Diffusion 是同一 IDFC $f$-chain 框架下，对「路由机制 $\Phi_l$」和「离散化时机 $\varepsilon_{\text{tok}}$」的三种不同取舍——没有绝对优劣，只有任务结构与架构 CAC 特性的匹配程度。
 
 ---
+
+## 10. MoE（混合专家）：$F$ 集合的显式分区
+
+> **定位**：本节将混合专家模型（Mixture of Experts，MoE）纳入 IDFC 框架。MoE 与 Transformer 共享 Attention 路由机制，关键区别在于 FFN 层的组织方式——MoE 将 $F$ 集合从**隐式激活分区**升级为**显式专家模块**，并引入一个独立的**路由器**来选择激活的专家。
+
+---
+
+### 10.1 MoE 的 IDFC 映射：$F$ 集合的显式化
+
+**密集模型中 $F$ 的隐式结构**：在标准 Transformer FFN 中，$F$ 通过 ReLU 激活掩码隐式分区——不同输入触发不同的激活路径，从而从同一套权重中「选出」不同的有效算子（§1.3）。这是**被动的、输入驱动的** $f$-chain 组装。
+
+**MoE 的显式化**：设共 $N$ 个专家，每个专家 $E_k$（$k = 1, \ldots, N$）是一个独立参数化的 FFN：
+
+$$E_k(h) = W_k^{(2)} \cdot \text{ReLU}(W_k^{(1)} h + b_k^{(1)}) + b_k^{(2)}$$
+
+路由器（Gating Network）$G: \mathbb{R}^d \to \mathbb{R}^N$ 为每个 token 在专家空间上打分，选出 Top-$K$ 专家：
+
+$$\mathcal{S}(h) = \text{TopK}\!\left(\text{softmax}(W_g h),\; K\right), \quad g_k(h) = \text{softmax}(W_g h)_k \cdot \mathbf{1}[k \in \mathcal{S}(h)]$$
+
+MoE 层的输出：
+
+$$\text{MoE}(h) = \sum_{k \in \mathcal{S}(h)} g_k(h) \cdot E_k(h)$$
+
+**IDFC 等价表述**：MoE 层对应的有效算子为：
+
+$$\Phi_l^{\text{MoE}}(h) = \sum_{k \in \mathcal{S}(h)} g_k(h) \cdot \Phi_k^{\text{FFN}}(h)$$
+
+> **命题 10.1（MoE 的 IDFC 实例化）**：MoE 是 Nemytskii 算子场的**门控混合**实例，有效算子 $\Phi_l^{\text{MoE}}$ 是 $K$ 个选中专家有效算子的加权叠加，权重 $g_k(h)$ 由路由器决定。路由器是**对专家空间的显式寻址机制**，类比于 Attention 对 token 空间的寻址。
+
+**密集 FFN vs MoE 在 IDFC 中的对比**：
+
+| 维度 | 密集 FFN | MoE |
+|---|---|---|
+| $F$ 集合结构 | 隐式（激活掩码分区共享权重）| 显式（$N$ 个独立参数化专家）|
+| $\Phi_l$ 的选择机制 | 输入被动触发（无独立路由器）| 路由器主动选择（$\mathcal{S}(h)$）|
+| 每 token 激活参数量 | $100\%$（全部 FFN 权重）| $K/N$（仅选中专家）|
+| $\|F\|$ 的增长方式 | 随激活路径数指数增长 | 随专家数 $N$ 线性增长，但更可解释 |
+
+---
+
+### 10.2 专家特化 = $R_{\text{tr}}$ 的显式分区
+
+实践中，MoE 的专家会发生**自发特化**：不同专家倾向于处理不同类型的输入（语言、代码、数学、不同领域知识等）。在 IDFC 框架下：
+
+**定义（专家的 $R$-分区）**：设训练后专家 $E_k$ 对原语集 $R_k \subset R_{\text{tr}}$ 实现高质量逼近（$\varepsilon_k \leq \varepsilon^*$），而对 $R_{\text{tr}} \setminus R_k$ 的逼近误差大。则 $\{R_k\}_{k=1}^N$ 构成 $R_{\text{tr}}$ 的（软性）分区：
+
+$$R_{\text{tr}} \approx \bigsqcup_{k=1}^N R_k, \quad |R_k| \approx |R_{\text{tr}}| / N$$
+
+**命题 10.2（专家特化的 CAC 收益）**：若每个专家 $E_k$ 只需拟合 $|R_k| \approx |R_{\text{tr}}|/N$ 个原语（而非全部 $|R_{\text{tr}}|$），则由 UAT（Part 2 §3.3），在相同精度 $\varepsilon^*$ 下，每个专家所需参数规模 $M_k$ 满足：
+
+$$M_k \ll M_{\text{dense}}, \quad \text{总参数} = N \cdot M_k > M_{\text{dense}}, \quad \text{推理参数} = K \cdot M_k \ll M_{\text{dense}}$$
+
+即：**MoE 用总参数换取推理效率**——同等推理计算量下，$\varepsilon_{\max}$ 比密集模型更低。
+
+**路由器的 IDFC 角色**：对当前输入 $h$，路由器需要判断所需的目标原语 $r_i \in R_k$，从而选择专家 $E_k$。路由器本质上是**在专家空间中执行 $r_i$ 的归属判断**——这是一个分类任务，其误差定义为：
+
+$$\varepsilon_{\text{route}} = P(\mathcal{S}(h) \not\ni k^* \mid r_{k^*} \text{ 是当前所需原语的归属专家})$$
+
+即路由器选错了专家。$\varepsilon_{\text{route}} > 0$ 时，所需 $r_i$ 的近似专家未被激活，CAC 单步误差突升。
+
+---
+
+### 10.3 MoE 是 Type III 幻觉的结构性解法
+
+这是 MoE 在 IDFC 框架下最深刻的结论。
+
+**回顾 Type III**（§11.3, Part 3）：当模型需要在 $d$ 维嵌入空间中表示 $N_{\text{prim}} > d$ 个语义独立原语时，Welch Bound 给出混叠误差的正下界，不可消除。
+
+**MoE 的结构性规避**：每个专家 $E_k$ 只承担 $|R_k| \approx |R_{\text{tr}}|/N$ 个原语。若：
+
+$$|R_k| \leq d_{\text{expert}}$$
+
+则每个专家**在其负责的子集内不触发 Welch 下界**——混叠不存在。MoE 的 $N$ 个专家将 $|R_{\text{tr}}|$ 个原语分散到 $N$ 个独立的 $d_{\text{expert}}$ 维空间中，**等价于将有效嵌入维度从 $d$ 提升至 $N \cdot d_{\text{expert}}$**（在激活稀疏的条件下）。
+
+> **命题 10.3（MoE 规避 Type III 的充分条件）**：若路由误差 $\varepsilon_{\text{route}} = 0$（完美路由），且每个专家的原语负载满足 $|R_k| \leq d_{\text{expert}}$，则 MoE 模型的系统性混叠误差 $\varepsilon_{\max}^*$ 可降至零：
+>
+> $$\varepsilon_{\max}^{*,\text{MoE}} = 0 \quad (\text{对所有 } r_i \in R_k,\; k \in \mathcal{S}(h))$$
+>
+> 对比密集模型在 $|R_{\text{tr}}| > d$ 时：$\varepsilon_{\max}^{*,\text{dense}} \geq \Omega(\sqrt{(N_{\text{prim}}-d)/d(N_{\text{prim}}-1)}) > 0$。
+
+**结论**：
+
+$$\boxed{\text{MoE 是 Type III 幻觉的结构性解法，代价是引入路由误差 } \varepsilon_{\text{route}}}$$
+
+RAG（§11.3 提到的另一种 Type III 解法）通过降低有效 $N_{\text{eff}}$ 来规避 Welch Bound；MoE 通过分区专家空间来规避。两者机制不同，互补使用效果最强。
+
+---
+
+### 10.4 MoE 的专有失效模式
+
+**失效模式 1：专家崩溃（Expert Collapse）**
+
+所有 token 路由到同 $K'< K$ 个专家，其余专家未被训练激活：
+
+$$\mathcal{S}(h) \subseteq \mathcal{S}^* \subsetneq \{1,\ldots,N\}, \quad |\mathcal{S}^*| \ll N$$
+
+在 IDFC 下，有效 $F$ 退化为 $|\mathcal{S}^*|$ 个专家覆盖的子集，其余 $N - |\mathcal{S}^*|$ 个专家的 $R_k$ 分区无法被访问——等价于回退至规模更小的密集模型，$\varepsilon_{\max}$ 重新升高，Type III 再度出现。
+
+**失效模式 2：负载不均衡（Load Imbalance）**
+
+某些高频原语 $r_i$ 集中在少数专家（如 Expert 1 处理所有数学相关 token），导致专家容量（Expert Capacity）被超过，触发 token dropping：
+
+$$\text{若 } |\{h : k^*(h) = k\}| > C_k \implies \text{超出容量的 token 被丢弃}$$
+
+被丢弃的 token 在 CAC 链路中等价于 $\varepsilon_i = \infty$（该步推理完全失效）——是最严重的单步错误形式。
+
+**失效模式 3：路由误差（Routing Error）**
+
+路由器选错专家，$k^* \notin \mathcal{S}(h)$。设正确专家的未激活损失为 $\delta_{k^*}$，其他专家对 $r_i$ 的逼近误差为 $\varepsilon_{k \neq k^*}(r_i) \gg \varepsilon_{k^*}(r_i)$，则：
+
+$$\varepsilon_{\text{step}}^{\text{route error}} = \varepsilon_{k \in \mathcal{S}(h)}(r_i) \gg \varepsilon_{\max}^{\text{perfect routing}}$$
+
+**命题 10.4（MoE 完整误差界）**：考虑路由误差 $\varepsilon_{\text{route}}$ 后，MoE 的 CAC 误差界为：
+
+$$\text{Err}^{\text{MoE}}(l) \leq \varepsilon_{\text{route}} \cdot \varepsilon_{\text{fallback}} \cdot \frac{L^l - 1}{L - 1} + (1 - \varepsilon_{\text{route}}) \cdot \varepsilon_{\max}^{\text{spec}} \cdot \frac{L^l - 1}{L - 1}$$
+
+其中 $\varepsilon_{\text{fallback}} \gg \varepsilon_{\max}^{\text{spec}}$ 是路由错误时的 fallback 误差，$\varepsilon_{\text{route}}$ 是路由错误概率。**路由精度是 MoE 的 CAC 误差的第二决定因素**（仅次于专家自身精度）。
+
+| 失效模式 | IDFC 失效层面 | 对 CAC 误差的影响 | 可缓解性 |
+|---|---|---|---|
+| **专家崩溃** | $\|F_{\text{active}}\|$ 缩减 | $\varepsilon_{\max}$ 升至密集基线 | ✅（辅助负载均衡损失）|
+| **负载不均衡** | 高频 $r_i$ 的专家容量饱和 | 部分 token $\varepsilon_i = \infty$（dropping）| ✅（容量扩充 / 专家并行）|
+| **路由误差** | 当前步 $r_i$ 的专家未被激活 | $\varepsilon_{\text{step}} \approx \varepsilon_{\text{fallback}} \gg \varepsilon_{\max}^{\text{spec}}$ | ⚠️（路由器质量上限）|
+| **token dropping** | CAC 链路节点缺失 | 该步等价于 $\varepsilon = \infty$ | ✅（expert buffer 策略）|
+
+---
+
+### 10.5 MoE 的 $\Delta(x_t)$ 类比：门控锐利度
+
+MoE 路由器的 Top-K 选择与前几节的「锐利度参数」类比：
+
+- **Soft routing（$K$ 大，权重均匀）**：多个专家共同贡献，每个专家的 $R_k$ 分区特化减弱；$\varepsilon_{\text{route}}$ 降低但 $\varepsilon_{\max}^{\text{spec}}$ 升高（专家不能充分特化）
+- **Hard routing（$K=1$）**：单专家激活，特化最强；$\varepsilon_{\text{route}}$ 成为主要风险
+
+| 锐利度参数 | 架构 | 控制对象 | 过锐利的代价 | 过平滑的代价 |
+|---|---|---|---|---|
+| 温度 $T$ ↓ | 自回归 | LM head（输出离散化）| greedy 路径固化 | $\varepsilon_{\text{tok}}$ 升高 |
+| Guidance $\gamma$ ↑ | Diffusion | 得分场方向 | 模式崩溃 | 条件约束失效 |
+| 步长 $\Delta$ ↑ | Mamba | SSM 遗忘/记忆比 | 切断历史 | 历史压缩无效 |
+| **Top-$K$ ↓** | **MoE** | **专家选择数量** | **路由错误风险升高** | **专家特化退化** |
+
+---
+
+### 10.6 四架构 IDFC 结构总览
+
+| 维度 | Transformer | Mamba | Diffusion | MoE（+Transformer）|
+|---|---|---|---|---|
+| **$\Phi_l$ 路由机制** | 全局 Attention（token 空间）| 局部 SSM 门控（当前 $x_t$）| 连续得分梯度场 | Attention（token）+ 路由器（专家空间）|
+| **$F$ 集合结构** | 隐式（激活掩码）| 隐式（SSM 门控）| 连续算子场 | **显式**（$N$ 个具名专家）|
+| **Lipschitz $L$** | LayerNorm 软约束 | HiPPO 保证 $<1$ | 依赖去噪器 | 同 Transformer（专家内部）|
+| **Type III 处理** | 未解决（Welch 下界）| 未解决 | 不适用（连续输出）| ✅ **结构性规避**（专家分区）|
+| **专有失效模式** | Type IV（softmax 稀释）| SSM 压缩损失 | Decode 误差集中 | 路由误差 + 专家崩溃 |
+| **$\varepsilon_{\text{tok}}$ 结构** | 每步（$T$ 次）| 每步（$T$ 次）| 仅最终一次 | 每步（$T$ 次，同密集）|
+| **推理计算** | $O(M)$ per token | $O(d_{\text{state}} \cdot d)$ per token | $O(M \cdot S)$ | $O(K/N \cdot M)$ per token |
+| **最适任务** | 长程精确依赖 | 局部依赖序列 | 连续结构生成 | 多领域混合任务（知识密集型）|
+
+> **一句话**：MoE 是 IDFC 框架下 $F$ 集合从隐式到显式的升维——它将原语近似的责任分配给可寻址的专家模块，在推理效率不增的前提下结构性地解决了 Type III，代价是引入路由误差这一新的 CAC 误差源。
+
+---
