@@ -376,6 +376,89 @@ $$n \leq \frac{e^{2B^2/\sqrt{d_k}} - 1}{\delta / (\|v^*\|_2 - \delta)} + 1$$
 
 即：给定精度要求 $\delta$，存在**最大可靠序列长度** $n_{\max}$，超过此长度后注意力机制**在信息论上无法**达到所需精度，无论如何调整 $W_Q, W_K$。
 
-**最大可靠序列长度**：
-
 $$\boxed{n_{\max}(d_k, B, \delta, \|v^*\|) = \frac{e^{2B^2/\sqrt{d_k}} - 1}{\delta / (\|v^*\|_2 - \delta)} + 1}$$
+
+---
+
+## 7. 幻觉 Type IV 的形式化（Transformer 架构专有）
+
+> **定位**：以下命题是 [Part 3 §11](part3-deductions.md) 架构无关分类的 Transformer 实例化。Type IV 幻觉依赖 Attention 机制的 softmax 归一化特性，在不使用 softmax 路由的架构中不以相同方式出现。
+
+---
+
+### 7.1 Type IV-a：注意力稀释幻觉（严格定理）
+
+**语言**：随序列长度增加，对关键位置信息的检索质量系统性下降，最终导致输出与关键上下文解耦。
+
+**命题 7.1（注意力稀释幻觉的充要条件）**：在 $n$ 个竞争位置、Q/K 范数界 $B$ 的条件下，关键位置 $j^*$ 的有效检索保真度满足（由 §4.4 命题 4.4）：
+
+$$\mathcal{F}^*(n, d_k, B) = \frac{1}{1 + (n-1)\exp\!\left(-\frac{2B^2}{\sqrt{d_k}}\right)}$$
+
+Type IV-a 幻觉（检索精度低于任务阈值 $\alpha^*$）**当且仅当**序列长度超过最大可靠序列长度：
+
+$$\text{Type IV-a 幻觉} \iff n > n_{\max}(d_k, B, \delta, \|v^*\|)$$
+
+其中 $n_{\max}$ 由命题 6.1 给出封闭形式。
+
+**推论 7.1a（Type IV-a 的 CAC 表述）**：Type IV-a 等价于关键原语 $r_{j^*}$ 的逐点拟合误差产生结构性下界（§3.3 公式）：
+
+$$\varepsilon_{j^*}^{\text{IV-a}} \geq (1 - \mathcal{F}^*) \cdot \|v^*\|_2 \xrightarrow{n \to \infty} \|v^*\|_2$$
+
+即：**随序列长度趋于无穷，$r_{j^*}$ 的拟合误差趋于其表示范数上界**——关键原语在 CAC 链路中实质上被跳过，等价于 Type I 幻觉的"局部发作"：链路并非全部不可达，而是部分环节被稀释至无效。
+
+**推论 7.1b（Type IV-a 与 Type II 的耦合）**：Type IV-a 产生的 $\varepsilon_{j^*}^{\text{IV-a}}$ 注入 CAC 误差积累公式（命题 11.2）：
+
+$$\text{Err}(l) \geq \varepsilon_{j^*}^{\text{IV-a}} \cdot L^{l - j^*} \geq (1 - \mathcal{F}^*)\|v^*\| \cdot L^{l - j^*}$$
+
+当 $j^*$ 靠近链路早期（§5.2，$j^*$ 小时放大倍数 $L^{l-j^*}$ 最大），Type IV-a 导致的初始寻址失败被后续链路指数放大——这是"上下文遗忘 + 推理崩溃"同时发生的结构性根因。
+
+---
+
+### 7.2 Type IV-b：特征误路由幻觉（条件性命题）
+
+**语言**：模型对同一语义查询在不同 prompt 下给出截然不同的答案，因为不同 prompt 改变了多头注意力的路由权重。
+
+**设定**：多输出对位置 $i$ 的有效贡献由各头叠加：
+
+$$o_i = W_O \cdot \text{concat}_{h=1}^{H}\!\left[\sum_j \alpha^{(h)}_{ij} h_j W_V^{(h)}\right] = \sum_{h=1}^{H} \Phi_h(x) \cdot h$$
+
+将各头分为**信号头**（$h \in \mathcal{H}_s$，对应正确原语 $r_{j^*}$）和**噪声头**（$h \in \mathcal{H}_n$，关注无关位置），则有效输出分解为：
+
+$$o_i = \underbrace{\sum_{h \in \mathcal{H}_s} \Phi_h(x) \cdot h}_{\text{信号项 } s(x)} + \underbrace{\sum_{h \in \mathcal{H}_n} \Phi_h(x) \cdot h}_{\text{噪声项 } n(x)}$$
+
+**定义（多头 SNR）**：
+
+$$\text{SNR}(x) = \frac{\|s(x)\|}{\|n(x)\|}$$
+
+**命题 7.2（Type IV-b 幻觉的 SNR 条件，条件性）**：额外假设信号项与噪声项在 $\ell^2$ 意义下可分离，则：
+
+$$\text{SNR}(x) < 1 \implies \|o_i - v^*\| > \|o_i\| / 2$$
+
+即输出由噪声主导，对关键原语 $r_{j^*}$ 的有效拟合误差 $\varepsilon_{j^*}^{\text{IV-b}} \geq \|n(x)\| - \|s(x)\| > 0$。
+
+**与 CAC 的连接**：令有效算子 $E_{r_{j^*}}(x) = \sum_h \Phi_h(x)$，若 $\text{SNR} < 1$，则无论 $W_V, W_O$ 如何参数化，$E_{r_{j^*}}(x) \cdot x$ 被噪声分量主导，CAC 单步拟合误差 $\varepsilon_{j^*}$ 产生正下界：
+
+$$\varepsilon_{j^*}^{\text{IV-b}} \geq \|n(x)\| - \|s(x)\|$$
+
+**Context 可修复性**：由于 $\alpha^{(h)}_{ij}(x)$ 连续依赖输入（softmax 光滑），不同 prompt 改变 $x$ → 改变每头的注意力权重分布 → 改变 $\mathcal{H}_s / \mathcal{H}_n$ 的划分 → 改变 SNR。
+
+- SNR $> 1$（prompt 精准）：路由成功，无 Type IV-b 幻觉
+- SNR $< 1$（prompt 模糊或有干扰）：路由失败，Type IV-b 幻觉触发
+
+**与 Type III 的区分**：Type III（Welch Bound）是 $\varepsilon_{j^*}$ 的全局不可消除下界（所有 prompt 均失败）；Type IV-b 的 $\varepsilon_{j^*}^{\text{IV-b}}$ 依赖 $x$（某些 prompt 可成功）。判别方法：5 种不同 prompt 全部错误 → Type III；部分可成功 → Type IV-b。
+
+---
+
+### 7.3 四类幻觉的 IDFC 统一对比
+
+| 类型 | IDFC 失效层面 | 核心不等式 | 架构相关性 | 不可消除性 |
+|---|---|---|---|---|
+| **Type I** | $f$-chain 长度 $k < l^*(q)$ | $\mathcal{T}_{k,\theta}(x) \neq q(x)$（$\forall \theta$） | ❌ 任何固定深度架构 | ✅ 不可消除（只能用 CoT 延伸） |
+| **Type II** | CAC 误差积累：$l > l_{\max}(\delta_{\text{fail}})$ | $\text{Err}(l) \leq \varepsilon_{\max}(L^l-1)/(L-1)$ | ❌ 任何 $\varepsilon > 0$ 的 $f$-chain | ✅ 不可消除（可延迟：降 $\varepsilon_{\max}$ 或 $L$） |
+| **Type III** | $F$ 容量：$N > d$，Welch 混叠 | $\varepsilon_{\max}^* \geq \Omega(\sqrt{(N-d)/dN})$ | ❌ 任何有限维嵌入架构 | ✅ $N > d$ 时不可消除（需 $d\uparrow$ 或 RAG） |
+| **Type IV-a** | Attention 稀释：$n > n_{\max}$ | $\varepsilon_{j^*}^{\text{IV-a}} \geq (1-\mathcal{F}^*)\|v^*\|$ | ✅ **softmax Attention 专有** | ⚑ 在固定架构下不可消除；换架构（稀疏/线性Attention）可缓解 |
+| **Type IV-b** | 多头 SNR $< 1$，噪声头主导 | $\varepsilon_{j^*}^{\text{IV-b}} \geq \|n(x)\| - \|s(x)\|$ | ✅ **多头 softmax Attention 专有** | ❌ 可消除（fine-tuning 调整 $W_O$；精准 prompt 调整 SNR） |
+
+**汇总一句话**：
+- **Type I–III** 是 $f$-chain 框架的结构性极限，与 Transformer 无关；
+- **Type IV** 是 Attention 的 softmax 路由的专有病理，换掉路由机制就换掉了 Type IV——但同时也失去了 Attention 带来的上下文动态路由能力。

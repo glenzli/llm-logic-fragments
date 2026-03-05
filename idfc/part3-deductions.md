@@ -345,6 +345,97 @@ $$\lim_{M \to \infty} \lim_{t \to \infty} \text{Acc}(M, t, q) < 1 \implies q \no
 
 ---
 
+## 11. 幻觉的 CAC 统一分类（架构无关推论）
+
+> **定位**：以下命题将语言模型"幻觉"的主要结构性类型，在 IDFC 框架下给出数学定理形式的刻画。每类幻觉被归结为 $f$-chain 或 $F$ 集合的某种具体失效模式。架构无关的三类由本节给出；Transformer 架构专有的第四类见 [Part 4 §7](part4-empirical.md)。
+
+---
+
+### 11.1 Type I：$f$-chain 长度不足（严格推论）
+
+**语言**：模型对需要超过其网络层数的顺序递归任务系统性失败。
+
+**定义（$r$-chain 的顺序深度）**：称 $r$-chain $q = r_{i_l} \circ \cdots \circ r_{i_1}$ 的**顺序深度**为 $l$，若 $q$ 在 $R_{\\text{tr}}^*$ 上是不可约的（§7.1 意义下），且每步 $r_{i_j}$ 的计算依赖前一步的输出（自适应依赖）。
+
+**命题 11.1（$f$-chain 长度的复杂度上界）**：设网络共 $k$ 层，则对任意输入 $x$，整个前向传播等价于至多 $k$ 步 $f$-chain：
+
+$$\text{output}(x) = G_k \circ G_{k-1} \circ \cdots \circ G_1(x)$$
+
+若目标任务 $q$ 的顺序深度 $l^*(q) > k$，则对任意参数配置 $\theta$，模型**不能**精确计算 $q$。在标准复杂度假设 $\text{TC}^0 \subsetneq \text{NC}^1$ 下：
+
+$$\forall \theta,\ \exists x: \mathcal{T}_{k,\theta}(x) \neq q(x)$$
+
+**证明**：由 Part 2 §1.2，$k$ 层前向传播对应 $k$ 步 $f$-chain，其计算能力不超过 $\text{TC}^0$（深度 $O(k)$，常数层数归约）。若 $q$ 的顺序深度要求 $l^*(q) > k$，则 $q \in \text{NC}^1 \setminus \text{TC}^0$（模标准假设），故无参数 $\theta$ 使 $\mathcal{T}_{k,\theta}$ 在全域上精确计算 $q$。$\square$
+
+**推论 11.1a（CoT 是 $f$-chain 长度的动态扩张）**：$T$ 步自回归 CoT 将有效 $f$-chain 长度从 $k$ 扩展至 $k \times T$：
+
+$$\text{CoT}_T: \quad l_{\text{eff}} = k \cdot T, \quad \text{可计算类} = (\text{TC}^0)^T \supseteq \text{NC}^1 \text{ 当 } T = O(\log n)$$
+
+但每步 CoT 引入一次离散化成本 $\varepsilon_{\text{tok}}$，与 §5.3 命题 5.3 精确耦合。
+
+> **CAC 含义**：Type I 幻觉 = $r$-chain 顺序深度超过模型的 $f$-chain 长度上限时，CAC 框架**在结构上失去适用条件**（$l^*(q) > k$ 使得无 $F$-chain 可覆盖）。与 $\varepsilon$ 无关；是链路长度的天花板。
+
+---
+
+### 11.2 Type II：CAC 误差积累（严格推论，= §5.1 的命名）
+
+**语言**：模型可以完成各步推理，但多步组合后输出偏离正确答案。
+
+**命题 11.2（Type II 幻觉即 CAC误差积累定理的宏观表现）**：CAC 定理（Part 2 §2）给出：对长度为 $l$ 的推理链，误差上界为
+
+$$\text{Err}(l) \leq \varepsilon_{\max} \cdot \frac{L^l - 1}{L - 1}$$
+
+定义**幻觉触发阈值** $\delta_{\text{fail}} > 0$（输出偏离到被认定为幻觉的误差量），则 Type II 幻觉**必然在** $l > l_{\max}(\delta_{\text{fail}})$ 时发生，其中（同命题 5.1）：
+
+$$l_{\max}(\delta_{\text{fail}}) = \left\lfloor \frac{\log\!\left(1 + \frac{\delta_{\text{fail}}(L-1)}{\varepsilon_{\max}}\right)}{\log L} \right\rfloor \qquad (L > 1)$$
+
+**推论 11.2a（Type II 幻觉的双参数根因）**：Type II 幻觉的严重程度由两个参数控制：
+
+| 参数 | 含义 | 控制因素 |
+|---|---|---|
+| $\varepsilon_{\max}$ | 单步原语近似误差上界 | $F$ 集合的容量（$M$）和 Type III 的 Welch 下界 |
+| $L$ | 链路最大 Lipschitz 常数 | 架构：LayerNorm 软性约束 $L$（Part 4 §1.4）|
+
+**推论 11.2b（CoT 的误差线性化即 Type II 的工程缓解）**：§5.3 命题 5.3 已严格证明：$k$ 步 CoT 将 Type II 误差从 $O(L^{l-1}\varepsilon)$ 降至 $O(k \varepsilon L^{l/k})$，在 $k = l$ 时退化为线性 $O(l\varepsilon)$。
+
+> **CAC 含义**：Type II 不是新的幻觉机制——它就是 **CAC 定理本身的负面表述**：组合近似的误差积累必然在某个链路长度处穿越失败阈值。这也意味着 Type II 在任何具有 $\varepsilon > 0$ 的 $f$-chain 架构中都不可消除，只可通过降低 $\varepsilon$ 或 $L$ 来延迟。
+
+---
+
+### 11.3 Type III：$F$ 容量下界（严格推论，Welch Bound）
+
+**语言**：模型对长尾知识或相近概念的混淆，不因训练数据增加而消失。
+
+**前提**：设 $F$ 使用 $d$ 维嵌入空间表示 $N$ 个语义上独立的原语 $\{r_1, \ldots, r_N\} \subset R_{\\text{tr}}$，每个原语对应的有效算子 $E_{r_i} \in \mathcal{M}_d(\mathbb{R})$ 在对应的 unit-norm 表示向量空间中中占据一个方向 $\hat{v}_i \in \mathbb{R}^d$。
+
+**命题 11.3（$\varepsilon_{\max}$ 的 Welch 结构下界）**：当 $N > d$ 时，存在至少两个原语 $r_i, r_j$ 的表示，满足：
+
+$$|\langle \hat{v}_i, \hat{v}_j \rangle| \geq \sqrt{\frac{N - d}{d(N - 1)}}$$
+
+即两者的有效算子方向的余弦相似度不可能同时为零。这导致**结构性混叠**：在需要区分 $r_i$ 与 $r_j$ 的输入上，模型的有效算子 $E_{r_i}(x)$ 对 $r_j$-方向的分量不为零，产生系统性近似误差。
+
+**推论 11.3a（Type III 给 $\varepsilon_{\max}$ 一个正下界）**：在 $N > d$ 的条件下，存在至少一个原语 $r_i$ 满足：
+
+$$\varepsilon_i \geq \Omega\!\left(\sqrt{\frac{N-d}{d(N-1)}}\right) \cdot \|v^*\|$$
+
+从而对 CAC 误差界：
+
+$$\text{Err}(l) \geq \Omega\!\left(\sqrt{\frac{N-d}{d(N-1)}}\right) \cdot \|v^*\| \cdot \frac{L^l - 1}{L - 1}$$
+
+当 $l \geq 1$，此下界严格正——**即使模型规模 $M \to \infty$，只要 $N > d$，Type III 导致的基底误差不可消除**。
+
+**推论 11.3b（Type III 与 UAT 的互补性）**：Part 2 §3.3（UAT）给出了 $\varepsilon_{\max}$ 的上界随 $M$ 趋于 0，但前提是表示维度 $d$ 与 $N$ 的关系允许正交嵌入。Welch Bound 给出**下界**：
+
+$$\varepsilon_{\max}^* \geq \begin{cases} 0 & N \leq d\\ \Omega\!\left(\sqrt{(N-d)/d(N-1)}\right) \cdot \|v^*\| & N > d \end{cases}$$
+
+**这确立了 Scaling $d$ 的必要性**：仅扩大 $M$（FFN 宽度）而不扩大 $d$（嵌入维度），无法消除 $N > d$ 时的 Type III 误差；必须同步扩大 $d$ 使 $N \leq d$。
+
+**推论 11.3c（Type III 与 Type II 的耦合）**：Type III 给 $\varepsilon_{\max}$ 的正下界，Type II 的误差积累公式将其放大至 $\Omega(L^{l-1}) \cdot \varepsilon_{\max}^*$。因此：**Type III 是 Type II 在长链推理中的乘数放大器**——长尾知识的混叠误差会沿推理链指数级传播。
+
+> **CAC 含义**：Type III 是**CAC 的初始条件约束**：它规定了 $\varepsilon_{\max}$ 的地板，而 CAC 定理从这个地板出发计算误差的天花板。RAG 通过将 $N_{\text{eff}}$ 降至有效检索范围（$N_{\text{eff}} \leq d$），从而将 Welch 下界压至 0，是 Type III 的唯一架构无关的理论根治方案。
+
+---
+
 > [!IMPORTANT]
 > **推论层次总览**：
 >
@@ -363,3 +454,7 @@ $$\lim_{M \to \infty} \lim_{t \to \infty} \text{Acc}(M, t, q) < 1 \implies q \no
 > | 条件性 | 7.1 | 条件性 | 推理链不可约性 → CoT 步数下界 |
 > | 条件性 | 7.2 | 条件性 | 幂律分布假设 → Scaling Law 指数推导 |
 > | 开放猜想 | 8.2 | 待证 | CAC 逆定理 → 失败 = $R$-覆盖缺口 |
+> | **幻觉分类** | **11.1** | **严格（模 TC⁰⊊NC¹）** | **Type I：$f$-chain 长度不足 → 不可计算** |
+> | 幻觉分类 | 11.2 | 严格 | Type II：CAC 误差积累 = $l > l_{\max}(\delta_{\text{fail}})$ 时必然幻觉 |
+> | 幻觉分类 | 11.3 | 严格（Welch Bound） | Type III：$N > d$ → $\varepsilon_{\max}$ 有正下界，不可消除 |
+> | Transformer专有 | Part 4 §7 | 见Part 4 | Type IV-a/b：Attention稀释与误路由 |
