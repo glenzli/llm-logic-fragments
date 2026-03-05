@@ -54,7 +54,23 @@ $$\|\hat{h}_l - q(x)\| \leq \varepsilon_{\max} \cdot \frac{L^l - 1}{L - 1}$$
 | **CoT 有效性** | 将长链拆段，将误差从指数降至线性；中间 token 作为状态锚点 |
 | **能力涌现偏序** | $r$-依赖图的拓扑排序决定能力出现顺序 |
 | **对齐脆弱性** | 对齐行为所需链越长，稳定半径以 $L^{-l}$ 指数衰减 |
-| **Lost in the Middle** | 注意力对中间位置的检索权重系统性偏低（Part 4 第一性原理推导） |
+| **Lost in the Middle** | 注意力对中间位置的检索权重系统性偏低（Part 4 第一性原理推导）|
+
+**技术干预方向的统一分析**（§14–24）：
+
+| 技术 | IDFC 核心定位 |
+|---|---|
+| RLHF / DPO | 不改变 $F$，对路由概率施加梯度偏置 |
+| 量化（INT8/INT4）| 直接抬升 $\varepsilon_{\max}$，系统性降低 $l_{\max}$ |
+| LoRA / PEFT | 局部低秩摄动有效算子，选择性压降 $\varepsilon_i$，不改变 $F$ 拓扑 |
+| Tool Use | $f$-chain 步骤精确外包（$\varepsilon_{\text{tool}} \approx 0$），绕过 Type I/II |
+| TTC / o1 思考 | $l_{\max}$ 的主动工程化扩展；训练 Scaling 与 TTC 正交互补 |
+| RAG | 动态 $N_{\text{eff}}$ 压缩器；Type III 的唯一架构无关根治方案 |
+| Speculative Decoding | 纯加速机制；输出分布等价于 $F_{\text{target}}$，不改变误差结构 |
+| 多模态 | 模态投影引入 $\varepsilon_{\text{modal}}$；Welch 下界叠加（$N_V + N_T$）是视觉幻觉根因 |
+| 持续学习 | $F$ 的时序修改；灾难性遗忘 = 旧原语 $\varepsilon_j$ 超阈值退化 |
+| ICL | 上下文注入对路由的临时偏置，三成分分解（格式/知识/CoT脚手架）等价于 RLHF+RAG+TTC 的推理时版本 |
+| 合成数据坍缩 | Type III 混叠的自我强化回路；数据处理不等式给出坍缩的信息论保证 |
 
 ---
 
@@ -71,7 +87,8 @@ $$\|\hat{h}_l - q(x)\| \leq \varepsilon_{\max} \cdot \frac{L^l - 1}{L - 1}$$
 |---|---|---|
 | **[Part 1 · 本文]** | 导论 | 非正式动机、主张、预测 |
 | **[Part 2](part2-model-proof.md)** | 数学建模 + 定理证明 | 形式定义、CAC 定理、完整证明 |
-| **[Part 3](part3-deductions.md)** | 推论 | 全部从 CAC 推导的命题（严格/条件/猜想） |
+| **[Part 3](part3-deductions.md)** | 推论 | 全部从 CAC 推导的命题（§12–24，含三类幻觉、技术干预、ICL、合成数据坍缩）|
 | **[Part 4](part4-empirical.md)** | 理论验证 | Attention 泛函界——理论预测的第一性原理验证 |
+| **[Part 5](part5-epilogue.md)** | 结语 | 关于这个 framework 自我指涉的本质的反思 |
 
-阅读顺序：本文 → Part 2 → Part 3 → Part 4。
+阅读顺序：本文 → Part 2 → Part 3 → Part 4 → Part 5。
