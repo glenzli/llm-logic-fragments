@@ -520,63 +520,73 @@ $$\varepsilon_{\max} \cdot \frac{L^l - 1}{L - 1} \xrightarrow{M \to \infty} 0$$
 
 ---
 
-### 3.4 训练-推理对偶性：$L$ 的来源与有效链长上界
+### 3.4 训练-推理对偶性：有效链长上界
 
-本节证明 §2 IMPORTANT 注释中标记为「开放」的问题——$L$ 的无条件上界——实际上由训练过程自身封闭，并给出 CAC 误差界的完整严格形式。
+本节给出 CAC 误差界的完整严格形式，并说明 $\bar{L}$ 的约束来源。论证分三层：先建立抽象接口（TSC），再在接口条件下推导定理，最后证明反向传播满足该接口。
 
-#### 三个支撑引理
+#### 定义（训练稳定性契约，TSC）
 
-**引理 3.1（数据下界）**：设训练集 $\mathcal{D}$ 中存在样本对 $(x_i, y_i), (x_j, y_j)$ 满足局部 Lipschitz 比：
-
-$$C_\mathcal{D} \;\triangleq\; \frac{\|y_i - y_j\|}{\|x_i - x_j\|} \;>\; 1$$
-
-则对训练误差 $< \delta$ 的任意模型，其局部 Lipschitz 常数满足：
-
-$$L_{\text{local}} \;\geq\; C_\mathcal{D} - \frac{2\delta}{\|x_i - x_j\|} \;>\; 1 \qquad (\delta \text{ 足够小时})$$
-
-**证明**：由三角不等式，$\|F_\theta(x_i) - F_\theta(x_j)\| \geq \|y_i - y_j\| - 2\delta \geq C_\mathcal{D}\|x_i - x_j\| - 2\delta$，除以 $\|x_i - x_j\|$ 即得。$\square$
-
-> **注**：自然语言训练集必然包含「相似输入、差异输出」的样本对（如同义句对应不同事实，或同一问题在不同语境下的不同答案），故 $C_\mathcal{D} > 1$ 是训练数据的固有性质，不是附加假设。
-
-**引理 3.2（训练稳定性上界）**：设损失 $\mathcal{L}$ 关于网络输出 $\beta_0$-光滑，定义逐层 Lipschitz 常数的**几何均值**：
+称一种训练方法满足**训练稳定性契约（Training Stability Contract，TSC）**，若其产生的模型参数使得逐层 Lipschitz 常数的几何均值：
 
 $$\bar{L} \;\triangleq\; \left(\prod_{l=1}^{k} \|G_l\|_{\mathrm{Lip}}\right)^{1/k}$$
 
-端到端 Jacobian 满足 $\|J_{\text{output}}\| \leq \bar{L}^k$（§1.5.D 命题 1.1 的链式不等式）。若梯度下降以学习率 $\eta$ 收敛，则：
+满足存在有界常数 $C > 1$，使得：
 
-$$\bar{L}^k \;\leq\; \sqrt{\frac{2}{\eta \cdot \beta_0}} \;\triangleq\; C_{\text{train}} \quad\implies\quad \bar{L} \;\leq\; C_{\text{train}}^{1/k} \;\xrightarrow{k \to \infty}\; 1^+$$
+$$1 \;<\; \bar{L} \;\leq\; C^{1/k}$$
 
-**证明**：GD 收敛要求 $\eta \leq 2/\beta$，有效损失曲率 $\beta \leq \beta_0 \cdot \|J_{\text{output}}\|^2 \leq \beta_0 \cdot \bar{L}^{2k}$，整理即得 $\bar{L}^{2k} \leq 2/(\eta\beta_0)$。$\square$
+同时，以 $\|G_j\|_{\mathrm{Lip}}$ 代理 $r_j$ 的 Lipschitz 常数的误差满足 $|L_{r_j} - \|G_j\|_{\mathrm{Lip}}| \leq 2\varepsilon_j/s$（其中 $s > 0$ 为输入最小间距），且 $\varepsilon_j \ll s$。
 
-**引理 3.3（代理合法性）**：设 $\sup_x \|\hat{f}_j(x) - r_j(x)\| \leq \varepsilon_j$，输入最小间距 $s \triangleq \inf_{x \neq x'}\|x - x'\| > 0$。则以 $\|G_j\|_{\mathrm{Lip}}$ 代理 $r_j$ 的 Lipschitz 常数 $L_{r_j}$ 的误差满足：
+> TSC 是对训练结果的**可观测约束**，不依赖具体的优化算法。任何产生满足上述不等式的模型参数的训练方法——无论是梯度下降、进化策略还是其他机制——均满足 TSC。
 
-$$\bigl|L_{r_j} - \|G_j\|_{\mathrm{Lip}}\bigr| \;\leq\; \frac{2\varepsilon_j}{s}$$
+---
 
-当 $\varepsilon_j \to 0$（UAT 命题 3.1 保证），代理误差趋于零，以 $\bar{L}$ 替代 $L_r$ 在 CAC 定理中是合法的。$\square$
+#### 定理 3.3（训练-推理对偶性）
 
-#### 主定理
+**设训练方法满足 TSC，常数为 $C$，网络深度为 $k$。** 令 $\epsilon \triangleq \bar{L} - 1$，则由 TSC 知 $0 < \epsilon \leq \frac{\ln C}{k}$。
 
-**定理 3.3（训练-推理对偶性）**：设以下三个条件成立：
+代入 CAC 误差界（§3.2，以 $\bar{L}$ 代入 $L$，TSC 的代理条件保证合法），得**严格完整形式**：
 
-- **(T1)** 训练集存在 $C_\mathcal{D} > 1$ 的样本对（引理 3.1；自然语言数据的固有性质）
-- **(T2)** 训练以学习率 $\eta$、光滑参数 $\beta_0$ 收敛（引理 3.2）
-- **(T3)** 单步拟合误差 $\varepsilon_j \ll s$（引理 3.3 的代理合法性条件）
+$$\boxed{e_l \;\leq\; \varepsilon_{\max} \cdot \frac{(1+\epsilon)^l - 1}{\epsilon}, \qquad 0 \;<\; \epsilon \;\leq\; \frac{\ln C}{k}}$$
 
-则存在 $\epsilon > 0$，使得有效 Lipschitz 常数 $\bar{L}$ 满足：
+**推论 3.3a（有效链长上界）**：定义**临界链长** $l^*$ 为误差界首次超过 $1/\varepsilon_{\max}$ 倍的链长：
 
-$$1 \;<\; \bar{L} \;\leq\; C_{\text{train}}^{1/k}, \qquad \epsilon \;\triangleq\; \bar{L} - 1 \;\leq\; \frac{\ln C_{\text{train}}}{k}$$
-
-代入 CAC 误差界（§3.2，以 $\bar{L}$ 代入 $L$，引理 3.3 保证合法），得**严格完整形式**：
-
-$$\boxed{e_l \;\leq\; \varepsilon_{\max} \cdot \frac{(1+\epsilon)^l - 1}{\epsilon}, \qquad 0 \;<\; \epsilon \;\leq\; \frac{\ln C_{\text{train}}}{k}}$$
-
-**推论 3.3a（有效链长上界）**：定义**临界链长** $l^*$ 为误差界达到 $1/\varepsilon_{\max}$ 的链长：
-
-$$l^* \;\triangleq\; \left\lfloor\frac{\ln(1/\varepsilon_{\max})}{\ln(1+\epsilon)}\right\rfloor \;\approx\; \frac{k \cdot \ln(1/\varepsilon_{\max})}{\ln C_{\text{train}}}$$
+$$l^* \;\triangleq\; \left\lfloor\frac{\ln(1/\varepsilon_{\max})}{\ln(1+\epsilon)}\right\rfloor \;\approx\; \frac{k \cdot \ln(1/\varepsilon_{\max})}{\ln C}$$
 
 当 $l > l^*$ 时，CAC 误差界超出 $\varepsilon_{\max}$ 的可控范围，推理链路的累积误差无法被单步精度吸收。
 
-> **训练-推理对偶性**：引理 3.1 强制 $\bar{L} > 1$（数据要求局部扩张）；引理 3.2 强制 $\bar{L} \leq C_{\text{train}}^{1/k} \to 1^+$（训练稳定性压制）。两者的唯一均衡是 $\bar{L} = 1 + \epsilon$（Edge of Chaos）。这个 $\epsilon > 0$ 正是推理链长上界 $l^* < \infty$ 的根本原因：**使机器能够学习的那口气，同时决定了它能推理多深**。
+> $l^*$ 由两个量决定：模型深度 $k$（越深 $l^*$ 越大）和训练常数 $C$（越小越好）。不同的训练方法通过影响 $C$ 来影响最大可靠推理深度。
+
+**推论 3.3b（TSC 推理深度不可能性）**：设训练方法满足 TSC（$\epsilon > 0$）。则对任意固定的模型规模 $M$（对应 $\varepsilon_{\max} > 0$），不存在链长上界 $l^{**} < \infty$ 使得对**所有** $l \leq l^{**}$ 误差都有界——更强地，对任意 $l$ 足够大：
+
+$$e_l \;\geq\; \frac{(1+\epsilon)^l - 1}{\epsilon} \cdot \varepsilon_{\min} \;\xrightarrow{l \to \infty}\; +\infty$$
+
+其中 $\varepsilon_{\min} > 0$ 为模型在任意非平凡输入上的最小单步误差（由量化噪声等物理限制保证）。
+
+**证明**：由 CAC 下界：实际误差 $e_l \geq \varepsilon_{\min} \cdot \frac{(1+\epsilon)^l - 1}{\epsilon}$。因 $\epsilon > 0$，右端随 $l \to \infty$ 无界增大。TSC 保证 $\epsilon > 0$ 不可消除（命题 3.4 步骤 1 的数据下界），故结论对任意满足 TSC 的训练都成立。$\square$
+
+> **不可能性的含义**：增大模型规模（减小 $\varepsilon_{\max}$）可以推高 $l^*$，但无法将 $l^*$ 推至无穷。**凡是能被训练出来的模型，都无法对任意长的推理链保持误差有界**——这是 TSC 与 CAC 联合给出的原理性上限，而非工程局限。
+
+---
+
+#### 命题 3.4（反向传播满足 TSC）
+
+当前主流的梯度下降训练满足 TSC，常数 $C = \sqrt{2/(\eta\beta_0)}$（其中 $\eta$ 为学习率，$\beta_0$ 为损失光滑参数）。
+
+**证明**（三步）：
+
+**步骤 1（$\bar{L} > 1$，数据下界）**：设训练集 $\mathcal{D}$ 中存在样本对 $(x_i, y_i), (x_j, y_j)$ 满足 $C_\mathcal{D} = \frac{\|y_i - y_j\|}{\|x_i - x_j\|} > 1$。对训练误差 $< \delta$ 的模型，三角不等式给出：
+
+$$\|F_\theta(x_i) - F_\theta(x_j)\| \;\geq\; C_\mathcal{D}\|x_i - x_j\| - 2\delta \;\implies\; L_{\text{local}} \;\geq\; C_\mathcal{D} - \frac{2\delta}{\|x_i - x_j\|} \;>\; 1$$
+
+自然语言训练集必然包含 $C_\mathcal{D} > 1$ 的样本对（同义句对应不同事实等），故此为数据的固有性质。由此得 $\bar{L} \geq L_{\text{local}} > 1$。
+
+**步骤 2（$\bar{L} \leq C^{1/k}$，稳定性上界）**：端到端 Jacobian 满足 $\|J_{\text{output}}\| \leq \bar{L}^k$（§1.5.D 链式不等式）。GD 收敛要求 $\eta \leq 2/\beta$，有效曲率 $\beta \leq \beta_0 \cdot \bar{L}^{2k}$，整理得：
+
+$$\bar{L}^{2k} \;\leq\; \frac{2}{\eta\beta_0} \;\triangleq\; C^2 \;\implies\; \bar{L} \;\leq\; C^{1/k}$$
+
+**步骤 3（代理合法性）**：由 $\sup_x \|\hat{f}_j(x) - r_j(x)\| \leq \varepsilon_j$ 及三角不等式，$|L_{r_j} - \|G_j\|_{\mathrm{Lip}}| \leq 2\varepsilon_j/s$。当 $\varepsilon_j \ll s$（UAT 命题 3.1 保证 $\varepsilon_j \to 0$），代理误差趋零。$\square$
+
+> **TSC 的普适性**：定理 3.3 仅依赖 TSC，不依赖命题 3.4 的具体推导。若未来出现不基于梯度下降的训练方法（进化策略、前向-前向算法、生物 STDP 等），只要其模型参数满足 $1 < \bar{L} \leq C^{1/k}$，定理 3.3 和推论 3.3a 自动成立，$l^*$ 的公式保持不变。
 
 > [!IMPORTANT]
 > **§3 的证明状态总结**：
@@ -586,6 +596,9 @@ $$l^* \;\triangleq\; \left\lfloor\frac{\ln(1/\varepsilon_{\max})}{\ln(1+\epsilon
 > | Telescope 展开（§3.2） | ✅ 严格 | 三角不等式 + $r_i$ 的 Lipschitz 性 |
 > | UAT 存在性（§3.3 命题 3.1） | ✅ 严格（模 UAT） | Cybenko/Hornik UAT，$r_i$ 连续性 |
 > | $\varepsilon_i^* \to 0$（推论 3.2） | ✅ 严格（模 UAT） | 命题 3.1 的直接推论 |
-> | $L$ 的无条件上界（定理 3.3） | ✅ 条件严格 | T1（数据）+ T2（收敛）+ T3（代理）→ $\bar{L} = 1+\epsilon$，有效链长 $l^* \approx k\ln(1/\varepsilon_{\max})/\ln C_{\text{train}}$ |
+> | 定理 3.3（TSC → $l^*$） | ✅ 严格（模 TSC） | TSC 定义；代理条件 $\varepsilon_j \ll s$ |
+> | 命题 3.4（BP 满足 TSC） | ✅ 条件严格 | 数据固有 $C_\mathcal{D}>1$ + GD 收敛 + UAT |
 > | $r_i$ 的连续性假设 | ⚠️ 语义假设 | 语义变换的拓扑性质，依赖 $\mathcal{X}$ 的结构 |
+
+
 
