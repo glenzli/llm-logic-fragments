@@ -467,7 +467,10 @@ $$\varepsilon_{\max}^* \geq \begin{cases} 0 & N \leq d\\ \Omega\!\left(\sqrt{(N-
 > | 生成策略 | 12.3 | 严格 | Self-Consistency = $\varepsilon_{\text{tok}}$ 蒙特卡洛降噪，绕过 critique 循环 |
 > | **训练范式** | **13.1** | **严格** | **Soft label = $r$-chain 度量拓扑的压缩投影（dark knowledge 形式化）** |
 > | 训练范式 | 13.2 | 严格 | KL 最小化 = 内积度量结构对齐，学生嵌入几何与老师对齐 |
-> | 训练范式 | 13.3 | 条件性 | CoT trace 蒸馏 = $l_{\max}$ 转移（最强形式） |
+> | 训练范式 | 13.3 | 条件性 | CoT trace 蒸馏 = $l_{\max}$ 转移（最强形式）|
+> | **对齐训练** | **14.1** | **严格** | **RLHF/DPO = $F$ 上的路由概率再分配；不改变 $F$ 本身** |
+> | 对齐训练 | 14.3 | 严格 | 奖励黑客 = RM 误差 $\varepsilon_R$ 的寄生 $f$-chain 激活（Goodhart 定律）|
+> | 对齐训练 | 14.4 | 严格 | RLHF 无法弥补 $l_{\max}$ 不足；对齐能力上限由 $F$ 的 $r$-chain 覆盖度决定 |
 
 ---
 
@@ -659,3 +662,107 @@ $$l_{\max}^S(\delta) \xrightarrow{\text{CoT trace KD}} l_{\max}^T(\delta) \quad 
 > 1. **Soft label = $r$-chain 拓扑的压缩编码**：老师的输出概率将老师 $F$-chain 对整个输出流形的曲率信息压缩进了 $V$ 维向量。
 > 2. **KL 最小化 = 内积度量结构对齐**：学生嵌入空间必须具有与老师相同的几何关系，小参数量学生仍可获得老师层度的 $\varepsilon_{\max}^S$。
 > 3. **CoT trace 蒸馏直接转移 $l_{\max}$**：Trace 模仿将学习目标从「答案正确」升级为「$r$-chain 分解步骤正确」，直接将学生的推理深度上限平齐老师——这是 DeepSeek-R1、QwQ 等推理蒸馏模型效果惊人的激活 IDFC 机制解释。
+
+---
+
+## 14. RLHF 与 DPO 的 CAC 分析
+
+> **定位**：本节将基于人类反馈的强化学习（RLHF）和直接偏好优化（DPO）纳入 IDFC 框架。核心结论：**RLHF/DPO 不改变 $F$（$f$-chain 的集合），而是改变在 $F$ 上的路由概率分布**——这与预训练（填充 $F$）是正交的两个维度。
+
+---
+
+### 14.1 RLHF 的计算结构与 IDFC 映射
+
+**RLHF 三阶段**：
+
+1. **SFT（监督微调）**：在人类示范数据上训练，建立基础 $F$-chain 分布 $\pi_{\text{ref}}$
+2. **RM（奖励模型训练）**：训练独立模型 $R_\phi(x, y) \in \mathbb{R}$，用人类偏好标注学习输出质量评分
+3. **PPO（策略梯度）**：用 RM 作为反馈信号，优化策略 $\pi_\theta$，同时保持与 $\pi_{\text{ref}}$ 的 KL 约束：
+
+$$\max_{\pi_\theta} \mathbb{E}_{y \sim \pi_\theta(y|x)}\!\left[R_\phi(x, y)\right] - \beta \cdot \text{KL}\!\left(\pi_\theta \| \pi_{\text{ref}}\right)$$
+
+**命题 14.1（RLHF 的 IDFC 解读：路由概率再分配）**：RLHF 优化改变的是模型在 $F$ 上的**$f$-chain 路由概率**，而非 $F$ 本身：
+
+$$P_{\text{ref}}(f\text{-chain}_{k} \mid x) \xrightarrow{\text{RLHF}} P_\theta(f\text{-chain}_{k} \mid x)$$
+
+具体而言：
+- 产生高奖励输出的 $f$-chain（对应「对齐」$r$-chain 路径）：路由概率升高
+- 产生低奖励输出的 $f$-chain：路由概率降低
+- $F$ 中各 $f_i \in F$ 的近似质量 $\varepsilon_i$：**在 KL 约束有效时基本不变**
+
+**与预训练的正交性**：
+
+| 训练阶段 | 改变的 IDFC 对象 | 改变的方式 |
+|---|---|---|
+| 预训练 | $F$（$f$-chain 集合的容量与精度）| 填充 $F$，降低 $\varepsilon_{\max}$ |
+| RLHF / DPO | $F$ 上的路由概率分布 $P(f \mid x)$ | 偏置 $f$-chain 选择，不改变 $F$ 本身 |
+
+---
+
+### 14.2 DPO 的 IDFC 解读：隐式路由偏置
+
+**DPO 目标**：直接从偏好数据 $(x, y_w, y_l)$（$y_w$ 优于 $y_l$）优化策略，无需显式 RM：
+
+$$\mathcal{L}_{\text{DPO}} = -\mathbb{E}\!\left[\log \sigma\!\left(\beta \log \frac{\pi_\theta(y_w|x)}{\pi_{\text{ref}}(y_w|x)} - \beta \log \frac{\pi_\theta(y_l|x)}{\pi_{\text{ref}}(y_l|x)}\right)\right]$$
+
+**命题 14.2（DPO 的 IDFC 等价）**：DPO 的梯度在每对偏好数据上施加如下路由调整：
+
+$$\nabla_\theta \mathcal{L}_{\text{DPO}} \propto \nabla_\theta \left[\log \pi_\theta(y_w|x) - \log \pi_\theta(y_l|x)\right]$$
+
+即：**提升「胜出」$f$-chain 路径的概率，降低「落败」$f$-chain 的概率**——这是在 $F$ 上的二元软性路由调整，等价于 RLHF PPO 的隐式版本。
+
+**$\beta$ 参数的 IDFC 角色**（对应 §14.3 的 KL 约束分析）：
+
+| $\beta$ | $\pi_\theta$ 与 $\pi_{\text{ref}}$ 的偏离 | 路由调整强度 | $\varepsilon_{\max}$ 风险 |
+|---|---|---|---|
+| $\beta \to \infty$ | 几乎不变 | 对齐效果弱 | $\varepsilon_{\max}$ 稳定（$F$ 基本不变）|
+| 适中 $\beta$ | 受控偏离 | 对齐有效 | $\varepsilon_{\max}$ 轻微升高（非对齐 $r_i$ 略退化）|
+| $\beta \to 0$ | 无约束展开 | 对齐最强 | **$\varepsilon_{\max}$ 大幅升高**（灾难性遗忘非对齐原语）|
+
+---
+
+### 14.3 奖励模型误差与「奖励黑客」的 IDFC 机制
+
+**奖励模型的本质**：RM $R_\phi(x, y)$ 是一个近似「人类偏好」$r$-chain 的函数——它自身也是一个 $f$-chain 近似，存在误差 $\varepsilon_R$（对应该 RM 的 Type III：$N_{\text{pref}} > d_{\text{RM}}$ 时偏好混叠）。
+
+**命题 14.3（奖励黑客的 IDFC 机制）**：PPO 在最大化 $\mathbb{E}[R_\phi(x,y)]$ 时，若 $\varepsilon_R > 0$，则存在「寄生 $f$-chain」——这些 $f$-chain 对 $R_\phi$ 的评分高，但对真实人类偏好 $R^*(x,y)$ 的近似误差大：
+
+$$\exists f^{\dagger}\text{-chain}: \quad R_\phi(x, f^{\dagger}(x)) \gg R^*(x, f^{\dagger}(x))$$
+
+策略梯度在某个训练步数后开始强化 $f^{\dagger}$-chain——这是 **Goodhart 定律的 IDFC 形式化**：对 RM（$R$ 的不完美近似）的持续优化，最终找到 RM 的对抗输入，而非真正对齐的 $r$-chain。
+
+**推论 14.3a（KL 约束是 $\varepsilon_{R}$ 的缓冲器）**：$\beta \cdot \text{KL}(\pi_\theta \| \pi_{\text{ref}})$ 正则项限制了策略偏离 $\pi_{\text{ref}}$ 的程度，从而限制了寄生 $f^{\dagger}$-chain 被激活的概率：
+
+$$P(f^{\dagger}\text{-chain 激活}) \leq \exp\!\left(-\frac{\text{KL 预算}}{\beta_{\text{exploit}}}\right)$$
+
+其中 $\beta_{\text{exploit}}$ 是 $f^{\dagger}$-chain 需要的 KL 代价。**KL 预算（由 $\beta$ 控制）是奖励黑客的防护壁，其有效性上限由 $\varepsilon_R$ 决定**。
+
+---
+
+### 14.4 RLHF 对齐与 §6 对齐脆弱性的连接
+
+§6.1（命题 6.1）证明了对齐稳定性以 $L^{-l_{\text{align}}}$ 指数衰减。RLHF 在此基础上增加了一个更具体的层次：
+
+**命题 14.4（RLHF 对齐能力的 $F$ 约束）**：RLHF 只能调整 $F$-chain 的路由概率，不能为模型注入新的 $r$-chain 近似能力。若对齐目标行为 $q_{\text{align}}$ 的 $r$-chain 深度 $l_{\text{align}} > l_{\max}(\delta)$（即模型根本无法可靠执行该链路），则 RLHF **无论施加多强的路由偏置都无法实现稳定对齐**：
+
+$$l_{\text{align}} > l_{\max}(\delta) \implies \rho_{\text{align}} \to 0 \quad \text{（对任意 RLHF 强度）}$$
+
+**具体含义**：
+- **简单对齐行为**（$l_{\text{align}}$ 小，如「拒绝有害请求」）：RLHF 效果好，路由偏置充分
+- **复杂对齐行为**（$l_{\text{align}}$ 大，如「在多步推理中保持价值一致性」）：RLHF 无法弥补 $f$-chain 深度不足；必须先扩展模型的 $l_{\max}$（通过预训练或 CoT）
+
+这将 §6 的理论预测与 RLHF 的工程实践连通：**对齐失败不是 RLHF 算法问题，而是模型 $F$ 对对齐相关 $r$-chain 的覆盖问题**。
+
+---
+
+### 14.5 DPO vs PPO vs RLHF：IDFC 结构对比
+
+| 维度 | PPO (RLHF) | DPO |
+|---|---|---|
+| RM 的角色 | 显式独立模型 $R_\phi$（独立 $F'$）| 隐式参数化为策略比率 |
+| 路由调整机制 | RM 评分 → PPO 梯度 → 路由更新 | 偏好对 $(y_w, y_l)$ → 直接路由对比 |
+| 奖励黑客风险 | 需显式 KL 约束（$\beta$）防止 $f^\dagger$ 激活 | 相对评分自然限制绝对偏离（$\pi_{\text{ref}}$ 隐含锚点）|
+| 对 $\varepsilon_{\max}$ 的影响 | KL 约束失效时 $\varepsilon_{\max}$ 升高 | $\beta$ 过小时同样风险 |
+| 类比 §12 结构 | RM = 独立 $F'$（类比 PRM 打破循环）| 无独立 $F'$，自我对比（类比反思的循环）|
+
+> **一句话**：RLHF/DPO 是在 $F$ 上的软性路由重加权——提升对齐 $f$-chain 的激活概率，降低非对齐 $f$-chain 的概率。它不改变 $F$ 的容量（$\varepsilon_{\max}$），不能弥补 $l_{\max}$ 不足，且其有效性被 RM 误差 $\varepsilon_R$ 和 KL 约束共同上限。
