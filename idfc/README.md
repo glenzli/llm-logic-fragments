@@ -6,14 +6,14 @@
 
 ---
 
-## 文档地图
+## 文档结构（数学定理格式）
 
-| 文件 | 内容 | 状态 |
+| 文件 | 角色 | 内容 |
 |---|---|---|
-| [**part1-model.md**](./part1-model.md) | 数学模型构造：$\mathcal{X}$、$\Omega$、$F$、CAC 定理、误差分析 | 核心理论 |
-| [**part2-deductions.md**](./part2-deductions.md) | 行为推论：涌现、顿悟、CoT、能力聚簇、Scaling Law | 第一阶推论 |
-| [**part3-extensions.md**](./part3-extensions.md) | CAC 扩展推论：能力上界、不可约性、对齐脆弱性、逆定理猜想 | 深层推论 |
-| [**part4-attention.md**](./part4-attention.md) | Attention 泛函界：LiM 定义、最优检索保真度、$n_{\max}$ | **可观测接口** |
+| [**part1-intro.md**](./part1-intro.md) | **导论** | 问题动机、IDFC 主张（非正式）、理论预测一览、文档地图 |
+| [**part2-model-proof.md**](./part2-model-proof.md) | **数学建模 + 定理证明** | 形式定义（$\mathcal{X}$、$\Omega$、$F$、$f$-chain）、CAC 定理严格陈述、完整证明 |
+| [**part3-deductions.md**](./part3-deductions.md) | **推论** | 全部 CAC 推论（严格推论 → 条件性命题 → 开放猜想） |
+| [**part4-empirical.md**](./part4-empirical.md) | **理论验证** | 理论预测的实证推导（当前：Attention 泛函界、LiM、$n_{\max}$） |
 
 阅读顺序：`part1` → `part2` → `part3` → `part4`。
 
@@ -31,17 +31,16 @@
 
 ## 关键可观测预测（part4 的角色）
 
-`part4-attention.md` 推导出：
+`part4-empirical.md` 是理论预测的**实证验证层**——将 Part 3 的抽象推论推导为可实验验证的可观测量。
 
-- **最优检索保真度** $\mathcal{F}^*(n, d_k, B)$：注意力机制在 $n$ 个竞争位置中提取单个目标的信息论上界
+当前验证案例（Attention 泛函界）给出：
+- **最优检索保真度** $\mathcal{F}^*(n, d_k, B)$：注意力机制信息提取的信息论上界
 - **最大可靠序列长度** $n_{\max}$：超过此长度后，注意力在信息论上无法达到精度要求 $\delta$
 - **LiM 的算子定义**：Lost in the Middle 是 $f$-链路组装的局部失效，而非工程缺陷
-
-这些预测原则上可通过实验验证，是理论与现实接轨的关键节点。
 
 ---
 
 ## 与其他模块的关系
 
 - [`behavioral-attractors/`](../behavioral-attractors/) — IDFC 为行为吸引子的**存在性**提供基础；吸引子理论描述这些构型的**拓扑结构**
-- [`hallucination/`](../hallucination/) — IV-a/IV-b 的现象级分析；`part4-attention.md` 提供其第一性原理基础
+- [`hallucination/`](../hallucination/) — IV-a/IV-b 的现象级分析；`part4-empirical.md` 的 Attention 分析提供其第一性原理基础
