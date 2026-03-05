@@ -14,3 +14,5 @@
 |---|---|---|
 | [**part2a-model-proof.md**](./part2a-model-proof.md) | 数学建模与 CAC 定理证明 | §1 形式定义（$\mathcal{X}$、$\Omega$、$F$、$f$-chain）· §2 CAC 假说严格陈述 · §3 完整证明（Telescope 展开 + UAT 桥接 + TSC 对偶性） |
 | [**part2b-fspace-morphology.md**](./part2b-fspace-morphology.md) | $F$-空间形态学 | §25 知识 / 逻辑 / 逐字记忆三态的形式定义 · Lipschitz 一致性分类 · 知识-逻辑纠缠命题 · 哈利波特实验的 IDFC 预测 |
+| [**part2c-algebraic-instance.md**](./part2c-algebraic-instance.md) | 代数实例化层 | §26 泛函层→代数层映射总表 · §27 CAC 定理的 Transformer 紧化 · §28 双层 Welch 结构 · §29 三态分类代数可测化 · §30 语义的线性代数表示 · §31 UAT 的 Transformer 扩展 |
+
