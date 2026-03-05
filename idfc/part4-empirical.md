@@ -2498,7 +2498,7 @@ $$n_{\max}^{\text{RoPE}} > n_{\max}^{\text{base}} \implies t^* \uparrow$$
 
 两者的本质相同：context 的某种权威性信号将寄生链 $f_q^{	ext{par}}$（"服从 context"）的路由概率抬高，使其在部分输入上击败正确链 $f_q^*$（"依据内部知识"）。
 
-**无需引入独立原语**：不需要"元映射原语" $r_{	ext{meta}}$ 这一专门构造——$r_{	ext{defer-to-context}}$ 就是谄媚机制中的 $r_{	ext{agree-with-user}}$ 在演示场景下的同一条路由路径，来源于 $\nu_{\text{agree}} \gg \nu_{\text{refute}}$ 的预训练频率不对称（§19.3.1）。
+$r_{\text{defer-to-context}}$ 是谄媚机制中 $r_{\text{agree-with-user}}$ 在演示场景下的同一条路由路径，来源于 $\nu_{\text{agree}} \gg \nu_{\text{refute}}$ 的预训练频率不对称（§19.3.1）——无需引入任何额外原语即可解释随机标签 ICL 的有效性。
 
 ---
 
@@ -2541,7 +2541,7 @@ $$\Delta_B \approx \text{Acc}_{\text{correct}} - \text{Acc}_{\text{random}}$$
 
 > [!IMPORTANT]
 > **随机标签 ICL 的 IDFC 核心结论**：
-> 1. **无需独立原语**：随机标签 ICL 的有效性不需要假设"元映射原语"，它是 §19 谄媚机制中 $r_{\text{defer-to-context}}$ 寄生链在"演示权威"场景下的同一路由竞争——来源和机制完全相同，仅 authority 的表现形式不同（显式声称 vs. 隐式演示）。
+> 1. **§19 机制的直接延伸**：随机标签 ICL 的有效性是谄媚机制中 $r_{\text{defer-to-context}}$ 寄生链在"演示权威"场景下的同一路由竞争——来源和机制完全相同，仅 authority 的表现形式不同（用户显式声称 vs. 示例隐式呈现）。
 > 2. **天然受控实验**：随机标签实验将谄媚机制的 $\Delta_A$（context 服从项）和任务原语的 $\Delta_B$（语义路由项）精确分离，是测量"context 权威服从"强度的标准实验设计。
 > 3. **可验证的跨现象预测**：高谄媚模型应有高随机标签遵循率；反谄媚 prompt 应同时抑制两者——这是 §23 和 §19 共用同一机制的可证伪预测。
 
