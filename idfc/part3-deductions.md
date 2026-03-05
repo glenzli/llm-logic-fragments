@@ -438,7 +438,72 @@ $$\varepsilon_{\max}^* \geq \begin{cases} 0 & N \leq d\\ \Omega\!\left(\sqrt{(N-
 
 > **CAC 含义**：Type III 是**CAC 的初始条件约束**：它规定了 $\varepsilon_{\max}$ 的地板，而 CAC 定理从这个地板出发计算误差的天花板。RAG 通过将 $N_{\text{eff}}$ 降至有效检索范围（$N_{\text{eff}} \leq d$），从而将 Welch 下界压至 0，是 Type III 的唯一架构无关的理论根治方案。
 
+**推论 11.3d（混叠的 F-空间操作定义：激活路径重叠）**：行业通用描述停留在嵌入向量余弦相似度层——「向量相近所以混叠」。在 F-空间，混叠的操作定义更精确：
+
+设原语 $r_i$ 的目标输入集合为 $\mathcal{D}_{r_i}$（训练分布中标注为需执行 $r_i$ 的输入）。**$r_i$ 与 $r_j$ 的 F-空间混叠率**定义为：
+
+$$c_{ij} \;\triangleq\; \Pr_{x \sim \mathcal{D}_{r_i}}\!\!\left[\,\bigl\|E_{r_i}(x)\cdot x - r_j(x)\bigr\| \;<\; \bigl\|E_{r_i}(x)\cdot x - r_i(x)\bigr\|\,\right]$$
+
+即：对本应执行 $r_i$ 的输入，激活路径选出的有效算子更接近 $r_j$ 的目标输出——路由机制在该输入上做出了错误的矩阵选择。Welch 下界对 $c_{ij}$ 的约束：
+
+$$c_{ij} \;\geq\; \Omega\!\left(|\langle\hat{v}_i, \hat{v}_j\rangle|\right) \;\geq\; \Omega\!\left(\sqrt{\frac{N - d}{d(N - 1)}}\right)$$
+
+**关键区分**：余弦相似度是嵌入空间的几何属性（$d$ 决定），$c_{ij}$ 是激活路径层的动态属性（还受 M 的路由分辨率影响）——这正是推论 11.3e 分离的两个维度。混叠让模型犯错，不是因为向量角度相近本身，而是因为**路由机制在该角度下无法可靠分叉**。
+
 ---
+
+**推论 11.3e（$M$ 与 $d$ 的正交分离定理 + 有效规模上界 $M^*$）**：
+
+**分离定义**：
+
+$$\varepsilon_i^*(M) \;\triangleq\; \inf_{\text{valid } E_{r_i}} \sup_{x \in \mathcal{X}_{r_i}} \|E_{r_i}(x)\cdot x - r_i(x)\| \quad \text{（域内逼近精度，$M$ 控制）}$$
+
+$$c_{ij}^*(d, N) \;\triangleq\; \Omega\!\left(\sqrt{\frac{N-d}{d(N-1)}}\right) \quad \text{（Welch 混叠地板，$d$ 和 $N$ 控制，与 $M$ 无关）}$$
+
+**正交性**：
+
+$$\varepsilon_i^*(M) \xrightarrow{M \to \infty} 0 \quad \text{（UAT，§3.3 命题 3.1）}$$
+
+$$c_{ij}^*(d, N) \;\text{与}\; M \;\text{无关，当}\; N > d \;\text{时严格正}$$
+
+两式可同时成立：充分大的 $M$ 使域内逼近误差任意小，但原语间的混叠地板由 $d$ 决定，$M$ 无法触及。
+
+**有效模型规模上界 $M^*$（边际收益趋零点）**：
+
+$$M^* \;\triangleq\; \min\!\left\{M \;:\; \varepsilon_{\max}(M) \;\leq\; c_{ij}^*(d,N) \cdot \|v^*\|\right\}$$
+
+当 $M > M^*$ 时，整体误差界被 Welch 项主导而非 UAT 精度项，继续增大 $M$ 对 $\text{Err}(l)$ 边际贡献趋零：
+
+$$\text{Err}(l) \;\approx\; c_{ij}^*(d,N) \cdot \|v^*\| \cdot \frac{L^l - 1}{L-1} \quad \text{（$M > M^*$ 后，$M$ 从等式右端消失）}$$
+
+此后的唯一有效手段是增大 $d$（使 $N \leq d$，Welch 压至 0）或在推断时动态压低 $N_{\text{eff}}$（RAG，§19）。
+
+> **Scaling Law 饱和的 IDFC 机制根因**：实验观察到的训练 Scaling 边际收益曲线弯折，在 IDFC 中的精确解释是：$M$ 增大使 $\varepsilon_{\max}(M)$ 逼近 $c_{ij}^* \cdot \|v^*\|$ 后，继续 Scaling $M$ 压低的是已不再是瓶颈的 UAT 精度项，而非控制地板的混叠项。**这是扩展 $d$（嵌入维度）与扩展 $M$（参数量）在 Scaling 阶段必须同步的 IDFC 理论依据，也是 o1/o3 系列转向 TTC（推断时 $l_{\max}$ 扩展）的另一角度解读：在 $M$ 已过 $M^*$ 后，增加推断时计算比增加训练参数更有效（§18.5 命题）。**
+
+---
+
+**推论 11.3f（三重保护机制：为什么混叠没有导致彻底崩溃）**：
+
+给定 $N > d$、$c_{ij}^* > 0$ 严格成立，为何模型仍能有效工作？IDFC 给出三个结构性保护机制，它们协同使实际混叠代价在典型查询分布下可控：
+
+**机制 1（频率非对称保护）**：混叠的实际代价正比于混叠发生的频率：
+
+$$c_{ij}^{\text{effective}} = c_{ij} \cdot \Pr(x \in \mathcal{X}_{r_i} \cap \mathcal{X}_{r_j})$$
+
+高频原语有宽 $\mathcal{X}_{r_i}$（训练样本密集 → 宽槽 → 域间重叠面积小），混叠多发生在低频/长尾原语对。期望混叠代价：
+
+$$\mathbb{E}_{q \sim P_{\text{query}}}\!\left[c_{ij}^{\text{effective}}\right] \;\ll\; c_{ij}^* \quad \text{（频率加权后远低于 Welch 下界）}$$
+
+**机制 2（误差权重指数非对称保护）**：§5.2 的链路权重为 $w_j = L^{l-j}$——早期步骤（高权重）对误差的放大系数最大。而早期步骤恰好是最高频、最稳定的原语（宏观任务类型、语言、领域结构等），受机制 1 保护最强。低频原语多在链路晚期出现（权重 $L^0 = 1$），即使混叠，放大系数最小：
+
+$$\underbrace{\text{混叠最严重}}_{\text{低频原语}} \;\xleftrightarrow{\text{天然对齐}}\; \underbrace{\text{权重最小}}_{l-j \approx 0 \text{，链路晚期}}$$
+
+**机制 3（$R^*$ 语义粗糙度保护）**：$r_i$ 与 $r_j$ 的混叠仅当下游任务**需要精确区分两者**时才产生可见错误。对大多数任务，$r_i$ 和 $r_j$ 的输出差异在任务容忍阈值 $\delta_{\text{fail}}$ 之内——语义近义词之间的混叠不影响答案正确性，只有专门考察两者鉴别的任务（细粒度分类、专业术语辨析等）才真正受损。
+
+> **三重保护的协同效果**：Welch 下界 $c_{ij}^*$ 是最坏情形下**某对**原语的混叠下界；经频率加权（机制 1）、权重加权（机制 2）、任务粗糙度过滤（机制 3）后，绝大多数实际查询的有效混叠代价远低于 $c_{ij}^*$。混叠实际危害集中于**低频原语 × 链路晚期 × 需精细区分**这一交集——在真实查询分布下，这是个小测度集合。这解释了「结构性混叠存在但模型整体可用」的现象：不是混叠消失了，而是三重保护使其代价在典型使用场景下可控。
+
+---
+
 
 > [!IMPORTANT]
 > **推论层次总览**：
@@ -461,6 +526,9 @@ $$\varepsilon_{\max}^* \geq \begin{cases} 0 & N \leq d\\ \Omega\!\left(\sqrt{(N-
 > | **幻觉分类** | **11.1** | **严格（模 TC⁰⊊NC¹）** | **Type I：$f$-chain 长度不足 → 不可计算** |
 > | 幻觉分类 | 11.2 | 严格 | Type II：CAC 误差积累 = $l > l_{\max}(\delta_{\text{fail}})$ 时必然幻觉 |
 > | 幻觉分类 | 11.3 | 严格（Welch Bound） | Type III：$N > d$ → $\varepsilon_{\max}$ 有正下界，不可消除 |
+> | 幻觉分类 | 11.3d | 严格 | 混叠的 F-空间操作定义：$c_{ij} = \Pr[\text{路由错误选择}]$；余弦相似度是嵌入属性（$d$），$c_{ij}$ 是激活路径属性（$M$ 可缩小但不能消除）|
+> | 幻觉分类 | 11.3e | 严格 | $M$ vs $d$ 正交分离：$\varepsilon_i^*(M) \to 0$（UAT），$c_{ij}^*(d,N)$ 与 $M$ 无关；$M^* = \min\{M : \varepsilon_{\max}(M) \leq c_{ij}^* \cdot \|v^*\|\}$，过后 Scaling $M$ 边际收益趋零；Scaling Law 饱和的 IDFC 根因 |
+> | 幻觉分类 | 11.3f | 严格 | 三重保护机制：频率非对称（高频原语域宽重叠小）+ 误差权重非对称（低频原语天然在链路晚期低权重位置）+ $R^*$ 语义粗糙度（大多数任务无需精细区分混叠对）|
 > | Transformer专有 | Part 4 §7 | 见Part 4 | Type IV-a/b：Attention稀释与误路由 |
 > | **生成策略** | **12.1** | **严格** | **反思对 Type II 有效（$y_1$ 作外部锚点）；对 Type III 不稳定（循环验证）** |
 > | 生成策略 | 12.2 | 严格 | 反思稳定性条件：critique 误差差 $\Delta\varepsilon_c < 0$ |
