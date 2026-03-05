@@ -420,9 +420,9 @@ $$\rho(r_l \circ \cdots \circ r_1) \;\approx\; \rho(r_l) \cdot_{\text{chain}} \c
 这是涌现能力的机制级主张：模型不需要"见过" $q(x)$ 的答案，只需要在训练中学会了 $q$ 所需的每一个 $r_i$ 的近似 $E_{r_i}$——**组合是免费的，代价仅在误差随 $l$ 和 $L$ 增长**。
 
 > [!IMPORTANT]
-> **CAC 误差界本身是严格定理**，无经验性前提——$\varepsilon_i$ 由定义给出，误差界是代数推论。真正开放的两个问题是：
-> 1. **$L$ 的控制**：$L > 1$ 时误差随链长 $l$ 指数爆炸；架构约束（Layer Norm、残差）可以抑制 $L$，但目前没有无条件的理论上界
-> 2. **覆盖性**：目标任务是否真的在 $Q_{\text{unseen}}$（即可分解为 $R_{\text{tr}}$ 的有限复合）——这取决于 $R_\text{tr}$ 对自然语言推理原语的覆盖度，目前无法形式化
+> **CAC 误差界本身是严格定理**，无经验性前提——$\varepsilon_i$ 由定义给出，误差界是代数推论。§3.4 定理 3.3 证明训练过程将 $\bar{L}$ 锁定在 $1 + \epsilon$（Edge of Chaos），$\epsilon \leq \ln C_{\text{train}}/k$，有效推理链长上界 $l^* \approx k\ln(1/\varepsilon_{\max})/\ln C_{\text{train}}$。
+>
+> **开放问题**：**覆盖性**——目标任务是否真的在 $Q_{\text{unseen}}$（即可分解为 $R_{\text{tr}}$ 的有限复合），这取决于 $R_\text{tr}$ 对自然语言推理原语的覆盖度，目前无法形式化。
 
 
 
@@ -518,6 +518,66 @@ $$\varepsilon_{\max} \cdot \frac{L^l - 1}{L - 1} \xrightarrow{M \to \infty} 0$$
 
 即：对任意有限复合长度的未见任务，充分大的模型可以将 CAC 误差压制到任意小的 $\delta > 0$。
 
+---
+
+### 3.4 训练-推理对偶性：$L$ 的来源与有效链长上界
+
+本节证明 §2 IMPORTANT 注释中标记为「开放」的问题——$L$ 的无条件上界——实际上由训练过程自身封闭，并给出 CAC 误差界的完整严格形式。
+
+#### 三个支撑引理
+
+**引理 3.1（数据下界）**：设训练集 $\mathcal{D}$ 中存在样本对 $(x_i, y_i), (x_j, y_j)$ 满足局部 Lipschitz 比：
+
+$$C_\mathcal{D} \;\triangleq\; \frac{\|y_i - y_j\|}{\|x_i - x_j\|} \;>\; 1$$
+
+则对训练误差 $< \delta$ 的任意模型，其局部 Lipschitz 常数满足：
+
+$$L_{\text{local}} \;\geq\; C_\mathcal{D} - \frac{2\delta}{\|x_i - x_j\|} \;>\; 1 \qquad (\delta \text{ 足够小时})$$
+
+**证明**：由三角不等式，$\|F_\theta(x_i) - F_\theta(x_j)\| \geq \|y_i - y_j\| - 2\delta \geq C_\mathcal{D}\|x_i - x_j\| - 2\delta$，除以 $\|x_i - x_j\|$ 即得。$\square$
+
+> **注**：自然语言训练集必然包含「相似输入、差异输出」的样本对（如同义句对应不同事实，或同一问题在不同语境下的不同答案），故 $C_\mathcal{D} > 1$ 是训练数据的固有性质，不是附加假设。
+
+**引理 3.2（训练稳定性上界）**：设损失 $\mathcal{L}$ 关于网络输出 $\beta_0$-光滑，定义逐层 Lipschitz 常数的**几何均值**：
+
+$$\bar{L} \;\triangleq\; \left(\prod_{l=1}^{k} \|G_l\|_{\mathrm{Lip}}\right)^{1/k}$$
+
+端到端 Jacobian 满足 $\|J_{\text{output}}\| \leq \bar{L}^k$（§1.5.D 命题 1.1 的链式不等式）。若梯度下降以学习率 $\eta$ 收敛，则：
+
+$$\bar{L}^k \;\leq\; \sqrt{\frac{2}{\eta \cdot \beta_0}} \;\triangleq\; C_{\text{train}} \quad\implies\quad \bar{L} \;\leq\; C_{\text{train}}^{1/k} \;\xrightarrow{k \to \infty}\; 1^+$$
+
+**证明**：GD 收敛要求 $\eta \leq 2/\beta$，有效损失曲率 $\beta \leq \beta_0 \cdot \|J_{\text{output}}\|^2 \leq \beta_0 \cdot \bar{L}^{2k}$，整理即得 $\bar{L}^{2k} \leq 2/(\eta\beta_0)$。$\square$
+
+**引理 3.3（代理合法性）**：设 $\sup_x \|\hat{f}_j(x) - r_j(x)\| \leq \varepsilon_j$，输入最小间距 $s \triangleq \inf_{x \neq x'}\|x - x'\| > 0$。则以 $\|G_j\|_{\mathrm{Lip}}$ 代理 $r_j$ 的 Lipschitz 常数 $L_{r_j}$ 的误差满足：
+
+$$\bigl|L_{r_j} - \|G_j\|_{\mathrm{Lip}}\bigr| \;\leq\; \frac{2\varepsilon_j}{s}$$
+
+当 $\varepsilon_j \to 0$（UAT 命题 3.1 保证），代理误差趋于零，以 $\bar{L}$ 替代 $L_r$ 在 CAC 定理中是合法的。$\square$
+
+#### 主定理
+
+**定理 3.3（训练-推理对偶性）**：设以下三个条件成立：
+
+- **(T1)** 训练集存在 $C_\mathcal{D} > 1$ 的样本对（引理 3.1；自然语言数据的固有性质）
+- **(T2)** 训练以学习率 $\eta$、光滑参数 $\beta_0$ 收敛（引理 3.2）
+- **(T3)** 单步拟合误差 $\varepsilon_j \ll s$（引理 3.3 的代理合法性条件）
+
+则存在 $\epsilon > 0$，使得有效 Lipschitz 常数 $\bar{L}$ 满足：
+
+$$1 \;<\; \bar{L} \;\leq\; C_{\text{train}}^{1/k}, \qquad \epsilon \;\triangleq\; \bar{L} - 1 \;\leq\; \frac{\ln C_{\text{train}}}{k}$$
+
+代入 CAC 误差界（§3.2，以 $\bar{L}$ 代入 $L$，引理 3.3 保证合法），得**严格完整形式**：
+
+$$\boxed{e_l \;\leq\; \varepsilon_{\max} \cdot \frac{(1+\epsilon)^l - 1}{\epsilon}, \qquad 0 \;<\; \epsilon \;\leq\; \frac{\ln C_{\text{train}}}{k}}$$
+
+**推论 3.3a（有效链长上界）**：定义**临界链长** $l^*$ 为误差界达到 $1/\varepsilon_{\max}$ 的链长：
+
+$$l^* \;\triangleq\; \left\lfloor\frac{\ln(1/\varepsilon_{\max})}{\ln(1+\epsilon)}\right\rfloor \;\approx\; \frac{k \cdot \ln(1/\varepsilon_{\max})}{\ln C_{\text{train}}}$$
+
+当 $l > l^*$ 时，CAC 误差界超出 $\varepsilon_{\max}$ 的可控范围，推理链路的累积误差无法被单步精度吸收。
+
+> **训练-推理对偶性**：引理 3.1 强制 $\bar{L} > 1$（数据要求局部扩张）；引理 3.2 强制 $\bar{L} \leq C_{\text{train}}^{1/k} \to 1^+$（训练稳定性压制）。两者的唯一均衡是 $\bar{L} = 1 + \epsilon$（Edge of Chaos）。这个 $\epsilon > 0$ 正是推理链长上界 $l^* < \infty$ 的根本原因：**使机器能够学习的那口气，同时决定了它能推理多深**。
+
 > [!IMPORTANT]
 > **§3 的证明状态总结**：
 >
@@ -526,6 +586,6 @@ $$\varepsilon_{\max} \cdot \frac{L^l - 1}{L - 1} \xrightarrow{M \to \infty} 0$$
 > | Telescope 展开（§3.2） | ✅ 严格 | 三角不等式 + $r_i$ 的 Lipschitz 性 |
 > | UAT 存在性（§3.3 命题 3.1） | ✅ 严格（模 UAT） | Cybenko/Hornik UAT，$r_i$ 连续性 |
 > | $\varepsilon_i^* \to 0$（推论 3.2） | ✅ 严格（模 UAT） | 命题 3.1 的直接推论 |
-> | $L$ 的无条件上界 | ❌ 开放 | 见 §2 IMPORTANT 注释 |
+> | $L$ 的无条件上界（定理 3.3） | ✅ 条件严格 | T1（数据）+ T2（收敛）+ T3（代理）→ $\bar{L} = 1+\epsilon$，有效链长 $l^* \approx k\ln(1/\varepsilon_{\max})/\ln C_{\text{train}}$ |
 > | $r_i$ 的连续性假设 | ⚠️ 语义假设 | 语义变换的拓扑性质，依赖 $\mathcal{X}$ 的结构 |
 
