@@ -92,7 +92,7 @@ $$
 
 **IV-b. 特征注意力误路由**：幻觉触发的精确几何条件为 SNR $= |s|/|n| < 1$（信号被噪声 head 反向压制）。上下文依赖：不同 prompt 改变 Softmax 权重 → 改变 SNR。缓解：精确 prompting / Fine-tuning（✅ 条件严格）/ RAG / CoT（⚠️ 自举依赖）/ PCP（⚠️ 双向加速，含 Shelve/Purge 抑制机制）。⚠️/✅ 部分严格。
 
-→ [完整分析](type-iv-attention-dilution.md)
+→ [完整分析](type-iv-attention-dilution.md) · [第一性原理推导（IDFC）](../idfc/part4-attention.md)
 
 ---
 

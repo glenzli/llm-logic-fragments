@@ -2,18 +2,17 @@
 
 关于 LLM 的一些零散想法、推理过程和数学推导。
 
-还没有成体系，就是把平时琢磨的东西先记下来。包括但不限于：
-
-- 对 LLM 行为模式的观察和分析
-- 一些推理链路的拆解
-- 相关的数学推导和形式化尝试
-- Prompt 工程中踩过的坑和总结
-
 ## 目录
+
+- [**idfc/**](idfc/) — 输入驱动函数复合（IDFC）：LLM 计算的数学理论
+  - [part1-model.md](idfc/part1-model.md) — 数学模型构造（$\mathcal{X}$、$F$、CAC 定理、误差分析）
+  - [part2-deductions.md](idfc/part2-deductions.md) — 行为推论（涌现、顿悟、CoT、Scaling Law）
+  - [part3-extensions.md](idfc/part3-extensions.md) — CAC 扩展推论（能力上界、对齐脆弱性、逆定理）
+  - [part4-attention.md](idfc/part4-attention.md) — Attention 泛函界（LiM 定义、$\mathcal{F}^*$、$n_{\max}$）
 
 - [**hallucination/**](hallucination/) — LLM 幻觉的结构性分类与形式化证明（Type I–IV）
 
-内容比较碎片化，想到什么写什么，后续可能会整理。
+- [**behavioral-attractors/**](behavioral-attractors/) — 行为吸引子理论（稳定盆地的拓扑结构）
 
 ## License
 
