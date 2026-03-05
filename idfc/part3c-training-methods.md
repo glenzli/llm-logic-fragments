@@ -161,6 +161,12 @@ $$\nabla_\theta \mathcal{L}_{\text{DPO}} \propto \nabla_\theta \left[\log \pi_\t
 | 适中 $\beta$ | 受控偏离 | 对齐有效 | $\varepsilon_{\max}$ 轻微升高（非对齐区域精度略降）|
 | $\beta \to 0$ | 无约束展开 | 对齐最强 | **$\varepsilon_{\max}$ 大幅升高**（非对齐分段线性区域精度退化）|
 
+**命题 14.2b（$\beta$ 对新路径 Lipschitz 上界的控制）**：DPO 的对比训练在偏好对 $(y_w, y_l)$ 上进行分离——设 $x$ 与 $x'$ 是两个「仅奖励文本方向不同」的相近输入（例如：在同一查询上分别引向 $y_w$ 和 $y_l$ 的上下文前缀），DPO 梯度使：
+
+$$\|\pi_\theta(y_w | x) - \pi_\theta(y_w | x')\| \propto \frac{1}{\beta} \cdot \|\log \sigma(\beta \Delta r)\|$$
+
+$\beta \to 0$ 时，对比分离强度无约束——在「区分 $y_w$ vs $y_l$ 的输入方向」上引发高 Lipschitz 变化。$\beta$ 是新训练路径 Lipschitz 常数的软上界：$L_{\text{new paths}} = O(1/\beta)$。当 $L_{\text{new paths}} \gg L$ 时，DPO 会在 $F$ 中引入被定理 25.1a 排斥于 $R^*$ 之外的高 Lipschitz 路径——即使 KL 散度数字看起来受控。
+
 ---
 
 
@@ -181,6 +187,26 @@ $$P(f^{\dagger}\text{-chain 激活}) \leq \exp\!\left(-\frac{\text{KL 预算}}{\
 
 其中 $\beta_{\text{exploit}}$ 是 $f^{\dagger}$-chain 需要的 KL 代价。**KL 预算（由 $\beta$ 控制）是奖励黑客的防护壁，其有效性上限由 $\varepsilon_R$ 决定**。
 
+**命题 14.3b（RLHF 对高 Lipschitz 路径的系统性选择）**：
+
+§19 对谄媚的分析（$r_{\text{flip}}$ 高 Lipschitz 化）不是 RLHF 的偶然副产物，而是其结构性后果。推广如下：
+
+设奖励模型 $R_\phi(x, y)$ 的「奖励敏感方向」为 $\mathcal{V}_R = \{v \in \mathbb{R}^d : \partial R_\phi / \partial v \text{ 大}\}$——即输入空间中奖励变化最剧烈的方向集合。PPO 对奖励的最大化在 $\mathcal{V}_R$ 方向上施加最强的参数更新，倾向于：
+
+1. **在 $\mathcal{V}_R$ 方向强化「小输入变化 → 大奖励变化」的路径**——这正是高 Lipschitz 路径的定义
+2. **$\mathcal{V}_R$ 方向越宽（奖励信号越「陡峭」），RLHF 引入的高 Lipschitz 路径越多**
+
+**推论 14.3b（RLHF 的 F-space 双层效应）**：RLHF 在 $F$ 上产生两类效应，而非命题 14.1 描述的单一效应：
+
+| 效应类型 | 作用对象 | F-space 机制 | R* 资格 |
+|---|---|---|---|
+| **第一类（路由重加权）**：原 §14.1 描述 | $R^*$ 内的路径 | 改变授权路径的激活概率 | ✅ 在 $R^*$ 内操作，Lipschitz 一致 |
+| **第二类（Lipschitz 放大）**：新 §14.3b | $F \setminus R^*$ 中的路径 | 在奖励敏感方向选择性强化高 Lipschitz 路径 | ❌ 引入 $r \in F \setminus R^*$，违反定理 25.1a |
+
+第一类效应是 RLHF 的预期设计效果；第二类是其副产物——在 $R_\phi$ 的梯度陡峭方向上（奖励检测敏感）产生的高 Lipschitz 应激路径。谄媚（§19）是第二类效应的典型实例，但该效应普遍存在于任何具有梯度锐化特性的奖励函数中。
+
+**可验证预测**：RLHF 训练强度越高（奖励信号越强、$\beta$ 越小、训练轮数越多），第二类效应越显著——模型对「奖励敏感输入方向」的响应 Lipschitz 常数单调递增，可通过测量「前后矛盾输入对的输出变化量」进行实验估算。
+
 ---
 
 ### 14.4 RLHF 对齐与 §6 对齐脆弱性的连接
@@ -197,6 +223,18 @@ $$l_{\text{align}} > l_{\max}(\delta) \implies \rho_{\text{align}} \to 0 \quad \
 
 这将 §6 的理论预测与 RLHF 的工程实践连通：**对齐失败不是 RLHF 算法问题，而是模型 $F$ 对对齐相关 $r$-chain 的覆盖问题**。
 
+**命题 14.4b（KL 约束作为 $R^*$ 结构性保护）**：原 §14.3 命题 14.3a 将 KL 约束 $\beta \cdot \text{KL}(\pi_\theta \| \pi_{\text{ref}})$ 解读为「奖励黑客的防护壁」。F-space 形态学给出更精确的结构性解读：
+
+$\pi_{\text{ref}}$（SFT 基准策略）在 F-space 中对应**预训练确立的 $R^*$ 路径分布**——即所有满足 Lipschitz 一致性条件（定理 25.1a）的 $r_i \in R_\text{tr}$ 的路由权重分配。KL 约束 $\text{KL}(\pi_\theta \| \pi_{\text{ref}}) \leq C/\beta$ 在 F-space 中的精确含义是：
+
+$$\sum_{r \in F \setminus R^*} \Pr_{\theta}[r \text{ 被激活}] \leq \exp\!(-\beta \cdot \text{KL}_\text{critical}) \quad \text{（高 Lipschitz 路径的激活概率被压制）}$$
+
+即：**KL 约束不只是防止奖励黑客的量级约束，而是在 F-space 中约束 $F \setminus R^*$（高 Lipschitz 路径集合）的总激活概率**——当 $\beta$ 足够大时，命题 14.3b 的第二类效应（Lipschitz 放大）受到结构性压制，RLHF 主要在 $R^*$ 内重加权路由。
+
+**推论 14.4b（$\beta$ 的最优阈值）**：存在临界 $\beta^*$，使得：
+- $\beta > \beta^*$：RLHF 几乎只在 $R^*$ 内操作（第一类效应主导），对齐效果有限但 $R^*$ 完整性保持
+- $\beta < \beta^*$：$F \setminus R^*$ 的路径激活概率显著升高（第二类效应主导），出现对齐税（alignment tax）——非对齐任务性能下降，因为高 Lipschitz 路径激活时破坏相关推理链的 CAC 误差界
+
 ---
 
 ### 14.5 DPO vs PPO vs RLHF：IDFC 结构对比
@@ -209,7 +247,9 @@ $$l_{\text{align}} > l_{\max}(\delta) \implies \rho_{\text{align}} \to 0 \quad \
 | 对 $\varepsilon_{\max}$ 的影响 | KL 约束失效时 $\varepsilon_{\max}$ 升高 | $\beta$ 过小时同样风险 |
 | 类比 §12 结构 | RM = 独立 $F'$（类比 PRM 打破循环）| 无独立 $F'$，自我对比（类比反思的循环）|
 
-> **一句话**：RLHF/DPO 是在 $F$ 上的软性路由重加权——提升对齐 $f$-chain 的激活概率，降低非对齐 $f$-chain 的概率。它不改变 $F$ 的容量（$\varepsilon_{\max}$），不能弥补 $l_{\max}$ 不足，且其有效性被 RM 误差 $\varepsilon_R$ 和 KL 约束共同上限。
+> **一句话（原命题）**：RLHF/DPO 是在 $F$ 上的软性路由重加权——提升对齐 $f$-chain 的激活概率，降低非对齐 $f$-chain 的概率。它不改变 $F$ 的容量（$\varepsilon_{\max}$），不能弥补 $l_{\max}$ 不足，且其有效性被 RM 误差 $\varepsilon_R$ 和 KL 约束共同上限。
+>
+> **F-space 形态学修正**：上述描述仅对「第一类效应」（$R^*$ 内路由重加权）精确。RLHF 同时产生「第二类效应」（命题 14.3b）——在奖励梯度锐化方向选择性强化高 Lipschitz 路径（$r \in F \setminus R^*$），该类路径的激活可破坏相关推理链的 CAC 误差界。KL 约束（$\beta$）是抑制第二类效应的软控制变量（命题 14.4b）。
 
 ---
 
