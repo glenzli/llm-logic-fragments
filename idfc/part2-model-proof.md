@@ -96,6 +96,8 @@ $$G_l : \mathbb{R}^d \to \mathbb{R}^d, \qquad G_l(h) \;=\; \Phi_l(h) \cdot h \;=
 - $F$ 不要求正交、独立或可解释——它们是权重空间被激活函数切割后的产物
 - $M$ 越大（网络越深越宽），$F$ 越丰富，每个 $r$ 的近似精度上限越高
 
+> **约定（$F$ 空间的语义中立性——语义防火墙）**：本文随后所有关于"$f$-chain 近似 $r_i$"、"$F$ 覆盖 $R^*$"以及"路由偏置/路由选择"的陈述，均严格指以下**数值关系**：存在矩阵值函数 $E: \mathcal{X} \to \langle F \rangle_\cdot$，使得 $\|E(x)\cdot x - r_i(x)\| \leq \varepsilon$；"激活路径改变"严格指概率分布 $\Pr[\mathrm{Path}(x,k) = \pi]$ 因参数 $\theta$ 或输入 $x$ 的改变而改变（见 §1.4 激活路径定义）。$E(x)$ 是满足约束的矩阵乘积，**不蕴含** $F$ 空间中存在与 $r_i$ 语义对应的可辨识结构。将近似关系记为 $E_{r_i}$、将激活模式称作"路由"，均为**分析者外加的命名约定**，而非 $F$ 空间的内在属性。
+
 ### 1.4 分叉、路径合并与抽象层的形成
 
 样本的激活路径不仅会分叉，也会**被动合并**。这是抽象表示形成的核心机制。
@@ -413,11 +415,13 @@ CAC 断言**逐点拟合关系在复合运算下近似传递**：映射
 
 $$\rho: R_{\text{tr}} \to \mathrm{Map}\!\bigl(\mathcal{X},\, \langle F \rangle_\cdot\bigr), \quad r_i \mapsto E_{r_i}$$
 
-在复合意义下构成从自由幺半群 $R_{\text{tr}}^*$ 到 $\langle F \rangle_\cdot$-值函数链的**近似幺半群同态**：
+> **注（$\rho$ 的纯数值语义）**：$\rho$ 是**数值配对映射**，将 $r_i \in R_{\text{tr}}$ 与满足逐点拟合约束 $\|E_{r_i}(x)\cdot x - r_i(x)\| \leq \varepsilon_i$（§1.6）的矩阵值函数 $E_{r_i}$ 配对。$\rho$ 不蕴含因果、语义等价或功能对应——$E_{r_i}(x)$ 是满足数值不等式的矩阵乘积，下标 $r_i$ 为分析者外加的命名约定（§1.3 语义防火墙）。
+
+在复合意义下，$\rho$ 构成从自由幺半群 $R_{\text{tr}}^*$ 到 $\langle F \rangle_\cdot$-值函数链的**近似幺半群同态**：
 
 $$\rho(r_l \circ \cdots \circ r_1) \;\approx\; \rho(r_l) \cdot_{\text{chain}} \cdots \cdot_{\text{chain}} \rho(r_1) \quad \text{（误差 }\leq \varepsilon_{\max}(L^l-1)/(L-1)\text{）}$$
 
-这是涌现能力的机制级主张：模型不需要"见过" $q(x)$ 的答案，只需要在训练中学会了 $q$ 所需的每一个 $r_i$ 的近似 $E_{r_i}$——**组合是免费的，代价仅在误差随 $l$ 和 $L$ 增长**。
+精确叙述：对 $q = r_l \circ \cdots \circ r_1 \in Q_{\text{unseen}}$，存在矩阵乘积链 $E_{r_l}(\hat{h}_{l-1})\cdots E_{r_1}(x)$，使得其在 $x$ 上的作用结果与 $q(x)$ 的偏差 $\leq \varepsilon_{\max}(L^l-1)/(L-1)$——**组合是免费的，代价仅在误差随 $l$ 和 $L$ 增长**。对比原语的单步情形：对每个 $r_i \in R_{\text{tr}}$，训练后存在 $E_{r_i}: \mathcal{X} \to \langle F \rangle_\cdot$ 满足 $\|E_{r_i}(x)\cdot x - r_i(x)\| \leq \varepsilon_i$；训练的作用是使这些矩阵值函数的上确界误差 $\varepsilon_i$ 足够小，而非使 $F$ 中出现具有 $r_i$ 语义的功能单元。
 
 > [!IMPORTANT]
 > **CAC 误差界本身是严格定理**，无经验性前提——$\varepsilon_i$ 由定义给出，误差界是代数推论。§3.4 定理 3.3 证明训练过程将 $\bar{L}$ 锁定在 $1 + \epsilon$（Edge of Chaos），$\epsilon \leq \ln C_{\text{train}}/k$，有效推理链长上界 $l^* \approx k\ln(1/\varepsilon_{\max})/\ln C_{\text{train}}$。
