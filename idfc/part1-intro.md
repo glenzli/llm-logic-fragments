@@ -88,7 +88,7 @@ $$\|\hat{h}_l - q(x)\| \leq \varepsilon_{\max} \cdot \frac{L^l - 1}{L - 1}$$
 | **[Part 1 · 本文]** | 导论 | 非正式动机、主张、预测 |
 | **[Part 2](part2-model-proof.md)** | 数学建模 + 定理证明 | 形式定义、CAC 定理、完整证明 |
 | **[Part 3](part3-deductions.md)** | 推论 | 全部从 CAC 推导的命题（§12–24，含三类幻觉、技术干预、ICL、合成数据坍缩）|
-| **[Part 4](part4-empirical.md)** | 理论验证 | Attention 泛函界——理论预测的第一性原理验证 |
+| **[Part 4](part4-empirical.md)** | 理论验证 | 多架构分析（Transformer/Mamba/MoE）+ 多实验场景（幻觉分类、LiM、ICL 曲线、Reversal Curse、Sycophancy 等）验证并锚定理论预测 |
 | **[Part 5](part5-epilogue.md)** | 结语 | 关于这个 framework 自我指涉的本质的反思 |
 
 阅读顺序：本文 → Part 2 → Part 3 → Part 4 → Part 5。

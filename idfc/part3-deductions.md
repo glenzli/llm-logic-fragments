@@ -5,7 +5,7 @@
 > - **条件性命题**：需要额外假设（已明确标注）
 > - **开放猜想**：目前无证明路径
 >
-> **后续**：[Part 4](part4-empirical.md) 以 Attention 泛函界验证本文预测。
+> **后续**：[Part 4](part4-empirical.md) 以多架构分析（Transformer、Mamba、MoE）与多组实验场景（幻觉分类、ICL 曲线、Reversal Curse、Sycophancy 等）验证并锚定本文推论。
 
 ---
 

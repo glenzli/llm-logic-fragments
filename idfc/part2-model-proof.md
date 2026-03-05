@@ -4,7 +4,7 @@
 >
 > **本文内容**：§1 形式定义（语义空间 $\mathcal{X}$、原语 $R$、函数集 $F$、$f$-chain）；§2 核心假说 CAC 的严格陈述；§3 定理完整证明（Telescope 展开 + UAT 桥接）。
 >
-> **后续**：[Part 3](part3-deductions.md) 从本文定理推导全部推论；[Part 4](part4-empirical.md) 用 Attention 泛函界验证理论预测。
+> **后续**：[Part 3](part3-deductions.md) 从本文定理推导全部推论；[Part 4](part4-empirical.md) 以 Transformer/Mamba/MoE 等架构分析与多组实验场景（幻觉、ICL、量化、Reversal Curse、Sycophancy 等）验证并锚定本文理论预测。
 
 ---
 
