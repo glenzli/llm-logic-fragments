@@ -860,3 +860,155 @@ MoE 路由器的 Top-K 选择与前几节的「锐利度参数」类比：
 > **一句话**：MoE 是 IDFC 框架下 $F$ 集合从隐式到显式的升维——它将原语近似的责任分配给可寻址的专家模块，在推理效率不增的前提下结构性地解决了 Type III，代价是引入路由误差这一新的 CAC 误差源。
 
 ---
+
+## 11. 1.58-bit 极限量化的实验验证接口
+
+> **定位**：本节将 [Part 3 §15.7](part3-deductions.md) 的理论推论转化为**可执行的实验方案**，作为 IDFC 框架在量化极限情形下与现实数据接轨的验证层。BitNet b1.58 的独特性在于：它不仅是一种量化工程方案，更是验证 CAC 误差传播理论的**天然受控实验**——三值权重的结构性约束将 $\varepsilon_{\max}$ 的下界提升至可观测量级，使 IDFC 对 $l_{\max}$ 的预测变得可测量、可反驳。
+
+---
+
+### 11.1 实验设计的第一性原理基础
+
+Part 3 §15.7 的核心理论链路是：
+
+$$\delta_q^{\min}(d) > 0 \implies \varepsilon_{\max}^{\text{1.58}} > \varepsilon_{\max}^{\text{fp32}} \implies l_{\max}^{\text{1.58}} < l_{\max}^{\text{fp32}} \implies \text{性能差距（gap）随 } l \text{ 指数扩大}$$
+
+将此链路映射到可观测量的关键是：**任务的有效推理链长度 $l_{\text{eff}}$ 对大多数 benchmark 来说是可以估计的**。例如：
+
+| 任务类型 | 估计 $l_{\text{eff}}$ | 依据 |
+|---|---|---|
+| 事实检索（TriviaQA）| $l_{\text{eff}} \sim 1$–$2$ | 近乎直接的知识提取 |
+| 常识推理（HellaSwag）| $l_{\text{eff}} \sim 3$–$5$ | 浅层因果链 |
+| 多步数学（MATH，1–2 步）| $l_{\text{eff}} \sim 5$–$10$ | 中等推理链 |
+| 多步数学（MATH，4–5 步）| $l_{\text{eff}} \sim 15$–$25$ | 长推理链 |
+| 复杂代码生成（HumanEval Hard）| $l_{\text{eff}} \sim 20$–$40$ | 长程依赖链 |
+
+**IDFC 预测**：1.58-bit 与全精度的性能 gap 应在 $l_{\text{eff}}$ 增大时以指数速率扩大（$\propto L^{l_{\text{eff}}}$），而非线性扩大。
+
+---
+
+### 11.2 五个关键实验的设计规范
+
+#### 实验 E1：链长度分层的性能 gap 验证（验证 P1）
+
+**IDFC 预测（P1）**：gap$(l) \propto L^l \cdot \delta_q^{\min}(d)$，即 gap 随 $l$ 指数扩大。
+
+**实验设计**：
+
+1. 选择具有**已知推理链长度**的基准集，按 $l_{\text{eff}} \in \{1, 3, 5, 10, 20\}$ 分 5 层
+2. 对同参数量的 BitNet b1.58 与 BF16 基线分别测试
+3. 以对数坐标绘制 gap$(l_{\text{eff}})$：若呈线性（$\log$ gap $\propto l_{\text{eff}}$），则 P1 成立
+
+**IDFC 可观测量**：斜率即 $\log L$，等于 Lipschitz 常数的对数——这是 CAC 误差结构的**直接测量**。
+
+**潜在基准集**：GSM8K（按推理步数分层）、MATH（按难度分层）、BIG-Bench（长推理子集）
+
+**反驳条件**：若 gap$(l_{\text{eff}})$ 在 $l_{\text{eff}} > 10$ 后趋于平缓或反向收缩，则 IDFC 的 $L > 1$ 假设需要重新检验（可能 $L \approx 1$ 或 $L < 1$）。
+
+---
+
+#### 实验 E2：嵌入维度 $d$ 的控制实验（验证 P2）
+
+**IDFC 预测（P2）**：$\delta_q^{\min}(d) \propto 1/\sqrt{d}$，相同参数量但 $d$ 更大的模型（"宽矮型"）gap 更小。
+
+**实验设计**：
+
+1. 固定总参数量 $M \approx$ 7B，变化架构：$(d = 2048, k = 48)$ vs. $(d = 4096, k = 24)$ vs. $(d = 8192, k = 12)$（$d \cdot k \cdot d_{\text{ffn}}$ 大致不变）
+2. 分别训练 BitNet b1.58 配置，在长链任务上测试
+3. 绘制 gap 关于 $1/\sqrt{d}$ 的线性关系
+
+**IDFC 可观测量**：若 gap $\approx C/\sqrt{d}$ 则 P2 成立，斜率 $C$ 是 $\sigma^*$（目标模型所需最小奇异值）的度量。
+
+**实验挑战**：固定参数量变架构会改变训练效率。需控制训练 FLOPs，不只是参数量。
+
+---
+
+#### 实验 E3：CoT 收益的分层实验（验证 P4）
+
+**IDFC 预测（P4）**：CoT 的最优段数 $k^* \propto 1/\varepsilon_{\max}$（命题 5.3），$\varepsilon_{\max}^{\text{1.58}} > \varepsilon_{\max}^{\text{fp32}}$ 意味着 1.58-bit 的 $k^*$ 更小，且对超过 $k^*$ 的 CoT 步数，性能提升更快收敛。
+
+**实验设计**：
+
+1. 在固定任务（如 MATH Level 5）上，系统测试 1.58-bit 与 BF16 模型对 CoT 步数 $k \in \{1, 2, 4, 8, 16\}$ 的反应
+2. 拟合 $\text{Acc}(k)$ 曲线，提取饱和点 $k^*$
+3. 比较两者的 $(k^*, \text{Acc}(k^*))$
+
+**IDFC 预测**：$k^{*,\text{1.58}} < k^{*,\text{fp32}}$，且 $\text{Acc}(k^{*,\text{1.58}})$ 低于 $\text{Acc}(k^{*,\text{fp32}})$——1.58-bit 在更少的 CoT 步数处达到性能上限，且该上限更低。
+
+**反驳条件**：若 $k^{*,\text{1.58}} \approx k^{*,\text{fp32}}$，则表明 CoT 的有效性与 $\varepsilon_{\max}$ 关系不强，命题 5.3 的预测在该任务域失效，需检查 $\varepsilon_{\text{tok}}$ 项是否主导。
+
+---
+
+#### 实验 E4：规模极限的 Gap 收敛性测试（验证 / 反驳 P5）
+
+**IDFC 预测（P5）**：在标准 Scaling 轨迹（$d \propto M^{0.25}$）下，gap 在 $M \to \infty$ 时收敛至正下界 $\Delta_\infty(d) > 0$，而非趋于零。
+
+**实验设计**：
+
+1. 使用 BitNet b1.58 的公开 1B / 3B / 7B / 13B 模型（或训练同等规模模型）
+2. 在长链任务上测量 gap$(M)$，在 $\log M$ 坐标下检验收敛模式
+3. 拟合收敛曲线：$\text{gap}(M) = \Delta_\infty + C \cdot M^{-\beta}$
+
+**IDFC 可分辨的两种结果**：
+
+| 结果 | 含义 | IDFC 修订方向 |
+|---|---|---|
+| $\Delta_\infty > 0$（gap 收敛正值）| $\delta_q^{\min}(d)$ 不可消除，P5 成立 | 理论确认，IDFC 无需修订 |
+| $\Delta_\infty \to 0$（gap 趋于零）| $d$ 的增速足以消除 $\delta_q^{\min}$；$d/M$ 关系比假设的更强 | 需更新 §15.7.4 的 Scaling 假设，补充「$d$ 超线性增长」情形的兼容分析 |
+
+**注意**：P5 的反驳是建设性的，不是破坏性的——它指向 IDFC 对 Scaling 假设的精化，不影响 CAC 核心定理。
+
+---
+
+#### 实验 E5：长短任务的差异化分层测试（验证 P3）
+
+**IDFC 预测（P3）**：gap 在长链任务上远大于短链任务——不是绝对性能差距的均匀缩放，而是**任务 $l_{\text{eff}}$ 的函数**。
+
+**最易执行的版本**：
+
+```
+gap_score(task) = [Acc_fp32(task) - Acc_1.58(task)] / [1 - Acc_1.58(task)]
+
+绘制 gap_score 关于 estimated l_eff 的散点图
+```
+
+IDFC 预测散点图中：
+- 短链任务（$l_{\text{eff}} < 5$）：gap_score < 0.1
+- 中链任务（$l_{\text{eff}} \sim 10$）：gap_score ≈ 0.2–0.3
+- 长链任务（$l_{\text{eff}} > 20$）：gap_score > 0.5
+
+**若散点图呈单调递增趋势，P3 成立**；若无趋势，则 $l_{\text{eff}}$ 不是 gap 的主要预测变量，需考虑其他变量（如知识密集度导致的 Type III 效应）。
+
+---
+
+### 11.3 实验结果的 IDFC 解释框架
+
+所有实验的结果通过以下框架进行解读：
+
+$$\text{gap}(l_{\text{eff}}, d, M) = \left(\varepsilon_{\max}^{\text{1.58}} - \varepsilon_{\max}^{\text{fp32}}\right) \cdot \frac{L^{l_{\text{eff}}} - 1}{L - 1}$$
+
+其中三个可分解的因子：
+
+| 因子 | IDFC 参数 | 实验可测性 | 对应实验 |
+|---|---|---|---|
+| $(\varepsilon_{\max}^{\text{1.58}} - \varepsilon_{\max}^{\text{fp32}})$ | $\delta_q^{\min}(d) \propto 1/\sqrt{d}$ | 通过 E2（固定 $M$ 变 $d$）分离 | E2 |
+| $L^{l_{\text{eff}}}$ | Lipschitz 常数 $L$（架构决定）| 通过 E1 的斜率估计 | E1 |
+| $l_{\text{eff}}$ | 任务推理链长度 | 任务标注或模型估计 | E3, E5 |
+
+**关键实验公式**：将 E1 的斜率 $\approx \log L$ 与 E2 的截距 $\approx \delta_q^{\min}(d)$ 组合，可以**从实验数据中反推** IDFC 的两个核心参数 $L$ 和 $\delta_q^{\min}$，进而验证 Part 2 §1.5.D 对 $L$ 的理论估计是否与宏观观测一致。这是 IDFC 框架少有的**参数自洽性检验机会**。
+
+---
+
+### 11.4 与 Part 4 其他验证节的关系
+
+| 本节实验 | Part 4 对应理论 | 共同验证的 IDFC 命题 |
+|---|---|---|
+| E1（gap 随 $l$ 指数扩大）| §4（Attention 信息提取界）、§7（Type IV-a）| CAC 误差界的 $L^l$ 指数增长项 |
+| E2（$d$ 补偿效应）| §3（LiM 与算子稀释）| Type III Welch Bound 的维度依赖性 |
+| E3（CoT 饱和点 $k^*$）| §4.3（Score 界）、§6（功能阈值 $\alpha^*$）| 命题 5.3 的 CoT 最优段数预测 |
+| E4（规模极限 gap）| §5（统一定理）| CAC 误差界在大 $M$ 极限的渐近行为 |
+| E5（任务分层）| §7（Type IV 幻觉分类）| $l_{\text{eff}}$ 是性能 gap 的主要预测变量假设 |
+
+> [!NOTE]
+> **验证优先级建议**：E1 和 E5 最易执行（仅需公开 benchmark 数据），且对 IDFC 理论有最直接的检验价值。E2 需要定制训练，但提供了 $\delta_q^{\min}(d)$ 的直接测量。E4 依赖大规模模型公开，目前可用现有 BitNet b1.58 的不同规模版本近似。
+

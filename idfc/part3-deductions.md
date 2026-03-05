@@ -477,6 +477,8 @@ $$\varepsilon_{\max}^* \geq \begin{cases} 0 & N \leq d\\ \Omega\!\left(\sqrt{(N-
 > | 量化 | 15.4 | 严格 | 混合精度最优分配：Attention 高精度，末层可降位；KV Cache 量化代价被 CoT 深度放大 |
 > | 量化 | 15.5 | 严格 | QAT = $F$ 对量化格的结构适应；位宽理论下界与 Welch 下界在 CAC 框架内同构 |
 > | 量化 | 15.6 | 严格 | 量化-对齐乘法衰减：$\rho_{\text{align}}^Q \propto L^{-l_{\text{align}}} \cdot (\varepsilon_{\max}^{\text{fp32}}/\varepsilon_{\max}^Q)$；复杂对齐破坏被 benchmark 系统性低估 |
+> | 量化 | **15.7** | **严格（谱间隙）** | **1.58-bit = 三值格约束的 Nemytskii 算子；$\delta_q^{\min}(d) = \Omega(1/\sqrt{d}) > 0$ 不可消除，$l_{\max}^{\text{1.58}} < l_{\max}^{\text{fp32}}$ 永久成立；P1–P5 是 CAC 假设的实验探针（见 Part 4 §11）** |
+
 > | **LoRA / PEFT** | **16.1** | **严格** | **LoRA = 有效算子场的局部低秩摄动；$F$ 拓扑不变，局部 $\varepsilon_i$ 可降** |
 > | LoRA / PEFT | 16.2 | 严格 | 选择性 $\varepsilon$ 压降：仅 $R_{\text{tgt}}$ 相关层降低，非目标原语不退化；秩 $r$ = 任务复杂度硬约束 |
 > | LoRA / PEFT | 16.3 | 严格 | LoRA 不改变 $L$ 和 CoT 结构，$l_{\max}$ 提升仅间接来自 $\varepsilon_{\max}$ 局部降低 |
@@ -999,6 +1001,157 @@ $$\rho_{\text{align}}^Q \approx \rho_{\text{align}}^{\text{fp32}} \cdot \frac{\v
 > 3. **GPTQ = 校准集内的误差重定向**：有效但受分布偏移限制，Hessian 条件数决定其泛化边界。
 > 4. **QAT = $F$ 对量化格的结构适应**：能力优于 PTQ，但受位宽理论下界约束（与 Type III 的 Welch 下界在 CAC 框架内同构）。
 > 5. **量化-对齐双重退化**：量化与推理链深度对对齐稳定性存在乘法衰减关系——量化对「复杂对齐行为」（大 $l_{\text{align}}$）的破坏在基准测试中系统性低估。
+
+---
+
+### 15.7 1.58-bit 极限量化（BitNet b1.58）：三值代数结构与不可消除下界
+
+> **定位**：本节将 BitNet b1.58（Microsoft Research，2024）纳入 IDFC 框架，作为量化的极端情形进行严格分析。1.58-bit 的核心操作是将权重约束至三值集 $\{-1, 0, +1\}$，将矩阵乘法退化为有符号加法与掩码。本节的核心结论与 §15.1–15.6 的定性方向一致，但 1.58-bit 存在**结构性不可消除下界**（与 Type III 的 Welch 同构，但来源不同），并为 $\varepsilon_{\max}$ 的规模渐近行为提供了可实验验证的**反驳边界**。
+
+---
+
+#### 15.7.1 三值权重的 IDFC 建模：Nemytskii 算子场的离散化格约束
+
+**定义（三值有效算子场）**：设 1.58-bit 模型第 $l$ 层的权重矩阵 $W_l \in \{-1, 0, +1\}^{m \times n}$。对输入状态 $h \in \mathbb{R}^n$，该层的有效算子为：
+
+$$\Phi_l^{\{-1,0,1\}}(h) \in \mathcal{M}_{m,n}^{\{-1,0,1\}} \subset \mathcal{M}_{m,n}(\mathbb{R})$$
+
+前向传播：$G_l^{\text{1.58}}(h) = \Phi_l^{\{-1,0,1\}}(h) \cdot h$（在激活路径选择后退化为符号加法）。
+
+**命题 15.7.1（1.58-bit 是合法的 IDFC 实例）**：1.58-bit 模型完整地满足 [Part 2 §1.2](part2-model-proof.md) 的 Nemytskii 算子场定义：
+
+$$G_l^{\text{1.58}}(h) = \Phi_l(h) \cdot h, \quad \Phi_l : \mathbb{R}^d \to \mathcal{M}_{m,n}^{\{-1,0,1\}}$$
+
+其中 $\Phi_l(h)$ 由输入 $h$ 在激活路径上决定（ReLU 激活掩码或其他非线性），值域限制在三值格内。**CAC 定理（Part 2 §2）对 1.58-bit 模型完全适用**，误差界 $\varepsilon_{\max} \cdot (L^l-1)/(L-1)$ 可直接代入。
+
+**量化误差分解**：相对于全精度模型，1.58-bit 引入附加量化误差 $\delta_q$：
+
+$$\varepsilon_{\max}^{\text{1.58}} = \varepsilon_{\max}^{\text{fp32}} + \delta_q, \quad \delta_q \triangleq \sup_{l,x} \|\Phi_l^{\{-1,0,1\}}(h) \cdot h - \Phi_l^{\text{fp32}}(h) \cdot h\|$$
+
+由 §15.1 命题 15.1，这直接给出：
+
+$$l_{\max}^{\text{1.58}}(\delta) \leq l_{\max}^{\text{fp32}}(\delta) \quad \text{（严格不等式，当 } \delta_q > 0 \text{ 时）}$$
+
+---
+
+#### 15.7.2 三值离散格的谱结构与 $\delta_q$ 的不可消除下界
+
+这是 1.58-bit 区别于 INT8/INT4 的关键——三值权重导致算子谱有**离散化的结构性间隙**。
+
+**引理 15.7.2a（三值矩阵奇异值的离散性）**：设 $W \in \{-1,0,1\}^{m \times n}$，其奇异值 $\sigma_k(W)$ 满足：
+
+$$\sigma_k(W) \in \{0\} \cup \left[\frac{1}{\sqrt{\min(m,n)}},\; \sqrt{\min(m,n)} \cdot n\right]$$
+
+即奇异值谱在零点处有一个**有限间隙**（gap）：三值矩阵要么有某个奇异值为零（低秩退化），要么最小非零奇异值至少为 $1/\sqrt{\min(m,n)}$。
+
+**推论**：设目标全精度算子 $\Phi_l^{\text{fp32}}(h)$ 的最小奇异值为 $\sigma_{\min}^{\text{fp32}} \in (0, 1/\sqrt{m})$——即目标算子恰好需要表达接近零但非零的奇异值（如概率微衰减、弱权重传播）。此时任何三值逼近均无法表达此奇异值；逼近误差下界：
+
+$$\delta_q^{(l)} \geq \sigma_{\min}^{\text{fp32}} \cdot \|h\|_2 > 0 \quad \text{（与模型规模 $M$ 无关）}$$
+
+**命题 15.7.2（$\delta_q^{\min}$ 的不可消除性）**：对任意全精度模型，设其某层有效算子 $\Phi_l^{\text{fp32}}(h)$ 需要表达量级为 $\sigma^* < 1/\sqrt{d}$ 的奇异值。则无论三值模型规模 $M$ 多大，三值量化误差存在与 $M$ 无关的正下界：
+
+$$\delta_q^{\min}(d) \triangleq \inf_{W \in \{-1,0,1\}^{d \times d}} \|\Phi^{\{-1,0,1\}} - \Phi^{\text{fp32}}\|_{\text{op}} \geq \sigma^* - \frac{1}{\sqrt{d}} > 0 \quad \text{（当 } \sigma^* > 1/\sqrt{d} \text{ 时）}$$
+
+从而：
+
+$$\lim_{M \to \infty} \varepsilon_{\max}^{\text{1.58}}(M) \geq \delta_q^{\min}(d) > 0$$
+
+而全精度模型（UAT 保证，Part 2 §3.3）：
+
+$$\lim_{M \to \infty} \varepsilon_{\max}^{\text{fp32}}(M) \to 0$$
+
+**这在理论上确立了两者的严格分离**：
+
+$$\exists \, \Delta_{\infty}(d) = \delta_q^{\min}(d) > 0 : \quad \forall M,\; \varepsilon_{\max}^{\text{1.58}}(M) - \varepsilon_{\max}^{\text{fp32}}(M) \geq \Delta_{\infty}(d)$$
+
+---
+
+#### 15.7.3 $F$ 的乘积子幺半群密度分析
+
+可能的反驳：三值矩阵的**乘积** $\langle F^{\text{1.58}} \rangle_\cdot$ 是否可以密逼 $\mathcal{M}_d(\mathbb{R})$ 有界集？
+
+**命题 15.7.3（$\langle F^{\text{1.58}} \rangle_\cdot$ 的有界域密度）**：在有界矩阵球 $\mathcal{B}_r = \{A \in \mathcal{M}_d : \|A\|_{\text{op}} \leq r\}$ 内，三值矩阵乘积生成的子幺半群 $\langle F^{\text{1.58}} \rangle_\cdot$ 可以构成 $\mathcal{B}_r$ 的 $\varepsilon$-网（对任意 $\varepsilon > 0$），当且仅当 $r$ 足够大（乘积数量和维度 $d$ 足够大）。
+
+**解读**：这意味着通过叠加足够多的三值矩阵乘积，$F^{\text{1.58}}$ 在**大范数**的算子上确实可以任意逼近全精度算子——**"用量换质"的机制是存在的**。
+
+**然而**，$\varepsilon$-网覆盖的质量对不同奇异值范围不均匀：
+- **大奇异值范围**（$\sigma \gg 1/\sqrt{d}$）：三值乘积可以精确逼近——这覆盖了强权重传播、激活放大等操作；
+- **小奇异值范围**（$\sigma \sim 1/\sqrt{d}$ 或更小）：覆盖密度急剧下降，最小可达奇异值受限于离散格间距——这覆盖了**精细概率衰减、弱关联传播**等需要小量算子的原语。
+
+**在 IDFC 语言中**：若目标 $r$-chain 中包含需要小奇异值算子的原语 $r_i$（例如：对近义词的细粒度权重分配、精确的数值小量计算），则 $E_{r_i}^{\text{1.58}}$ 无论如何都无法精确逼近 $r_i$。这类原语在 1.58-bit 模型中将系统性地贡献正的 $\varepsilon_i$——即使规模 $M \to \infty$ 亦然。
+
+---
+
+#### 15.7.4 UAT 兼容性与实际逼近边界
+
+**命题 15.7.4（1.58-bit UAT 条件）**：三值权重网络满足 UAT（万能逼近定理），条件为宽度充分大——即对任意连续函数 $g$，存在足够宽的三值网络使均匀逼近误差任意小（文献：Ding & Li, 2019；Lin et al., 2020）。
+
+**看似矛盾**：UAT 保证任意逼近，但命题 15.7.2 又给出不可消除下界？
+
+**解消**：UAT 保证的是对**有界紧域上连续函数**的逼近。参数 $\delta_q^{\min}(d)$ 的正数性质来自**固定维度 $d$ 的单层算子的奇异值谱间隙**，而 UAT 的逼近通过**层数（深度）和宽度的联合增长**实现——即通过更多层的三值矩阵乘积叠加来"合成"任意精度。
+
+然而在 IDFC 框架中，$\varepsilon_{\max}$ 是**给定架构深度 $k$ 与宽度 $d$ 下**的单步最大误差，不是复合链路的总逼近能力。具体地：
+
+$$\lim_{k \to \infty, d \to \infty} \varepsilon_{\max}^{\text{1.58}} \to 0 \quad \text{（UAT 方向，规模同时在深度和宽度增长）}$$
+$$\lim_{M \to \infty, \text{固定 } d/k} \varepsilon_{\max}^{\text{1.58}} \geq \delta_q^{\min}(d) > 0 \quad \text{（实际 Scaling 方向，$d$ 随 $M$ 固定比例增长）}$$
+
+**结论**：BitNet b1.58 在"宽度和深度均无限"的极限下可以逼近全精度——但在实际 Scaling 轨迹（固定 $d$ vs $k$ 比例）下，$\delta_q^{\min}(d)$ 提供了有效的正下界。实际"逼近"发生的条件是：令 $d \to \infty$ 的速度快于 $M$ 的增长（即 embedding 维度的增速超线性）——这与通常的 Scaling Law 假设不同。
+
+---
+
+#### 15.7.5 $l_{\max}$ 退化的精确形式
+
+将 $\varepsilon_{\max}^{\text{1.58}} \geq \varepsilon_{\max}^{\text{fp32}} + \delta_q^{\min}(d)$ 代入命题 5.1：
+
+**命题 15.7.5（1.58-bit 的推理深度退化定理）**：
+
+$$l_{\max}^{\text{1.58}}(\delta) = \left\lfloor \frac{\log\!\left(1 + \dfrac{\delta(L-1)}{\varepsilon_{\max}^{\text{fp32}} + \delta_q^{\min}(d)}\right)}{\log L} \right\rfloor \leq l_{\max}^{\text{fp32}}(\delta)$$
+
+退化量（当 $\delta_q^{\min}$ 主导时）：
+
+$$\Delta l_{\max}^{\text{1.58}} = l_{\max}^{\text{fp32}} - l_{\max}^{\text{1.58}} \approx \frac{\log\!\left(1 + \delta_q^{\min}(d) / \varepsilon_{\max}^{\text{fp32}}\right)}{\log L}$$
+
+**与 INT4 的对比**：INT4 的 $\delta_q \propto 2^{-4}$（按位宽指数缩小，见命题 15.2），而 1.58-bit 的 $\delta_q^{\min}(d) \propto 1/\sqrt{d}$（按嵌入维度幂律缩小）。
+
+| 量化方案 | $\delta_q$ 的规模依赖 | $\Delta l_{\max}$ 的渐近行为 |
+|---|---|---|
+| INT8 | $\propto 2^{-8}$（可忽略）| $\approx 0$ |
+| INT4 | $\propto 2^{-4}$（中等）| $\approx (b_{\text{ref}}-4)/\log_2 L$ |
+| **1.58-bit** | $\geq 1/\sqrt{d}$（**与 $M$ 无关**）| $\approx \log(1 + 1/(\sqrt{d}\,\varepsilon_{\max}^{\text{fp32}}))/\log L$，不随规模消失 |
+
+---
+
+#### 15.7.6 BitNet b1.58 与 CAC 假设本身的验证关系
+
+> **这是本节最重要的洞察**：1.58-bit 的规模实验不仅是量化效果的测试，而是验证 CAC 框架 $\varepsilon_{\max}$ 分析路径的天然实验平台。
+
+**命题 15.7.6（1.58-bit 作为 CAC 假设的实验探针）**：若 IDFC 框架的以下推断正确：
+
+1. 推理能力随 $l_{\max}$ 下降而退化；
+2. $l_{\max}$ 由 $\varepsilon_{\max}$ 精确控制；
+3. 1.58-bit 的 $\varepsilon_{\max}$ 有不随规模消失的下界 $\delta_q^{\min}(d)$；
+
+则以下实验预测必须成立（如不成立，则指向 IDFC 框架的修正方向）：
+
+| 预测编号 | 实验预测 | 预测方向 | IDFC 含义 |
+|---|---|---|---|
+| **P1** | 随推理链长度 $l$ 增长，1.58-bit 相对全精度的性能差距以 $L^l$ 量级扩大 | **验证 CAC 误差积累的指数性** | $\varepsilon_{\max}^{\text{1.58}} > \varepsilon_{\max}^{\text{fp32}}$ 的乘数效应 |
+| **P2** | 在 $d$ 更大的 1.58-bit 模型中，性能差距更小（$\delta_q^{\min} \propto 1/\sqrt{d}$） | **验证维度补偿效应** | $d$ 增大使三值谱间隙缩小 |
+| **P3** | 1.58-bit 模型的性能差距在复杂推理任务（MATH、ARC-Challenge）远大于简单任务 | **验证 $l_{\max}$ 差异的任务选择性** | 长链任务更早触发 CAC 误差上界 |
+| **P4** | CoT 对 1.58-bit 的收益边际递减于全精度模型 | **验证 $\varepsilon_{\text{tok}}$ 与 $\varepsilon_{\max}$ 的交互** | 命题 5.3：$\varepsilon_{\max}$ 越大，CoT 有效分段数 $k^*$ 越小 |
+| **P5** | 规模超过 $10^{10}$ 参数后，1.58-bit 在复杂推理任务上的 gap 收敛但**不趋于零** | **反驳"规模无限时等价"的强主张** | $\delta_q^{\min}(d)$ 的不可消除性（条件：$d$ 不超线性增长）|
+
+**P5 是关键的反驳预测**：如果实验观察到 gap 在大规模时趋于零，则表明 $d$ 在该 Scaling 轨迹下增长速度足以消除 $\delta_q^{\min}$，与 §15.7.4 的 UAT 兼容分析一致，但 IDFC 框架需要更新对"固定 $d/k$ 比例"假设的适用边界。
+
+---
+
+> [!IMPORTANT]
+> **1.58-bit 极限量化的 IDFC 核心结论**：
+> 1. **合法 IDFC 实例**：1.58-bit 是 Nemytskii 算子场在三值离散格上的约束版，CAC 定理完全适用。
+> 2. **不可消除下界存在**：三值权重的奇异值谱间隙导致 $\delta_q^{\min}(d) = \Omega(1/\sqrt{d}) > 0$，构成 $\varepsilon_{\max}^{\text{1.58}}$ 的与规模无关的正下界——严格分离于全精度模型 $\varepsilon_{\max}^{\text{fp32}} \to 0$。
+> 3. **实用逼近的条件性**：BitNet b1.58 的"大规模时等价"论断成立的条件是嵌入维度 $d$ 增速超线性；在通常固定 $d/M$ 比例的 Scaling 下，$\delta_q^{\min}$ 不会消失，$l_{\max}^{\text{1.58}} < l_{\max}^{\text{fp32}}$ 永久成立。
+> 4. **工程价值与理论极限并存**：1.58-bit 对短链任务（$l \ll l_{\max}^{\text{1.58}}$）是实用意义上的等价替代；对长链推理任务，$\Delta l_{\max}^{\text{1.58}}$ 是量化代价的精确量化，无法通过继续 Scaling 消除。
+> 5. **验证价值**：1.58-bit 的规模实验是验证 IDFC 误差传播理论的天然探针，§15.7.6 的五个预测提供了可证伪的实验路线图。
 
 ---
 
