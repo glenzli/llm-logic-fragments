@@ -462,3 +462,97 @@ $$\varepsilon_{\max}^* \geq \begin{cases} 0 & N \leq d\\ \Omega\!\left(\sqrt{(N-
 > | 幻觉分类 | 11.2 | 严格 | Type II：CAC 误差积累 = $l > l_{\max}(\delta_{\text{fail}})$ 时必然幻觉 |
 > | 幻觉分类 | 11.3 | 严格（Welch Bound） | Type III：$N > d$ → $\varepsilon_{\max}$ 有正下界，不可消除 |
 > | Transformer专有 | Part 4 §7 | 见Part 4 | Type IV-a/b：Attention稀释与误路由 |
+> | **生成策略** | **12.1** | **严格** | **反思对 Type II 有效（$y_1$ 作外部锚点）；对 Type III 不稳定（循环验证）** |
+> | 生成策略 | 12.2 | 严格 | 反思稳定性条件：critique 误差差 $\Delta\varepsilon_c < 0$ |
+> | 生成策略 | 12.3 | 严格 | Self-Consistency = $\varepsilon_{\text{tok}}$ 蒙特卡洛降噪，绕过 critique 循环 |
+
+---
+
+## 12. 反思与自我精炼的 CAC 分析
+
+> **定位**：本节将「反思（self-reflection）」和「自我精炼（self-refinement）」纳入 IDFC 框架，给出其何时有效、何时失效的严格条件。直接建立在 §4.4（CoT 误差线性化）和 §5.3（CoT 完整误差界）之上。
+
+---
+
+### 12.1 反思的计算结构
+
+**定义（反思过程）**：设初始输入 $x$，反思过程为三步自回归展开：
+
+$$\hat{y}_1 = \text{AR}(x), \qquad \hat{c} = \text{AR}(x,\, \hat{y}_1), \qquad \hat{y}_2 = \text{AR}(x,\, \hat{y}_1,\, \hat{c})$$
+
+其中 $\hat{c}$ 是模型对 $\hat{y}_1$ 的**自生成批评（critique）**，$\hat{y}_2$ 是修订后的输出。
+
+**关键观察**：三步展开均使用同一个 $F$。因此**错误检测器与错误生成器共享同一套 $r$-chain 近似**——这是反思不稳定性的根本来源。
+
+**命题 12.1（反思的 CoT 解读）**：反思过程的 IDFC 等价表述：
+
+- 第一步 $\hat{y}_1$：$T_1$ 步自回归，有效 $f$-chain 深度 $k \cdot T_1$
+- 第二步 $\hat{c}$：新的 $T_2$ 步自回归，以 $\hat{y}_1$ 作为**外部状态锚点**（等价于 CoT 分段的物化中间步骤）
+- 第三步 $\hat{y}_2$：$T_3$ 步自回归，以 $(\hat{y}_1, \hat{c})$ 为上下文
+
+三步合计有效 $f$-chain 深度为 $k \cdot (T_1 + T_2 + T_3)$，等价于一次更长的 CoT——**前提是每步的 $\varepsilon_{\text{tok}}$ 足够小（对齐质量足够高）**。
+
+---
+
+### 12.2 反思的稳定性分析
+
+**定义（critique 误差差）**：设 $\varepsilon_{\text{orig}}$ 为第一步生成中 $r_i$ 的近似误差，$\varepsilon_{\text{crit}}$ 为 critique 生成中相同 $r_i$ 的近似误差，定义：
+
+$$\Delta\varepsilon_c \triangleq \varepsilon_{\text{crit}} - \varepsilon_{\text{orig}}$$
+
+**命题 12.2（反思稳定性条件）**：反思能可靠改善输出的**必要条件**为 $\Delta\varepsilon_c < 0$，即 $r_i$ 在 critique 生成时的近似质量**严格优于**原始生成时。
+
+**推论 12.2a（三类错误下的稳定性）**：
+
+| 错误类型 | $\Delta\varepsilon_c$ 的期望 | 反思有效性 | 机制 |
+|---|---|---|---|
+| **Type II**（链太长，各 $r_i$ 本身好）| $\Delta\varepsilon_c < 0$（*可期待*）| ✅ 结构性有效 | $\hat{y}_1$ 作外部锚点；critique 从更短的 $r$-chain 起点出发，误差更小 |
+| **Type I**（$f$-chain 深度不足）| $\Delta\varepsilon_c \approx 0$ | ❌ 无效 | 反思不增加模型深度 $k$，绑定于相同的 $l_{\max}(\delta)$ |
+| **Type III**（知识混叠，$\varepsilon_i$ 本身大）| $\Delta\varepsilon_c \approx 0$ 或 $> 0$ | ⚠️ 不稳定 | critique 使用同一个混叠 $E_{r_i}$；可能强化而非纠正错误 |
+
+**Type II 稳定性的机制细化**：当 $\hat{y}_1$ 包含中间正确步骤 $t_1, \ldots, t_{j-1}$ 而在第 $j$ 步出现偏差时，critique 通过 Attention 对比 $t_{j-1}$ 与 $t_j$ 的语义一致性——这一比较任务的 $r$-chain 长度远短于原始任务（仅需局部一致性检验），因此 $\varepsilon_{\text{crit}} \ll \varepsilon_{\text{orig}}$，$\Delta\varepsilon_c < 0$ 成立。
+
+**Type III 循环验证的形式化**：设 $r_i$ 的嵌入方向 $\hat{v}_i$ 与 $\hat{v}_j$ 的余弦相似度 $c_{ij} = |\langle \hat{v}_i, \hat{v}_j \rangle|$（由 Welch Bound §11.3 给出下界）。$\hat{y}_1$ 包含混叠误差（$r_j$ 方向激活），将 $\hat{y}_1$ 纳入 critique 上下文后，以 $c_{ij}$ 比例的概率**强化而非纠正**该混叠：
+
+$$P(\text{critique 强化错误}) \geq c_{ij}^2 \geq \frac{N - d}{d(N-1)}$$
+
+这是 Type III 场景下反思失效的**信息论下界**。
+
+---
+
+### 12.3 Self-Consistency = 对 $\varepsilon_{\text{tok}}$ 的蒙特卡洛降噪
+
+**定义（Self-Consistency）**：温度 $T > 0$ 下采样 $K$ 条独立路径，对最终答案做多数投票：
+
+$$\hat{y}^{\text{SC}} = \operatorname{Majority}\!\left(\hat{y}_1^{(1)}, \ldots, \hat{y}_1^{(K)}\right), \quad \hat{y}_1^{(k)} \sim \text{AR}_T(x)$$
+
+**命题 12.3（Self-Consistency 的 IDFC 解读）**：Self-Consistency 是对自回归展开中**逐步采样噪声** $\varepsilon_{\text{tok}}^{(t)}$ 的蒙特卡洛降噪：
+
+- 每条路径由不同的采样随机性产生不同的 $f$-chain 激活序列
+- 若正确 $r$-chain 在 $F$ 中被可靠覆盖（$\varepsilon_{\max}$ 小），正确答案的路径数在期望上多于错误路径
+- 多数投票以 $O(1/\sqrt{K})$ 速率降低误差期望（Hoeffding 界）
+
+**推论 12.3a（Self-Consistency 对 Type III 同样无效）**：多数投票降低的是 $\varepsilon_{\text{tok}}$ 引入的**随机误差**，不改变 $\varepsilon_{\max}$ 本身。若 Type III 导致 $\varepsilon_i$ 有正下界（$r_i$ 被系统性地以固定偏差方向逼近），则所有 $K$ 条路径发生相同的系统性偏差，多数投票**无法纠正系统误差**。
+
+**命题 12.3b（Self-Consistency vs 反思的误差来源对比）**：
+
+| 策略 | 降低的误差类型 | 保留的误差类型 | 对 Type II | 对 Type III |
+|---|---|---|---|---|
+| 单次生成 | — | $\varepsilon_{\text{tok}}$ + $\varepsilon_{\max}$ | $l > l_{\max}$ 时失败 | 系统性失败 |
+| Self-Consistency | $\varepsilon_{\text{tok}}$（随机采样噪声）| $\varepsilon_{\max}$（系统误差）| ✅ 提升 | ❌ 无效 |
+| 反思（Type II 下）| $\varepsilon_{\text{tok}}$ + 部分 $\varepsilon_{\max}$（通过锚点）| $\varepsilon_{\max}$（$r_i$ 本身的限制）| ✅ 提升 | ⚠️ 不稳定 |
+| PRM + 外部验证 | $\varepsilon_{\text{tok}}$ + $\varepsilon_{\max}$（独立验证器）| 验证器自身误差 | ✅✅ 最优 | ✅ 有效（独立 $F'$ 打破循环）|
+
+**推论 12.3c（PRM 的 IDFC 结构优越性）**：过程奖励模型（PRM）为每步中间状态提供独立于生成器 $F$ 的评分——等价于**引入第二个 $F'$ 执行同一 $r$-chain 的验证**。若 PRM 的 $F'$ 与生成器 $F$ 的混叠模式不相关（独立训练），则：
+
+$$\varepsilon_{\text{verify}}^{F'} \perp \varepsilon_{\text{gen}}^{F} \implies P(\text{双重错误}) = P(\varepsilon^F > \delta) \cdot P(\varepsilon^{F'} > \delta) \ll P(\varepsilon^F > \delta)$$
+
+这是 PRM 在 Type III 场景下优于纯自我反思的**信息论根因**：它打破了 $F$ 的自我验证循环，而反思无法做到这一点。
+
+---
+
+> [!IMPORTANT]
+> **反思的 IDFC 核心结论**：
+> 1. **反思 = 延迟 CoT + 循环验证的叠加**。CoT 部分（锚点机制）对 Type II 有效；循环验证部分对 Type III 有害。
+> 2. **稳定性条件**：$\Delta\varepsilon_c < 0$——critique 任务比原任务在 $r$-chain 层面更简单。Type II 下此条件通常成立；Type III 下不成立。
+> 3. **外部验证器（PRM）的结构优越性**：通过独立 $F'$ 打破 $F$ 的自我验证循环，是目前唯一在 Type III 场景下有信息论保证的改进方案。
