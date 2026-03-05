@@ -46,7 +46,7 @@ $$P(q \text{ 正确}, t) \approx \prod_{j=1}^{k} p(r_{i_j}, t)$$
 
 ### 4.4 思维链（CoT）：误差线性化机制
 
-**同构性基础**（**定理 1.7**，[Part 2 §1.7C](part2-model-proof.md)）：在计算机理层面，自回归展开与 CoT 是**同一数学结构的两种描述**——区别仅在于中间 token 对目标 $r$-chain 步骤的**对齐质量** $\varepsilon_{\text{tok}}^{(t)}$（$\varepsilon_{\text{tok}}$ 的正式定义见 [Part 2 §1.7A](part2-model-proof.md)）：
+**同构性基础**（**定理 1.7**，[Part 2 §1.7C](part2a-model-proof.md)）：在计算机理层面，自回归展开与 CoT 是**同一数学结构的两种描述**——区别仅在于中间 token 对目标 $r$-chain 步骤的**对齐质量** $\varepsilon_{\text{tok}}^{(t)}$（$\varepsilon_{\text{tok}}$ 的正式定义见 [Part 2 §1.7A](part2a-model-proof.md)）：
 
 $$\text{自回归展开} \equiv \text{CoT} \quad \iff \quad \varepsilon_{\text{tok}}^{(t)} \to 0 \quad \forall t$$
 
@@ -148,7 +148,7 @@ $$w_j = L^{l - j}, \qquad j = 1, 2, \ldots, l$$
 
 ### 5.3 CoT 的精确误差分析（严格推论，含中间 token 成本）
 
-命题 4.3（§4.4）给出了 CoT 的定性描述。$\varepsilon_{\text{tok}}$ 的正式定义见 [Part 2 §1.7A](part2-model-proof.md)（「连续 $f$-chain 输出物化为离散 token 时的信息损失」，即 $\varepsilon_{\text{tok}} \triangleq \mathbb{E}_{\hat{w} \sim p_T}\!\left[\|e_{\hat{w}} - h^*\|\right]$），此处给出含 $\varepsilon_{\text{tok}}$ 的精确版本。
+命题 4.3（§4.4）给出了 CoT 的定性描述。$\varepsilon_{\text{tok}}$ 的正式定义见 [Part 2 §1.7A](part2a-model-proof.md)（「连续 $f$-chain 输出物化为离散 token 时的信息损失」，即 $\varepsilon_{\text{tok}} \triangleq \mathbb{E}_{\hat{w} \sim p_T}\!\left[\|e_{\hat{w}} - h^*\|\right]$），此处给出含 $\varepsilon_{\text{tok}}$ 的精确版本。
 
 **命题 5.3（CoT 完整误差界）**：设 CoT 将 $l$ 步 $r$-链分为 $k$ 段，每段长度 $s = l/k$（整除情形），中间 token 的生成误差为 $\varepsilon_{\text{tok}}$，则 CoT 推理的总误差界为：
 

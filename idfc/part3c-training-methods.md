@@ -406,7 +406,7 @@ $$\Phi_l^{\{-1,0,1\}}(h) \in \mathcal{M}_{m,n}^{\{-1,0,1\}} \subset \mathcal{M}_
 
 前向传播：$G_l^{\text{1.58}}(h) = \Phi_l^{\{-1,0,1\}}(h) \cdot h$（在激活路径选择后退化为符号加法）。
 
-**命题 15.7.1（1.58-bit 是合法的 IDFC 实例）**：1.58-bit 模型完整地满足 [Part 2 §1.2](part2-model-proof.md) 的 Nemytskii 算子场定义：
+**命题 15.7.1（1.58-bit 是合法的 IDFC 实例）**：1.58-bit 模型完整地满足 [Part 2 §1.2](part2a-model-proof.md) 的 Nemytskii 算子场定义：
 
 $$G_l^{\text{1.58}}(h) = \Phi_l(h) \cdot h, \quad \Phi_l : \mathbb{R}^d \to \mathcal{M}_{m,n}^{\{-1,0,1\}}$$
 

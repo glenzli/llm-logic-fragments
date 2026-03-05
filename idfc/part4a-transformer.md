@@ -7,7 +7,7 @@
 
 ## 1. Transformer 作为 IDFC 的具体实现
 
-> **本节定位**：[Part 2 §1.2](part2-model-proof.md) 给出了架构无关的 Nemytskii 算子场定义 $G_l(h) = \Phi_l(h) \cdot h$。本节将 Transformer 的每一个子模块实例化为该框架下的具体 $\Phi_l$，并分析各部件在 IDFC 理论中承担的精确角色。
+> **本节定位**：[Part 2 §1.2](part2a-model-proof.md) 给出了架构无关的 Nemytskii 算子场定义 $G_l(h) = \Phi_l(h) \cdot h$。本节将 Transformer 的每一个子模块实例化为该框架下的具体 $\Phi_l$，并分析各部件在 IDFC 理论中承担的精确角色。
 
 ### 1.1 一个 Transformer Block 的函数分解
 
@@ -109,7 +109,7 @@ $$E(x) = \prod_{l=1}^{k} (I + \Phi_l^{\Delta}(h_{l-1}))$$
 
 ## 2. 基础设定（Attention 泛函分析）
 
-从 [Part 2 §1.2](part2-model-proof.md) 的 Nemytskii 框架，在 Transformer 的 Self-Attention 层中，对序列位置 $i$，单头注意力的有效算子为：
+从 [Part 2 §1.2](part2a-model-proof.md) 的 Nemytskii 框架，在 Transformer 的 Self-Attention 层中，对序列位置 $i$，单头注意力的有效算子为：
 
 $$E_i(x) = A_i(x) \cdot W_V W_O \in \mathcal{M}_d(\mathbb{R})$$
 

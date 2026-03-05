@@ -7,7 +7,7 @@
 
 ## 8. Diffusion 作为对比生成范式
 
-> **定位**：本节以 [Part 2 §1.7](part2-model-proof.md) 的自回归形式化框架为基准，将 Diffusion 模型（得分匹配 / DDPM 家族）纳入 IDFC 框架，解析其与自回归生成的**结构性差异**，并给出 guidance scale 在 IDFC 中的精确类比。
+> **定位**：本节以 [Part 2 §1.7](part2a-model-proof.md) 的自回归形式化框架为基准，将 Diffusion 模型（得分匹配 / DDPM 家族）纳入 IDFC 框架，解析其与自回归生成的**结构性差异**，并给出 guidance scale 在 IDFC 中的精确类比。
 
 ---
 
@@ -92,7 +92,7 @@ $$\tilde{\epsilon}(\mathbf{x}_s, s, c) = \epsilon_\theta(\mathbf{x}_s, s, \varno
 
 ## 9. Mamba 作为对比架构：SSM 路由的 IDFC 解读
 
-> **定位**：本节以 [Part 2 §1.2](part2-model-proof.md) 的架构无关 Nemytskii 算子场为基准，将 Mamba（Selective State Space Model，S6）纳入 IDFC 框架，解析其与 Transformer 的**结构性差异**，并形式化 SSM 压缩损失这一 Transformer-free 架构下的新失效模式。
+> **定位**：本节以 [Part 2 §1.2](part2a-model-proof.md) 的架构无关 Nemytskii 算子场为基准，将 Mamba（Selective State Space Model，S6）纳入 IDFC 框架，解析其与 Transformer 的**结构性差异**，并形式化 SSM 压缩损失这一 Transformer-free 架构下的新失效模式。
 
 ---
 

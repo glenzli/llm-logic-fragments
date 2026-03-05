@@ -1,6 +1,6 @@
 # IDFC · Part 4：理论验证
 
-> **定位**：本文是 IDFC 理论的**验证层**。[Part 2](part2-model-proof.md) 建立了 CAC 定理，[Part 3](part3-deductions.md) 推导了全部推论。本文以多种架构和实验场景为验证对象，将理论预测落地为可实验验证的可观测量。
+> **定位**：本文是 IDFC 理论的**验证层**。[Part 2](part2-foundations.md) 建立了 CAC 定理，[Part 3](part3-deductions.md) 推导了全部推论。本文以多种架构和实验场景为验证对象，将理论预测落地为可实验验证的可观测量。
 >
 > **可观测接口**：本文的结论（$\mathcal{F}^*$、$n_{\max}$、功能阈值 $\alpha^*$ 等）均可通过实验直接验证，是 IDFC 理论与现实接轨的关键节点。本文也是 [`../hallucination/type-iv-attention-dilution.md`](../hallucination/type-iv-attention-dilution.md) 现象级分析的第一性原理基础层。
 
