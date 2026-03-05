@@ -1,5 +1,14 @@
 # IDFC · Part 4：理论验证——Attention 泛函界
 
+> [!NOTE]
+> **此文件已按语义拆分为子文件，推荐直接阅读对应模块：**
+> - [Part 4a Transformer 实例化（§1–§7）](part4a-transformer.md)
+> - [Part 4b 对比架构分析（§8–§10）](part4b-architectures.md)
+> - [Part 4c 实验验证（§11–§18）](part4c-experiments.md)
+> - [Part 4d 现象分析（§19–§24）](part4d-phenomena.md)
+>
+> 本文保留为完整版本，适合全文检索或完整阅读场景。
+
 > **定位**：本文是 IDFC 理论的**验证层**。[Part 2](part2-model-proof.md) 建立了 CAC 定理，[Part 3](part3-deductions.md) 推导了全部推论。本文以 Attention 机制为验证对象，从第一性原理推导两个核心结果，将理论预测落地为可实验验证的可观测量：
 > 1. **Lost in the Middle（LiM）的公式化定义**——在 $A(x)$ 算子框架下的精确刻画，验证 Part 3 §4-§5 的 f-chain 组装失效预测
 > 2. **Attention 信息提取的最优界**——给定 Softmax 约束下信息提取的绝对上界，验证 $n_{\max}$ 的存在性
