@@ -1,16 +1,18 @@
-# Attention 的泛函界：从 IDFC 框架的第一性原理推导
+# IDFC · Part 4：Attention 的泛函界
 
-> **前置**：本文在 `compositional-closure/theory.md`（IDFC 框架）定义的泛函空间中，从第一性原理推导 Attention 的两个核心结果：
+> **前置**：本文在 [Part 1](part1-model.md) 定义的 IDFC 泛函空间中，从第一性原理推导 Attention 的两个核心结果：
 > 1. **Lost in the Middle（LiM）的公式化定义**——在 $A(x)$ 算子框架下的精确刻画
 > 2. **Attention 信息提取的最优界**——给定 Softmax 约束下信息提取的绝对上界
 >
-> 本文是 `type-iv-attention-dilution.md` 的理论基础层，将其现象级分析提升到算子层面的第一性原理推导。
+> **可观测接口**：本文的结论（$\mathcal{F}^*$、$n_{\max}$、功能阈値 $\alpha^*$）均可通过实验直接验证——是 IDFC 理论与现实接轨的关键节点。本文也是 [`../hallucination/type-iv-attention-dilution.md`](../hallucination/type-iv-attention-dilution.md) 现象级分析的第一性原理基础层。
+
+---
 
 ---
 
 ## 1. 基础设定（继承 IDFC 框架）
 
-从 `theory.md` §1.2 中，对序列位置 $i$，单头注意力的有效算子为：
+从 [Part 1 §1.2](part1-model.md) 中，对序列位置 $i$，单头注意力的有效算子为：
 
 $$E_i(x) = A_i(x) \cdot W_V W_O \in \mathcal{M}_d(\mathbb{R})$$
 

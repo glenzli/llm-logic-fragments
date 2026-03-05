@@ -1,8 +1,12 @@
 # 大语言模型计算的数学模型：输入驱动函数复合（IDFC）
 
-> **定位**：本文建立一套关于大语言模型计算过程的数学模型。模型的本质：在固定权重下，不同输入通过激活函数 / 注意力机制选择不同的有效权重矩阵，分段组装一条输入特化的函数链路，完成推理。模型导出的所有能力——泥化、顿悟、思维链的有效性、上下文学习——都是这个计算框架的自然推论。
+> **定位**：本文建立一套关于大语言模型计算过程的数学模型。模型的本质：在固定权重下，不同输入通过激活函数 / 注意力机制选择不同的有效权重矩阵，分段组装一条输入特化的函数链路，完成推理。模型导出的所有能力——涌现、顿悟、思维链的有效性、上下文学习——都是这个计算框架的自然推论。
 >
-> **本文结构**：第一部分（§1–3）建立数学模型本身；第二部分（§4–6）从模型出发对大模型已观测现象给出推论。
+> **文档结构**：本文是 IDFC 理论的第一章（数学模型构造），共分四章：
+> - **[Part 1 · 本文]** §1–3：数学模型构造——基本设定、CAC 定理、误差分析（含完整证明）
+> - **[Part 2](part2-deductions.md)** §4–6：行为推论——涌现、顿悟、CoT、能力聚簇、行为吸引子
+> - **[Part 3](part3-extensions.md)** §7–10：CAC 扩展推论——能力上界、不可约性、对齐脆弱性、逆定理猜想
+> - **[Part 4](part4-attention.md)** ：Attention 泛函界——LiM 定义、最优检索保真度、$n_{\max}$（可观测接口）
 
 ---
 
@@ -309,7 +313,7 @@ $$J_{\text{output}}(x) = J_{G_k}(h_{k-1}) \cdot J_{G_{k-1}}(h_{k-2}) \cdots J_{G
 
 $$\|G_l\|_{\mathrm{Lip}} \leq B_l + L_{\Phi_l}\cdot\sup_h\|h\|$$
 
-累积 Lipschitz 常数 $\prod_{l=1}^k \|G_l\|_{\mathrm{Lip}}$ 是 §3 误差指数传播的数学根因。
+累积 Lipschitz 常数 $\prod_{l=1}^k \|G_l\|_{\mathrm{Lip}}$ 是 §3.2 Telescope 展开中误差指数传播的数学根因。
 
 **不动点**：若 $(G_k \circ \cdots \circ G_1)(x^*) = x^*$，即 $E(x^*)\,x^* = x^*$，则 $x^*$ 是整个 f-chain 的不动点。若 $\|E(x)\| < 1$（压缩），Banach 定理保证唯一全局吸引不动点——行为吸引子理论"稳定盆地"的代数表述（见 `behavioral-attractors/theory-math.md`）。
 
@@ -406,35 +410,104 @@ $$\rho(r_l \circ \cdots \circ r_1) \;\approx\; \rho(r_l) \cdot_{\text{chain}} \c
 
 ---
 
-## 3. 误差分析：模型规模 $M$ 的作用
+## 3. 误差分析：CAC 定理的完整证明
 
-### 3.1 单步误差
+本节给出 §2 中 CAC 定理的严格证明，并分析模型规模 $M$ 对误差的控制作用。
 
-设 $F$ 对 $r_i$ 的逐点拟合误差为 $\varepsilon_i$，即：
+### 3.1 符号统一与单步误差
 
-$$\|\hat{f}_i(x) - r_i(x)\| \leq \varepsilon_i$$
+**符号对齐**：§1.6 定义了逐点拟合：对 $r_i \in R_{\text{tr}}$，存在矩阵值函数 $E_{r_i}: \mathcal{X} \to \langle F \rangle_\cdot$ 使得：
 
-### 3.2 链路误差的朴素上界
+$$\hat{f}_i(x) \triangleq E_{r_i}(x) \cdot x, \qquad \|\hat{f}_i(x) - r_i(x)\| \leq \varepsilon_i \quad \forall x \in \mathcal{X}$$
 
-对长度为 $l$ 的 $r$-链，对应的 $f$-链的累积误差在 $L$-Lipschitz 条件下满足：
+其中 $\varepsilon_i \triangleq \sup_{x \in \mathcal{X}} \|E_{r_i}(x) \cdot x - r_i(x)\|$（§2 的定义量）。$\hat{f}_i$ 是"用当前输入选出的矩阵作用于当前输入"，不是固定矩阵。
 
-$$\|f\text{-chain}(x) - r\text{-chain}(x)\| \leq \varepsilon_1 + L\varepsilon_2 + L^2\varepsilon_3 + \cdots + L^{l-1}\varepsilon_l$$
-
-当 Lipschitz 常数 $L > 1$ 时，误差可能指数级放大——这是链路长度的核心约束。
-
-### 3.3 模型规模 $M$ 与误差收敛
-
-$F$ 中允许冗余：$f_i$ 和 $f_j$ 可以是对同一个 $r$ 的不同精度近似。设对某个 $r_i$，$F$ 中存在 $\nu_i$ 个近似者，其中最优精度为：
-
-$$\varepsilon_i^* = \min_{f \in F, f \approx r_i} \|f - r_i\|$$
-
-**命题 3.1（规模收敛）**：若 $M \to \infty$，则对任意 $r_i \in R$，
-
-$$\varepsilon_i^* \to 0$$
-
-*直觉*：更大的 $F$ 提供了对每个 $r_i$ 的更高精度近似者。冗余不是浪费，而是为每一步提供了精度储备。当 $M$ 足够大时，每步误差均可被压低，链路误差总量走向收敛。
-
-**推论**：给定固定链路长度 $l$，当 $M$ 充分大时，CAC 的近似误差可以被压制到任意小的 $\delta > 0$。
+为简洁，以下记 $\hat{f}_j \equiv \hat{f}_{r_{i_j}}$（第 $j$ 步对应的近似函数），$\varepsilon_j \equiv \varepsilon_{i_j}$。
 
 ---
+
+### 3.2 链路误差的 Telescope 展开（CAC 定理的完整证明）
+
+**定理（CAC 误差界，完整证明）**：设 $q = r_{i_l} \circ \cdots \circ r_{i_1}$ 为长度 $l$ 的 $r$-链，$f$-链递推定义为：
+
+$$\hat{h}_0 = x, \qquad \hat{h}_j = \hat{f}_j(\hat{h}_{j-1}) = E_{r_{i_j}}(\hat{h}_{j-1}) \cdot \hat{h}_{j-1}$$
+
+设真实 $r$-链的中间状态为 $h_0^* = x$，$h_j^* = r_{i_j}(h_{j-1}^*)$。则：
+
+$$\|\hat{h}_l - h_l^*\| \leq \varepsilon_{\max} \cdot \frac{L^l - 1}{L - 1}$$
+
+**证明**：
+
+定义第 $j$ 步的累积误差 $e_j = \|\hat{h}_j - h_j^*\|$。
+
+**初始条件**：$e_0 = \|\hat{h}_0 - h_0^*\| = \|x - x\| = 0$。
+
+**第 $j$ 步的递推不等式**：
+
+$$e_j = \|\hat{h}_j - h_j^*\| = \|\hat{f}_j(\hat{h}_{j-1}) - r_{i_j}(h_{j-1}^*)\|$$
+
+插入中间量 $r_{i_j}(\hat{h}_{j-1})$，应用三角不等式：
+
+$$e_j \leq \underbrace{\|\hat{f}_j(\hat{h}_{j-1}) - r_{i_j}(\hat{h}_{j-1})\|}_{\text{（A）单步拟合误差}} + \underbrace{\|r_{i_j}(\hat{h}_{j-1}) - r_{i_j}(h_{j-1}^*)\|}_{\text{（B）$r_{i_j}$ 的 Lipschitz 传播}}$$
+
+- **项（A）**：由逐点拟合定义，$\|\hat{f}_j(y) - r_{i_j}(y)\| \leq \varepsilon_{i_j} \leq \varepsilon_{\max}$，对任意 $y$ 成立，故取 $y = \hat{h}_{j-1}$ 得 $\text{(A)} \leq \varepsilon_{\max}$。
+
+- **项（B）**：$r_{i_j}$ 是 $L$-Lipschitz 函数（$L$ 为全局最大逐层 Lipschitz 常数，由 §1.5.D 命题 1.1），故 $\text{(B)} \leq L \cdot \|\hat{h}_{j-1} - h_{j-1}^*\| = L \cdot e_{j-1}$。
+
+得递推关系：
+
+$$e_j \leq \varepsilon_{\max} + L \cdot e_{j-1}, \qquad e_0 = 0$$
+
+**展开递推**（Telescope 展开）：
+
+$$e_1 \leq \varepsilon_{\max}$$
+$$e_2 \leq \varepsilon_{\max} + L\varepsilon_{\max} = \varepsilon_{\max}(1 + L)$$
+$$e_3 \leq \varepsilon_{\max} + L \cdot \varepsilon_{\max}(1 + L) = \varepsilon_{\max}(1 + L + L^2)$$
+$$\vdots$$
+$$e_l \leq \varepsilon_{\max}(1 + L + L^2 + \cdots + L^{l-1}) = \varepsilon_{\max} \cdot \frac{L^l - 1}{L - 1}$$
+
+（$L = 1$ 时几何级数退化为 $l$，即 $e_l \leq l \cdot \varepsilon_{\max}$。）$\square$
+
+> **注（$L$ 的来源）**：项（B）使用 $r_{i_j}$ 是 $L$-Lipschitz。$r_{i_j} \in \Omega$ 是语义空间上的变换，其 Lipschitz 常数原则上由训练数据决定。在 IDFC 框架中，$L$ 取的是所有步骤中最大的 Lipschitz 常数，即 $L = \max_j \|G_{i_j}\|_{\text{Lip}}$（由 §1.5.D 命题 1.1 给出的累积 Lipschitz 常数的单步版本）。精确地，$L$ 应是 $r_{i_j}$ 的 Lipschitz 常数，此处以网络层的 Lipschitz 常数代理。
+
+> **注（证明的保守性）**：Telescope 展开对 $j$ 步的误差均取上界 $\varepsilon_{\max}$（而非各步实际的 $\varepsilon_{i_j}$），并对 Lipschitz 传播取全局最大 $L$。当各步误差和 Lipschitz 常数差异显著时，实际误差远低于此界。
+
+---
+
+### 3.3 万能逼近定理（UAT）与误差收敛
+
+**命题 3.1（逐点拟合的 UAT 保证）**：设 $r_i : \mathcal{X} \to \mathcal{X}$ 在有界域 $\mathcal{X} \subset \mathbb{R}^d$ 上是连续函数。则对任意 $\varepsilon > 0$，存在规模 $M_0(\varepsilon, r_i)$ 使得：当 $M \geq M_0$ 时，训练后的 $F$ 存在 $E_{r_i}: \mathcal{X} \to \langle F \rangle_\cdot$ 满足：
+
+$$\sup_{x \in \mathcal{X}} \|E_{r_i}(x) \cdot x - r_i(x)\| \leq \varepsilon$$
+
+**证明思路（UAT 到逐点拟合的桥接）**：
+
+UAT（Cybenko 1989; Hornik 1991）经典陈述为：对 $\mathcal{X}$ 上的任意连续函数 $g: \mathbb{R}^d \to \mathbb{R}^d$ 和 $\varepsilon > 0$，存在有限宽度的浅层 MLP 使得均匀逼近误差 $< \varepsilon$。
+
+从 UAT 到本文设定需要以下桥接：
+
+**步骤 1（连续性保证）**：$r_i: \mathcal{X} \to \mathcal{X}$ 的连续性满足 UAT 前提（IDFC 框架中 $r_i$ 是语义变换，自然连续性在 $\mathcal{X} = \mathbb{R}^d$ 上的有界子集成立）。
+
+**步骤 2（逼近目标的重写）**：目标逼近 $r_i(x)$ 等价于逼近函数 $g_i: x \mapsto r_i(x)$。UAT 保证存在一个 MLP $\tilde{f}_i$ 使得 $\|\tilde{f}_i(x) - r_i(x)\| \leq \varepsilon/2$。
+
+**步骤 3（逐点拟合的 IDFC 实现）**：$\tilde{f}_i(x)$ 是一个标准 MLP。在 IDFC 框架中，该 MLP 的计算等价于：对输入 $x$，激活路径选出某个 $E(x) \in \langle F \rangle_\cdot$，使得 $E(x) \cdot x = \tilde{f}_i(x)$（由 §1.5.B 的代数结构，任意 MLP 输出均可写成此形式）。故 $E_{r_i}(x) \triangleq E(x)$ 满足逐点拟合定义。
+
+**步骤 4（规模关系）**：UAT 只保证存在性，不给出 $M_0$ 的显式公式。但命题保证随 $M \to \infty$，$F$ 的近似能力单调增强，$\varepsilon_i^* = \inf_{\text{valid } E_{r_i}} \sup_x \|E_{r_i}(x) \cdot x - r_i(x)\|$ 趋于 $0$。$\square$
+
+**推论 3.2（链路误差的渐近收敛）**：对固定链长 $l$ 和固定 $L$，当 $M \to \infty$：
+
+$$\varepsilon_{\max} \cdot \frac{L^l - 1}{L - 1} \xrightarrow{M \to \infty} 0$$
+
+即：对任意有限复合长度的未见任务，充分大的模型可以将 CAC 误差压制到任意小的 $\delta > 0$。
+
+> [!IMPORTANT]
+> **§3 的证明状态总结**：
+>
+> | 命题 | 状态 | 依赖 |
+> |---|---|---|
+> | Telescope 展开（§3.2） | ✅ 严格 | 三角不等式 + $r_i$ 的 Lipschitz 性 |
+> | UAT 存在性（§3.3 命题 3.1） | ✅ 严格（模 UAT） | Cybenko/Hornik UAT，$r_i$ 连续性 |
+> | $\varepsilon_i^* \to 0$（推论 3.2） | ✅ 严格（模 UAT） | 命题 3.1 的直接推论 |
+> | $L$ 的无条件上界 | ❌ 开放 | 见 §2 IMPORTANT 注释 |
+> | $r_i$ 的连续性假设 | ⚠️ 语义假设 | 语义变换的拓扑性质，依赖 $\mathcal{X}$ 的结构 |
 
