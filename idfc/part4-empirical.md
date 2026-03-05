@@ -549,3 +549,155 @@ $$\tilde{\epsilon}(\mathbf{x}_s, s, c) = \epsilon_\theta(\mathbf{x}_s, s, \varno
 > **文本 Diffusion 模型的特殊性**：对在 token 空间上运行的 Diffusion（如 MDLM、SEDD 等离散扩散），每步仍操作离散 token，$\varepsilon_{\text{tok}}$ 的结构与自回归类似，但噪声过程不同。本节的命题 8.1 适用于**连续潜空间**的 Diffusion（如 Stable Diffusion、AudioLDM 等标准实现）；离散文本 Diffusion 需单独分析，见开放问题 §10.4。
 
 ---
+
+## 9. Mamba 作为对比架构：SSM 路由的 IDFC 解读
+
+> **定位**：本节以 [Part 2 §1.2](part2-model-proof.md) 的架构无关 Nemytskii 算子场为基准，将 Mamba（Selective State Space Model，S6）纳入 IDFC 框架，解析其与 Transformer 的**结构性差异**，并形式化 SSM 压缩损失这一 Transformer-free 架构下的新失效模式。
+
+---
+
+### 9.1 Selective SSM = 仿射 Nemytskii 算子（局部路由）
+
+**Mamba 的离散化 SSM 递推**：设序列位置 $t$，隐状态 $h_t \in \mathbb{R}^{d_{\text{state}}}$，输入 $x_t \in \mathbb{R}^d$：
+
+$$h_t = \bar{A}(x_t) \cdot h_{t-1} + \bar{B}(x_t) \cdot x_t, \qquad y_t = C(x_t) \cdot h_t$$
+
+其中 $\bar{A}(x_t) = \exp(\Delta(x_t) \cdot A)$，$\bar{B}(x_t) = \Delta(x_t) \cdot B(x_t)$，步长 $\Delta(x_t) = \text{softplus}(W_\Delta x_t + b_\Delta)$，均为 $x_t$ 的函数。
+
+**IDFC 映射**：对比 Part 2 §1.2 的标准 Nemytskii 算子 $G_l(h) = \Phi_l(h) \cdot h$，Mamba 每步是一个**仿射**变体：
+
+$$G_t^{\text{Mamba}}(h) = \bar{A}(x_t) \cdot h + \bar{B}(x_t) \cdot x_t$$
+
+通过扩充状态 $h_{\text{aug}} = [h_{t-1};\, x_t] \in \mathbb{R}^{d_{\text{state}} + d}$，可写成标准形式：
+
+$$G_t^{\text{Mamba}}(h_{\text{aug}}) = \underbrace{[\bar{A}(x_t) \;\big|\; \bar{B}(x_t)]}_{\Phi_t^{\text{Mamba}}(x_t) \;\in\; \mathcal{M}_{d_{\text{state}},\, d_{\text{state}}+d}} \cdot h_{\text{aug}}$$
+
+> **命题 9.1（Mamba 的 IDFC 实例化）**：Mamba 的 Selective SSM 是 IDFC Nemytskii 算子场的**仿射实例**，有效算子 $\Phi_t^{\text{Mamba}}$ 由**当前 token $x_t$** 单独决定。
+
+**与 Transformer 的根本差异**：
+
+| 算子来源 | Transformer | Mamba |
+|---|---|---|
+| $\Phi_l(h)$ 的决定因素 | 全序列 softmax Attention（$O(n)$ 信息） | 仅当前 $x_t$（$O(1)$ 局部信息）|
+| 路由类型 | **全局软路由**（attend 任意历史位置）| **局部硬路由**（$\Delta(x_t)$ 决定遗忘/记忆比）|
+| f-chain 的上下文感知 | 精确内容寻址（可靠找到远处 $j^*$） | 隐状态压缩后的摘要（近处权重 > 远处）|
+
+---
+
+### 9.2 $L < 1$ 的结构性保证——Mamba 的误差收缩特性
+
+**HiPPO 初始化的 Lipschitz 含义**：Mamba 的矩阵 $A$ 由 HiPPO 初始化，其特征值满足 $\text{Re}(\lambda_i) < 0$。离散化后：
+
+$$\|\bar{A}(x_t)\| = \|\exp(\Delta(x_t) \cdot A)\| \leq \exp(\Delta(x_t) \cdot \max_i \text{Re}(\lambda_i)) < 1$$
+
+即 $\|\bar{A}(x_t)\| < 1$ **对所有输入 $x_t$ 严格成立**——这是一个**无条件的架构级保证**，不依赖 LayerNorm 或训练细节。
+
+**命题 9.2（Mamba 的 CAC 误差界：$L < 1$ 版本）**：设 $\rho \triangleq \sup_t \|\bar{A}(x_t)\| < 1$，则 Mamba 的 $f$-chain 误差界退化为**收敛级数**：
+
+$$\text{Err}^{\text{Mamba}}(l) \leq \varepsilon_{\max} \cdot \frac{1 - \rho^l}{1 - \rho} \xrightarrow{l \to \infty} \frac{\varepsilon_{\max}}{1 - \rho} < \infty$$
+
+**对比命题 5.1（Transformer，$L > 1$ 时）**：误差以 $O(L^l)$ 指数爆炸。
+
+$$\boxed{\text{Mamba: } L < 1 \implies \text{CAC 误差有界（不随链长爆炸）}}$$
+$$\boxed{\text{Transformer: } L \gtrless 1 \text{（LayerNorm 软约束）} \implies \text{CAC 误差可能指数增长}}$$
+
+**推论 9.2a（Mamba 无 Type II 幻觉的无穷深版本）**：在 $\rho < 1$ 的保证下，对**任意有限链长 $l$**，Mamba 的 CAC 误差均有界于 $\varepsilon_{\max}/(1-\rho)$——不存在 Transformer 中「超过 $l_{\max}$ 后误差爆炸」的 Type II 临界点。代价是隐状态的信息容量被固定尺寸 $d_{\text{state}}$ 限制。
+
+> [!IMPORTANT]
+> Mamba 用「$L < 1$ 保证的误差收敛」换取了「精确历史寻址能力」。这不是优劣判断，而是 CAC 误差结构的不同取舍：Transformer 的 $L$ 不保证 $< 1$ 但可精确寻址；Mamba 的 $L < 1$ 有保证但历史信息被指数压缩。
+
+---
+
+### 9.3 SSM 压缩损失：Mamba 架构的专有失效模式
+
+**定义（历史信息衰减权重）**：在时刻 $n$ 生成时，位置 $k < n$ 的信息对当前隐状态的贡献权重为：
+
+$$w(k \leftarrow n) = \prod_{s=k+1}^{n} \bar{A}(x_s) \cdot \bar{B}(x_k)$$
+
+在 $\|\bar{A}\| \leq \rho < 1$ 的条件下，此权重以 $\rho^{n-k}$ 指数衰减——远处位置 $k$ 处的信息**系统性被压缩至接近零**。
+
+**命题 9.3（SSM 压缩损失：新的幻觉类型）**：设任务 $q$ 需要精确回指位置 $k^*$（$|n - k^*| \gg 1$）处的原语 $r_{k^*}$，Mamba 模型的该原语拟合误差满足：
+
+$$\varepsilon_{k^*}^{\text{SSM}} \geq (1 - \rho^{n - k^*}) \cdot \|v^*_{k^*}\|$$
+
+其中 $v^*_{k^*} = \bar{B}(x_{k^*}) \cdot x_{k^*}$ 是 $k^*$ 位置的初始贡献向量。
+
+**与 Type IV-a（Attention 稀释）的对比**：
+
+| 特性 | Type IV-a（Transformer） | SSM 压缩损失（Mamba） |
+|---|---|---|
+| **根因** | Softmax 归一化将权重分散至 $n$ 个竞争位置 | 矩阵乘积 $\prod \bar{A}_s$ 的指数衰减 |
+| **衰减速率** | $O(1/n)$（多项式，均匀竞争时） | $O(\rho^{n-k})$（指数，与距离成正比）|
+| **可修复性** | 可通过 Q/K 调优提高 score 差 $\|\Delta s\|$ | 不可通过参数调整绕过（$\rho < 1$ 是架构硬性质）|
+| **架构依赖性** | softmax Attention 专有 | 压缩状态 SSM 专有 |
+| **距离效应** | 非单调（Primacy + Recency 偏置） | 严格单调衰减（距离越远越差）|
+| **上限（信息论）** | $n > n_{\max}$ 时不可达（§6.1） | 任意长距离均有正误差下界 |
+
+**推论 9.3a（SSM 压缩损失与 Type II 的耦合）**：SSM 压缩损失给对应原语的 $\varepsilon_{k^*}$ 一个正下界，该下界被 CAC 误差积累（命题 11.2, Part 3）以 $L^{l-k^*}$ 放大——但 Mamba 下 $L < 1$，放大系数 $< 1$，故耦合效应**不比 Transformer 严重**（对 Mamba：压缩损失不会被放大，而会被后续步骤进一步压缩）。
+
+---
+
+### 9.4 Mamba 的 $f$-chain 组装：局部路由的 CAC 含义
+
+**核心对比**：Transformer 的 $f$-chain 在每步通过注意力矩阵 $A(x)$ **全局决定**哪个 $r_i$ 的信息被引入；Mamba 的 $f$-chain 在每步通过步长 $\Delta(x_t)$（选择性门控）**局部决定**当前 token 有多少映射贡献、历史状态保留多少。
+
+**定义（Mamba 的路由锐利度）**：步长 $\Delta(x_t) \in \mathbb{R}_{>0}$ 是 Mamba 的路由锐利度控制参数：
+
+- $\Delta(x_t) \to 0$：$\bar{A} \to I$（全保留历史），$\bar{B} \to 0$（忽略当前输入）→ **纯记忆模式**
+- $\Delta(x_t) \to \infty$：$\bar{A} \to 0$（完全遗忘历史），$\bar{B} \cdot x_t$ 主导 → **纯当前输入模式**
+
+这与自回归温度 $T$ 和 Guidance scale $\gamma$ 构成 IDFC 框架下的三参数类比：
+
+| 参数 | 架构 | 控制的锐利度 | 极端行为 |
+|---|---|---|---|
+| 温度 $T$ ↓ | 自回归 | LM head softmax（输出选择） | greedy → 固化路径 |
+| Guidance $\gamma$ ↑ | Diffusion | 得分场梯度方向（去噪导引） | 模式崩溃 |
+| 步长 $\Delta$ ↑ | Mamba | SSM 遗忘/记忆比（历史压缩） | 切断历史 → 只看当前 |
+
+**CAC 在 Mamba 下的工作方式**：CAC 定理（Part 2 §2）的代数结构对 Mamba 仍然成立——若 Mamba 在隐状态 $h_t$ 中能可靠地维持 $r_i$ 的近似，则链路误差仍以 Telescope 展开传播。區別在于：
+
+- Transformer 的 $r_i$ 近似是通过**内容寻址**（Attention score）「选出」过去哪个状态来执行 $r_i$
+- Mamba 的 $r_i$ 近似是通过**状态压缩**（SSM 递推）在隐状态中「累积」$r_i$ 所需的历史信息
+
+因此，**Mamba 更擅长局部依赖的 $r_i$（$r_i$ 的计算只需近处几步历史）**，而**对长程依赖的 $r_i$（需精确访问遥远位置）存在结构性劣势**——这正是 Mamba 在 Needle-in-a-Haystack 类任务上弱于 Transformer 的 IDFC 机制解释。
+
+---
+
+### 9.5 混合架构（Mamba + Attention）的 IDFC 分工
+
+实践中出现的混合架构（如 Jamba、Zamba、MambaFormer）将 SSM 层与 Attention 层交替堆叠。在 IDFC 框架下，这是**两种 $f$-chain 路由机制的分工组合**：
+
+| 层类型 | IDFC 角色 | 处理的 $r_i$ 类型 |
+|---|---|---|
+| **SSM 层（Mamba）** | 局部路由 + 历史压缩摘要 | 局部依赖的原语（近程语法、短程推理）|
+| **Attention 层（Transformer）** | 全局寻址 + 精确回指 | 长程依赖的原语（事实引用、跨章节逻辑）|
+
+**命题 9.5（混合架构的 CAC 最优分工原则）**：给定任务 $q$ 的 $r$-chain 分解，最优混合架构应满足：
+
+- 对 $r$-chain 中依赖距离 $\Delta t < \Delta^*$ 的原语步骤：使用 SSM 层（$L < 1$，误差有界）
+- 对依赖距离 $\Delta t \geq \Delta^*$ 的原语步骤：使用 Attention 层（精确寻址，避免 SSM 压缩损失）
+
+其中临界距离 $\Delta^*$ 满足 $\rho^{\Delta^*} \cdot \|v^*\| = \delta_{j^*}$（SSM 压缩损失等于任务容忍误差 $\delta_{j^*}$）：
+
+$$\Delta^* = \left\lfloor \frac{\log(\delta_{j^*} / \|v^*\|)}{\log \rho} \right\rfloor$$
+
+这将混合架构的层比例（SSM:Attention）从经验调参转化为**由任务的 $r$-chain 依赖距离分布决定的原则性设计问题**。
+
+---
+
+### 9.6 三架构 IDFC 结构总览
+
+| 维度 | Transformer | Mamba | Diffusion |
+|---|---|---|---|
+| **算子 $\Phi_l$ 来源** | 全局 softmax Attention | 局部 $x_t$ 决定的 SSM 门控 | 得分网络（连续梯度场）|
+| **Lipschitz $L$** | LayerNorm 软约束（不保证 $< 1$）| HiPPO 保证 $< 1$（无条件）| 依赖去噪网络设计 |
+| **CAC 误差趋势** | 可能指数爆炸（$L > 1$ 时）| 级数收敛（$L < 1$）| $S$ 步得分误差累积 |
+| **历史访问方式** | 精确内容寻址（KV Cache）| 指数衰减的隐状态压缩 | 无历史（单步生成）|
+| **$\varepsilon_{\text{tok}}$ 结构** | 每步采样（$T$ 次）| 每步采样（$T$ 次）| 仅最终解码一次 |
+| **CoT 可锚定性** | ✅（softmax 精确 attend 中间 token）| ⚠️（中间 token 被压缩进隐状态，精度随距离衰减）| ❌（连续潜空间无语义锚点）|
+| **专有失效模式** | Type IV（softmax 稀释）| SSM 压缩损失（§9.3）| 最终 Decode 误差集中 |
+| **最适任务** | 长程精确依赖（RAG、推理链）| 局部依赖序列（语言建模基础层）| 连续结构生成（图像、音频）|
+
+> **一句话**：Transformer、Mamba、Diffusion 是同一 IDFC $f$-chain 框架下，对「路由机制 $\Phi_l$」和「离散化时机 $\varepsilon_{\text{tok}}$」的三种不同取舍——没有绝对优劣，只有任务结构与架构 CAC 特性的匹配程度。
+
+---
