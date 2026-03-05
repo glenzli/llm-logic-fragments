@@ -283,6 +283,94 @@ $$\exists\; E_{r_i}: \mathcal{X} \to \langle F \rangle_\cdot \quad \text{s.t.} \
 
 
 
+
+---
+
+### 1.7 生成过程的形式化：离散化与自回归展开
+
+§1.5 定义了 $f$-chain 作为**连续状态空间 $\mathbb{R}^d$ 上的动力系统**，其输出 $\text{output}(x) = E(x) \cdot x \in \mathbb{R}^d$ 是连续向量。实际语言模型输出的是离散 token——本节形式化这一"连续→离散"的转换，并由此导出自回归展开的完整数学定义。
+
+#### A. 离散化步骤与 $\varepsilon_{\text{tok}}$
+
+**定义（语言模型头与离散化）**：设词表 $\mathcal{V}$，$|\mathcal{V}| = V$。语言模型头（LM head）是线性映射 $W_{\text{LM}} \in \mathbb{R}^{V \times d}$，将 $f$-chain 的输出映射为 logit 向量：
+
+$$z = W_{\text{LM}} \cdot h_k \in \mathbb{R}^V$$
+
+给定温度参数 $T > 0$，定义输出分布：
+
+$$p_T(w \mid x) = \frac{\exp(z_w / T)}{\sum_{w'} \exp(z_{w'} / T)}, \quad w \in \mathcal{V}$$
+
+采样 $\hat{w} \sim p_T(\cdot \mid x)$ 得到输出 token $\hat{w} \in \mathcal{V}$，对应嵌入向量 $e_{\hat{w}} \in \mathbb{R}^d$。
+
+**定义（令牌化误差 $\varepsilon_{\text{tok}}$）**：对目标语义状态 $h^* \in \mathbb{R}^d$，离散化步骤引入的**令牌化误差**为：
+
+$$\varepsilon_{\text{tok}} \triangleq \mathbb{E}_{\hat{w} \sim p_T}\!\left[\|e_{\hat{w}} - h^*\|\right]$$
+
+$\varepsilon_{\text{tok}}$ 是**连续 $f$-chain 输出物化为离散 token 时的信息损失**，是温度 $T$ 的单调函数：
+
+$$T \to 0 \implies p_T \to \delta_{\arg\max_w z_w} \implies \varepsilon_{\text{tok}} = \|e_{\hat{w}^{\text{greedy}}} - h^*\|$$
+$$T \to \infty \implies p_T \to \text{Uniform}(\mathcal{V}) \implies \varepsilon_{\text{tok}} \to \mathbb{E}_{w \sim \text{Unif}}[\|e_w - h^*\|]$$
+
+---
+
+#### B. $T$ 步自回归展开
+
+**定义（自回归展开）**：设初始输入 $x^{(0)} = x$，$T$ 步自回归展开定义如下迭代过程：
+
+对 $t = 0, 1, \ldots, T-1$：
+
+$$h_k^{(t)} = \text{f-chain}(x^{(t)}), \qquad \hat{w}^{(t+1)} \sim p_{T_t}\!\left(\cdot \mid x^{(t)}\right), \qquad x^{(t+1)} = \left(x^{(t)},\, e_{\hat{w}^{(t+1)}}\right)$$
+
+其中 $(x^{(t)}, e_{\hat{w}^{(t+1)}})$ 表示将新 token 的嵌入追加至上下文序列。最终输出序列为 $(\hat{w}^{(1)}, \ldots, \hat{w}^{(T)})$。
+
+**结构观察**：每步迭代由**一次 $f$-chain 前向传播**和**一次离散化采样**交替构成。$T$ 步展开将有效计算深度从 $k$（单次 $f$-chain 层数）扩展至 $k \cdot T$——与命题 11.1a 的 CoT 扩展完全对应。
+
+---
+
+#### C. 自回归展开与 CoT 的同构定理
+
+**定理 1.7（自回归展开 $\cong$ CoT，严格版本）**：
+
+设 $T$ 步自回归展开产生 token 序列 $(\hat{w}^{(1)}, \ldots, \hat{w}^{(T)})$，$k$ 步 CoT 定义为（命题 4.3）：将目标 $r$-chain 分为 $k$ 段，每段对应一个中间 token。
+
+则两者是**同一个数学结构**的两种描述：
+
+$$\text{自回归展开} \equiv \text{CoT}, \quad \text{当且仅当} \quad \hat{w}^{(t)} \approx r_{i_t}(h^{(t-1)}) \text{ 对所有 } t \text{ 成立}$$
+
+更精确地，令 $r$-chain 的目标为 $q = r_{i_T} \circ \cdots \circ r_{i_1}$，定义第 $t$ 步的**对齐误差**为：
+
+$$\varepsilon_{\text{tok}}^{(t)} = \|e_{\hat{w}^{(t)}} - r_{i_t}(h^{(t-1)})\|$$
+
+则自回归过程的总误差界与命题 5.3（CoT 完整误差界）完全相同：
+
+$$\text{Err}_{\text{AR}}(T) \leq \sum_{t=1}^{T} L^{T-t} \cdot \varepsilon_{\text{tok}}^{(t)} \leq T \cdot \varepsilon_{\text{tok}}^{\max} \cdot \frac{L^T - 1}{L - 1}$$
+
+**推论 1.7a（两种范式的统一解释）**：
+
+| 生成模式 | $\varepsilon_{\text{tok}}^{(t)}$ 的语义 | IDFC 含义 |
+|---|---|---|
+| 普通自回归（无 CoT） | token 不对应语义 $r$-chain 步，$\varepsilon_{\text{tok}}^{(t)}$ 大 | $f$-chain 有效链路被短截，每步误差大 |
+| 理想 CoT | token 精确对应某个 $r_i$ 的物化，$\varepsilon_{\text{tok}}^{(t)} \to 0$ | 自回归等价于逐步执行 $r$-chain |
+| 退化 CoT（$\varepsilon_{\text{tok}}^{(t)} > \varepsilon_{\max}$） | 中间 token 反而引入更大误差 | 命题 5.3b 失效条件：CoT 有害 |
+
+> **核心命题**：一切自回归语言模型的生成过程本质上都是 CoT——区别仅在于中间 token 对目标 $r$-chain 步骤的**对齐质量** $\varepsilon_{\text{tok}}^{(t)}$。"Chain-of-Thought"是对这个对齐质量从低到高的一端的工程描述，不是一种独立的计算机制。
+
+---
+
+#### D. 温度 $T$ 在 IDFC 中的精确角色
+
+温度 $T$ 是**离散化步骤的锐利度参数**，控制 $\varepsilon_{\text{tok}}$ 的大小：
+
+- $T$（温度）↑ → $p_T$ 分布更平 → $\varepsilon_{\text{tok}}$ ↑ → 自回归每步引入更大扰动
+- $T$ ↓ → 趋向 argmax → $\varepsilon_{\text{tok}}$ 最小化（但 greedy 可能非最优路径）
+
+> **注意**：$T$（输出温度，本节）与 Attention 内的缩放 $\sqrt{d_k}$（Part 4 §1.2）是两个不同的 softmax，前者在 $f$-chain 出口控制离散化，后者在 $f$-chain 内部控制路由锐利度。
+
+---
+
+> [!NOTE]
+> §1.7 定义的形式框架供 Part 3 §4.4、§5.3 的 CoT 分析引用（$\varepsilon_{\text{tok}}$ 的正式来源），并为 Part 4 §8 的 Diffusion 范式对比提供基准。Diffusion 的区别在于：整条去噪轨迹取消了逐步离散化，$\varepsilon_{\text{tok}}$ 仅在最终步骤一次性产生（见 Part 4 §8）。
+
 ---
 
 ## 2. 核心假说：组合近似封闭性

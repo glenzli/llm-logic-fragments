@@ -56,9 +56,13 @@ $$P(q \text{ 正确}, t) \approx \prod_{j=1}^{k} p(r_{i_j}, t)$$
 
 ### 4.4 思维链（CoT）：误差线性化机制
 
-思维链不是"提示技巧"，而是对 CAC 误差结构的工程介入。
+**同构性基础**（**定理 1.7**，[Part 2 §1.7C](part2-model-proof.md)）：在计算机理层面，自回归展开与 CoT 是**同一数学结构的两种描述**——区别仅在于中间 token 对目标 $r$-chain 步骤的**对齐质量** $\varepsilon_{\text{tok}}^{(t)}$（$\varepsilon_{\text{tok}}$ 的正式定义见 [Part 2 §1.7A](part2-model-proof.md)）：
 
-**问题根源**：对长度为 $l$ 的 $r$-链，误差在 $L$-Lipschitz 条件下以 $O(L^{l-1}\varepsilon)$ 累积。模型存在一个**可靠链路长度上限** $l_{\max}$——对需要深度 $l > l_{\max}$ 的 $r$-链问题，直接推理会失败。
+$$\text{自回归展开} \equiv \text{CoT} \quad \iff \quad \varepsilon_{\text{tok}}^{(t)} \to 0 \quad \forall t$$
+
+即：「Chain-of-Thought 提示」是对这种对齐质量从低到高的工程描述，不是独立的计算机制。
+
+**问题根源**：对长度为 $l$ 的 $r$-链，误差在 $L$-Lipschitz 条件下以 $O(L^{l-1}\varepsilon)$ 累积（CAC 定理，Part 2 §2）。模型存在一个**可靠链路长度上限** $l_{\max}$——对需要深度 $l > l_{\max}$ 的 $r$-链问题，直接推理会失败。
 
 **CoT 的介入机制**：将 $r$-链分解为 $k$ 段，每段长度 $l/k \leq l_{\max}$，并将每段终态 $t_i$ 显式生成为输出 token：
 
@@ -69,13 +73,13 @@ $$x \xrightarrow{r_1} t_1 \xrightarrow{r_2} t_2 \xrightarrow{\;\cdots\;} t_{k-1}
 | 模式 | 误差上界 |
 |---|---|
 | 无 CoT（直接推理） | $O(L^{l-1}\varepsilon)$（指数） |
-| 理想 CoT（每步 1 个 $r$） | $k\varepsilon$（线性） |
+| 理想 CoT（每步 1 个 $r$，$\varepsilon_{\text{tok}}^{(t)} \to 0$） | $k\varepsilon$（线性） |
 
-**中间 token 作为状态锚点**：生成的 $t_i$ 进入上下文后，后续位置通过注意力直接 attend 到它。这将隐式的 $f$-链路中间状态"物化"为显式向量，等价于将每段 $r$-链的初始条件重置为已知精确状态——消除了跨段误差传递。
+**中间 token 作为状态锚点**：生成的 $t_i$ 进入上下文后，后续位置通过注意力直接 attend 到它（即定理 1.7 的自回归展开中 $x^{(t+1)} = (x^{(t)}, e_{\hat{w}^{(t+1)}})$）。这将隐式 $f$-链路的中间状态「物化」为显式向量，等价于将每段 $r$-链的初始条件重置为已知精确状态——消除了跨段误差传递。
 
 > **命题 4.3（CoT 能力扩展）**：对可靠链路长度上限为 $l_{\max}$ 的模型，$k$ 步 CoT 将可解问题的有效 $r$-链深度从 $l_{\max}$ 扩展至 $k \cdot l_{\max}$，且误差保持可控。（含 $\varepsilon_{\text{tok}}$ 成本的精确版本见 §5.3）
 
-**推论**：更长的 CoT 不只是给模型更多"思考时间"，而是在 $f$-链路误差约束下合法地延伸了可达的 $Q$ 集合范围。
+**推论**：更长的 CoT 不只是给模型更多「思考时间」，而是在 $f$-链路误差约束下合法地延伸了可达的 $Q$ 集合范围。
 
 ---
 
@@ -154,7 +158,7 @@ $$w_j = L^{l - j}, \qquad j = 1, 2, \ldots, l$$
 
 ### 5.3 CoT 的精确误差分析（严格推论，含中间 token 成本）
 
-命题 4.3（§4.4）给出了 CoT 的定性描述，此处给出含中间 token 生成误差的精确版本。
+命题 4.3（§4.4）给出了 CoT 的定性描述。$\varepsilon_{\text{tok}}$ 的正式定义见 [Part 2 §1.7A](part2-model-proof.md)（「连续 $f$-chain 输出物化为离散 token 时的信息损失」，即 $\varepsilon_{\text{tok}} \triangleq \mathbb{E}_{\hat{w} \sim p_T}\!\left[\|e_{\hat{w}} - h^*\|\right]$），此处给出含 $\varepsilon_{\text{tok}}$ 的精确版本。
 
 **命题 5.3（CoT 完整误差界）**：设 CoT 将 $l$ 步 $r$-链分为 $k$ 段，每段长度 $s = l/k$（整除情形），中间 token 的生成误差为 $\varepsilon_{\text{tok}}$，则 CoT 推理的总误差界为：
 

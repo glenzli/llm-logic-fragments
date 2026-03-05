@@ -462,3 +462,90 @@ $$\varepsilon_{j^*}^{\text{IV-b}} \geq \|n(x)\| - \|s(x)\|$$
 **汇总一句话**：
 - **Type I–III** 是 $f$-chain 框架的结构性极限，与 Transformer 无关；
 - **Type IV** 是 Attention 的 softmax 路由的专有病理，换掉路由机制就换掉了 Type IV——但同时也失去了 Attention 带来的上下文动态路由能力。
+
+---
+
+## 8. Diffusion 作为对比生成范式
+
+> **定位**：本节以 [Part 2 §1.7](part2-model-proof.md) 的自回归形式化框架为基准，将 Diffusion 模型（得分匹配 / DDPM 家族）纳入 IDFC 框架，解析其与自回归生成的**结构性差异**，并给出 guidance scale 在 IDFC 中的精确类比。
+
+---
+
+### 8.1 Diffusion 的 IDFC 解读：连续去噪轨迹
+
+**自回归范式的 $\varepsilon_{\text{tok}}$ 结构（回顾）**：在 Part 2 §1.7A，每一步自回归采样引入离散化误差：
+
+$$\varepsilon_{\text{tok}}^{(t)} = \mathbb{E}_{\hat{w} \sim p_{T}}\!\left[\|e_{\hat{w}} - h^*_t\|\right]$$
+
+其中 $h^*_t \in \mathbb{R}^d$ 是第 $t$ 步的「理想连续状态」，$e_{\hat{w}}$ 是被选中 token 的嵌入向量。$T$ 步自回归展开在 IDFC 中产生 $T$ 次离散化误差的累积（Part 2 §1.7B、命题 5.3）。
+
+**Diffusion 的结构性对比**：设去噪过程共 $S$ 步，第 $s$ 步的状态为 $\mathbf{x}_s \in \mathbb{R}^{d_{\text{out}}}$（例如像素空间、潜在空间），去噪器 $\epsilon_\theta$ 给出分数估计：
+
+$$\mathbf{x}_{s-1} = \frac{1}{\sqrt{\alpha_s}}\!\left(\mathbf{x}_s - \frac{1 - \alpha_s}{\sqrt{1-\bar{\alpha}_s}} \epsilon_\theta(\mathbf{x}_s, s)\right) + \sigma_s \mathbf{z}, \quad \mathbf{z} \sim \mathcal{N}(0, I)$$
+
+**关键结构差异**：去噪轨迹 $\mathbf{x}_S \to \mathbf{x}_{S-1} \to \cdots \to \mathbf{x}_0$ 全程在**连续空间**中推进，**不经过离散化采样**。因此：
+
+> **命题 8.1（Diffusion 的 $\varepsilon_{\text{tok}}$ 结构）**：在 IDFC 框架下，Diffusion 模型的去噪轨迹产生的**逐步离散化误差为零**（$\varepsilon_{\text{tok}}^{(s)} = 0$，$s = 1, \ldots, S-1$）。$\varepsilon_{\text{tok}}$ **仅在最终投影步骤一次性产生**：
+>
+> $$\varepsilon_{\text{tok}}^{\text{Diff}} = \| \text{Decode}(\mathbf{x}_0) - y^* \|$$
+>
+> 其中 $\text{Decode}$ 是从连续潜在空间到离散输出（像素 quantization、token 投影等）的一次性转换。
+
+**IDFC 含义**：Diffusion 以「推迟离散化」换取了全程无 $\varepsilon_{\text{tok}}$ 的连续 $f$-chain 轨迹——中间状态不被量化，不损失信息，命题 5.3 中 $k-1$ 个 $\varepsilon_{\text{tok}}$ 项消失：
+
+$$\text{Err}_{\text{Diff}}(S) \leq S \cdot \varepsilon_{\text{score}} \cdot \frac{L^S - 1}{L - 1}$$
+
+其中 $\varepsilon_{\text{score}}$ 是每步得分估计误差，替代了自回归的 $\varepsilon_{\max}$。
+
+---
+
+### 8.2 Guidance Scale = Temperature 的精确等价
+
+**自回归温度回顾**（Part 2 §1.7A/D）：输出 logit 向量 $z \in \mathbb{R}^V$，采样分布为 $p_T(w) \propto \exp(z_w / T)$：
+
+- $T \to 0$：argmax（greedy），$\varepsilon_{\text{tok}}$ 最小化，但可能陷入局部最优路径
+- $T \to \infty$：均匀随机，$\varepsilon_{\text{tok}}$ 最大化，多样性但无意义
+
+**Classifier-Free Guidance（CFG）的分数修正**：设条件得分 $\epsilon_\theta(\mathbf{x}_s, s, c)$（条件 $c$）和无条件得分 $\epsilon_\theta(\mathbf{x}_s, s, \varnothing)$，CFG 的修正得分为：
+
+$$\tilde{\epsilon}(\mathbf{x}_s, s, c) = \epsilon_\theta(\mathbf{x}_s, s, \varnothing) + \gamma \cdot \left[\epsilon_\theta(\mathbf{x}_s, s, c) - \epsilon_\theta(\mathbf{x}_s, s, \varnothing)\right]$$
+
+其中 $\gamma > 0$ 为 **guidance scale**（引导强度）。
+
+> **命题 8.2（Guidance Scale = Temperature 等价）**：在 IDFC 框架下，guidance scale $\gamma$ 与自回归温度 $T$ 在控制「路径选择锐利度」上扮演**精确类比的角色**：
+>
+> | 参数 | 控制的 softmax 位置 | 效果方向 | $\varepsilon_{\text{tok}}$ 等价物 |
+> |---|---|---|---|
+> | 自回归温度 $T$ ↓ | LM head 输出（f-chain 出口） | 更锐利 → 靠近 argmax | $\varepsilon_{\text{tok}}$ ↓（但 greedy 路径固化） |
+> | Guidance scale $\gamma$ ↑ | 得分场（f-chain 内部梯度方向） | 更强条件约束 → 靠近条件极值 | $\varepsilon_{\text{score}}$ 等价物 ↓（但多样性 ↓） |
+>
+> 两者均是各自框架中控制「生成路径集中程度」的**锐利度参数**，过大则过拟合条件（模式崩溃），过小则扩散至高熵区（无意义输出）。
+
+**精确类比的限制**：两者并不完全等价——温度 $T$ 在离散词表上的 softmax 锐利度控制，而 $\gamma$ 在连续得分场的梯度方向上操作。温度的作用是**选取哪个 token**，$\gamma$ 的作用是**朝哪个方向去噪**——前者在离散集上选择，后者在连续流形上导航。
+
+---
+
+### 8.3 自回归 vs. Diffusion 的 IDFC 结构对比
+
+| 维度 | 自回归（AR） | Diffusion |
+|---|---|---|
+| **生成轨迹空间** | 离散 token 序列（$\mathcal{V}^T$） | 连续状态空间（$\mathbb{R}^{d_{\text{out}}}$） |
+| **$f$-chain 结构** | $T$ 步，每步一次 $k$-层前向 + 离散化 | $S$ 步，每步一次 $k$-层去噪前向，全程连续 |
+| **$\varepsilon_{\text{tok}}$ 发生时机** | **每步**（$T$ 次离散化误差累积） | **仅最终一次**（连续→离散的最终投影） |
+| **CAC 误差源** | $\varepsilon_{\text{tok}}$ + $\varepsilon_{\max}$（双重） | $\varepsilon_{\text{score}}$（单一：得分估计误差） |
+| **锐利度控制参数** | 温度 $T$（LM head softmax） | Guidance scale $\gamma$（得分场放大） |
+| **CoT 可组合性** | ✅ 天然：中间 token 是可读 $r$-chain 步骤 | ❌ 困难：中间状态在连续潜空间无语义 |
+| **Type I 幻觉上限** | 可通过 CoT 扩展（$l_{\text{eff}} = k \cdot T$） | COT 不适用；$S$ 步去噪等价于固定深度 $k \cdot S$ 的 $f$-chain |
+| **Type II 幻觉** | 误差在 $T$ 个 $\varepsilon_{\text{tok}}$ 步累积 | 误差在 $S$ 个 $\varepsilon_{\text{score}}$ 步累积（但无额外离散化项） |
+| **典型应用** | 序列任务、推理链、代码生成 | 图像/音频生成、分子设计、连续结构输出 |
+
+> **核心结论（命题 8.3）**：Diffusion 模型在 IDFC 框架下的结构优势在于**消除逐步 $\varepsilon_{\text{tok}}$**，代价是放弃了自回归的**中间 token 可读性**（即 CoT 的可锚定性）。两种范式对应 CAC 误差结构的两种不同取舍：
+> - **自回归**：多次离散化（每步 $\varepsilon_{\text{tok}}$），但每步均可作为语义锚点（CoT 可行）
+> - **Diffusion**：单次最终离散化（$\varepsilon_{\text{tok}}$ 集中于末步），但中间状态无语义可锚（CoT 不适用）
+>
+> 对需要可解释推理链（多步逻辑、CoT 必要）的任务，自回归的中间锚点价值超过其额外的 $\varepsilon_{\text{tok}}$ 成本；对连续结构输出（图像、蛋白质骨架），Diffusion 的单次离散化优势显著。
+
+> [!NOTE]
+> **文本 Diffusion 模型的特殊性**：对在 token 空间上运行的 Diffusion（如 MDLM、SEDD 等离散扩散），每步仍操作离散 token，$\varepsilon_{\text{tok}}$ 的结构与自回归类似，但噪声过程不同。本节的命题 8.1 适用于**连续潜空间**的 Diffusion（如 Stable Diffusion、AudioLDM 等标准实现）；离散文本 Diffusion 需单独分析，见开放问题 §10.4。
+
+---
