@@ -121,9 +121,19 @@ $$\frac{\partial l_{\max}}{\partial \varepsilon_{\max}} < 0, \qquad \frac{\parti
 
 **推论 5.1b（模型规模的间接作用）**：Part 2 §3.3 保证 $\varepsilon_{\max} \xrightarrow{M \to \infty} 0$，代入得 $l_{\max} \xrightarrow{\varepsilon_{\max} \to 0} +\infty$。模型规模的扩展在固定 $L$ 下可以将可靠推理深度推向无限——但 $L$ 本身是由架构而非规模决定的，是更根本的瓶颈。
 
+**推论 C-1（Transformer 实例化的 $l_{\max}$ 紧化版，= Part 2c §27 推论 27.1a）**：
+
+当 $f$ 落地到 Transformer（残差连接结构），泛函层用 $\log L$ 为分母的 $l_{\max}$ 公式（命题 5.1）获得代数紧化版：
+
+$$l_{\max}^{\text{alg}}(\delta) = \left\lfloor \frac{\log(\delta/\varepsilon_{\max})}{\lambda} \right\rfloor \geq l_{\max}^{\text{func}}(\delta)$$
+
+其中 $\lambda = \max_l \|J_{\Delta f_l}\|_{\text{op}}$ 是**残差增量 Jacobian 的谱范数**（远小于全局 $\log L$，因为 $\lambda$ 是每层的增量范数而非复合后的全局 Lipschitz）。由 LayerNorm 将 $\lambda_l$ 约束为权重范数的线性函数（$\lambda_l \leq C_{\text{LN}} \cdot (\|W_O W_V\| + \|W_2 W_1\|)$），$\lambda$ 是可从权重估算的具体量。
+
+**代数精化的量化含义**：$l_{\max}^{\text{alg}} / l_{\max}^{\text{func}} = (\log L) / \lambda \geq 1$，严格大于 1（在残差范数较小时）。泛函层对可靠推理深度**悲观估计**——真实 Transformer 的实际容限链长比命题 5.1 的预测更长，差异量级由 $\log L / \lambda$ 决定。
+
 ---
 
-### 5.2 误差传播的非对称结构（严格推论）
+
 
 **命题 5.2（误差权重的指数非对称性）**：对长度为 $l$ 的 $r$-链 $q = r_{i_l} \circ \cdots \circ r_{i_1}$，望远镜展开后，步骤 $j$ 的单步误差 $\varepsilon_{i_j}$ 对最终误差的贡献权重为：
 
@@ -144,7 +154,21 @@ $$w_j = L^{l - j}, \qquad j = 1, 2, \ldots, l$$
 
 **含义 3（验证器的非对称价值）**：在推理链中插入验证步骤，在位置 $j$ 插入的价值正比于 $L^{l-j}$。因此，**在推理链头部验证的价值比尾部高出 $L^{l-1}$ 倍**——这给出了验证器放置策略的理论最优解。
 
+**推论 C-2（Transformer 中误差权重的代数分解，= Part 2c §27 命题 27.1）**：
+
+泛函层的误差权重 $w_j = L^{l-j}$（命题 5.2）在 Transformer 代数层分解为：
+
+$$w_j = L^{l-j} = \prod_{j' = j}^{l-1} (1 + \lambda_{j'}) \leq e^{(l-j) \cdot \lambda}$$
+
+其中 $\lambda_{j'} = \|J_{\Delta f_{j'}}\|_{\text{op}}$（每层残差的 Jacobian 谱范数）可由 LayerNorm 估算：
+
+$$\lambda_{j'} \leq C_{\text{LN}} \cdot (\|W_O^{(j')}\|_{\text{op}} \cdot \|W_V^{(j')}\|_{\text{op}} + \|W_2^{(j')}\|_{\text{op}} \cdot \|W_1^{(j')}\|_{\text{op}})$$
+
+**实用含义**：误差权重的非对称结构（首步权重远大于末步）在代数层可量化——通过计算各层 $\lambda_{j'}$ 的乘积，可以估算实际权重而无需用全局 $L^{l-j}$ 作保守上界。这对验证器放置策略的精确优化有直接意义。
+
 ---
+
+
 
 ### 5.3 CoT 的精确误差分析（严格推论，含中间 token 成本）
 
@@ -277,7 +301,21 @@ $$|Q(M)| = \sum_{k=1}^{K(M)} |\mathcal{C}(r_k)| \sim K(M)^{2-\alpha+1} \propto M
 
 **这将 Scaling Law 的幂律从纯经验规律提升为结构性推导。**
 
+**推论 C-3（$\varepsilon_i$ Zipf 分布为幂律 Scaling 提供代数来源，= Part 2c §27 命题 27.4）**：
+
+命题 7.2 的能力块幂律假设（$|\mathcal{C}(r)|$ 幂律）与代数层的 $\varepsilon$ Zipf 分布（命题 27.4）相互印证：
+
+- 训练频率 $\nu_i \propto i^{-\alpha}$（Zipf，$\alpha \approx 1$）→ 拟合误差 $\varepsilon_i \propto \nu_i^{-1/2} \propto i^{\alpha/2}$
+- 高频原语（小 $i$）误差小、覆盖深、能力块大（$|\mathcal{C}(r_i)|$ 大）
+- 低频原语（大 $i$）误差大、覆盖浅、能力块小（$|\mathcal{C}(r_i)|$ 小）
+
+两者共同说明的结构：**频率驱动的 Zipf 分布同时决定了 $\varepsilon_i$ 的层级和 $|\mathcal{C}(r_i)|$ 的分布**——泛函层的能力块幂律假设（命题 7.2）在代数层获得了来自训练统计的自然来源，不再是独立的经验假设。
+
+**可验证预测**：若 $\varepsilon_i$ 确实服从 Zipf 分布（可从权重分析估算），则 Scaling Law 指数 $\beta(3-\alpha)$ 中的 $\alpha$ 应与语料的词频 Zipf 指数成正比——这是两个来自不同层面的独立测量值，若实验吻合则对 IDFC 代数实例化层提供强验证。
+
 ---
+
+
 
 # 第三类：认识论极限与开放猜想
 

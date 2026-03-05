@@ -78,7 +78,19 @@ $$\|G_l\|_{\text{Lip}} \leq B_l + L_{\Phi_l} \cdot \sup_h \|h\|$$
 
 LayerNorm 将 $\sup_h \|h\|$ 约束在 $O(\sqrt{d})$ 量级，使 $L$ 被软性限制。没有 LayerNorm，$L > 1$ 时 CAC 误差随链长 $l$ 指数爆炸；有了 LayerNorm，$L$ 被约束在有界范围，**使 CAC 误差界对长推理链维持可控。**
 
+**推论 E-1（Attention 的 Lipschitz 上界代数公式，= Part 2c §27.2 以及§5.2）**：
+
+Softmax Attention（关于输入序列 $X$ 的全局 Lipschitz）的谱范数上界：
+
+$$L_{\text{attn}} \leq \frac{\|W_V\|_{\text{op}}}{2\sqrt{d_k}} \cdot \|W_Q\|_{\text{op}} + O(\|W_K\|_{\text{op}})$$
+
+其中 $\|W_V\|_{\text{op}}/(2\sqrt{d_k})$ 来自 Softmax 的 Lipschitz 上界性质：$\text{softmax}$ 关于分数第 $i$ 个分量的 Lipschitz 常数不超过 $1/2$，乘以 $\|W_V\|/(\sqrt{d_k})$（缩放因子）即得。
+
+**与泛函层界的对比**：泛函层用 $L ≥ L_{\text{attn}}$（全局 Lipschitz）作上界；代数层将其分解为 $\|W_V\|/(2\sqrt{d_k})$（可从权重直接计算）和 $\|W_Q\|, \|W_K\|$（由 LayerNorm 有界）的乘积。这使 $L_{\text{attn}}$ 成为可测量的具体量，而不是抽象的标量 $L$。
+
 ---
+
+
 
 ### 1.5 残差连接：增量近似降阶器
 
@@ -92,7 +104,19 @@ $$E(x) = \prod_{l=1}^{k} (I + \Phi_l^{\Delta}(h_{l-1}))$$
 
 此形式是**矩阵指数的离散近似**：$\prod(I + \Delta_l) \approx e^{\sum \Delta_l}$，使深层网络的信息传播接近连续流。
 
+**推论 E-2（残差复合的 Lipschitz 指数增长公式，= Part 2c §27 命题 27.1）**：
+
+$K$ 层 Transformer（每层增量 Jacobian 谱范数 $\lambda_l = \|J_{\Delta f_l}\|_{\text{op}}$）的复合映射 $x_0 \mapsto x_K$ 的全局 Lipschitz 常数满足：
+
+$$L_{\text{eff}} = \|J_f^{(1 \to K)}\|_{\text{op}} \leq \prod_{l=1}^{K}(1 + \lambda_l) \leq e^{\sum_{l=1}^{K} \lambda_l} \leq e^{K\lambda}$$
+
+其中 $\lambda = \max_l \lambda_l$（由 LayerNorm 管制，可从 $\lambda_l \leq C_{\text{LN}}(\|W_O W_V\|_{\text{op}} + \|W_2 W_1\|_{\text{op}})$ 估算）。
+
+**与泛函层的强化对比**：泛函层将全局 Lipschitz 写为 $L$，$k$ 步复合的误差放大因子为 $L^k$。代数层找到了更紧的界 $e^{k\lambda}$（指数相同，但底数 $e^\lambda$ 明显小于 $L$）。这是泛函层 $l_{\max}$ 为**深度估低**的代数解释，也是 Part 2c §27 将泛函层界紧化的核心定理。
+
 ---
+
+
 
 ### 1.6 IDFC 角色总览
 
