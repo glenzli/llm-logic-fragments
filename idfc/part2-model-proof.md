@@ -540,7 +540,7 @@ $$\bar{L} \;\triangleq\; \left(\prod_{l=1}^{k} \|G_l\|_{\mathrm{Lip}}\right)^{1/
 
 $$1 \;<\; \bar{L} \;\leq\; C^{1/k}$$
 
-同时，以 $\|G_j\|_{\mathrm{Lip}}$ 代理 $r_j$ 的 Lipschitz 常数的误差满足 $|L_{r_j} - \|G_j\|_{\mathrm{Lip}}| \leq 2\varepsilon_j/s$（其中 $s > 0$ 为输入最小间距），且 $\varepsilon_j \ll s$。
+同时，以 $\|G_j\|_{\mathrm{Lip}}$ 代理 $r_j$ 的 Lipschitz 常数时，对任意尺度 $R = \|h-h'\| > 0$，局部 Lipschitz 比满足：$\frac{\|r_j(h)-r_j(h')\|}{R} \leq \|G_j\|_{\mathrm{Lip}} + \frac{2\varepsilon_j}{R}$（见命题 3.4 步骤 3）。在 CAC 链路中取 $R = e_{j-1}$（当步累积误差），代理在 $e_{j-1} \gg \varepsilon_j$ 时自动收紧，无需全局最小间距 $s > 0$。
 
 > TSC 是对训练结果的**可观测约束**，不依赖具体的优化算法。任何产生满足上述不等式的模型参数的训练方法——无论是梯度下降、进化策略还是其他机制——均满足 TSC。
 
@@ -611,7 +611,11 @@ $$\|F_\theta(x_i) - F_\theta(x_j)\| \;\geq\; C_\mathcal{D}\|x_i - x_j\| - 2\delt
 
 $$\bar{L}^{2k} \;\leq\; \frac{2}{\eta\beta_0} \;\triangleq\; C^2 \;\implies\; \bar{L} \;\leq\; C^{1/k}$$
 
-**步骤 3（代理合法性）**：由 $\sup_x \|\hat{f}_j(x) - r_j(x)\| \leq \varepsilon_j$ 及三角不等式，$|L_{r_j} - \|G_j\|_{\mathrm{Lip}}| \leq 2\varepsilon_j/s$。当 $\varepsilon_j \ll s$（UAT 命题 3.1 保证 $\varepsilon_j \to 0$），代理误差趋零。$\square$
+**步骤 3（代理合法性——尺度局部）**：对任意 $h, h'$ 满足 $R = \|h-h'\| > 0$，由三角不等式：
+
+$$\|r_j(h) - r_j(h')\| \;\leq\; \|\hat{f}_j(h) - \hat{f}_j(h')\| + 2\varepsilon_j \;\leq\; \|G_j\|_{\mathrm{Lip}} \cdot R + 2\varepsilon_j$$
+
+除以 $R$：$\frac{\|r_j(h)-r_j(h')\|}{R} \leq \|G_j\|_{\mathrm{Lip}} + \frac{2\varepsilon_j}{R}$。在 CAC Telescope 展开中取 $R = e_{j-1}$（当步累积误差）：误差 $= 2\varepsilon_j/e_{j-1} \to 0$ 当 $e_{j-1} \gg \varepsilon_j$（UAT 保证 $\varepsilon_j \to 0$）。无需全局最小间距 $s > 0$，代理在 CAC 分析的关键尺度（大误差阶段）自动收紧。$\square$
 
 > **TSC 的普适性**：定理 3.3 仅依赖 TSC，不依赖命题 3.4 的具体推导。若未来出现不基于梯度下降的训练方法（进化策略、前向-前向算法、生物 STDP 等），只要其模型参数满足 $1 < \bar{L} \leq C^{1/k}$，定理 3.3 和推论 3.3a 自动成立，$l^*$ 的公式保持不变。
 
