@@ -478,7 +478,6 @@ $$\varepsilon_{\max}^* \geq \begin{cases} 0 & N \leq d\\ \Omega\!\left(\sqrt{(N-
 > | 量化 | 15.5 | 严格 | QAT = $F$ 对量化格的结构适应；位宽理论下界与 Welch 下界在 CAC 框架内同构 |
 > | 量化 | 15.6 | 严格 | 量化-对齐乘法衰减：$\rho_{\text{align}}^Q \propto L^{-l_{\text{align}}} \cdot (\varepsilon_{\max}^{\text{fp32}}/\varepsilon_{\max}^Q)$；复杂对齐破坏被 benchmark 系统性低估 |
 > | 量化 | **15.7** | **严格（谱间隙）** | **1.58-bit = 三值格约束的 Nemytskii 算子；$\delta_q^{\min}(d) = \Omega(1/\sqrt{d}) > 0$ 不可消除，$l_{\max}^{\text{1.58}} < l_{\max}^{\text{fp32}}$ 永久成立；P1–P5 是 CAC 假设的实验探针（见 Part 4 §11）** |
-
 > | **LoRA / PEFT** | **16.1** | **严格** | **LoRA = 有效算子场的局部低秩摄动；$F$ 拓扑不变，局部 $\varepsilon_i$ 可降** |
 > | LoRA / PEFT | 16.2 | 严格 | 选择性 $\varepsilon$ 压降：仅 $R_{\text{tgt}}$ 相关层降低，非目标原语不退化；秩 $r$ = 任务复杂度硬约束 |
 > | LoRA / PEFT | 16.3 | 严格 | LoRA 不改变 $L$ 和 CoT 结构，$l_{\max}$ 提升仅间接来自 $\varepsilon_{\max}$ 局部降低 |
@@ -2544,7 +2543,7 @@ $$\mathcal{X}_c \;\triangleq\; \bigl\{x \in \mathcal{X} : \|E_c(x)\cdot x - y_c(
 
 **定义（内容三态）**：
 
-| 内容态 | 定义域宽度 $|\mathcal{X}_c|$ | 组合参与度（是否进入 $R^*$）| Lipschitz 曲率 |
+| 内容态 | 定义域宽度 $\lvert\mathcal{X}_c\rvert$ | 组合参与度（是否进入 $R^*$）| Lipschitz 曲率 |
 |---|---|---|---|
 | **逻辑原语**（Logic）| 大（整个语义类）| ✅ 强（核心组合单元）| 低（稳定）|
 | **知识事实**（Knowledge）| 中（特定问题类）| ✅ 部分（提供原语的定义域基底）| 中 |
