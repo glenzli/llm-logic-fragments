@@ -93,7 +93,30 @@ $$l_{\max}^S(\delta) \xrightarrow{\text{CoT trace KD}} l_{\max}^T(\delta) \quad 
 | CoT trace 模仿 | $l_{\max}^S \uparrow$ | **可解决更长的问题**，推理深度直接平齐老师 |
 | 两者叠加 | $\varepsilon_{\max}^S \downarrow$ + $l_{\max}^S \uparrow$ | **双维提升**：单步更好 + 链路更长 |
 
-**推论 13.3b（CoT trace 蒸馏的局限性）**：CoT trace 蒸馏试图转移老师的「$r$-chain 分语方式」，但若老师的 trace 中存在 $\varepsilon_{\text{tok}}^{T} > 0$（老师自身的中间 token 输入导致偏差），学生将模仿这些偶然性错误——学生不仅学了分解方式，也学了老师的失败模式。这就是为什么蒸馏自推理模型相对于蒸馏人类写的 Ground Truth CoT 存在上限的原因。
+**推论 13.3c（CoT trace 蒸馏传递了 CoT 的双重机制结构）**：答案蒸馏仅给出 $(x, y_{\text{final}})$——学生无法知道链路应在哪里截断。CoT trace 蒸馏传递的是完整的 $(x, t_1, t_2, \ldots, t_k, y)$，使学生同时获得 CoT 的两个维度（§4.4 双重机制）：
+
+$$\text{CoT trace 蒸馏} = \underbrace{\text{正确分段点（Type I：}F_{\text{eff}}\text{ 扩展位置）}}_{\text{答案蒸馏无法传递}} + \underbrace{\text{误差线性化的截断方式（Type II）}}_{\text{答案蒸馏亦无法传递}}$$
+
+**学生不仅知道答案是什么，还知道在哪里截链、每段终态是什么**——这是答案蒸馏在结构上不可逾越的信息差。
+
+**推论 13.3d（CoT trace = 对每个原语的信用分配式训练，直接扩展 $|\mathcal{K}_{r_i}|$）**：对 $k$ 步链路，答案蒸馏每条 example 仅给整体链路一个训练信号（无法分解到单个 $r_i$）；CoT trace 的每个中间步骤对应一个独立的 $(t_{j-1}, t_j)$ 原语执行样本：
+
+$$\text{答案蒸馏：} \quad (x,\; r_{i_k} \circ \cdots \circ r_{i_1}(x)) \quad \text{—— 整体 1 个信号（无信用分配）}$$
+$$\text{CoT trace 蒸馏：} \quad (x, t_1),\; (t_1, t_2),\; \ldots,\; (t_{k-1}, y) \quad \text{—— 每个 $r_{i_j}$ 各 1 个独立信号}$$
+
+由 Part 3a 推论 4.2b（知识覆盖约束逻辑阈值速率）：$|\mathcal{X}_{r_i}| \geq \Omega(|\mathcal{K}_{r_i}|^{1/d})$，每个中间步骤等价于为对应原语增加一条 $\mathcal{K}_{r_i}$ 样本。**CoT trace 蒸馏对 $k$ 步链路，将链路中每个原语的知识基底扩展了 $k$ 倍**——这是其加速学生原语阈值跨越（$p(r_i, t)$ 增速加快）的精确机制，而非模糊的"学会了推理过程"。
+
+**推论 13.3e（CoT trace 直接解锁 Zipf 瓶颈原语）**：由 Part 3a 推论 4.2a，链路涌现时刻由链路中频率最低的**瓶颈原语** $r_{i^*}$（Zipf 排名最低）决定。
+
+答案蒸馏从不单独展示 $r_{i^*}$ 的执行过程——学生无法看到"仅执行 $r_{i^*}$"时的输入-输出对，无法为这个瓶颈原语积累独立的样本。
+
+CoT trace 在每个包含 $r_{i^*}$ 的链路中，都提供 $r_{i^*}$ 被正确执行时的上下文对 $(t_{j-1}, t_j)$——即使 $r_{i^*}$ 在预训练中出现频率很低，也通过 teacher 的 trace 直接为其提供了多样的执行样本，使学生的 $p(r_{i^*}, t)$ 快速越过组合可用阈值。
+
+**这是 DeepSeek-R1、QwQ 等推理蒸馏模型效果惊人的 IDFC 三层精确机制**：不是"教会了思考"，而是：传递了截链结构（推论 13.3c）+ 为每个原语提供信用分配训练（推论 13.3d）+ 解锁了 Zipf 瓶颈原语（推论 13.3e）。
+
+---
+
+**推论 13.3b（CoT trace 蒸馏的局限性）**：CoT trace 蒸馏试图转移老师的「$r$-chain 分段方式」，但若老师的 trace 中存在 $\varepsilon_{\text{tok}}^{T} > 0$（老师自身的中间 token 输入导致偏差），学生将模仿这些偶然性错误——学生不仅学了分解方式，也学了老师的失败模式。这就是为什么蒸馏自推理模型相对于蒸馏人类写的 Ground Truth CoT 存在上限的原因。
 
 ---
 
@@ -101,7 +124,7 @@ $$l_{\max}^S(\delta) \xrightarrow{\text{CoT trace KD}} l_{\max}^T(\delta) \quad 
 > **蒸馏的 IDFC 核心结论**：
 > 1. **Soft label = $r$-chain 拓扑的压缩编码**：老师的输出概率将老师 $F$-chain 对整个输出流形的曲率信息压缩进了 $V$ 维向量。
 > 2. **KL 最小化 = 内积度量结构对齐**：学生嵌入空间必须具有与老师相同的几何关系，小参数量学生仍可获得老师层度的 $\varepsilon_{\max}^S$。
-> 3. **CoT trace 蒸馏直接转移 $l_{\max}$**：Trace 模仿将学习目标从「答案正确」升级为「$r$-chain 分解步骤正确」，直接将学生的推理深度上限平齐老师——这是 DeepSeek-R1、QwQ 等推理蒸馏模型效果惊人的激活 IDFC 机制解释。
+> 3. **CoT trace 蒸馏的三层精确机制**：(推论 13.3c) 传递 CoT 双重机制结构（Type I $F_{\text{eff}}$ 扩展位置 + Type II 截链方式）；(推论 13.3d) 信用分配式训练，$k$ 步链路将每个原语的 $|\mathcal{K}_{r_i}|$ 扩展 $k$ 倍，加速阈值跨越；(推论 13.3e) 直接为 Zipf 瓶颈原语 $r_{i^*}$ 提供独立执行样本，解锁链路涌现时刻——这是 DeepSeek-R1、QwQ 等推理蒸馏模型效果惊人的 IDFC 三层精确解释。
 
 ---
 
