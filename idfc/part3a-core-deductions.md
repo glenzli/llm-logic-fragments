@@ -69,7 +69,11 @@ $$x \xrightarrow{r_1} t_1 \xrightarrow{r_2} t_2 \xrightarrow{\;\cdots\;} t_{k-1}
 
 > **命题 4.3（CoT 能力扩展）**：对可靠链路长度上限为 $l_{\max}$ 的模型，$k$ 步 CoT 将可解问题的有效 $r$-链深度从 $l_{\max}$ 扩展至 $k \cdot l_{\max}$，且误差保持可控。（含 $\varepsilon_{\text{tok}}$ 成本的精确版本见 §5.3）
 
-**推论**：更长的 CoT 不只是给模型更多「思考时间」，而是在 $f$-链路误差约束下合法地延伸了可达的 $Q$ 集合范围。
+**CoT 的双重机制**：上文着重刻画了 Type II 视角（误差线性化）。代数层（Part 2c §31.2a）揭示了更根本的 Type I 视角：CoT 通过自回归展开将有效函数集 $F_{\text{eff}}$ 从 $O(k)$ 扩展至 $O(k \cdot T)$，使原本需要 $k \cdot T$ 层一次性前向传播才能解决的任务（Type I 幻觉域）变得可达——这是计算复杂度层面的机制，独立于误差线性化：
+
+$$\text{CoT 完整本质} = \underbrace{F_{\text{eff}} \text{ 扩展（Type I 缓解）}}_{\text{可计算类扩张}} \;+\; \underbrace{\text{误差线性化（Type II 缓解）}}_{\text{单步误差控制}}$$
+
+**推论**：更长的 CoT 不只是给模型更多「思考时间」，而是在两个独立维度上同时扩展了可达的 $Q$ 集合：一是绕过了 $f$-chain 深度天花板（Type I），二是在误差约束下延伸了可靠推理长度（Type II）。
 
 ---
 
@@ -184,7 +188,17 @@ $$\text{Err}_{\text{CoT}}(k) \leq (k \cdot \varepsilon_{\max} + (k-1) \cdot \var
 
 **推论 5.3a（CoT 最优步数）**：存在有限最优 $k^*$，在 $\varepsilon_{\text{tok}}$ 较大时 $k^* < l$（不应无限细分）。
 
-**推论 5.3b（CoT 失效条件）**：当 $\varepsilon_{\text{tok}} > \varepsilon_{\max}$ 时，CoT 反而比直接推理引入更多误差。即**中间 token 的物化误差超过单步推理误差时**，引入更多 CoT 步骤适得其反。这给出了 CoT 在某些任务上失效的机制性解释：若中间步骤难以用自然语言精确表达（如空间关系、抽象代数操作、高维几何推理），$\varepsilon_{\text{tok}}$ 会很大，CoT 不稳定乃至有害。
+**推论 5.3b（CoT 失效条件）**：当 $\varepsilon_{\text{tok}} > \varepsilon_{\max}$ 时，CoT 反而比直接推理引入更多误差。即**中间 token 的物化误差超过单步推理误差时**，引入更多 CoT 步骤适得其反。
+
+$\varepsilon_{\text{tok}}$ 升高的结构根因（Part 2b §25，三态分类）：中间步骤所对应内容的内容态决定了其物化代价——
+
+| 中间步骤内容态 | $L_c$ 性质 | $\varepsilon_{\text{tok}}$ 大小 | CoT 是否稳定 |
+|---|---|---|---|
+| **逻辑原语**（宽域、低曲率）| $L_c \approx L$（有界）| 接近 0（稳定 token 化）| ✅ 稳定 |
+| **知识事实**（中等域）| $L_c \lesssim L$ | 中等 | ⚠️ 依任务 |
+| **逐字/高维内容**（极窄域、极高曲率）| $L_s \gg L$ | **极大**（$\mathcal{X}$ 极小，微小 token 误差即脱槽） | ❌ 不稳定 |
+
+空间关系、抽象代数操作、高维几何推理等任务的中间步骤本质上对应高 Lipschitz 内容——物化时 $L_s \gg L$，任意 token 近似误差都被高度放大，这是「自然语言难以精确表达」的 IDFC 结构解释，而非主观描述。
 
 ---
 
@@ -277,7 +291,7 @@ $$k \geq \left\lceil \frac{l^*(q)}{l_{\max}(\delta)} \right\rceil$$
 即存在**不可规避的 CoT 步数下界**——某些任务无论提示如何设计，都需要至少若干步显式中间推理。
 
 > [!NOTE]
-> 判断具体任务是否 $R_{\text{tr}}$-不可约，当前无形式化方法（$R$ 不可枚举）。但此命题的预测性后果可实验验证：对特定任务，系统性地测试不同 CoT 步数，观察是否存在性能陡降的步数下界。
+> 此处 $l_{\max}(\delta)$ 使用全局最坏情形界（命题 5.1），对应任务所需原语中频率最低的一个（见 Part 2c §27.4a：$\varepsilon_{\text{task}} = \max_{r_i \in R(q)} \varepsilon_i$）。实际上 $l_{\max}$ 是任务相关的：高频常识推理任务的 $\varepsilon_{\text{task}} \ll \varepsilon_{\max}$，其 $l_{\max}^{\text{task}} \gg l_{\max}^{\text{global}}$，CoT 步数下界相应更松；长尾专业知识任务才真正受全局界约束。判断具体任务是否 $R_{\text{tr}}$-不可约，当前无形式化方法（$R$ 不可枚举）——此命题的预测性后果可实验验证：系统性测试不同 CoT 步数，观察是否存在性能陡降的步数下界。
 
 ---
 
