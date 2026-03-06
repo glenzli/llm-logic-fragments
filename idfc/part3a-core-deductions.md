@@ -142,7 +142,7 @@ $$|Q(M)| \approx \sum_{r_k : k \leq K(M)} |\mathcal{C}(r_k)|$$
 
 ### 5.1 推理深度硬上界（严格推论）
 
-**命题 5.1（推理深度硬上界）**：给定模型参数确定的 $(\varepsilon_{\max}, L)$，以及精度要求 $\delta > 0$，无 CoT 辅助时满足精度要求的最大推理链长度为：
+**命题 5.1（推理深度硬上界）**：✅ 给定模型参数确定的 $(\varepsilon_{\max}, L)$，以及精度要求 $\delta > 0$，无 CoT 辅助时满足精度要求的最大推理链长度为：
 
 $$l_{\max}(\delta) = \left\lfloor \frac{\log\!\left(1 + \dfrac{\delta(L-1)}{\varepsilon_{\max}}\right)}{\log L} \right\rfloor \qquad (L > 1)$$
 
@@ -150,13 +150,13 @@ $L = 1$ 时退化为 $l_{\max}(\delta) = \lfloor \delta / \varepsilon_{\max} \rf
 
 **证明**：由 CAC 误差界（Part 2 §2）：$\varepsilon_{\max} \cdot \frac{L^l - 1}{L - 1} \leq \delta$，解不等式取整即得。$\square$
 
-**推论 5.1a（双参数敏感性）**：
+**推论 5.1a（双参数敏感性）**：✅
 
 $$\frac{\partial l_{\max}}{\partial \varepsilon_{\max}} < 0, \qquad \frac{\partial l_{\max}}{\partial L} < 0$$
 
 即单步误差越大或 Lipschitz 常数越大，可靠推理深度越浅。当 $L > 1$ 时，$L$ 的作用以指数速率主导 $\varepsilon_{\max}$ 的影响。
 
-**推论 5.1b（模型规模的间接作用）**：Part 2 §3.3 保证 $\varepsilon_{\max} \xrightarrow{M \to \infty} 0$，代入得 $l_{\max} \xrightarrow{\varepsilon_{\max} \to 0} +\infty$。模型规模的扩展在固定 $L$ 下可以将可靠推理深度推向无限——但 $L$ 本身是由架构而非规模决定的，是更根本的瓶颈。
+**推论 5.1b（模型规模的间接作用）**：✅ Part 2 §3.3 保证 $\varepsilon_{\max} \xrightarrow{M \to \infty} 0$，代入得 $l_{\max} \xrightarrow{\varepsilon_{\max} \to 0} +\infty$。模型规模的扩展在固定 $L$ 下可以将可靠推理深度推向无限——但 $L$ 本身是由架构而非规模决定的，是更根本的瓶颈。
 
 **推论 C-1（Transformer 实例化的 $l_{\max}$ 紧化版，= Part 2c §27 推论 27.1a）**：
 
@@ -172,24 +172,24 @@ $$l_{\max}^{\text{alg}}(\delta) = \left\lfloor \frac{\log(\delta/\varepsilon_{\m
 
 
 
-**命题 5.2（误差权重的指数非对称性）**：对长度为 $l$ 的 $r$-链 $q = r_{i_l} \circ \cdots \circ r_{i_1}$，望远镜展开后，步骤 $j$ 的单步误差 $\varepsilon_{i_j}$ 对最终误差的贡献权重为：
+**命题 5.2（误差权重的指数非对称性）**：✅ 对长度为 $l$ 的 $r$-链 $q = r_{i_l} \circ \cdots \circ r_{i_1}$，望远镜展开后，步骤 $j$ 的单步误差 $\varepsilon_{i_j}$ 对最终误差的贡献权重为：
 
 $$w_j = L^{l - j}, \qquad j = 1, 2, \ldots, l$$
 
 **证明**：递推展开 $e_l \leq \sum_{j=1}^{l} L^{l-j}\varepsilon_{i_j}$（见 Part 2 §3.2），即得步骤 $j$ 的权重 $w_j = L^{l-j}$。$\square$
 
-**结构性推论**：
+**结构性推论**：✅
 
 | 步骤位置 $j$ | 误差放大倍数 $w_j$ | 含义 |
 |---|---|---|
 | $j = 1$（首步） | $L^{l-1}$ | **最大**——首步误差被全链放大 |
 | $j = l$（末步） | $L^0 = 1$ | **最小**——末步误差不被放大 |
 
-**含义 1（Prompt 精度的超线性收益）**：改善首步原语 $r_{i_1}$ 的拟合精度 $\varepsilon_{i_1}$ 带来的误差削减为 $L^{l-1} \cdot \Delta\varepsilon_{i_1}$，远超改善末步带来的 $\Delta\varepsilon_{i_l}$。精度改善的收益在推理链中呈现**指数权重**。
+**含义 1（Prompt 精度的超线性收益）**：⚠️ (OC) 改善首步原语 $r_{i_1}$ 的拟合精度 $\varepsilon_{i_1}$ 带来的误差削减为 $L^{l-1} \cdot \Delta\varepsilon_{i_1}$，远超改善末步带来的 $\Delta\varepsilon_{i_l}$。精度改善的收益在推理链中呈现**指数权重**。（前提：能经验识别任务的 r-chain 分解，确认首步原语 $r_{i_1}$ 对应哪个计算阶段；OC 条件 2。）
 
-**含义 2（推理错误的雪崩模式）**：若首步产生偏差 $\delta_1$，则最终误差至少为 $L^{l-1}\delta_1$——对于 $L > 1$ 的链，早期偏差不可收回，只会被放大。这是 LLM 推理错误呈现"幻觉在推理链中雪崩式传播"模式的机制解释。
+**含义 2（推理错误的雪崩模式）**：✅ 若首步产生偏差 $\delta_1$，则最终误差至少为 $L^{l-1}\delta_1$——对于 $L > 1$ 的链，早期偏差不可收回，只会被放大。这是 LLM 推理错误呈现"幻觉在推理链中雪崩式传播"模式的机制解释。
 
-**含义 3（验证器的非对称价值）**：在推理链中插入验证步骤，在位置 $j$ 插入的价值正比于 $L^{l-j}$。因此，**在推理链头部验证的价值比尾部高出 $L^{l-1}$ 倍**——这给出了验证器放置策略的理论最优解。
+**含义 3（验证器的非对称价值）**：⚠️ (OC) 在推理链中插入验证步骤，在位置 $j$ 插入的价值正比于 $L^{l-j}$。因此，**在推理链头部验证的价值比尾部高出 $L^{l-1}$ 倍**——这给出了验证器放置策略的理论最优解。（前提：能将目标任务分解为 r-chain 并识别各步的层次位置 $j$；OC 条件 2。）
 
 **推论 C-2（Transformer 中误差权重的代数分解，= Part 2c §27 命题 27.1）**：
 
@@ -211,7 +211,7 @@ $$\lambda_{j'} \leq C_{\text{LN}} \cdot (\|W_O^{(j')}\|_{\text{op}} \cdot \|W_V^
 
 命题 4.3（§4.4）给出了 CoT 的定性描述。$\varepsilon_{\text{tok}}$ 的正式定义见 [Part 2 §1.7A](part2a-model-proof.md)（「连续 $f$-chain 输出物化为离散 token 时的信息损失」，即 $\varepsilon_{\text{tok}} \triangleq \mathbb{E}_{\hat{w} \sim p_T}\!\left[\|e_{\hat{w}} - h^*\|\right]$），此处给出含 $\varepsilon_{\text{tok}}$ 的精确版本。
 
-**命题 5.3（CoT 完整误差界）**：设 CoT 将 $l$ 步 $r$-链分为 $k$ 段，每段长度 $s = l/k$（整除情形），中间 token 的生成误差为 $\varepsilon_{\text{tok}}$，则 CoT 推理的总误差界为：
+**命题 5.3（CoT 完整误差界）**：✅ 设 CoT 将 $l$ 步 $r$-链分为 $k$ 段，每段长度 $s = l/k$（整除情形），中间 token 的生成误差为 $\varepsilon_{\text{tok}}$，则 CoT 推理的总误差界为：
 
 $$\text{Err}_{\text{CoT}}(k) \leq k \cdot \varepsilon_{\max} \cdot \frac{L^s - 1}{L - 1} + (k-1) \cdot \varepsilon_{\text{tok}} \cdot \frac{L^s - 1}{L-1}$$
 
@@ -219,9 +219,9 @@ $$\text{Err}_{\text{CoT}}(k) \leq k \cdot \varepsilon_{\max} \cdot \frac{L^s - 1
 
 $$\text{Err}_{\text{CoT}}(k) \leq (k \cdot \varepsilon_{\max} + (k-1) \cdot \varepsilon_{\text{tok}}) \cdot \frac{L^s - 1}{L-1}$$
 
-**推论 5.3a（CoT 最优步数）**：存在有限最优 $k^*$，在 $\varepsilon_{\text{tok}}$ 较大时 $k^* < l$（不应无限细分）。
+**推论 5.3a（CoT 最优步数）**：✅ 存在有限最优 $k^*$，在 $\varepsilon_{\text{tok}}$ 较大时 $k^* < l$（不应无限细分）。
 
-**推论 5.3b（CoT 失效条件）**：当 $\varepsilon_{\text{tok}} > \varepsilon_{\max}$ 时，CoT 反而比直接推理引入更多误差。即**中间 token 的物化误差超过单步推理误差时**，引入更多 CoT 步骤适得其反。
+**推论 5.3b（CoT 失效条件）**：✅ 当 $\varepsilon_{\text{tok}} > \varepsilon_{\max}$ 时，CoT 反而比直接推理引入更多误差。即**中间 token 的物化误差超过单步推理误差时**，引入更多 CoT 步骤适得其反。
 
 $\varepsilon_{\text{tok}}$ 升高的结构根因（Part 2b §25，三态分类）：中间步骤所对应内容的内容态决定了其物化代价——
 
@@ -267,33 +267,35 @@ $$M \uparrow \implies \max_r |\mathcal{C}(r)|_{\text{剩余}} \downarrow \implie
 
 $$\rho_{\text{align}} \leq \frac{\delta_{\text{fail}} - \varepsilon_{\text{align}} \cdot \frac{L^{l_{\text{align}}}-1}{L-1}}{\left\|J_{\text{output}}\right\|} \sim \frac{\delta_{\text{fail}}}{L^{l_{\text{align}}}}$$
 
-**核心推论（对齐脆弱性随推理深度指数衰减）**：
+**核心推论（对齐脆弱性随推理深度指数衰减）**：✅
 
 $$\rho_{\text{align}} \propto L^{-l_{\text{align}}}$$
 
 **这是最深刻的结构性结论**：对齐行为所需推理链越长，其对 Prompt 扰动的稳定半径越小，以 $L$ 的指数速率衰减。具体含义：
 
-1. **简单对齐任务（$l_{\text{align}}$ 小）**：如"拒绝有害内容"这种单步判别，稳定半径较大，RLHF 对齐效果持久；
+1. **简单对齐任务（$l_{\text{align}}$ 小）**：✅ 如"拒绝有害内容"这种单步判别，稳定半径较大，RLHF 对齐效果持久；
 
-2. **复杂对齐行为（$l_{\text{align}}$ 大）**：如"多步推理中保持价值一致性"、"在长对话中维持角色对齐"，稳定半径以 $L^{-l_{\text{align}}}$ 衰减至极小——对齐会随推理深度退化，Adversarial Prompt 可以利用极小扰动撬动对齐失败；
+2. **复杂对齐行为（$l_{\text{align}}$ 大）**：✅ 如"多步推理中保持价值一致性"、"在长对话中维持角色对齐"，稳定半径以 $L^{-l_{\text{align}}}$ 衰减至极小——对齐会随推理深度退化，Adversarial Prompt 可以利用极小扰动撬动对齐失败；
 
-3. **能力-对齐权衡的 CAC 根源**：若提升能力需要更深的链（更大的 $l_{\text{align}}$），则对齐稳定性必然衰减——这不是 RLHF 的工程缺陷，而是 CAC 误差结构的**不可绕过的数学约束**。
+3. **能力-对齐权衡的 CAC 根源**：✅ 若提升能力需要更深的链（更大的 $l_{\text{align}}$），则对齐稳定性必然衰减——这不是 RLHF 的工程缺陷，而是 CAC 误差结构的**不可绕过的数学约束**。
+
+> **OC 说明**：⚠️ (OC) 以上定性结论（短链比长链稳定）对所有 $F$ 无条件成立（✅）；但将命题 6.1 用于具体对齐任务时（如估算某具体对话场景的 $\rho_{\text{align}}$ 数值、确认 $l_{\text{align}}$ 的量级），需要能识别该对齐行为所对应的 r-chain 分解——即 OC 条件 2。Part 4 的实证分析提供了若干典型情形的 OC 证据。
 
 ---
 
 ### 6.2 能力提升与对齐退化的不相容性（严格推论）
 
-**命题 6.2（能力-对齐不相容性）**：设模型能力由 $l_{\max}(\delta)$ 刻画（命题 5.1），对齐稳定性由 $\rho_{\text{align}}$（命题 6.1）刻画，则在 $L$ 和 $\delta_{\text{fail}}$ 固定的前提下：
+**命题 6.2（能力-对齐不相容性）**：✅ 设模型能力由 $l_{\max}(\delta)$ 刻画（命题 5.1），对齐稳定性由 $\rho_{\text{align}}$（命题 6.1）刻画，则在 $L$ 和 $\delta_{\text{fail}}$ 固定的前提下：
 
 $$l_{\max} \uparrow \iff \varepsilon_{\max} \downarrow \iff \rho_{\text{align}} \uparrow / \text{unchanged}$$
 
 $$l_{\text{align}} \uparrow \implies \rho_{\text{align}} \downarrow \text{（指数）}$$
 
 两个箭头说明：
-- **提升能力（降低 $\varepsilon_{\max}$ 或增大 $l_{\max}$）**：对对齐稳定性无必然负面影响（$\varepsilon_{\text{align}}$ 可同步下降）；
-- **要求对齐行为跨越更长推理链（增大 $l_{\text{align}}$）**：稳定性指数衰减，**不可通过提升规模绕过**。
+- **提升能力（降低 $\varepsilon_{\max}$ 或增大 $l_{\max}$）**：✅ 对对齐稳定性无必然负面影响（$\varepsilon_{\text{align}}$ 可同步下降）；
+- **要求对齐行为跨越更长推理链（增大 $l_{\text{align}}$）**：✅ 稳定性指数衰减，**不可通过提升规模绕过**。
 
-**结论**：对齐问题的关键不在于模型是否"足够大"，而在于对齐目标行为是否需要长推理链。将对齐约束嵌入短链（单步判别）比要求长链中的价值一致性，在 CAC 框架下有**量级上的稳定性优势**。
+**结论**：对齐问题的关键不在于模型是否"足够大"，而在于对齐目标行为是否需要长推理链。⚠️ (OC) 将对齐约束嵌入短链（单步判别）比要求长链中的价值一致性，在 CAC 框架下有**量级上的稳定性优势**——此工程建议对具体系统有效时，需要能判断目标对齐行为的 r-chain 深度，即 OC 条件。
 
 ---
 

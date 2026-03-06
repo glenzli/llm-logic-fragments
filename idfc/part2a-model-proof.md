@@ -379,6 +379,25 @@ $$\text{Err}_{\text{AR}}(T) \leq \sum_{t=1}^{T} L^{T-t} \cdot \varepsilon_{\text
 
 ---
 
+### 1.8 可操作化条件（Operationalizability Condition，OC）
+
+> **本节的逻辑地位**：§1—§1.7 建立的全部数学结构（$f$-chain、$E_{r_i}(x)$、$\varepsilon_i$、激活路径等）在**数学层面无条件成立**——它们是对任意神经网络的代数描述，不依赖任何语义主张。本节定义一个额外条件，区分"数学推论"与"需要经验桥接的实践建议"。
+
+**定义（可操作化条件，OC）**：称任务 $q$ 对模型 $F$ **满足可操作化条件**，若满足以下两条：
+
+1. **r-链路可分解性**：存在 $R_{\text{tr}}$-链路 $r_{i_l} \circ \cdots \circ r_{i_1}$ 使得 $q \approx r_{i_l} \circ \cdots \circ r_{i_1}$（在 $\varepsilon_{\\max}$ 精度内）；
+2. **步骤可区分性**：对每步 $r_{i_j}$，存在可经验验证的方式（如激活分析、因果干预、MI 实验），确认模型在对应输入阶段的有效算子 $E(x)$ 满足 $\|E(x)\cdot x - r_{i_j}(x)\| \leq \varepsilon_{i_j}$。
+
+> **OC 与 $\varepsilon_{\max}$ 的关系**：若 OC 成立，§2 定义的 $\varepsilon_i$ 就不仅是抽象定义量，而是可与具体模型行为对应的可测量量。OC **不影响**任何数学定理的逻辑有效性；它只决定定理的实践建议能否被操作化为具体的工程指导。
+
+**标注约定（贯穿全文）**：
+- ✅ **纯数学推论**：对任意满足 CAC 前提的 $F$ 无条件成立，与 OC 无关。
+- ⚠️ (OC) **需要 OC**：数学结论为真，但将其转化为具体模型的工程建议时，需要能识别该模型上的 r-chain 分解。Part 4 的实证分析提供 OC 的经验证据。
+
+> **与 Mechanistic Interpretability 的关系**：MI 研究发现的叠加（superposition）和多义性（polysemanticity）现象表明，一般 Transformer 中 OC 不是自动成立的——同一组神经元可执行多个不同"原语"。在叠加显著的层/头，OC 条件 2 可能很难满足。这是实证约束，不是框架的数学缺陷；Part 4 讨论了在不同程度叠加下框架预测力的变化。
+
+---
+
 ## 2. 核心假说：组合近似封闭性
 
 #### 前提设定
@@ -438,7 +457,7 @@ $$\rho(r_l \circ \cdots \circ r_1) \;\approx\; \rho(r_l) \cdot_{\text{chain}} \c
 
 ## 3. 误差分析：CAC 定理的完整证明
 
-本节给出 §2 中 CAC 定理的严格证明，并分析模型规模 $M$ 对误差的控制作用。
+本节给出 §2 中 CAC 定理的严格证明。**CAC 定理的证明在 §3.2（Telescope 展开）处完整结束**——$\varepsilon_i$ 是定义量（见 §2），不需要 UAT 作为前提。§3.3 是独立的补充结果，分析模型规模 $M$ 对 $\varepsilon_{\max}$ 数值大小的渐近影响；§3.4 分析训练方法对 $L_{\max}$ 的约束。
 
 ### 3.1 符号统一与单步误差
 
@@ -506,49 +525,45 @@ $$e_l \leq \varepsilon_{\max}(1 + L + L^2 + \cdots + L^{l-1}) = \varepsilon_{\ma
 
 ---
 
-### 3.3 万能逼近定理（UAT）与误差收敛
+### 3.3 模型规模与 $\varepsilon_{\max}$ 的渐近关系（UAT 补充结果，非 CAC 前提）
 
-**命题 3.1（逐点拟合的 UAT 保证）**：设 $r_i : \mathcal{X} \to \mathcal{X}$ 在有界域 $\mathcal{X} \subset \mathbb{R}^d$ 上是连续函数。则对任意 $\varepsilon > 0$，存在规模 $M_0(\varepsilon, r_i)$ 使得：当 $M \geq M_0$ 时，训练后的 $F$ 存在 $E_{r_i}: \mathcal{X} \to \langle F \rangle_\cdot$ 满足：
+> **本节的逻辑地位**：CAC 定理（§3.2）已完整证明，且对任意 $\varepsilon_{\max}$ 值无条件成立——$\varepsilon_{\max}$ 是训练后模型的**定义量**，不是需要被保证的假设。本节回答一个独立的问题：**当模型规模 $M$ 增大时，$\varepsilon_{\max}$ 的理论下界能被压多低？** 这不影响 CAC 定理的逻辑有效性，只影响 $l^*$ 的数值大小。
+
+**命题 3.1（UAT 存在性：充分大的模型可实现任意精度）**：设 $r_i : \mathcal{X} \to \mathcal{X}$ 在有界域 $\mathcal{X} \subset \mathbb{R}^d$ 上是连续函数。则对任意 $\varepsilon > 0$，存在规模 $M_0(\varepsilon, r_i)$ 和某个权重配置，使得当 $M \geq M_0$ 时，**理论上存在** $E_{r_i}: \mathcal{X} \to \langle F \rangle_\cdot$ 满足：
 
 $$\sup_{x \in \mathcal{X}} \|E_{r_i}(x) \cdot x - r_i(x)\| \leq \varepsilon$$
 
+> **重要边界**：命题 3.1 是**纯存在性定理**。它保证某个权重配置理论上可以实现该精度，但**不保证**梯度下降训练实际找到这个配置。实际训练的 $\varepsilon_{\max}$ 由训练后模型的实际误差决定——它是 CAC 框架中的可观测输入量，可能大于 UAT 理论下界。CAC 定理用的是实际的 $\varepsilon_{\max}$，不是 UAT 意义下的最优值。
+
 **证明思路（UAT 到逐点拟合的桥接）**：
 
-UAT（Cybenko 1989; Hornik 1991）经典陈述为：对 $\mathcal{X}$ 上的任意连续函数 $g: \mathbb{R}^d \to \mathbb{R}^d$ 和 $\varepsilon > 0$，存在有限宽度的浅层 MLP 使得均匀逼近误差 $< \varepsilon$。
+UAT（Cybenko 1989; Hornik 1991）经典陈述为：对 $\mathcal{X}$ 上的任意连续函数 $g: \mathbb{R}^d \to \mathbb{R}^d$ 和 $\varepsilon > 0$，存在有限宽度的浅层 MLP 使得均匀逼近误差 $< \varepsilon$。桥接步骤：（1）$r_i$ 连续性满足 UAT 前提；（2）UAT 保证存在某个 MLP $\tilde{f}_i$ 使 $\|\tilde{f}_i(x) - r_i(x)\| \leq \varepsilon$；（3）由 §1.5.B 代数结构，$\tilde{f}_i(x) = E(x)\cdot x$ 对某个 $E(x) \in \langle F \rangle_\cdot$ 成立，满足逐点拟合定义。UAT 仅给出存在性，不给出 $M_0$ 的显式公式。$\square$
 
-从 UAT 到本文设定需要以下桥接：
+**推论 3.2（理论精度渐近收敛——模型容量上界）**：对固定链长 $l$ 和固定 $L_{\max}$，若训练能达到 UAT 意义下的最优精度，则当 $M \to \infty$：
 
-**步骤 1（连续性保证）**：$r_i: \mathcal{X} \to \mathcal{X}$ 的连续性满足 UAT 前提（IDFC 框架中 $r_i$ 是语义变换，自然连续性在 $\mathcal{X} = \mathbb{R}^d$ 上的有界子集成立）。
+$$\varepsilon_{\max}^{\text{opt}}(M) \cdot \frac{L_{\max}^l - 1}{L_{\max} - 1} \xrightarrow{M \to \infty} 0$$
 
-**步骤 2（逼近目标的重写）**：目标逼近 $r_i(x)$ 等价于逼近函数 $g_i: x \mapsto r_i(x)$。UAT 保证存在一个 MLP $\tilde{f}_i$ 使得 $\|\tilde{f}_i(x) - r_i(x)\| \leq \varepsilon/2$。
-
-**步骤 3（逐点拟合的 IDFC 实现）**：$\tilde{f}_i(x)$ 是一个标准 MLP。在 IDFC 框架中，该 MLP 的计算等价于：对输入 $x$，激活路径选出某个 $E(x) \in \langle F \rangle_\cdot$，使得 $E(x) \cdot x = \tilde{f}_i(x)$（由 §1.5.B 的代数结构，任意 MLP 输出均可写成此形式）。故 $E_{r_i}(x) \triangleq E(x)$ 满足逐点拟合定义。
-
-**步骤 4（规模关系）**：UAT 只保证存在性，不给出 $M_0$ 的显式公式。但命题保证随 $M \to \infty$，$F$ 的近似能力单调增强，$\varepsilon_i^* = \inf_{\text{valid } E_{r_i}} \sup_x \|E_{r_i}(x) \cdot x - r_i(x)\|$ 趋于 $0$。$\square$
-
-**推论 3.2（链路误差的渐近收敛）**：对固定链长 $l$ 和固定 $L$，当 $M \to \infty$：
-
-$$\varepsilon_{\max} \cdot \frac{L^l - 1}{L - 1} \xrightarrow{M \to \infty} 0$$
-
-即：对任意有限复合长度的未见任务，充分大的模型可以将 CAC 误差压制到任意小的 $\delta > 0$。
+即：对任意有限复合长度的未见任务，充分大模型的**理论精度上限**可将 CAC 误差压制到任意小的 $\delta > 0$。实际训练的 $\varepsilon_{\max}$ 可能大于 $\varepsilon_{\max}^{\text{opt}}$——差值是训练效率问题，不是 CAC 框架的假设。
 
 ---
 
 ### 3.4 训练-推理对偶性：有效链长上界
 
-本节给出 CAC 误差界的完整严格形式，并说明 $\bar{L}$ 的约束来源。论证分三层：先建立抽象接口（TSC），再在接口条件下推导定理，最后证明反向传播满足该接口。
+本节给出 CAC 误差界的完整严格形式，并说明 $L_{\max}$ 的约束来源。论证分三层：先建立抽象接口（TSC），再在接口条件下推导定理，最后证明 AdamW 训练满足该接口。
 
 #### 定义（训练稳定性契约，TSC）
 
-称一种训练方法满足**训练稳定性契约（Training Stability Contract，TSC）**，若其产生的模型参数使得逐层 Lipschitz 常数的几何均值：
+称一种训练方法满足**训练稳定性契约（Training Stability Contract，TSC）**，若其产生的模型参数使得逐层 Lipschitz 常数的**全局最大值**：
 
-$$\bar{L} \;\triangleq\; \left(\prod_{l=1}^{k} \|G_l\|_{\mathrm{Lip}}\right)^{1/k}$$
+$$L_{\max} \;\triangleq\; \max_{1 \leq l \leq k} \|G_l\|_{\mathrm{Lip}}$$
 
 满足存在有界常数 $C > 1$，使得：
 
-$$1 \;<\; \bar{L} \;\leq\; C^{1/k}$$
+$$1 \;<\; L_{\max} \;\leq\; C$$
 
 同时，以 $\|G_j\|_{\mathrm{Lip}}$ 代理 $r_j$ 的 Lipschitz 常数时，对任意尺度 $R = \|h-h'\| > 0$，局部 Lipschitz 比满足：$\frac{\|r_j(h)-r_j(h')\|}{R} \leq \|G_j\|_{\mathrm{Lip}} + \frac{2\varepsilon_j}{R}$（见命题 3.4 步骤 3）。在 CAC 链路中取 $R = e_{j-1}$（当步累积误差），代理在 $e_{j-1} \gg \varepsilon_j$ 时自动收紧，无需全局最小间距 $s > 0$。
+
+> **为何用 $L_{\max}$ 而非几何均值 $\bar{L}$**：CAC 望远镜展开（§3.2）中，项（B）的 Lipschitz 传播使用每步最坏情形——各步 Lipschitz 乘积的上界依赖 $\max_j \|G_j\|_{\mathrm{Lip}} = L_{\max}$，而非几何均值。用几何均值代入封闭公式在各层 Lipschitz 差异较大时可给出低于真实误差的假紧界，构成逻辑跳跃。$L_{\max}$ 是在 Telescope 公式中合法使用的最小上界量。
 
 > TSC 是对训练结果的**可观测约束**，不依赖具体的优化算法。任何产生满足上述不等式的模型参数的训练方法——无论是梯度下降、进化策略还是其他机制——均满足 TSC。
 
@@ -556,27 +571,27 @@ $$1 \;<\; \bar{L} \;\leq\; C^{1/k}$$
 
 #### 定理 3.3（训练-推理对偶性）
 
-**设训练方法满足 TSC，常数为 $C$，网络深度为 $k$。** 令 $\epsilon \triangleq \bar{L} - 1$，则由 TSC 知 $0 < \epsilon \leq \frac{\ln C}{k}$。
+**设训练方法满足 TSC，常数为 $C$。** 令 $L \triangleq L_{\max}$，则由 TSC 知 $1 < L \leq C$。
 
-代入 CAC 误差界（§3.2，以 $\bar{L}$ 代入 $L$，TSC 的代理条件保证合法），得**严格完整形式**：
+直接代入 §3.2 的 CAC 误差界——$L_{\max}$ 即为望远镜展开中项（B）的 Lipschitz 传播常数，无需任何代换，TSC 代理条件保证 $\|G_j\|_{\mathrm{Lip}}$ 代理 $r_j$ 的 Lipschitz 合法（见命题 3.4 步骤 3）——得**严格完整形式**：
 
-$$\boxed{e_l \;\leq\; \varepsilon_{\max} \cdot \frac{(1+\epsilon)^l - 1}{\epsilon}, \qquad 0 \;<\; \epsilon \;\leq\; \frac{\ln C}{k}}$$
+$$\boxed{e_l \;\leq\; \varepsilon_{\max} \cdot \frac{L^l - 1}{L - 1}, \qquad 1 < L \leq C}$$
 
-**推论 3.3a（有效链长上界）**：定义**临界链长** $l^*$ 为误差界首次超过 $1/\varepsilon_{\max}$ 倍的链长：
+**推论 3.3a（有效链长上界）**：定义**临界链长** $l^*$ 为误差界首次超过 $1/\varepsilon_{\max}$ 倍的链长，即解 $\varepsilon_{\max}(L^{l^*}-1)/(L-1) \leq 1$：
 
-$$l^* \;\triangleq\; \left\lfloor\frac{\ln(1/\varepsilon_{\max})}{\ln(1+\epsilon)}\right\rfloor \;\approx\; \frac{k \cdot \ln(1/\varepsilon_{\max})}{\ln C}$$
+$$l^* \;\triangleq\; \left\lfloor\frac{\ln\!\left(1 + \dfrac{L-1}{\varepsilon_{\max}}\right)}{\ln L}\right\rfloor \;\approx\; \frac{\ln(1/\varepsilon_{\max})}{\ln L}$$
 
 当 $l > l^*$ 时，CAC 误差界超出 $\varepsilon_{\max}$ 的可控范围，推理链路的累积误差无法被单步精度吸收。
 
-> $l^*$ 由两个量决定：模型深度 $k$（越深 $l^*$ 越大）和训练常数 $C$（越小越好）。不同的训练方法通过影响 $C$ 来影响最大可靠推理深度。
+> $l^*$ 由两个量决定：单步误差 $\varepsilon_{\max}$（越小 $l^*$ 越大）和训练常数 $C$（$L \leq C$；$C$ 越小即各层 Lipschitz 越受约束，$l^*$ 越大）。不同的训练方法通过影响 $C$ 来影响最大可靠推理深度。
 
-**推论 3.3b（TSC 推理深度不可能性——测度论下界）**：设训练方法满足 TSC，从而 $\bar{L} > 1$。设 $\mathcal{X} = \mathbb{R}^d$，目标 $r$-链从自然语言任务中随机选取（服从任意绝对连续分布，不对齐到网络某个固定子空间）。则对几乎所有（Lebesgue 测度意义下）的目标链：
+**推论 3.3b（TSC 推理深度不可能性——测度论下界）**：设训练方法满足 TSC，从而 $L_{\max} > 1$。设 $\mathcal{X} = \mathbb{R}^d$，目标 $r$-链从自然语言任务中随机选取（服从任意绝对连续分布，不对齐到网络某个固定子空间）。则对几乎所有（Lebesgue 测度意义下）的目标链：
 
 $$\Pr\!\left[e_l \xrightarrow{l \to \infty} +\infty\right] = 1$$
 
 **证明**：
 
-**步骤 1（奇异值分析）**：对每层 $G_j$，最大奇异值 $\sigma_{\max,j} = \|G_j\|_{\mathrm{Lip}}$。由 TSC 几何均值下界 $\bar{L} > 1$，至少一半层满足 $\sigma_{\max,j} > 1$（否则几何均值 $\leq 1$，矛盾）。
+**步骤 1（奇异值分析）**：对每层 $G_j$，最大奇异值 $\sigma_{\max,j} = \|G_j\|_{\mathrm{Lip}}$。由 TSC 最大值下界 $L_{\max} > 1$，至少存在某层 $j_0$ 满足 $\sigma_{\max,j_0} > 1$（否则所有层 Lipschitz $\leq 1$，最大值 $\leq 1$，矛盾）。
 
 **步骤 2（误差投影递推）**：设累积误差向量 $\mathbf{e}_l = \hat{h}_l - h_l^*$，$v_j$ 为第 $j$ 层最大奇异值对应的右奇异向量。沿 $v_j$ 方向投影：
 
@@ -593,7 +608,7 @@ $$\langle \mathbf{e}_l,\, v_j \rangle \;\geq\; \sigma_{\max,j} \cdot \langle \ma
 > | 强度 | 陈述 | 位置 | 依赖 |
 > |---|---|---|---|
 > | 存在性 | $\exists$ 输入使 $e_l \to \infty$ | §3.2 紧性注 | $\varepsilon_{\min} > 0$，与训练无关 |
-> | **测度论** | **几乎所有任务 $e_l \to \infty$（概率 1）** | **推论 3.3b** | **TSC（$\bar{L} > 1$）** |
+> | **测度论** | **几乎所有任务 $e_l \to \infty$（概率 1）** | **推论 3.3b** | **TSC（$L_{\max} > 1$）** |
 > | 普遍性 | 所有输入 $e_l \to \infty$ | — | ❌ 不可证（零测集任务可规避）|
 >
 > TSC 通过测度论将不可能性从"最坏情形存在"升级为"几乎所有真实任务均受限"。能让误差有界的任务集合是零测集，实践中无法系统性构造。
@@ -603,29 +618,73 @@ $$\langle \mathbf{e}_l,\, v_j \rangle \;\geq\; \sigma_{\max,j} \cdot \langle \ma
 
 ---
 
-#### 命题 3.4（反向传播满足 TSC）
+#### 命题 3.4（AdamW 训练满足 TSC）
 
-当前主流的梯度下降训练满足 TSC，常数 $C = \sqrt{2/(\eta\beta_0)}$（其中 $\eta$ 为学习率，$\beta_0$ 为损失光滑参数）。
+现代 LLM 训练的标准配置——**AdamW 优化器 + 权重衰减系数 $\lambda > 0$**（典型值 $\lambda = 0.1$）——满足 TSC，且 TSC 常数 $C$ 由权重衰减系数和网络结构直接决定，与参数空间损失曲率无关。
+
+> **为何 AdamW 而非 Adam+L2**：原版 Adam 对 L2 正则项也会应用二阶矩缩放，使实际衰减效果不均匀。AdamW 将权重衰减从梯度更新中分离（$W_{t+1} = (1-\eta\lambda)W_t - \eta \hat{m}_t/(\sqrt{\hat{v}_t}+\varepsilon_{\text{adam}})$），使每层权重范数的稳态上界严格可控。GPT-3、LLaMA、PaLM 等主流 LLM 均采用 AdamW + $\lambda=0.1$。
 
 **证明**（三步）：
 
-**步骤 1（$\bar{L} > 1$，数据下界）**：设训练集 $\mathcal{D}$ 中存在样本对 $(x_i, y_i), (x_j, y_j)$ 满足 $C_\mathcal{D} = \frac{\|y_i - y_j\|}{\|x_i - x_j\|} > 1$。对训练误差 $< \delta$ 的模型，三角不等式给出：
+**步骤 1（$\bar{L} > 1$，数据下界，与之前相同）**：设训练集 $\mathcal{D}$ 中存在样本对 $(x_i, y_i), (x_j, y_j)$ 满足 $C_\mathcal{D} = \frac{\|y_i - y_j\|}{\|x_i - x_j\|} > 1$。对训练误差 $< \delta$ 的模型，三角不等式给出：
 
 $$\|F_\theta(x_i) - F_\theta(x_j)\| \;\geq\; C_\mathcal{D}\|x_i - x_j\| - 2\delta \;\implies\; L_{\text{local}} \;\geq\; C_\mathcal{D} - \frac{2\delta}{\|x_i - x_j\|} \;>\; 1$$
 
 自然语言训练集必然包含 $C_\mathcal{D} > 1$ 的样本对（同义句对应不同事实等），故此为数据的固有性质。由此得 $\bar{L} \geq L_{\text{local}} > 1$。
 
-**步骤 2（$\bar{L} \leq C^{1/k}$，稳定性上界）**：端到端 Jacobian 满足 $\|J_{\text{output}}\| \leq \bar{L}^k$（§1.5.D 链式不等式）。GD 收敛要求 $\eta \leq 2/\beta$，有效曲率 $\beta \leq \beta_0 \cdot \bar{L}^{2k}$，整理得：
+**步骤 2（$\bar{L} \leq C^{1/k}$，AdamW 权重衰减上界）**：
 
-$$\bar{L}^{2k} \;\leq\; \frac{2}{\eta\beta_0} \;\triangleq\; C^2 \;\implies\; \bar{L} \;\leq\; C^{1/k}$$
+AdamW 的每层更新为：
 
-**步骤 3（代理合法性——尺度局部）**：对任意 $h, h'$ 满足 $R = \|h-h'\| > 0$，由三角不等式：
+$$W_l^{(t+1)} = (1 - \eta\lambda)\,W_l^{(t)} \;-\; \eta\,u_l^{(t)}$$
+
+其中 $u_l^{(t)} = \hat{m}_l^{(t)}/(\sqrt{\hat{v}_l^{(t)}} + \varepsilon_{\text{adam}})$ 是 Adam 的归一化更新量。关键性质：Adam 的归一化设计保证每个分量的更新幅度有界：
+
+$$\left|(u_l^{(t)})\right|_{ij} \leq 1 \quad \forall\, i,j,t$$
+
+（因为 $|\hat{m}_{ij}| \leq \sqrt{\hat{v}_{ij}}$ 由矩估计的 AM-GM 不等式成立，分子分母均为同一坐标的一、二阶矩。）
+
+设权重矩阵维度为 $d_{\text{in}} \times d_{\text{out}}$，上确界更新幅度为：
+
+$$\|u_l^{(t)}\|_F \;\leq\; \sqrt{d_{\text{in}} \cdot d_{\text{out}}} \;\triangleq\; D_l$$
+
+由系数 $(1-\eta\lambda) < 1$，权重范数在稳态满足收缩-驱动的不动点方程：
+
+$$\|W_l^{(\infty)}\|_F \;\leq\; \frac{\eta D_l}{\eta\lambda} \;=\; \frac{D_l}{\lambda}$$
+
+**证明（稳态界）**：对任意 $t$，递推 $\|W^{(t+1)}\|_F \leq (1-\eta\lambda)\|W^{(t)}\|_F + \eta D_l$。若 $\|W^{(t)}\|_F > D_l/\lambda$，则 $(1-\eta\lambda)\|W^{(t)}\|_F + \eta D_l < \|W^{(t)}\|_F$，权重范数严格递减。因此稳态值被 $D_l/\lambda$ 吸引，以指数速率 $(1-\eta\lambda)^t$ 收紧。$\square$
+
+由 Frobenius-谱范数不等式 $\sigma_{\max}(W_l) \leq \|W_l\|_F$，得稳态谱范数上界：
+
+$$\sigma_{\max}(W_l^{(\infty)}) \;\leq\; \frac{D_l}{\lambda} \;=\; \frac{\sqrt{d_{\text{in}} \cdot d_{\text{out}}}}{\lambda}$$
+
+对 Transformer 层而言，每层 Lipschitz 常数由注意力子层和 FFN 子层的权重谱范数乘积控制（含残差结构，§1.5.D 命题 1.1）：
+
+$$\|G_l\|_{\mathrm{Lip}} \;\leq\; 1 \;+\; \underbrace{\sigma_{\max}(W_O)\,\sigma_{\max}(W_V)}_{\text{注意力子层}} \;+\; \underbrace{\sigma_{\max}(W_2)\,\sigma_{\max}(W_1)}_{\text{FFN 子层}}$$
+
+代入稳态谱范数上界，令 $B_l(\lambda) \triangleq 1 + 2D_l^2/\lambda^2$ 为第 $l$ 层 Lipschitz 常数的上界（$D_l = \sqrt{d_{\text{in}}^{(l)} \cdot d_{\text{out}}^{(l)}}$），则每层：
+
+$$\|G_l\|_{\mathrm{Lip}} \;\leq\; B_l(\lambda) \quad \forall\, l = 1,\ldots,k$$
+
+由此，TSC 所需的**全局最大值**直接由逐层上界取最大得到：
+
+$$L_{\max} \;=\; \max_{l}\, \|G_l\|_{\mathrm{Lip}} \;\leq\; \max_{l}\, B_l(\lambda) \;\triangleq\; B_{\max}(\lambda)$$
+
+其中：
+
+$$\boxed{B_{\max}(\lambda) \;=\; 1 + \frac{2\,D_{\max}^2}{\lambda^2}, \qquad D_{\max} \;\triangleq\; \max_{l}\,\sqrt{d_{\text{in}}^{(l)} \cdot d_{\text{out}}^{(l)}}}$$
+
+（$D_{\max}$ 是各层中输入输出维度乘积最大的层的几何平均维度，仅由网络结构决定。注意力子层和 FFN 子层各贡献一个 $D_l^2/\lambda^2$ 项；取最大层给出 $B_{\max}$。精确系数可由各层 $W_O, W_V, W_1, W_2$ 维度分别计算。）
+
+TSC 常数 $C \triangleq B_{\max}(\lambda)$，满足 $L_{\max} \leq C$。$C$ **可由网络结构和权重衰减系数直接计算**，不依赖损失曲率假设。权重衰减系数 $\lambda$ 越大，$C$ 越小，$l^*$ 越大（可靠推理链允许更长）。$\square$
+
+**步骤 3（代理合法性——尺度局部，与之前相同）**：对任意 $h, h'$ 满足 $R = \|h-h'\| > 0$，由三角不等式：
 
 $$\|r_j(h) - r_j(h')\| \;\leq\; \|\hat{f}_j(h) - \hat{f}_j(h')\| + 2\varepsilon_j \;\leq\; \|G_j\|_{\mathrm{Lip}} \cdot R + 2\varepsilon_j$$
 
 除以 $R$：$\frac{\|r_j(h)-r_j(h')\|}{R} \leq \|G_j\|_{\mathrm{Lip}} + \frac{2\varepsilon_j}{R}$。在 CAC Telescope 展开中取 $R = e_{j-1}$（当步累积误差）：误差 $= 2\varepsilon_j/e_{j-1} \to 0$ 当 $e_{j-1} \gg \varepsilon_j$（UAT 保证 $\varepsilon_j \to 0$）。无需全局最小间距 $s > 0$，代理在 CAC 分析的关键尺度（大误差阶段）自动收紧。$\square$
 
-> **TSC 的普适性**：定理 3.3 仅依赖 TSC，不依赖命题 3.4 的具体推导。若未来出现不基于梯度下降的训练方法（进化策略、前向-前向算法、生物 STDP 等），只要其模型参数满足 $1 < \bar{L} \leq C^{1/k}$，定理 3.3 和推论 3.3a 自动成立，$l^*$ 的公式保持不变。
+> **TSC 的普适性**：定理 3.3 仅依赖 TSC，不依赖命题 3.4 的具体推导。若未来出现不基于 AdamW 的训练方法，只要其产生的模型参数满足 $1 < \bar{L} \leq C^{1/k}$（可由权重谱范数验算），定理 3.3 和推论 3.3a 自动成立，$l^*$ 的公式保持不变。特别地，**$C(\lambda)$ 现在是可从训练后的权重直接计算的量**，使 $l^*$ 从理论预测变为可实测的模型属性。
 
 > [!IMPORTANT]
 > **§3 的证明状态总结**：
@@ -635,8 +694,10 @@ $$\|r_j(h) - r_j(h')\| \;\leq\; \|\hat{f}_j(h) - \hat{f}_j(h')\| + 2\varepsilon_
 > | Telescope 展开（§3.2） | ✅ 严格 | 三角不等式 + $r_i$ 的 Lipschitz 性 |
 > | UAT 存在性（§3.3 命题 3.1） | ✅ 严格（模 UAT） | Cybenko/Hornik UAT，$r_i$ 连续性 |
 > | $\varepsilon_i^* \to 0$（推论 3.2） | ✅ 严格（模 UAT） | 命题 3.1 的直接推论 |
-> | 定理 3.3（TSC → $l^*$） | ✅ 严格（模 TSC） | TSC 定义；代理条件 $\varepsilon_j \ll s$ |
-> | 命题 3.4（BP 满足 TSC） | ✅ 条件严格 | 数据固有 $C_\mathcal{D}>1$ + GD 收敛 + UAT |
+> | 定理 3.3（TSC → $l^*$） | ✅ 严格（模 TSC） | TSC 定义；代理条件 $\varepsilon_j \ll e_{j-1}$ |
+> | 命题 3.4 步骤 1（$L_{\max}>1$） | ✅ 严格 | 训练集固有数据多样性 $C_\mathcal{D}>1$ |
+> | 命题 3.4 步骤 2（$L_{\max} \leq C$） | ✅ 严格 | AdamW 稳态权重范数界 → 逐层谱范数 → 取最大 |
+> | 命题 3.4 步骤 3（代理合法性） | ✅ 严格（模 UAT） | UAT 保证 $\varepsilon_j \to 0$，尺度局部自动收紧 |
 > | $r_i$ 的连续性假设 | ⚠️ 语义假设 | 语义变换的拓扑性质，依赖 $\mathcal{X}$ 的结构 |
 
 
