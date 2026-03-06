@@ -130,7 +130,7 @@ CoT trace 在每个包含 $r_{i^*}$ 的链路中，都提供 $r_{i^*}$ 被正确
 
 ## 14. RLHF 与 DPO 的 CAC 分析
 
-> **定位**：本节将基于人类反馈的强化学习（RLHF）和直接偏好优化（DPO）纳入 IDFC 框架。核心结论：**RLHF/DPO 改变参数 $\theta$，从而改变 $\Phi_l(\cdot\,;\theta)$ 的函数形状，进而偏移激活路径分布 $\Pr[\mathrm{Path}(x,k)=\pi]$**——在 KL 约束有效时各分段线性区域的单步近似精度 $\varepsilon_i$ 基本不变；这与预训练（丰富 $F$ 的分段线性区域集）是正交的两个维度。（见 §1.3 语义防火墙：以下"路由概率"均为激活路径分布的简称。）
+> **定位**：本节将基于人类反馈的强化学习（RLHF）和直接偏好优化（DPO）纳入 IDFC 框架。核心结论：**RLHF/DPO 改变参数 $\theta$，从而改变 $\Phi_l(\cdot\,;\theta)$ 的函数形状，进而偏移激活路径分布 $\Pr[\mathrm{Path}(x,k)=\pi]$**——在 KL 约束有效时各分段线性区域的单步近似精度 $\varepsilon_i$ 基本不变；这与预训练（丰富 $F$ 的分段线性区域集）是正交的两个维度。（见 Part 2c §2 语义防火墙：以下"路由概率"均为激活路径分布的简称。）
 
 ---
 
@@ -144,7 +144,7 @@ CoT trace 在每个包含 $r_{i^*}$ 的链路中，都提供 $r_{i^*}$ 被正确
 
 $$\max_{\pi_\theta} \mathbb{E}_{y \sim \pi_\theta(y|x)}\!\left[R_\phi(x, y)\right] - \beta \cdot \text{KL}\!\left(\pi_\theta \| \pi_{\text{ref}}\right)$$
 
-**命题 14.1（RLHF 的 IDFC 解读：激活路径分布偏移）**：RLHF 优化改变参数 $\theta$，从而改变 $\Phi_l(\cdot\,;\theta)$ 的函数形状，进而改变给定输入 $x$ 时激活路径 $\mathrm{Path}(x,k)$ 的分布（见 §1.3 语义防火墙：以下"路由概率"是 $\Pr[\mathrm{Path}(x,k)=\pi]$ 的简称，不存在独立的路由器算子）：
+**命题 14.1（RLHF 的 IDFC 解读：激活路径分布偏移）**：RLHF 优化改变参数 $\theta$，从而改变 $\Phi_l(\cdot\,;\theta)$ 的函数形状，进而改变给定输入 $x$ 时激活路径 $\mathrm{Path}(x,k)$ 的分布（见 Part 2c §2 语义防火墙：以下"路由概率"是 $\Pr[\mathrm{Path}(x,k)=\pi]$ 的简称，不存在独立的路由器算子）：
 
 $$\Pr_{\theta_{\text{ref}}}[\mathrm{Path}(x,k) = \pi] \xrightarrow{\text{RLHF}} \Pr_\theta[\mathrm{Path}(x,k) = \pi]$$
 
@@ -622,7 +622,7 @@ $$W = W_0 + \Delta W = W_0 + BA, \quad B \in \mathbb{R}^{m \times r},\; A \in \m
 
 $$h = (W_0 + BA)x = W_0 x + BAx$$
 
-**命题 16.1（LoRA 的 IDFC 等价：有效算子场的局部低秩修正）**：在 IDFC 语言中，设层 $i$ 对应的原始有效算子为 $E_{r_i}$（Part 2 §1.5），LoRA 注入后对应的有效算子变为：
+**命题 16.1（LoRA 的 IDFC 等价：有效算子场的局部低秩修正）**：在 IDFC 语言中，设层 $i$ 对应的原始有效算子为 $E_{r_i}$（Part 2c §4），LoRA 注入后对应的有效算子变为：
 
 $$E_{r_i}^{\text{LoRA}} = E_{r_i}^{(0)} + \delta E_{r_i}^{\text{low-rank}}, \quad \text{rank}(\delta E_{r_i}^{\text{low-rank}}) \leq r$$
 

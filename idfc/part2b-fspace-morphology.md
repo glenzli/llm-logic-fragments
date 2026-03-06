@@ -6,7 +6,7 @@
 > 对应 $E_c: \mathcal{X} \to \langle F \rangle_\cdot$ 的三种不同几何性质（定义域宽度、Lipschitz 曲率、组合参与度），
 > 是理解 $F$ 内部结构的基础性框架。
 >
-> **阅读前置**：[Part 2 §1.6 Lipschitz 一致性条件](part2a-model-proof.md)、[Part 2 §3.3 UAT](part2a-model-proof.md)
+> **阅读前置**：[Part 2c §4 Lipschitz 一致性条件](part2c-nn-algebraic.md)、[Part 2 §3.3 UAT](part2a-model-proof.md)
 >
 > **后续**：三态分类的实验验证（哈利波特前缀实验等）见 [Part 4c 实验验证](part4c-experiments.md)。
 
@@ -22,7 +22,7 @@
 
 ### 1.1 三态的形式定义
 
-**前提**：对任意内容单元 $c$（可以是一个逻辑规则、一个事实、一段原著文字），训练后的 $F$ 中存在（可能多个）矩阵值函数 $E_c: \mathcal{X} \to \langle F \rangle_\cdot$，满足数值逼近关系（§1.3 语义防火墙：$E_c$ 不"知道" $c$ 的语义，下标 $c$ 为分析者命名约定）。
+**前提**：对任意内容单元 $c$（可以是一个逻辑规则、一个事实、一段原著文字），训练后的 $F$ 中存在（可能多个）矩阵值函数 $E_c: \mathcal{X} \to \langle F \rangle_\cdot$，满足数值逼近关系（Part 2c §2 语义防火墙：$E_c$ 不"知道" $c$ 的语义，下标 $c$ 为分析者命名约定）。
 
 **定义（有效定义域）**：对内容 $c$ 对应的矩阵值函数 $E_c$，定义其**有效定义域**：
 
@@ -174,7 +174,7 @@ $$\Pr[\text{提取成功}] \approx \begin{cases} 1 & x \in \mathcal{B}(e_{w_{1:k
 
 **实验对应**：滚动50 token 前缀可提取 91%（Llama 3.1 70B）；直接提问"背诵哈利波特"提取率极低——两者之差正是 $\mathcal{X}_{\text{verbatim}}$ 的宽度的测量。
 
-**预测 P2（续写连贯性 = CoT 锚点机制的逐字版）**：提取过程中，每步输出的 token 追加入上下文后，保持 $\hat{x} \in \mathcal{X}_{\text{verbatim}}$（自回归展开的 §1.7 结构），下一步以近零 $\varepsilon_{\text{tok}}$ 自然延续。失败的唯一路径是输出 token 误差将 $\hat{x}$ 推出 $\mathcal{X}_{\text{verbatim}}$，引发"脱槽"——后续续写质量骤降。
+**预测 P2（续写连贯性 = CoT 锚点机制的逐字版）**：提取过程中，每步输出的 token 追加入上下文后，保持 $\hat{x} \in \mathcal{X}_{\text{verbatim}}$（自回归展开的 Part 2c §6 结构），下一步以近零 $\varepsilon_{\text{tok}}$ 自然延续。失败的唯一路径是输出 token 误差将 $\hat{x}$ 推出 $\mathcal{X}_{\text{verbatim}}$，引发"脱槽"——后续续写质量骤降。
 
 **预测 P3（Lipschitz 测试）**：对原著前缀做最小意义扰动（同义词替换、词序调整），提取率应骤降（$L_s$ 极高）；而对逻辑推理任务做同等扰动，准确率基本不变（$L$ 正常）。**两者 Lipschitz 常数之比是区分逐字记忆与逻辑泛化的直接实验指标。**
 

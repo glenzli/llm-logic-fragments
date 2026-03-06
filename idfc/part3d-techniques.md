@@ -874,7 +874,7 @@ $$\varepsilon_j^{(n)} = \varepsilon_j^{(0)} + \sum_{k: r_j \notin R_{\mathcal{T}
 
 ## 23. In-Context Learning（ICL）的 CAC 分析
 
-> **定位**：本节将 In-Context Learning（ICL，上下文学习）纳入 IDFC 框架。传统对 ICL 的理解赋予其特殊的"meta-learning"地位——模型在 forward pass 中隐式执行梯度下降。在 IDFC 中，这一神秘性完全消失：**ICL = 上下文追加至输入后，改变 $\hat{x} = (x, \mathcal{C})$ 的激活路径分布**（见 §1.3 语义防火墙），在数值效果上等价于对激活路径分布施加无梯度临时偏移。ICL 的"神秘性"在 IDFC 中被分解为三个在数值效果上已知的成分。
+> **定位**：本节将 In-Context Learning（ICL，上下文学习）纳入 IDFC 框架。传统对 ICL 的理解赋予其特殊的"meta-learning"地位——模型在 forward pass 中隐式执行梯度下降。在 IDFC 中，这一神秘性完全消失：**ICL = 上下文追加至输入后，改变 $\hat{x} = (x, \mathcal{C})$ 的激活路径分布**（见 Part 2c §2 语义防火墙），在数值效果上等价于对激活路径分布施加无梯度临时偏移。ICL 的"神秘性"在 IDFC 中被分解为三个在数值效果上已知的成分。
 
 ---
 
@@ -886,7 +886,7 @@ $$\varepsilon_j^{(n)} = \varepsilon_j^{(0)} + \sum_{k: r_j \notin R_{\mathcal{T}
 
 $$\Pr[\mathrm{Path}(\hat{x},k) = \pi] \neq \Pr[\mathrm{Path}(x,k) = \pi]$$
 
-（此处"路由概率"均为激活路径分布的简称，见 §1.3 语义防火墙。）
+（此处"路由概率"均为激活路径分布的简称，见 Part 2c §2 语义防火墙。）
 
 不同类型的 $\mathcal{C}$ 在数值效果上对应不同的 IDFC 作用维度：
 

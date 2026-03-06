@@ -91,7 +91,7 @@ $$l_{\max}^{\text{alg}}(\delta) = \left\lfloor \frac{\log(\delta/\varepsilon_{\m
 
 ### 27.2 LayerNorm 是 TSC 的代数实现机制
 
-**TSC（训练稳定合同，Part 2a §1.5.D）**：训练过程保证了 $L \leq L_{\text{TSC}}$，使 CAC 误差界有限。
+**TSC（训练稳定合同，Part 2c §4.D）**：训练过程保证了 $L \leq L_{\text{TSC}}$，使 CAC 误差界有限。
 
 在泛函层，TSC 是抽象假设（通过训练对数值稳定性的隐性要求）。代数层中，TSC 有具体的**架构实现机制**：
 
@@ -283,7 +283,7 @@ $$C_{\min} \cdot \sqrt{d_v} \;\leq\; \|W_V^{(l)} e_{r_i}\|_2 \;\leq\; C_{\max} \
 
 $$\|W_V^{(l)} e_{r_i}\|_2 \;\gg\; C_{\text{TSC}} \cdot \sqrt{d_v}$$
 
-其中 $C_{\text{TSC}}$ 是 TSC 保证的全局 Lipschitz 上界对应的 $W_V$ 范数阈值（见 Part 2a §1.5.D 和 §5.5）。
+其中 $C_{\text{TSC}}$ 是 TSC 保证的全局 Lipschitz 上界对应的 $W_V$ 范数阈值（见 Part 2c §4.D 和 §5.5）。
 
 **代数含义**：$W_V$ 对 $r_i$ 方向有**异常大的奇异值分量**——该方向的 Value 投影大幅放大嵌入向量，对应 Part 2b 命题 25.2 的 $L_s \gg L$ 条件。该条件使 $r_i$ 被结构性地排除于 $R^*$ 之外（Part 2b 推论 25.1b）。
 

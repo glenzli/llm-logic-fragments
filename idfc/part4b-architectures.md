@@ -7,17 +7,17 @@
 
 ## 8. Diffusion 作为对比生成范式
 
-> **定位**：本节以 [Part 2 §1.7](part2a-model-proof.md) 的自回归形式化框架为基准，将 Diffusion 模型（得分匹配 / DDPM 家族）纳入 IDFC 框架，解析其与自回归生成的**结构性差异**，并给出 guidance scale 在 IDFC 中的精确类比。
+> **定位**：本节以 [Part 2c §6](part2c-nn-algebraic.md) 的自回归形式化框架为基准，将 Diffusion 模型（得分匹配 / DDPM 家族）纳入 IDFC 框架，解析其与自回归生成的**结构性差异**，并给出 guidance scale 在 IDFC 中的精确类比。
 
 ---
 
 ### 8.1 Diffusion 的 IDFC 解读：连续去噪轨迹
 
-**自回归范式的 $\varepsilon_{\text{tok}}$ 结构（回顾）**：在 Part 2 §1.7A，每一步自回归采样引入离散化误差：
+**自回归范式的 $\varepsilon_{\text{tok}}$ 结构（回顾）**：在 Part 2c §6.A，每一步自回归采样引入离散化误差：
 
 $$\varepsilon_{\text{tok}}^{(t)} = \mathbb{E}_{\hat{w} \sim p_{T}}\!\left[\|e_{\hat{w}} - h^*_t\|\right]$$
 
-其中 $h^*_t \in \mathbb{R}^d$ 是第 $t$ 步的「理想连续状态」，$e_{\hat{w}}$ 是被选中 token 的嵌入向量。$T$ 步自回归展开在 IDFC 中产生 $T$ 次离散化误差的累积（Part 2 §1.7B、命题 5.3）。
+其中 $h^*_t \in \mathbb{R}^d$ 是第 $t$ 步的「理想连续状态」，$e_{\hat{w}}$ 是被选中 token 的嵌入向量。$T$ 步自回归展开在 IDFC 中产生 $T$ 次离散化误差的累积（Part 2c §6.B、命题 5.3）。
 
 **Diffusion 的结构性对比**：设去噪过程共 $S$ 步，第 $s$ 步的状态为 $\mathbf{x}_s \in \mathbb{R}^{d_{\text{out}}}$（例如像素空间、潜在空间），去噪器 $\epsilon_\theta$ 给出分数估计：
 
@@ -41,7 +41,7 @@ $$\text{Err}_{\text{Diff}}(S) \leq S \cdot \varepsilon_{\text{score}} \cdot \fra
 
 ### 8.2 Guidance Scale = Temperature 的精确等价
 
-**自回归温度回顾**（Part 2 §1.7A/D）：输出 logit 向量 $z \in \mathbb{R}^V$，采样分布为 $p_T(w) \propto \exp(z_w / T)$：
+**自回归温度回顾**（Part 2c §6.A/D）：输出 logit 向量 $z \in \mathbb{R}^V$，采样分布为 $p_T(w) \propto \exp(z_w / T)$：
 
 - $T \to 0$：argmax（greedy），$\varepsilon_{\text{tok}}$ 最小化，但可能陷入局部最优路径
 - $T \to \infty$：均匀随机，$\varepsilon_{\text{tok}}$ 最大化，多样性但无意义
@@ -250,7 +250,7 @@ $$\Delta^* = \left\lfloor \frac{\log(\delta_{j^*} / \|v^*\|)}{\log \rho} \right\
 
 ### 10.1 MoE 的 IDFC 映射：$F$ 集合的显式化
 
-**密集模型中 $F$ 的隐式结构**：在标准 Transformer FFN 中，$F$ 通过 ReLU 激活掩码隐式分区——不同输入触发不同的激活路径，从而从同一套权重中「选出」不同的有效算子（§1.3）。这是**被动的、输入驱动的** $f$-chain 组装。
+**密集模型中 $F$ 的隐式结构**：在标准 Transformer FFN 中，$F$ 通过 ReLU 激活掩码隐式分区——不同输入触发不同的激活路径，从而从同一套权重中「选出」不同的有效算子（Part 2c §2）。这是**被动的、输入驱动的** $f$-chain 组装。
 
 **MoE 的显式化**：设共 $N$ 个专家，每个专家 $E_k$（$k = 1, \ldots, N$）是一个独立参数化的 FFN：
 

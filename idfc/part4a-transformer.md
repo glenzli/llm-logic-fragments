@@ -72,7 +72,7 @@ $$\text{LN}(h) = \frac{h - \mathbb{E}[h]}{\sqrt{\text{Var}[h] + \epsilon}} \odot
 
 **IDFC 角色**：LayerNorm 将 $h$ 的范数归一化，使得 $\|h_{\text{LN}}\| \approx \sqrt{d} \cdot |\gamma|$，**与输入范数无关**。
 
-这直接压制 CAC 误差界中的 Lipschitz 常数 $L$（Part 2 §1.5.D 命题 1.1）：
+这直接压制 CAC 误差界中的 Lipschitz 常数 $L$（Part 2c §4.D 命题 1.1）：
 
 $$\|G_l\|_{\text{Lip}} \leq B_l + L_{\Phi_l} \cdot \sup_h \|h\|$$
 

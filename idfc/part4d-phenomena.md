@@ -64,7 +64,7 @@ $$f_q^{\text{agree}} = r_{\text{agree}} \circ r_{\text{recall}}$$
 
 **命题 19.1（$r_{\text{agree}}$ 的 $F$-空间形态）**：
 
-设 $E_{\text{agree}}: \mathcal{X} \to \langle F \rangle_\cdot$ 为「同意」路径对应的矩阵值函数（§1.6 逐点拟合）。
+设 $E_{\text{agree}}: \mathcal{X} \to \langle F \rangle_\cdot$ 为「同意」路径对应的矩阵值函数（Part 2c §5 逐点拟合）。
 
 $r_{\text{agree}}$ 满足：
 

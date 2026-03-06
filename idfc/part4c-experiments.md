@@ -176,7 +176,7 @@ $$\text{gap}(l_{\text{eff}}, d, M) = \left(\varepsilon_{\max}^{\text{1.58}} - \v
 | $L^{l_{\text{eff}}}$ | Lipschitz 常数 $L$（架构决定）| 通过 E1 的斜率估计 | E1 |
 | $l_{\text{eff}}$ | 任务推理链长度 | 任务标注或模型估计 | E3, E5 |
 
-**关键实验公式**：将 E1 的斜率 $\approx \log L$ 与 E2 的截距 $\approx \delta_q^{\min}(d)$ 组合，可以**从实验数据中反推** IDFC 的两个核心参数 $L$ 和 $\delta_q^{\min}$，进而验证 Part 2 §1.5.D 对 $L$ 的理论估计是否与宏观观测一致。这是 IDFC 框架少有的**参数自洽性检验机会**。
+**关键实验公式**：将 E1 的斜率 $\approx \log L$ 与 E2 的截距 $\approx \delta_q^{\min}(d)$ 组合，可以**从实验数据中反推** IDFC 的两个核心参数 $L$ 和 $\delta_q^{\min}$，进而验证 Part 2c §4.D 对 $L$ 的理论估计是否与宏观观测一致。这是 IDFC 框架少有的**参数自洽性检验机会**。
 
 ---
 
@@ -394,7 +394,7 @@ $$\varepsilon_{\text{rev}} > \varepsilon_{\text{fail}} \quad \text{当 } \nu_{\t
 
 ### 13.4 代数结构：幺半群中自由逆的不存在性
 
-从 Part 2 §1.5.B 的代数视角，$r_{\text{fwd}}$ 和 $r_{\text{rev}}$ 的关系更清晰：
+从 Part 2c §4.B 的代数视角，$r_{\text{fwd}}$ 和 $r_{\text{rev}}$ 的关系更清晰：
 
 $R^*$ 是自由幺半群——它**不是群**（group）。自由幺半群中一般没有逆元：
 
