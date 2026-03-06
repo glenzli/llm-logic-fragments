@@ -2,7 +2,7 @@
 
 > **前置**：见 [Part 1 导论](part1-intro.md) 了解非正式动机与预测概览。
 >
-> **本文内容**：§1 形式定义（语义空间 $\mathcal{X}$、原语 $R$、函数集 $F$、$f$-chain）；§2 核心假说 CAC 的严格陈述；§3 定理完整证明（Telescope 展开 + UAT 桥接）。
+> **本文内容**：§1 形式定义（语义空间 $\mathcal{X}$、原语 $R$；函数集 $F$ 的抽象定义 → 代数推导 → 形式定义；$f$-chain；生成过程形式化）；§2 核心假说 CAC 的严格陈述；§3 定理完整证明（Telescope 展开 + UAT 桥接）。
 >
 > **后续**：[Part 3](part3-deductions.md) 从本文定理推导全部推论；[Part 4](part4-empirical.md) 以 Transformer/Mamba/MoE 等架构分析与多组实验场景（幻觉、ICL、量化、Reversal Curse、Sycophancy 等）验证并锚定本文理论预测。
 
@@ -16,10 +16,11 @@
 
 #### 第一层：语义状态空间 $\mathcal{X}$
 
-设 $\mathcal{X}$ 为**语义状态空间**——所有可能的语义表示（token 序列、中间推理状态、知识断言等）所在的抽象集合。$\mathcal{X}$ 不要求有具体的几何结构，只需满足：
+设 $(\mathcal{X}, d)$ 为**语义状态空间**——赋予了度量 $d$ 的集合，元素代表所有可能的语义表示（token 序列、中间推理状态、知识断言等）。$\mathcal{X}$ 满足：
 
 - 元素 $x \in \mathcal{X}$ 代表一个完整的语义状态（输入、中间步骤、输出均可）
-- 状态之间没有预设的距离或拓扑，这些由具体任务赋予
+- 度量 $d: \mathcal{X} \times \mathcal{X} \to \mathbb{R}_{\geq 0}$ 由具体任务赋予，无需是 Euclidean 范数，亦无需向量空间结构
+- 度量的唯一作用：支持 Lipschitz 函数的定义 $\bigl(d(f(x), f(y)) \leq L \cdot d(x,y)\bigr)$ 和单步近似误差 $\varepsilon_i$ 的测量——这是 CAC Telescope 展开所需的全部度量性质（见 §3.2）
 
 #### 第二层：完整变换空间 $\Omega$
 
@@ -33,7 +34,7 @@ $\Omega$ 在函数复合下构成一个**幺半群**（monoid）：
 
 $$\phi_2 \circ \phi_1 \in \Omega, \quad \text{id}_{\mathcal{X}} \in \Omega$$
 
-即两个逻辑变换的串联仍是逻辑变换，且存在平凡的"什么都不做"操作。
+即两个语义变换的串联仍是语义变换，且存在平凡的"什么都不做"操作。
 
 #### 第三层：原始生成元集 $R$ 与封闭包 $R^*$
 
@@ -45,14 +46,56 @@ $$R = \{r_1, r_2, \ldots, r_m\} \subset \Omega$$
 
 $$R^* = \{ r_{i_k} \circ \cdots \circ r_{i_1} \mid k \geq 0,\ r_{i_j} \in R \}$$
 
-$R^*$ 是"$R$ 能够描述的一切推理过程"的完整边界。本文的核心假说 **CAC（Compositional Approximation Closure，组合近似封闭性，见 §2）** 主张：模型学到的函数集 $F$ 能够在误差范围内近似覆盖 $R^*$——即只要 $R$ 能组合到达的推理结论，$F$ 也能组合近似地到达。
+$R^*$ 是"$R$ 能够描述的一切推理过程"的完整边界。本文的核心假说 **CAC（Compositional Approximation Closure，组合近似封闭性，见 §2）** 主张：任意满足**输入驱动函数系统**（Input-Driven Function System，**IDFS**；形式定义见 §1.2）条件的 $(F, \sigma)$，均能在误差范围内近似覆盖 $R^*$——即只要 $R$ 能组合到达的推理结论，$F$ 也能通过输入驱动的组合近似地到达。神经网络（矩阵 + 激活函数）是 IDFS 的一个代数实例，在 §1.3 严格推导；CAC 作为抽象定理对任意 IDFS 成立，不预设具体实现机制。
 
 **注意**：
 - $R$ 不要求是干净的、正交的或可解释的；$\Omega$ 中有大量元素不属于 $R$，也不影响模型行为
 - $R$ 可以包含人类尚未命名的隐式规则——$R$ 的边界由训练数据所能描述的推理结构决定，而非人为枚举
 - $m$ 可以很大，但 $R$ 对 $\Omega$ 而言是稀疏的：实际语言使用中反复出现的推理模式远少于全集
 
-### 1.2 为什么神经网络等价于输入驱动的 $F$ 集群（架构无关论证）
+### 1.2 输入驱动函数系统（IDFS）：泛化定义
+
+IDFC 框架适用于任意满足以下三条的 $(F, \sigma)$——神经网络是其中一个实例，在 §1.3 专门推导。
+
+**定义（$(F, \sigma)$ 结构）**：称一个**输入驱动函数系统**为有序对 $(F, \sigma)$，其中：
+
+1. **函数集** $F = \{f_1, f_2, \ldots, f_M\} \subset \mathrm{Lip}_L(\mathcal{X})$：$F$ 是 $\mathcal{X}$ 上有限个 $L$-Lipschitz 函数的集合，$M$ 为系统规模。
+
+2. **选择映射** $\sigma : \mathcal{X} \to F$：一个将当前状态映射到下一步函数的映射。$\sigma(x)$ 给出当状态为 $x$ 时被激活的函数。
+
+由此，单步递推**唯一确定**为：
+
+$$x_{l+1} = \sigma(x_l)\bigl(x_l\bigr)$$
+
+即：当前状态 $x_l$ 先通过 $\sigma$ 选出函数，再被该函数作用于自身。**$f_j$ 的选择由 $f_i(x)$ 决定，而非自由选取**——这是 IDFS 区别于自由函数复合（$\Omega^*$ 的自由幺半群）的核心约束。
+
+**注（Voronoi 划分）**：选择映射 $\sigma$ 自然诱导 $\mathcal{X}$ 的一个划分：
+
+$$\mathcal{X}_j \;\triangleq\; \sigma^{-1}(f_j) \;=\; \{x \in \mathcal{X} : \sigma(x) = f_j\}$$
+
+$\{\mathcal{X}_j\}_{j=1}^M$ 构成 $\mathcal{X}$ 的**状态区域划分**（Voronoi 剖分）。单步递推等价地写为：
+
+$$x_{l+1} = \sum_{j=1}^M \mathbb{I}(x_l \in \mathcal{X}_j) \cdot f_j(x_l)$$
+
+对 MLP-ReLU，$\mathcal{X}_j$ 是仿射超平面划分出的分段线性区域（$\sigma$ 分段常数）；对 softmax Transformer，$\sigma$ 是软性加权，$\mathcal{X}_j$ 退化为软边界区域。两种情形均在此框架内。
+
+**CAC 对 $(F, \sigma)$ 的最小要求**（恰好是上述三条，不多也不少）：
+
+| 要求 | 形式 | CAC 中的作用 |
+|---|---|---|
+| 输入驱动可复合 | $\sigma: \mathcal{X} \to F$ 存在 | 定义 $f$-链的单步递推 |
+| 逐点近似 | $\|\sigma(x)(x) - r_i(x)\| \leq \varepsilon_i$ | Telescope 展开项（A） |
+| Lipschitz 一致性 | $x \mapsto \sigma(x)(x)$ 是 $L$-Lipschitz | Telescope 展开项（B） |
+
+矩阵代数结构（$F \subset \mathcal{M}_d(\mathbb{R})$）不是 CAC 的逻辑前提，而是神经网络这个具体实例满足上述三条的**实现方式**，在 §1.3 作为定理推导。
+
+> **逻辑进路**：本节给出 $(F, \sigma)$ 的泛化定义及 CAC 所需的最小约束。§1.3 证明标准神经网络（矩阵 + 激活函数结构）诱导的 $(F, \sigma)$ 满足 $F \subset \mathcal{M}_d(\mathbb{R})$，将"$F$ 是矩阵族"从直觉升级为可证明的定理。§1.4 在此推导的基础上给出 $F$ 的完整形式定义。
+
+### 1.3 定理：神经网络等价于输入驱动的矩阵族（架构无关推导）
+
+> **特化声明**：本节将 §1.2 的抽象框架实例化到标准神经网络。此处令 $\mathcal{X} = \mathbb{R}^d$，度量取 Euclidean 范数 $d(x, y) = \|x - y\|_2$——这是矩阵-向量乘法 $\Phi_l(h) \cdot h \in \mathbb{R}^d$ 的自然度量。§1.2 的全部论证在任意度量空间 $(\mathcal{X}, d)$ 上均成立；Euclidean 结构仅在本节（以及后续 §1.6 的算子分析）中使用。
+
+本节从网络架构的基本事实出发，证明神经网络诱导的 $(F, \sigma)$ 满足 $F \subset \mathcal{M}_d(\mathbb{R})$。这是关于神经网络实例的**定理**，不是 §1.2 抽象定义的前提。
 
 **引理（无激活函数时的退化）**：若神经网络中不存在激活函数，则无论深度与宽度多大，整个网络退化为单一线性映射：
 
@@ -78,27 +121,73 @@ $$G_l : \mathbb{R}^d \to \mathbb{R}^d, \qquad G_l(h) \;=\; \Phi_l(h) \cdot h \;=
 
 其中 $\mathrm{ev}: \mathcal{M}_d \times \mathbb{R}^d \to \mathbb{R}^d$ 是标准的矩阵-向量求值映射。$G_l$ 是 $\mathbb{R}^d$ 上的非线性自映射：**算子由当前状态决定，再作用于当前状态本身**——这是"输入驱动"机制的泛函精确表述，对任意满足此结构的架构均成立。
 
+**定理 1.3（$F$ 的矩阵代数结构）**：对任意激活路径 $\pi = (\Phi_1^\pi, \ldots, \Phi_k^\pi)$（各层在该路径下的算子场取值；激活路径的精确集合论定义见 §1.5），路径所对应的有效变换为：
+
+$$f_\pi(x) = \Phi_k^\pi(h_{k-1}) \cdots \Phi_1^\pi(h_0) \cdot x$$
+
+当激活路径固定后，每层 $\Phi_l^\pi(h_{l-1})$ 退化为一个**确定的 $d \times d$ 实矩阵**（MLP 中由掩码决定的常矩阵；Transformer 中由注意力权重决定的矩阵）。因此，固定激活路径下，$f_\pi$ 是线性映射 $\mathbb{R}^d \to \mathbb{R}^d$，即
+
+$$f_\pi \in \mathcal{M}_d(\mathbb{R}) = \mathrm{End}(\mathbb{R}^d)$$
+
+由于 $F$ 的每个元素 $f_i$ 对应某条固定激活路径，故：
+
+$$\boxed{F \subset \mathcal{M}_d(\mathbb{R})}$$
+
 **$F$ 的规模**：不同激活路径序列的数量随深度和宽度指数级增长，这就是模型规模 $M$ 对应的数学实体。
 
 **推论（输入驱动组装）**：给定输入 $x$，模型不执行固定函数，而是由 $x$ 递归选择激活路径，**在线组装**出对应的 $f$-链路。
 
+**推论 1.3a（神经网络满足 §1.2 的 IDFS 两个定义条件，并具有特有代数结构）**：设 $\mathcal{X} = \mathbb{R}^d$，网络参数固定为 $\theta$。对第 $l$ 层，令：
+
+$$\sigma_l : \mathbb{R}^d \to F_l, \qquad h \mapsto \Phi_l(h)$$
+
+则 $(F, \sigma_l)$ 满足 §1.2 IDFS 定义的两个结构条件，并额外具有神经网络特有的矩阵代数性质。
+
+**IDFS 条件 1（选择映射存在，对应 §1.2 定义第 2 条）**：$\sigma_l$ 由 Nemytskii 算子场 $\Phi_l$ 直接给出，对每个 $h \in \mathbb{R}^d$ 有定义。单步递推为：
+
+$$h_{l+1} = \sigma_l(h_l)(h_l) = \Phi_l(h_l) \cdot h_l = G_l(h_l)$$
+
+与 §1.2 的 $x_{l+1} = \sigma(x_l)(x_l)$ 字面对应，$\sigma_l$ 即为该层的选择映射。$\square$
+
+**IDFS 条件 2（Lipschitz 一致性，对应 §1.2 定义第 1 条）**：需证 $h \mapsto G_l(h) = \sigma_l(h)(h)$ 是 $L_l$-Lipschitz。分两种架构：
+
+*情形 A（MLP-ReLU）*：在每个分段线性区域 $\mathcal{X}_j$ 内，$\sigma_l(h) = M_j$（常矩阵，由掩码固定）。对任意 $h, h' \in \mathcal{X}_j$：
+
+$$\|G_l(h) - G_l(h')\| = \|M_j(h - h')\| \leq \|M_j\|_{\mathrm{op}} \cdot \|h - h'\|$$
+
+故在每个区域内 $G_l$ 是 $\|M_j\|_{\mathrm{op}}$-Lipschitz（最大奇异值 $= \sigma_{\max}(M_j)$）。跨区域时 $G_l$ 在边界连续（激活切换为测度零事件），整体 Lipschitz 常数为 $\|G_l\|_{\mathrm{Lip}} \leq \max_j \sigma_{\max}(M_j)$。
+
+*情形 B（Transformer，softmax 路由）*：$\sigma_l(h) = \Phi_l(h)$ 连续依赖 $h$，$G_l$ 可微。Jacobian 分解（§1.6D）给出：
+
+$$\|J_{G_l}(h)\| \leq \underbrace{\|\Phi_l(h)\|_{\mathrm{op}}}_{\text{冻结项}} + \underbrace{\|(\nabla_h \Phi_l(h))[h]\|_{\mathrm{op}}}_{\text{选择器响应项}} \leq B_l + L_{\Phi_l} \cdot \|h\|$$
+
+其中 $B_l = \sup_h \|\Phi_l(h)\|_{\mathrm{op}}$，$L_{\Phi_l}$ 为 $\Phi_l$ 的 Lipschitz 常数（由 softmax 光滑性有界）。在有界域 $\|h\| \leq R$ 上，$G_l$ 是 $(B_l + L_{\Phi_l} R)$-Lipschitz。
+
+两种情形下 $F \subset \mathrm{Lip}_{L}(\mathcal{X})$ 均成立，$L = \max_l \|G_l\|_{\mathrm{Lip}}$（在 AdamW 训练下由 §3.4 命题 3.4 给出显式上界）。$\square$
+
+**神经网络特有代数性质（$F \subset \mathcal{M}_d(\mathbb{R})$）**：此性质超出 §1.2 的 IDFS 定义要求——它是矩阵 + 激活函数结构的具体推论，由定理 1.3 直接给出。一般 IDFS 不要求 $F$ 有此矩阵结构。$\square$
+
+> **综合**：神经网络（矩阵 + 激活函数结构）诱导的 $(F, \sigma_l)$ 是 §1.2 所定义的输入驱动函数系统的一个**具体实例**，所有三个条件均严格满足。CAC 定理（§2–§3）的全部论证在 §1.2 的一般 $(F, \sigma)$ 层面成立，神经网络的矩阵结构不是逻辑前提。
+
 > **架构实例**：$\Phi_l(h)$ 的具体形式与正则性（MLP 的分段常数掩码、Transformer 的 softmax 光滑路由等）及其在 IDFC 框架中的角色分析，见 [Part 4 §1](part4-empirical.md)。
 
-### 1.3 模型映射函数集（形式定义）
+> **逻辑地位**：定理 1.3 将"$F$ 具有矩阵代数结构"从前提变为推论——它是从激活函数原理出发的推导结果，而非 $F$ 定义的一部分。§1.4 在此基础上给出 $F$ 的完整形式定义，§1.6B 严格建立其幺半群代数结构。
 
-基于上述推导，正式定义：
+### 1.4 模型映射函数集（形式定义）
 
+基于 §1.3 的推导，正式给出 $F$ 的完整定义：
 
-设模型规模为 $M$（分段线性区域数的对数量级），**学出的函数集**为 $F = \{f_1, f_2, \ldots, f_M\}$，其中每个 $f_i$ 是某个激活掩码序列对应的有效映射。
+设模型规模为 $M$（分段线性区域数的对数量级），**学出的函数集**为 $F = \{f_1, f_2, \ldots, f_M\}$，其中每个 $f_i$ 是某个激活掩码序列对应的有效映射，且由定理 1.3 知 $F \subset \mathcal{M}_d(\mathbb{R})$。
 
 **关键性质**：
+- $F \subset \mathcal{M}_d(\mathbb{R})$：每个 $f_i$ 在其激活路径固定后是一个 $d \times d$ 实矩阵（定理 1.3）
 - $F$ 中的元素可以冗余：$f_i$ 和 $f_j$ 可对应近似同一计算，但精度不同
 - $F$ 不要求正交、独立或可解释——它们是权重空间被激活函数切割后的产物
 - $M$ 越大（网络越深越宽），$F$ 越丰富，每个 $r$ 的近似精度上限越高
 
 > **约定（$F$ 空间的语义中立性——语义防火墙）**
 >
-> **$E_{r_i}$ 的精确含义**：对固定参数 $\theta$ 的网络，每个输入 $x$ 的前向传播产生各层矩阵的有序乘积，即**有效算子**（见 §1.5B）：
+> **$E_{r_i}$ 的精确含义**：对固定参数 $\theta$ 的网络，每个输入 $x$ 的前向传播产生各层矩阵的有序乘积，即**有效算子**（见 §1.6B）：
 >
 > $$E(x) \;=\; \Phi_k(h_{k-1};\theta)\cdots\Phi_1(h_0;\theta) \;\in\; \langle F \rangle_\cdot$$
 >
@@ -106,11 +195,11 @@ $$G_l : \mathbb{R}^d \to \mathbb{R}^d, \qquad G_l(h) \;=\; \Phi_l(h) \cdot h \;=
 >
 > $$E_{r_i}: \mathcal{X} \to \langle F \rangle_\cdot, \quad x \mapsto E_{r_i}(x)$$
 >
-> 对不同的 $x$，$E_{r_i}(x)$ 一般是不同的 $d\times d$ 矩阵——$\{E_{r_i}(x) : x \in \mathcal{X}\}$ 是以 $x$ 为索引的**矩阵族**，不要求收敛到 $\mathbb{R}^d$ 中某个固定向量或方向。拟合条件 $\|E_{r_i}(x)\cdot x - r_i(x)\| \leq \varepsilon_i$（§1.6 逐点拟合）对族中每个矩阵分别独立成立。
+> 对不同的 $x$，$E_{r_i}(x)$ 一般是不同的 $d\times d$ 矩阵——$\{E_{r_i}(x) : x \in \mathcal{X}\}$ 是以 $x$ 为索引的**矩阵族**，不要求收敛到 $\mathbb{R}^d$ 中某个固定向量或方向。拟合条件 $\|E_{r_i}(x)\cdot x - r_i(x)\| \leq \varepsilon_i$（§1.7 逐点拟合）对族中每个矩阵分别独立成立。
 >
 > **命名约定**：下标 $r_i$ 是分析者事后贴上的标签（观察到数值近似成立后命名），**不蕴含** $F$ 空间中存在与 $r_i$ 语义对应的可辨识专用结构，也不蕴含该矩阵族存在固定的几何方向或可辨识的神经回路。"激活路径改变"严格指分布 $\Pr[\mathrm{Path}(x,k)=\pi]$ 随 $\theta$ 或 $x$ 的改变；将激活模式称作"路由"同样是分析者的命名约定，而非 $F$ 空间的内在属性。
 
-### 1.4 分叉、路径合并与抽象层的形成
+### 1.5 分叉、路径合并与抽象层的形成
 
 样本的激活路径不仅会分叉，也会**被动合并**。这是抽象表示形成的核心机制。
 
@@ -175,7 +264,7 @@ $$r\text{-paths confluent at state } s \implies f\text{-paths weakly confluent a
 这是 **CAC 的第二种形式**：不仅终点可达，中间状态也具有对应关系。
 
 
-### 1.5 函数链路：完整泛函定义
+### 1.6 函数链路：完整泛函定义
 
 #### A. 正式定义：非自治离散动力系统
 
@@ -223,7 +312,7 @@ $$\boxed{\text{output}(x) = E(x) \cdot x}$$
 
 $E(x)$ 对 $x$ 的依赖是**非线性的**（激活路径由 $x$ 决定），但对 $x$ 的**作用是线性的**。整个深层非线性网络，对固定输入 $x$ 而言，等价于一个输入依赖的线性映射 $E(x)$。
 
-> **信息损失**：从词序列到有效算子时，"哪条路径"的信息丢失（不同词可出同一积）；从有效算子到轨道终点时，中间状态 $h_1,\ldots,h_{k-1}$ 丢失。这正是 §1.4 定义的"强合并"现象的代数精确表述。
+> **信息损失**：从词序列到有效算子时，"哪条路径"的信息丢失（不同词可出同一积）；从有效算子到轨道终点时，中间状态 $h_1,\ldots,h_{k-1}$ 丢失。这正是 §1.5 定义的"强合并"现象的代数精确表述。
 
 **CAC 的代数含义**：$R \subset \Omega$（一般非线性），$F \subset \mathcal{M}_d$（线性）。CAC 是"$R^*$ 中的非线性复合可以被 $\langle F \rangle_\cdot$ 中的矩阵乘积在误差 $\varepsilon$ 内逼近"——本质上是**对非线性函数的分段线性逼近在复合下的传递性**（详见 §2）。
 
@@ -267,7 +356,7 @@ $$\|G_l\|_{\mathrm{Lip}} \leq B_l + L_{\Phi_l}\cdot\sup_h\|h\|$$
 
 
 
-### 1.6 拟合关系
+### 1.7 拟合关系
 
 由于 $F \subset \mathcal{M}_d(\mathbb{R})$（线性）而 $R \subset \Omega$（一般非线性），"$F$ 拟合 $R$"需要区分两种含义。
 
@@ -295,7 +384,7 @@ $$\text{（数值逼近）}\quad \exists\; E_{r_i}: \mathcal{X} \to \langle F \r
 
 $$\text{（Lipschitz 一致性）}\quad x \mapsto E_{r_i}(x)\cdot x \text{ 是 } L\text{-Lipschitz 函数，其中 } L = \max_j \|G_j\|_{\mathrm{Lip}}$$
 
-其中 $\varepsilon_i > 0$ 为允许的单步近似误差，$\|\cdot\|$ 为 $\mathbb{R}^d$ 上的标准 Euclidean 范数，$L$ 为§1.5.D 命题 1.1 定义的全局逐层 Lipschitz 上界。
+其中 $\varepsilon_i > 0$ 为允许的单步近似误差，$\|\cdot\|$ 为 $\mathbb{R}^d$ 上的标准 Euclidean 范数，$L$ 为§1.6.D 命题 1.1 定义的全局逐层 Lipschitz 上界。
 
 > **为何需要 Lipschitz 一致性**：§3.2 Telescope 展开的项（B）依赖 $r_{i_j}$ 是 $L$-Lipschitz（分析者视角）并由 $E_{r_i}$ 的 Lipschitz 常数代理（命题 3.4 步骤 3）。若某个 $E_c$ 的 Lipschitz 常数 $L_c \gg L$，则将其插入 f-chain 后误差传播速率变为 $L_c$ 而非 $L$，CAC 误差界中的 $L^l$ 项膨胀为 $L_c^l$，$l_{\max}$ 的 TSC 约束完全失效。**Lipschitz 一致性是 CAC 定理在 f-chain 复合下成立的必要条件，不是推论。**
 
@@ -304,9 +393,9 @@ $$\text{（Lipschitz 一致性）}\quad x \mapsto E_{r_i}(x)\cdot x \text{ 是 }
 
 ---
 
-### 1.7 生成过程的形式化：离散化与自回归展开
+### 1.8 生成过程的形式化：离散化与自回归展开
 
-§1.5 定义了 $f$-chain 作为**连续状态空间 $\mathbb{R}^d$ 上的动力系统**，其输出 $\text{output}(x) = E(x) \cdot x \in \mathbb{R}^d$ 是连续向量。实际语言模型输出的是离散 token——本节形式化这一"连续→离散"的转换，并由此导出自回归展开的完整数学定义。
+§1.6 定义了 $f$-chain 作为**连续状态空间 $\mathbb{R}^d$ 上的动力系统**，其输出 $\text{output}(x) = E(x) \cdot x \in \mathbb{R}^d$ 是连续向量。实际语言模型输出的是离散 token——本节形式化这一"连续→离散"的转换，并由此导出自回归展开的完整数学定义。
 
 #### A. 离散化步骤与 $\varepsilon_{\text{tok}}$
 
@@ -387,13 +476,13 @@ $$\text{Err}_{\text{AR}}(T) \leq \sum_{t=1}^{T} L^{T-t} \cdot \varepsilon_{\text
 ---
 
 > [!NOTE]
-> §1.7 定义的形式框架供 Part 3 §4.4、§5.3 的 CoT 分析引用（$\varepsilon_{\text{tok}}$ 的正式来源），并为 Part 4 §8 的 Diffusion 范式对比提供基准。Diffusion 的区别在于：整条去噪轨迹取消了逐步离散化，$\varepsilon_{\text{tok}}$ 仅在最终步骤一次性产生（见 Part 4 §8）。
+> §1.8 定义的形式框架供 Part 3 §4.4、§5.3 的 CoT 分析引用（$\varepsilon_{\text{tok}}$ 的正式来源），并为 Part 4 §8 的 Diffusion 范式对比提供基准。Diffusion 的区别在于：整条去噪轨迹取消了逐步离散化，$\varepsilon_{\text{tok}}$ 仅在最终步骤一次性产生（见 Part 4 §8）。
 
 ---
 
-### 1.8 可操作化条件（Operationalizability Condition，OC）
+### 1.9 可操作化条件（Operationalizability Condition，OC）
 
-> **本节的逻辑地位**：§1—§1.7 建立的全部数学结构（$f$-chain、$E_{r_i}(x)$、$\varepsilon_i$、激活路径等）在**数学层面无条件成立**——它们是对任意神经网络的代数描述，不依赖任何语义主张。本节定义一个额外条件，区分"数学推论"与"需要经验桥接的实践建议"。
+> **本节的逻辑地位**：§1—§1.8 建立的全部数学结构（$f$-chain、$E_{r_i}(x)$、$\varepsilon_i$、激活路径等）在**数学层面无条件成立**——它们是对任意神经网络的代数描述，不依赖任何语义主张。本节定义一个额外条件，区分"数学推论"与"需要经验桥接的实践建议"。
 
 **定义（可操作化条件，OC）**：称任务 $q$ 对模型 $F$ **满足可操作化条件**，若满足以下两条：
 
@@ -424,7 +513,7 @@ $$\varepsilon_i \;\triangleq\; \sup_{x \in \mathcal{X}} \|E_{r_i}(x)\cdot x - r_
 
 $\varepsilon_i$ 是**定义量**，不是假设——对任意 $F$ 和任意 $r_i$，此上确界总是存在的。**万能逼近定理（UAT）** 保证：对 $\mathcal{X}$ 上的任意连续函数 $r_i$，当模型规模 $M$ 充分大时，$\varepsilon_i$ 可以被压制到任意小（存在性 + 精度控制，详见 §3.3）。
 
-设 $\varepsilon_{\max} = \max_i \varepsilon_i$，$L = \max_i \|G_i\|_{\mathrm{Lip}}$（最大逐层 Lipschitz 常数，由 §1.5.D）。$L$ 同时是以下两类函数的 Lipschitz 上界：（1）$r_i$ 的 Lipschitz 常数（语义变换的固有属性）；（2）$x \mapsto E_{r_i}(x)\cdot x$ 的 Lipschitz 常数（§1.6 拟合定义的 Lipschitz 一致性条件）。两者相等是 Telescope 展开（§3.2）在 f-chain 复合下给出统一界 $L^l$ 的隐含前提——凡是 $L_c > L$ 的内容路径（如逐字记忆，见 §25.1 定理 25.1a），CAC 定理在该路径上不适用，不构成合法的 $r_i \in R_{\text{tr}}$。
+设 $\varepsilon_{\max} = \max_i \varepsilon_i$，$L = \max_i \|G_i\|_{\mathrm{Lip}}$（最大逐层 Lipschitz 常数，由 §1.6.D）。$L$ 同时是以下两类函数的 Lipschitz 上界：（1）$r_i$ 的 Lipschitz 常数（语义变换的固有属性）；（2）$x \mapsto E_{r_i}(x)\cdot x$ 的 Lipschitz 常数（§1.7 拟合定义的 Lipschitz 一致性条件）。两者相等是 Telescope 展开（§3.2）在 f-chain 复合下给出统一界 $L^l$ 的隐含前提——凡是 $L_c > L$ 的内容路径（如逐字记忆，见 §25.1 定理 25.1a），CAC 定理在该路径上不适用，不构成合法的 $r_i \in R_{\text{tr}}$。
 
 **未见任务集**：由 $R_{\text{tr}}$ 的有限复合可以描述但未在训练分布中出现的任务：
 
@@ -450,7 +539,7 @@ CAC 断言**逐点拟合关系在复合运算下近似传递**：映射
 
 $$\rho: R_{\text{tr}} \to \mathrm{Map}\!\bigl(\mathcal{X},\, \langle F \rangle_\cdot\bigr), \quad r_i \mapsto E_{r_i}$$
 
-> **注（$\rho$ 的纯数值语义）**：$\rho$ 是**数值配对映射**，将 $r_i \in R_{\text{tr}}$ 与满足逐点拟合约束 $\|E_{r_i}(x)\cdot x - r_i(x)\| \leq \varepsilon_i$（§1.6）的矩阵值函数 $E_{r_i}$ 配对。$\rho$ 不蕴含因果、语义等价或功能对应——$E_{r_i}(x)$ 是满足数值不等式的矩阵乘积，下标 $r_i$ 为分析者外加的命名约定（§1.3 语义防火墙）。
+> **注（$\rho$ 的纯数值语义）**：$\rho$ 是**数值配对映射**，将 $r_i \in R_{\text{tr}}$ 与满足逐点拟合约束 $\|E_{r_i}(x)\cdot x - r_i(x)\| \leq \varepsilon_i$（§1.7）的矩阵值函数 $E_{r_i}$ 配对。$\rho$ 不蕴含因果、语义等价或功能对应——$E_{r_i}(x)$ 是满足数值不等式的矩阵乘积，下标 $r_i$ 为分析者外加的命名约定（§1.3 语义防火墙）。
 
 在复合意义下，$\rho$ 构成从自由幺半群 $R_{\text{tr}}^*$ 到 $\langle F \rangle_\cdot$-值函数链的**近似幺半群同态**：
 
@@ -509,7 +598,7 @@ $$e_j \leq \underbrace{\|\hat{f}_j(\hat{h}_{j-1}) - r_{i_j}(\hat{h}_{j-1})\|}_{\
 
 - **项（A）**：由逐点拟合定义，$\|\hat{f}_j(y) - r_{i_j}(y)\| \leq \varepsilon_{i_j} \leq \varepsilon_{\max}$，对任意 $y$ 成立，故取 $y = \hat{h}_{j-1}$ 得 $\text{(A)} \leq \varepsilon_{\max}$。
 
-- **项（B）**：$r_{i_j}$ 是 $L$-Lipschitz 函数（$L$ 为全局最大逐层 Lipschitz 常数，由 §1.5.D 命题 1.1），故 $\text{(B)} \leq L \cdot \|\hat{h}_{j-1} - h_{j-1}^*\| = L \cdot e_{j-1}$。
+- **项（B）**：$r_{i_j}$ 是 $L$-Lipschitz 函数（$L$ 为全局最大逐层 Lipschitz 常数，由 §1.6.D 命题 1.1），故 $\text{(B)} \leq L \cdot \|\hat{h}_{j-1} - h_{j-1}^*\| = L \cdot e_{j-1}$。
 
 得递推关系：
 
@@ -525,7 +614,7 @@ $$e_l \leq \varepsilon_{\max}(1 + L + L^2 + \cdots + L^{l-1}) = \varepsilon_{\ma
 
 （$L = 1$ 时几何级数退化为 $l$，即 $e_l \leq l \cdot \varepsilon_{\max}$。）$\square$
 
-> **注（$L$ 的来源）**：项（B）使用 $r_{i_j}$ 是 $L$-Lipschitz。$r_{i_j} \in \Omega$ 是语义空间上的变换，其 Lipschitz 常数原则上由训练数据决定。在 IDFC 框架中，$L$ 取的是所有步骤中最大的 Lipschitz 常数，即 $L = \max_j \|G_{i_j}\|_{\text{Lip}}$（由 §1.5.D 命题 1.1 给出的累积 Lipschitz 常数的单步版本）。精确地，$L$ 应是 $r_{i_j}$ 的 Lipschitz 常数，此处以网络层的 Lipschitz 常数代理。
+> **注（$L$ 的来源）**：项（B）使用 $r_{i_j}$ 是 $L$-Lipschitz。$r_{i_j} \in \Omega$ 是语义空间上的变换，其 Lipschitz 常数原则上由训练数据决定。在 IDFC 框架中，$L$ 取的是所有步骤中最大的 Lipschitz 常数，即 $L = \max_j \|G_{i_j}\|_{\text{Lip}}$（由 §1.6.D 命题 1.1 给出的累积 Lipschitz 常数的单步版本）。精确地，$L$ 应是 $r_{i_j}$ 的 Lipschitz 常数，此处以网络层的 Lipschitz 常数代理。
 
 > **注（证明的保守性）**：Telescope 展开对 $j$ 步的误差均取上界 $\varepsilon_{\max}$（而非各步实际的 $\varepsilon_{i_j}$），并对 Lipschitz 传播取全局最大 $L$。当各步误差和 Lipschitz 常数差异显著时，实际误差远低于此界。
 
@@ -549,7 +638,7 @@ $$\sup_{x \in \mathcal{X}} \|E_{r_i}(x) \cdot x - r_i(x)\| \leq \varepsilon$$
 
 **证明思路（UAT 到逐点拟合的桥接）**：
 
-UAT（Cybenko 1989; Hornik 1991）经典陈述为：对 $\mathcal{X}$ 上的任意连续函数 $g: \mathbb{R}^d \to \mathbb{R}^d$ 和 $\varepsilon > 0$，存在有限宽度的浅层 MLP 使得均匀逼近误差 $< \varepsilon$。桥接步骤：（1）$r_i$ 连续性满足 UAT 前提；（2）UAT 保证存在某个 MLP $\tilde{f}_i$ 使 $\|\tilde{f}_i(x) - r_i(x)\| \leq \varepsilon$；（3）由 §1.5.B 代数结构，$\tilde{f}_i(x) = E(x)\cdot x$ 对某个 $E(x) \in \langle F \rangle_\cdot$ 成立，满足逐点拟合定义。UAT 仅给出存在性，不给出 $M_0$ 的显式公式。$\square$
+UAT（Cybenko 1989; Hornik 1991）经典陈述为：对 $\mathcal{X}$ 上的任意连续函数 $g: \mathbb{R}^d \to \mathbb{R}^d$ 和 $\varepsilon > 0$，存在有限宽度的浅层 MLP 使得均匀逼近误差 $< \varepsilon$。桥接步骤：（1）$r_i$ 连续性满足 UAT 前提；（2）UAT 保证存在某个 MLP $\tilde{f}_i$ 使 $\|\tilde{f}_i(x) - r_i(x)\| \leq \varepsilon$；（3）由 §1.6.B 代数结构，$\tilde{f}_i(x) = E(x)\cdot x$ 对某个 $E(x) \in \langle F \rangle_\cdot$ 成立，满足逐点拟合定义。UAT 仅给出存在性，不给出 $M_0$ 的显式公式。$\square$
 
 **推论 3.2（理论精度渐近收敛——模型容量上界）**：对固定链长 $l$ 和固定 $L_{\max}$，若训练能达到 UAT 意义下的最优精度，则当 $M \to \infty$：
 
@@ -670,7 +759,7 @@ $$\|W_l^{(\infty)}\|_F \;\leq\; \frac{\eta D_l}{\eta\lambda} \;=\; \frac{D_l}{\l
 
 $$\sigma_{\max}(W_l^{(\infty)}) \;\leq\; \frac{D_l}{\lambda} \;=\; \frac{\sqrt{d_{\text{in}} \cdot d_{\text{out}}}}{\lambda}$$
 
-对 Transformer 层而言，每层 Lipschitz 常数由注意力子层和 FFN 子层的权重谱范数乘积控制（含残差结构，§1.5.D 命题 1.1）：
+对 Transformer 层而言，每层 Lipschitz 常数由注意力子层和 FFN 子层的权重谱范数乘积控制（含残差结构，§1.6.D 命题 1.1）：
 
 $$\|G_l\|_{\mathrm{Lip}} \;\leq\; 1 \;+\; \underbrace{\sigma_{\max}(W_O)\,\sigma_{\max}(W_V)}_{\text{注意力子层}} \;+\; \underbrace{\sigma_{\max}(W_2)\,\sigma_{\max}(W_1)}_{\text{FFN 子层}}$$
 
