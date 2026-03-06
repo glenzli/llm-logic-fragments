@@ -12,89 +12,164 @@
 
 ## 1. 基本设定
 
-### 1.1 逻辑空间与原始逻辑原语
+### 1.1 状态空间、变换空间与原语集
 
-#### 第一层：语义状态空间 $\mathcal{X}$
+设 $(\mathcal{X}, d)$ 为度量空间，称为**状态空间**。
 
-设 $(\mathcal{X}, d)$ 为**语义状态空间**——赋予了度量 $d$ 的集合，元素代表所有可能的语义表示（token 序列、中间推理状态、知识断言等）。$\mathcal{X}$ 满足：
-
-- 元素 $x \in \mathcal{X}$ 代表一个完整的语义状态（输入、中间步骤、输出均可）
-- 度量 $d: \mathcal{X} \times \mathcal{X} \to \mathbb{R}_{\geq 0}$ 由具体任务赋予，无需是 Euclidean 范数，亦无需向量空间结构
-- 度量的唯一作用：支持 Lipschitz 函数的定义 $\bigl(d(f(x), f(y)) \leq L \cdot d(x,y)\bigr)$ 和单步近似误差 $\varepsilon_i$ 的测量——这是 CAC Telescope 展开所需的全部度量性质（见 §3.2）
-
-#### 第二层：完整变换空间 $\Omega$
-
-定义 $\mathcal{X}$ 上所有可能的变换构成的**完整变换空间**：
+定义**变换空间**：
 
 $$\Omega = \{ \phi : \mathcal{X} \to \mathcal{X} \}$$
 
-$\Omega$ 包含了**一切可能的语义状态变换**——事实检索、语法变换、数学推导、类比映射、因果推理、字面复现、格式转换……凡是能将一个语义状态映射到另一个语义状态的规则，不论是否具有"逻辑"结构，都是 $\Omega$ 的元素。
+$\Omega$ 在函数复合下构成**幺半群**：$\phi_2 \circ \phi_1 \in \Omega$，$\text{id}_{\mathcal{X}} \in \Omega$。
 
-$\Omega$ 在函数复合下构成一个**幺半群**（monoid）：
-
-$$\phi_2 \circ \phi_1 \in \Omega, \quad \text{id}_{\mathcal{X}} \in \Omega$$
-
-即两个语义变换的串联仍是语义变换，且存在平凡的"什么都不做"操作。
-
-#### 第三层：原始生成元集 $R$ 与封闭包 $R^*$
-
-**定义（原始逻辑原语）**：设
+定义**原语集** $R$ 为 $\Omega$ 的一个有限子集：
 
 $$R = \{r_1, r_2, \ldots, r_m\} \subset \Omega$$
 
-为从 $\Omega$ 中选出的有限**生成元子集**，代表语言中已知或未知的基础推理规则。$R^*$ 为 $R$ 在复合运算下的**自由幺半群**（即所有有限长度复合的集合）：
+$R^*$ 为 $R$ 在复合运算下的**自由幺半群**：
 
 $$R^* = \{ r_{i_k} \circ \cdots \circ r_{i_1} \mid k \geq 0,\ r_{i_j} \in R \}$$
 
-$R^*$ 是"$R$ 能够描述的一切推理过程"的完整边界。本文的核心假说 **CAC（Compositional Approximation Closure，组合近似封闭性，见 §2）** 主张：任意满足**输入驱动函数系统**（Input-Driven Function System，**IDFS**；形式定义见 §1.2）条件的 $(F, \sigma)$，均能在误差范围内近似覆盖 $R^*$——即只要 $R$ 能组合到达的推理结论，$F$ 也能通过输入驱动的组合近似地到达。神经网络（矩阵 + 激活函数）是 IDFS 的一个代数实例，在 §1.3 严格推导；CAC 作为抽象定理对任意 IDFS 成立，不预设具体实现机制。
 
-**注意**：
-- $R$ 不要求是干净的、正交的或可解释的；$\Omega$ 中有大量元素不属于 $R$，也不影响模型行为
-- $R$ 可以包含人类尚未命名的隐式规则——$R$ 的边界由训练数据所能描述的推理结构决定，而非人为枚举
-- $m$ 可以很大，但 $R$ 对 $\Omega$ 而言是稀疏的：实际语言使用中反复出现的推理模式远少于全集
+### 1.2 输入驱动函数系统（IDFS）与全局演化算子
 
-### 1.2 输入驱动函数系统（IDFS）：泛化定义
+**定义（输入驱动函数系统，Input-Driven Function System，IDFS）**：称有序对 $(F, \sigma)$ 为**输入驱动函数系统**，其中：
 
-IDFC 框架适用于任意满足以下三条的 $(F, \sigma)$——神经网络是其中一个实例，在 §1.3 专门推导。
+1. **函数集** $F = \{f_1, f_2, \ldots, f_M\}$：$\mathcal{X}$ 上有限个函数的集合。
 
-**定义（$(F, \sigma)$ 结构）**：称一个**输入驱动函数系统**为有序对 $(F, \sigma)$，其中：
+2. **选择映射** $\sigma : \mathcal{X} \to F$：将当前状态映射到下一步函数的映射。
 
-1. **函数集** $F = \{f_1, f_2, \ldots, f_M\} \subset \mathrm{Lip}_L(\mathcal{X})$：$F$ 是 $\mathcal{X}$ 上有限个 $L$-Lipschitz 函数的集合，$M$ 为系统规模。
+定义**全局演化算子** $\Phi: \mathcal{X} \to \mathcal{X}$ 为：
 
-2. **选择映射** $\sigma : \mathcal{X} \to F$：一个将当前状态映射到下一步函数的映射。$\sigma(x)$ 给出当状态为 $x$ 时被激活的函数。
+$$\Phi(x) \triangleq \sigma(x)(x)$$
 
-由此，单步递推**唯一确定**为：
+单步递推由此唯一确定：$x_{l+1} = \Phi(x_l)$。
 
-$$x_{l+1} = \sigma(x_l)\bigl(x_l\bigr)$$
+**假设（系统级 Lipschitz 约束）**：要求全局演化算子 $\Phi \in \mathrm{Lip}_L(\mathcal{X})$，即：
 
-即：当前状态 $x_l$ 先通过 $\sigma$ 选出函数，再被该函数作用于自身。**$f_j$ 的选择由 $f_i(x)$ 决定，而非自由选取**——这是 IDFS 区别于自由函数复合（$\Omega^*$ 的自由幺半群）的核心约束。
+$$d\bigl(\Phi(x),\, \Phi(y)\bigr) \leq L \cdot d(x, y) \quad \forall\, x, y \in \mathcal{X}$$
 
-**注（Voronoi 划分）**：选择映射 $\sigma$ 自然诱导 $\mathcal{X}$ 的一个划分：
+### 1.3 单步拟合与 f-chain
 
-$$\mathcal{X}_j \;\triangleq\; \sigma^{-1}(f_j) \;=\; \{x \in \mathcal{X} : \sigma(x) = f_j\}$$
+**定义（单步拟合）**：设 $r_i \in R$。定义 IDFS 对 $r_i$ 的**拟合误差**为：
 
-$\{\mathcal{X}_j\}_{j=1}^M$ 构成 $\mathcal{X}$ 的**状态区域划分**（Voronoi 剖分）。单步递推等价地写为：
+$$\varepsilon_i \;\triangleq\; \sup_{x \in \mathcal{X}} \bigl\|\Phi(x) - r_i(x)\bigr\|$$
 
-$$x_{l+1} = \sum_{j=1}^M \mathbb{I}(x_l \in \mathcal{X}_j) \cdot f_j(x_l)$$
+记 $\varepsilon_{\max} = \max_i \varepsilon_i$。
 
-对 MLP-ReLU，$\mathcal{X}_j$ 是仿射超平面划分出的分段线性区域（$\sigma$ 分段常数）；对 softmax Transformer，$\sigma$ 是软性加权，$\mathcal{X}_j$ 退化为软边界区域。两种情形均在此框架内。
+**定义（f-chain）**：设 $r$-链 $q = r_{i_l} \circ \cdots \circ r_{i_1} \in R^*$。定义对应的 **f-chain** 为递推序列：
 
-**CAC 对 $(F, \sigma)$ 的最小要求**（恰好是上述三条，不多也不少）：
-
-| 要求 | 形式 | CAC 中的作用 |
-|---|---|---|
-| 输入驱动可复合 | $\sigma: \mathcal{X} \to F$ 存在 | 定义 $f$-链的单步递推 |
-| 逐点近似 | $\|\sigma(x)(x) - r_i(x)\| \leq \varepsilon_i$ | Telescope 展开项（A） |
-| Lipschitz 一致性 | $x \mapsto \sigma(x)(x)$ 是 $L$-Lipschitz | Telescope 展开项（B） |
-
-矩阵代数结构（$F \subset \mathcal{M}_d(\mathbb{R})$）不是 CAC 的逻辑前提，而是神经网络这个具体实例满足上述三条的**实现方式**，在 §1.3 作为定理推导。
-
-> **逻辑进路**：本节给出 $(F, \sigma)$ 的泛化定义及 CAC 所需的最小约束。§1.3 证明标准神经网络（矩阵 + 激活函数结构）诱导的 $(F, \sigma)$ 满足 $F \subset \mathcal{M}_d(\mathbb{R})$，将"$F$ 是矩阵族"从直觉升级为可证明的定理。§1.4 在此推导的基础上给出 $F$ 的完整形式定义。
-
-
-> **神经网络代数化**：标准神经网络（矩阵 + 激活函数结构）诱导的 $(F, \sigma)$ 满足上述 IDFS 定义的全部三个条件，并额外具有 $F \subset \mathcal{M}_d(\mathbb{R})$ 的矩阵代数结构。完整推导（Nemytskii 算子场、Theorem 1.3、激活路径、$f$-chain、拟合关系、生成过程、OC、TSC/AdamW）见 [**Part 2c §1–§8**](part2c-nn-algebraic.md)。
+$$\hat{h}_0 = x, \qquad \hat{h}_j = \Phi(\hat{h}_{j-1}), \quad j = 1, \ldots, l$$
 
 ---
+
+## 2. CAC 定理
+
+**定理（组合近似封闭性，Compositional Approximation Closure，CAC）**：设 $(F, \sigma)$ 为 IDFS，全局演化算子 $\Phi \in \mathrm{Lip}_L(\mathcal{X})$（§1.2），对原语集 $R$ 的拟合误差上界为 $\varepsilon_{\max}$（§1.3）。
+
+则对任意 $r$-链 $q = r_{i_l} \circ \cdots \circ r_{i_1} \in R^*$ 和初始状态 $x \in \mathcal{X}$，设真实 $r$-链轨迹 $h_j^* = r_{i_j}(h_{j-1}^*)$（$h_0^* = x$），f-chain 轨迹 $\hat{h}_j = \Phi(\hat{h}_{j-1})$（$\hat{h}_0 = x$），则：
+
+$$\bigl\|\hat{h}_l - h_l^*\bigr\| \;\leq\; \varepsilon_{\max} \cdot \frac{L^l - 1}{L - 1}$$
+
+（$L = 1$ 时右端取极限值 $l \cdot \varepsilon_{\max}$。）
+
+**证明**：令 $e_j = \|\hat{h}_j - h_j^*\|$，$e_0 = 0$。第 $j$ 步：
+
+$$e_j = \|\Phi(\hat{h}_{j-1}) - r_{i_j}(h_{j-1}^*)\|$$
+
+插入虚拟中间量 $\Phi(h_{j-1}^*)$，三角不等式：
+
+$$e_j \;\leq\; \underbrace{\|\Phi(\hat{h}_{j-1}) - \Phi(h_{j-1}^*)\|}_{\text{系统漂移项}} \;+\; \underbrace{\|\Phi(h_{j-1}^*) - r_{i_j}(h_{j-1}^*)\|}_{\text{单步拟合项}}$$
+
+- **系统漂移项**：$\Phi \in \mathrm{Lip}_L$ 直接给出 $\leq L \cdot e_{j-1}$。
+- **单步拟合项**：由 §1.3 定义，$\leq \varepsilon_{\max}$。
+
+递推关系：$e_j \leq L\,e_{j-1} + \varepsilon_{\max}$，$e_0 = 0$。逐步展开：
+
+$$e_1 \leq \varepsilon_{\max}$$
+$$e_2 \leq \varepsilon_{\max} + L \cdot \varepsilon_{\max} = \varepsilon_{\max}(1 + L)$$
+$$e_3 \leq \varepsilon_{\max} + L \cdot \varepsilon_{\max}(1+L) = \varepsilon_{\max}(1 + L + L^2)$$
+$$\vdots$$
+$$e_l \leq \varepsilon_{\max}(1 + L + L^2 + \cdots + L^{l-1}) = \varepsilon_{\max} \cdot \frac{L^l - 1}{L - 1}$$
+$\square$
+
+**推论 1（界的紧性）**：设 $\varepsilon_{\max} > 0$。则存在初始状态 $x \in \mathcal{X}$ 和 $r$-链 $q \in R^*$，使得对应 f-chain 满足：
+
+$$e_l \;\geq\; \varepsilon_{\max} \cdot \frac{L^l - 1}{L - 1}$$
+
+即上界在最坏情形下恰好可达。
+
+**证明**：取 $r^* \in R$ 使 $\varepsilon_{r^*} = \varepsilon_{\max}$，构造常值链 $q = r^* \circ \cdots \circ r^*$（长度 $l$）。对第 $j$ 步，选取 $x$ 使 $\|\Phi(h_0^*) - r^*(h_0^*)\| = \varepsilon_{\max}$，并要求每步虚拟拟合误差向量 $\Phi(h_{j-1}^*) - r^*(h_{j-1}^*)$ 与漂移向量 $\Phi(\hat{h}_{j-1}) - \Phi(h_{j-1}^*)$ 方向一致（内积非负），则三角不等式无抵消，每步取等：
+
+$$e_j = L \cdot e_{j-1} + \varepsilon_{\max}$$
+
+归纳展开：$e_l = \varepsilon_{\max}(1 + L + \cdots + L^{l-1}) = \varepsilon_{\max} \cdot \dfrac{L^l - 1}{L - 1}$。$\square$
+
+**结论**：定理与推论 1 合并，任意 IDFS 在组合 $l$ 步后的最坏情形误差**精确为**：
+
+$$e_l^* = \varepsilon_{\max} \cdot \frac{L^l - 1}{L - 1}$$
+
+降低链路误差有且仅有两条路径：压低单步拟合误差 $\varepsilon_{\max}$，或控制 Lipschitz 常数 $L$。
+
+**推论 2（有效推理深度）**：设容忍误差为 $\delta > 0$。则使 $e_l \leq \delta$ 的最大链长为：
+
+$$l^* = \left\lfloor \frac{\log\!\left(1 + \dfrac{\delta(L-1)}{\varepsilon_{\max}}\right)}{\log L} \right\rfloor \quad (L > 1), \qquad l^* = \left\lfloor \frac{\delta}{\varepsilon_{\max}} \right\rfloor \quad (L = 1)$$
+
+**证明**：由 CAC 定理，$e_l \leq \delta$ 等价于：
+
+$$\varepsilon_{\max} \cdot \frac{L^l - 1}{L - 1} \leq \delta$$
+
+**$L > 1$**：解不等式 $L^l \leq 1 + \dfrac{\delta(L-1)}{\varepsilon_{\max}}$，两边取以 $L$ 为底的对数：
+
+$$l \leq \frac{\log\!\left(1 + \dfrac{\delta(L-1)}{\varepsilon_{\max}}\right)}{\log L}$$
+
+取下整即得 $l^*$。$l^*$ 关于 $L$ 单调递减：$L$ 增大时分子增速（对数）慢于分母增速，故 $L$ 越大 $l^*$ 越小；当 $L \to 1^+$ 时 $l^* \to \infty$，此为极限最优（即 $L = 1$ 的情形）。
+
+**$L = 1$**：$\dfrac{L^l - 1}{L-1}$ 取极限为 $l$，不等式化为 $l \cdot \varepsilon_{\max} \leq \delta$，解得 $l^* = \left\lfloor \dfrac{\delta}{\varepsilon_{\max}} \right\rfloor$。$\square$
+
+**推论 3（饱和体制，$L < 1$）**：设 $\Phi \in \mathrm{Lip}_L(\mathcal{X})$ 且 $L < 1$。则对任意 $r$-链 $q \in R^*$，无论链长 $l$ 多大，f-chain 误差满足：
+
+$$e_l \;\leq\; \frac{\varepsilon_{\max}}{1 - L}$$
+
+即误差有全局上界，不随链长增长。
+
+**证明**：由 CAC 定理，$e_l \leq \varepsilon_{\max} \cdot \dfrac{L^l - 1}{L - 1} = \varepsilon_{\max} \cdot \dfrac{1 - L^l}{1 - L}$（$L < 1$ 时分母 $1-L > 0$）。由 $L^l \geq 0$ 得 $\dfrac{1 - L^l}{1 - L} \leq \dfrac{1}{1 - L}$。$\square$
+
+**推论（Banach 不动点）**：若 $L < 1$ 且 $(\mathcal{X}, d)$ 完备，则 $\Phi$ 存在唯一不动点 $x^* = \Phi(x^*)$，f-chain 从任意初始状态收敛：$\hat{h}_l \to x^*$。
+
+**推论 4（路径依赖精细化界）**：设 f-chain 轨迹经过的各步局部 Lipschitz 常数为 $L_j \triangleq \mathrm{Lip}(\Phi \!\restriction_{\hat{h}_{j-1}})$，各步拟合误差为 $\varepsilon_{i_j}$。则：
+
+$$e_l \;\leq\; \sum_{j=1}^{l} \varepsilon_{i_j} \cdot \prod_{k=j+1}^{l} L_k$$
+
+其中空积（$j = l$ 项）定义为 1。特别地，取 $\varepsilon_{i_j} \leq \varepsilon_{\max}$，即得：
+
+$$e_l \;\leq\; \varepsilon_{\max} \cdot \sum_{j=1}^{l} \prod_{k=j+1}^{l} L_k$$
+
+**证明**：对递推 $e_j \leq L_j \cdot e_{j-1} + \varepsilon_{i_j}$，$e_0 = 0$，逐步展开：
+
+$$e_l \leq \varepsilon_{i_1} \!\cdot\! \prod_{k=2}^{l} L_k \;+\; \varepsilon_{i_2} \!\cdot\! \prod_{k=3}^{l} L_k \;+\; \cdots \;+\; \varepsilon_{i_{l-1}} \!\cdot\! L_l \;+\; \varepsilon_{i_l}$$
+
+收项即得结论。当所有 $L_j = L$ 时，$\displaystyle\sum_{j=1}^{l} L^{l-j} = \frac{L^l - 1}{L-1}$，退化为 CAC 定理。$\square$
+
+**定义（累积放大系数）**：
+
+$$\Lambda_l \;\triangleq\; \sum_{j=1}^{l} \prod_{k=j+1}^{l} L_k$$
+
+其中空积（$j = l$ 项）定义为 $1$。精细界化简为：
+
+$$e_l \;\leq\; \varepsilon_{\max} \cdot \Lambda_l$$
+
+**备注（$\Lambda_l$ 的渐近行为）**：$\Lambda_l$ 完全由路径上的 $\{L_j\}$ 决定，$L_j > 1$ 与 $L_j < 1$ 的效果自然在乘积中抵消：
+
+| 条件 | $\Lambda_l$ 行为 |
+|---|---|
+| $\prod_{k=1}^l L_k \to \infty$（扩张主导） | $\Lambda_l$ 指数增长，退化为 CAC 全局界 |
+| $\forall j: L_j \leq 1$（每步非扩张） | $\Lambda_l \leq l$，线性增长 |
+| $\sum_{j=1}^{\infty} \prod_{k=j+1}^{\infty} L_k < C$（收缩步充分多） | $\Lambda_\infty \leq C$，全局有界 |
+
+---
+
+<!-- 以下为旧版 §2，保留供参考，待整理 -->
 
 ## 2. 核心假说：组合近似封闭性
 
