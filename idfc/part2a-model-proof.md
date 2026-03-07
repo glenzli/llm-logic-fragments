@@ -188,6 +188,26 @@ $$d(\hat{h}_j^{(A)}, \hat{h}_j^{(B)}) \leq L_j \cdot d(\hat{h}_{j-1}^{(A)}, \hat
 
 > **注（对偶结构）**：$\Pi_l$ 与 $\Lambda_l$ 控制系统的两个方向：$\Lambda_l$ 衡量**误差的累积放大**（单步近似误差如何沿链传播），$\Pi_l$ 衡量**输入差异的保留程度**（不同输入的输出能否区分）。收缩机制（$L_j < 1$）同时压低 $\Pi_l$（输出坍缩，输入可区分性消失）和 $\Lambda_l$（抑制误差累积）；扩张机制（$L_j > 1$）则反之。两者的平衡决定了 IDFS 的长链稳定性。
 
+**推论 3c（输入敏感性爆炸，Input Sensitivity Explosion）**：设 f-链第 $j$ 步 $\Phi$ 满足**扩张下界**（co-Lipschitz 条件）：存在 $c_j > 1$ 使得
+
+$$d\!\bigl(\Phi(\hat{h}_{j-1}^{(A)}),\, \Phi(\hat{h}_{j-1}^{(B)})\bigr) \;\geq\; c_j \cdot d\!\bigl(\hat{h}_{j-1}^{(A)},\, \hat{h}_{j-1}^{(B)}\bigr)$$
+
+定义**扩张系数**：
+
+$$\Pi_l^- \;\triangleq\; \prod_{j=1}^{l} c_j$$
+
+则任意两个输入 $x_A \neq x_B$ 的 f-chain 终态满足：
+
+$$d\!\bigl(\hat{h}_l^{(A)},\, \hat{h}_l^{(B)}\bigr) \;\geq\; \Pi_l^- \cdot d(x_A,\, x_B)$$
+
+若 $\Pi_l^- \to \infty$，则初始任意微小的输入差异均被**指数放大**，IDFS 对输入表现出极端敏感性。
+
+**证明**：对 co-Lipschitz 条件连续应用 $l$ 次，链式展开得下界 $\Pi_l^- \cdot d(x_A, x_B)$。$\Pi_l^- \to \infty$ 时，对任意 $x_A \neq x_B$，终态距离趋无穷。$\square$
+
+> **注（与推论3b对偶）**：推论3b（$\Pi_l \to 0$，收缩）与推论3c（$\Pi_l^- \to \infty$，扩张）构成完整的对称图景：前者刻画 IDFS 失去区分不同输入的能力，后者刻画 IDFS 将微小输入差异无限放大。推论6是推论3c在 IDFS $\sigma$-决策边界处的**结构性实例**——当两点跨越边界时，局部扩张下界自动以 $c_j \to \infty$ 的速度发散，无需额外假设。
+
+---
+
 **推论 4（生成基约简，Basis Reduction）**：设 $R_0 \subseteq R$ 为 $R$ 的**生成基**，$d_{\max} \triangleq \max_{r_i \in R \setminus R_0} d(r_i, R_0)$。设 $\Phi$ 以误差 $\varepsilon_0$ 局部拟合 $R_0$（即对所有 $(r, \mathcal{X}_r) \in \mathcal{S},\, r \in R_0$：$\sup_{x \in \mathcal{X}_r} \|\Phi(x) - r(x)\| \leq \varepsilon_0$）。
 
 对任意 $r_i \in R \setminus R_0$ 的分解路径 $r_i = r_{i_{d_i}} \circ \cdots \circ r_{i_1}$，记该路径的累积放大系数为 $\Lambda_{d_i}^{\mathrm{path}}$，则：
@@ -271,4 +291,4 @@ $$\|f_k(a) - f_{k'}(b)\| \;\geq\; \|f_k(a) - f_{k'}(a)\| - \|f_{k'}(a) - f_{k'}(
 
 $$L_j \;\geq\; \frac{\Delta}{d(a,b)} - L_{f_{k'}} \;\xrightarrow{d(a,b) \to 0}\; +\infty \qquad \square$$
 
-> **注（结构性含义）**：推论 6 刻画了 IDFS 的一类结构性脆弱点——当轨道漂移导致 $\hat{h}_{j-1}$ 与 $h^*_{j-1}$ 跨越 $\sigma$-决策边界时，路径局部 Lipschitz $L_j$ 急剧放大，$\Lambda_l$ 爆炸，CAC 误差界退化为无效约束。这是 IDFS 定义本身的代价：$\sigma$ 将连续状态空间映射到离散函数集，**边界天然是不连续的**。推论 6 为分析此类不稳定路径提供了量化机制。
+> **注（与推论3c的关系）**：推论6是**推论3c在 IDFS $\sigma$-边界处的结构性实例**。推论3c要求以 co-Lipschitz 下界 $c_j > 1$ 作为前提条件；而推论6表明，当两点跨越 $\sigma$-决策边界时，该条件由 IDFS 结构**自动满足**，且下界以 $c_j \geq \Delta/d(a,b) - L_{f_{k'}} \to +\infty$ 的速度发散——即 IDFS 在边界附近天然具备极端扩张性。这是 $\sigma$ 将连续状态空间映射到离散函数集的内在代价：**边界处的不连续性产生无界局部扩张，是推论3c最极端的退化情形**。
