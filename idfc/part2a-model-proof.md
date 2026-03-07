@@ -170,7 +170,7 @@ $$\Lambda_\infty \leq \sum_{j=0}^{\infty} L^j = \frac{1}{1-L}$$
 
 **证明**：$L < 1$ 时 $\Phi$ 是完备度量空间 $(\mathcal{X}, d)$ 上的压缩映射，由 **Banach 压缩映射定理**直接得不动点存在唯一性及轨道收敛。$\square$
 
-**推论 3b（初始条件的动力学衰减，Dynamical Decay of Initial Conditions）**：设 f-链第 $j$ 步的路径局部 Lipschitz 为 $L_j$，定义**记忆衰减系数**：
+**推论 3b（输入可区分性的长链衰减，Long-chain Decay of Input Distinguishability）**：设 f-链第 $j$ 步的路径局部 Lipschitz 为 $L_j$，定义**输入敏感性系数**：
 
 $$\Pi_l \;\triangleq\; \prod_{j=1}^{l} L_j$$
 
@@ -178,15 +178,15 @@ $$\Pi_l \;\triangleq\; \prod_{j=1}^{l} L_j$$
 
 $$d\!\bigl(\hat{h}_l^{(A)},\, \hat{h}_l^{(B)}\bigr) \;\leq\; \Pi_l \;\cdot\; d(x_A,\, x_B)$$
 
-若 $\Pi_l \to 0$（即 $\sum_j \log L_j \to -\infty$，收缩步主导），则无论输入距离 $d(x_A, x_B)$ 多大，两条轨道的终态均收敛：$d(\hat{h}_l^{(A)}, \hat{h}_l^{(B)}) \to 0$，输入差异对输出的影响被指数衰减殆尽。
+若 $\Pi_l \to 0$（即 $\sum_j \log L_j \to -\infty$，收缩步主导），则无论两个输入的原始距离 $d(x_A, x_B)$ 多大，f-chain 终态均收敛：$d(\hat{h}_l^{(A)}, \hat{h}_l^{(B)}) \to 0$——即 IDFS **失去区分不同输入的能力**，所有输入的长链输出坍缩至同一点。
 
-定义**有效记忆深度** $l^\dagger = \max\{l \mid \Pi_l \geq \theta\}$（$\theta \in (0,1)$ 为保真阈值），超过此深度后输入差异对输出的贡献衰减至阈值 $\theta$ 以下。
+定义**有效区分深度** $l^\dagger = \max\{l \mid \Pi_l \geq \theta\}$（$\theta \in (0,1)$ 为可区分阈值），超过此深度后任意两个输入的输出差异已衰减至不可区分范围内。
 
 **证明**：对局部 Lipschitz 条件连续应用 $l$ 次：
 $$d(\hat{h}_j^{(A)}, \hat{h}_j^{(B)}) \leq L_j \cdot d(\hat{h}_{j-1}^{(A)}, \hat{h}_{j-1}^{(B)})$$
-链式展开得 $d(\hat{h}_l^{(A)}, \hat{h}_l^{(B)}) \leq \Pi_l \cdot d(x_A, x_B)$。$\Pi_l \to 0$ 时右端趋零，故两轨道终态距离趋零。$\square$
+链式展开得 $d(\hat{h}_l^{(A)}, \hat{h}_l^{(B)}) \leq \Pi_l \cdot d(x_A, x_B)$。$\Pi_l \to 0$ 时右端趋零。$\square$
 
-> **注（对偶结构）**：$\Pi_l$ 与 $\Lambda_l$ 控制系统的两个方向：$\Lambda_l$ 衡量**误差的累积放大**（新扰动如何传播），$\Pi_l$ 衡量**输入差异的保持程度**（不同输入的输出能否区分）。收缩机制（$L_j < 1$）同时压低 $\Pi_l$（不同输入趋向相同输出）和 $\Lambda_l$（抑制误差累积）；扩张机制（$L_j > 1$）则反之。两者的平衡决定了 IDFS 的长链稳定性。
+> **注（对偶结构）**：$\Pi_l$ 与 $\Lambda_l$ 控制系统的两个方向：$\Lambda_l$ 衡量**误差的累积放大**（单步近似误差如何沿链传播），$\Pi_l$ 衡量**输入差异的保留程度**（不同输入的输出能否区分）。收缩机制（$L_j < 1$）同时压低 $\Pi_l$（输出坍缩，输入可区分性消失）和 $\Lambda_l$（抑制误差累积）；扩张机制（$L_j > 1$）则反之。两者的平衡决定了 IDFS 的长链稳定性。
 
 **推论 4（生成基约简，Basis Reduction）**：设 $R_0 \subseteq R$ 为 $R$ 的**生成基**，$d_{\max} \triangleq \max_{r_i \in R \setminus R_0} d(r_i, R_0)$。设 $\Phi$ 以误差 $\varepsilon_0$ 局部拟合 $R_0$（即对所有 $(r, \mathcal{X}_r) \in \mathcal{S},\, r \in R_0$：$\sup_{x \in \mathcal{X}_r} \|\Phi(x) - r(x)\| \leq \varepsilon_0$）。
 
