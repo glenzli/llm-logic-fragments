@@ -204,7 +204,7 @@ $$d\!\bigl(\hat{h}_l^{(A)},\, \hat{h}_l^{(B)}\bigr) \;\geq\; \Pi_l^- \cdot d(x_A
 
 **证明**：对 co-Lipschitz 条件连续应用 $l$ 次，链式展开得下界 $\Pi_l^- \cdot d(x_A, x_B)$。$\Pi_l^- \to \infty$ 时，对任意 $x_A \neq x_B$，终态距离趋无穷。$\square$
 
-> **注（与推论3b对偶）**：推论3b（$\Pi_l \to 0$，收缩）与推论3c（$\Pi_l^- \to \infty$，扩张）构成完整的对称图景：前者刻画 IDFS 失去区分不同输入的能力，后者刻画 IDFS 将微小输入差异无限放大。推论6是推论3c在 IDFS $\sigma$-决策边界处的**结构性实例**——当两点跨越边界时，局部扩张下界自动以 $c_j \to \infty$ 的速度发散，无需额外假设。
+> **注（与推论3b对偶）**：推论3b（$\Pi_l \to 0$，收缩）与推论3c（$\Pi_l^- \to \infty$，扩张）构成完整的对称图景：前者刻画 IDFS 失去区分不同输入的能力，后者刻画 IDFS 将微小输入差异无限放大。推论7是推论3c在 IDFS $\sigma$-决策边界处的**结构性实例**——当两点跨越边界时，局部扩张下界自动以 $c_j \to \infty$ 的速度发散，无需额外假设。
 
 ---
 
@@ -251,7 +251,27 @@ $$\delta^* \;=\; \varepsilon_0 \cdot \min_{R_0 \;\text{生成}\; R}\; \max_{r_i 
 
 ---
 
-**推论 5（逆映射逼近的不对称性，Asymmetry of Inverse Approximation）**：设 $r \in R$ 为可逆映射，$(r, \mathcal{X}_r) \in \mathcal{S}$，且 $(r^{-1}, r(\mathcal{X}_r)) \notin \mathcal{S}$。设 IDFS $(F, \sigma)$ 满足 $\sup_{x \in \mathcal{X}_r} \|\Phi(x) - r(x)\| \leq \varepsilon_r$。
+**定义（映射的局部变分下界，Local Variation Lower Bound）**：设 $(\mathcal{X}, d)$ 为度量空间。称映射 $r \in \Omega$ 在子集 $\mathcal{X}_r \subseteq \mathcal{X}$ 上具有 **$(\delta, \Delta)$-变分**，若存在 $x, y \in \mathcal{X}_r$ 使得：
+
+$$d(x, y) \;\leq\; \delta \quad \text{且} \quad d\bigl(r(x), r(y)\bigr) \;\geq\; \Delta$$
+
+即 $r$ 在 $\delta$-邻域内存在幅度不小于 $\Delta$ 的剧烈跳变。
+
+**推论 5（Lipschitz 与近似误差的代数互斥，Algebraic Trade-off between Lipschitz and Approximation Error）**：设 $\Phi \in \mathrm{Lip}_L(\mathcal{X})$。设 $(r, \mathcal{X}_r) \in \mathcal{S}$，$r$ 在 $\mathcal{X}_r$ 上具有 $(\delta, \Delta)$-变分，记 $\varepsilon_r = \sup_{z \in \mathcal{X}_r} d(\Phi(z), r(z))$。则必然成立：
+
+$$2\varepsilon_r \;+\; L \cdot \delta \;\geq\; \Delta$$
+
+**证明**：取满足 $(\delta, \Delta)$-变分条件的点对 $x, y \in \mathcal{X}_r$。对 $d(r(x), r(y))$ 两次插入 $\Phi$，由三角不等式：
+
+$$d\bigl(r(x), r(y)\bigr) \;\leq\; \underbrace{d\bigl(r(x), \Phi(x)\bigr)}_{\leq\,\varepsilon_r} \;+\; \underbrace{d\bigl(\Phi(x), \Phi(y)\bigr)}_{\leq\,L\cdot d(x,y)\,\leq\,L\delta} \;+\; \underbrace{d\bigl(\Phi(y), r(y)\bigr)}_{\leq\,\varepsilon_r}$$
+
+又 $d(r(x), r(y)) \geq \Delta$，代入即得 $\Delta \leq 2\varepsilon_r + L\delta$。$\square$
+
+> **注（三方互斥律）**：式 $2\varepsilon_r + L\delta \geq \Delta$ 刻画了三个量的内在紧张：局部变分幅度 $\Delta/\delta$（$r$ 的"局部高频特征"）、全局光滑度 $L$、单步近似误差 $\varepsilon_r$ 三者不能同时任意小。具体地：若要近似具有高局部变分（$\Delta/\delta \gg L$）的 $r$（如阶跃切换、利器二分类边界），则**近似误差必然不小于** $\varepsilon_r \geq (\Delta - L\delta)/2$。这是用 Lipschitz 算子逆映射高频信号的内在代价，不取决于模型大小或训练方法。
+
+---
+
+**推论 6（逆映射逼近的不对称性，Asymmetry of Inverse Approximation）**：设 $r \in R$ 为可逆映射，$(r, \mathcal{X}_r) \in \mathcal{S}$，且 $(r^{-1}, r(\mathcal{X}_r)) \notin \mathcal{S}$。设 IDFS $(F, \sigma)$ 满足 $\sup_{x \in \mathcal{X}_r} \|\Phi(x) - r(x)\| \leq \varepsilon_r$。
 
 则 $\Phi$ 对 $r^{-1}$ 的逼近误差与 $\varepsilon_r$ **逻辑独立**：存在满足上述条件的 $\Phi \in \mathrm{Lip}_L(\mathcal{X})$，使得
 
@@ -269,7 +289,7 @@ $$\Phi(x) = \begin{cases} x + D + \delta & x \in [0, 1] \\ x + C & x \in [D, D+1
 
 ---
 
-**推论 6（决策边界的局部曲率爆炸，Decision Boundary Curvature Explosion）**：设 IDFS $(F, \sigma)$ 如 §1.2 所定义。若 f-链第 $j$ 步中，近似状态 $\hat{h}_{j-1}$ 与理想状态 $h^*_{j-1}$ 被 $\sigma$ 选到了不同的函数——即 $\sigma(\hat{h}_{j-1}) = f_k \neq f_{k'} = \sigma(h^*_{j-1})$——且两函数在 $\hat{h}_{j-1}$ 处的输出差有宏观下界：
+**推论 7（决策边界的局部曲率爆炸，Decision Boundary Curvature Explosion）**：设 IDFS $(F, \sigma)$ 如 §1.2 所定义。若 f-链第 $j$ 步中，近似状态 $\hat{h}_{j-1}$ 与理想状态 $h^*_{j-1}$ 被 $\sigma$ 选到了不同的函数——即 $\sigma(\hat{h}_{j-1}) = f_k \neq f_{k'} = \sigma(h^*_{j-1})$——且两函数在 $\hat{h}_{j-1}$ 处的输出差有宏观下界：
 
 $$\Delta \;\triangleq\; \bigl\|f_k(\hat{h}_{j-1}) - f_{k'}(\hat{h}_{j-1})\bigr\| \;>\; 0, \qquad k \neq k'$$
 
@@ -291,4 +311,4 @@ $$\|f_k(a) - f_{k'}(b)\| \;\geq\; \|f_k(a) - f_{k'}(a)\| - \|f_{k'}(a) - f_{k'}(
 
 $$L_j \;\geq\; \frac{\Delta}{d(a,b)} - L_{f_{k'}} \;\xrightarrow{d(a,b) \to 0}\; +\infty \qquad \square$$
 
-> **注（与推论3c的关系）**：推论6是**推论3c在 IDFS $\sigma$-边界处的结构性实例**。推论3c要求以 co-Lipschitz 下界 $c_j > 1$ 作为前提条件；而推论6表明，当两点跨越 $\sigma$-决策边界时，该条件由 IDFS 结构**自动满足**，且下界以 $c_j \geq \Delta/d(a,b) - L_{f_{k'}} \to +\infty$ 的速度发散——即 IDFS 在边界附近天然具备极端扩张性。这是 $\sigma$ 将连续状态空间映射到离散函数集的内在代价：**边界处的不连续性产生无界局部扩张，是推论3c最极端的退化情形**。
+> **注（与推论3c的关系）**：推论7是**推论3c在 IDFS $\sigma$-边界处的结构性实例**。推论3c要求以 co-Lipschitz 下界 $c_j > 1$ 作为前提条件；而推论7表明，当两点跨越 $\sigma$-决策边界时，该条件由 IDFS 结构**自动满足**，且下界以 $c_j \geq \Delta/d(a,b) - L_{f_{k'}} \to +\infty$ 的速度发散——即 IDFS 在边界附近天然具备极端扩张性。这是 $\sigma$ 将连续状态空间映射到离散函数集的内在代价：**边界处的不连续性产生无界局部扩张，是推论3c最极端的退化情形**。
