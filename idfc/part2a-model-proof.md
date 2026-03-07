@@ -257,7 +257,7 @@ $$d(x, y) \;\leq\; \delta \quad \text{且} \quad d\bigl(r(x), r(y)\bigr) \;\geq\
 
 即 $r$ 在 $\delta$-邻域内存在幅度不小于 $\Delta$ 的剧烈跳变。
 
-**推论 5（Lipschitz 与近似误差的代数互斥，Algebraic Trade-off between Lipschitz and Approximation Error）**：设 $\Phi \in \mathrm{Lip}_L(\mathcal{X})$。设 $(r, \mathcal{X}_r) \in \mathcal{S}$，$r$ 在 $\mathcal{X}_r$ 上具有 $(\delta, \Delta)$-变分，记 $\varepsilon_r = \sup_{z \in \mathcal{X}_r} d(\Phi(z), r(z))$。则必然成立：
+**推论 5（近似误差的变分下界，Variation Bound on Approximation Error）**：设 $\Phi \in \mathrm{Lip}_L(\mathcal{X})$。设 $(r, \mathcal{X}_r) \in \mathcal{S}$，$r$ 在 $\mathcal{X}_r$ 上具有 $(\delta, \Delta)$-变分，记 $\varepsilon_r = \sup_{z \in \mathcal{X}_r} d(\Phi(z), r(z))$。则必然成立：
 
 $$2\varepsilon_r \;+\; L \cdot \delta \;\geq\; \Delta$$
 
@@ -267,7 +267,7 @@ $$d\bigl(r(x), r(y)\bigr) \;\leq\; \underbrace{d\bigl(r(x), \Phi(x)\bigr)}_{\leq
 
 又 $d(r(x), r(y)) \geq \Delta$，代入即得 $\Delta \leq 2\varepsilon_r + L\delta$。$\square$
 
-> **注（三方互斥律）**：式 $2\varepsilon_r + L\delta \geq \Delta$ 刻画了三个量的内在紧张：局部变分幅度 $\Delta/\delta$（$r$ 的"局部高频特征"）、全局光滑度 $L$、单步近似误差 $\varepsilon_r$ 三者不能同时任意小。具体地：若要近似具有高局部变分（$\Delta/\delta \gg L$）的 $r$（如阶跃切换、利器二分类边界），则**近似误差必然不小于** $\varepsilon_r \geq (\Delta - L\delta)/2$。这是用 Lipschitz 算子逆映射高频信号的内在代价，不取决于模型大小或训练方法。
+> **注（三方互斥律）**：式 $2\varepsilon_r + L\delta \geq \Delta$ 刻画了三个量的内在紧张：局部变分幅度 $\Delta/\delta$、全局光滑度 $L$、单步近似误差 $\varepsilon_r$ 三者不能同时任意小。若要近似具有高局部变分（$\Delta/\delta \gg L$）的 $r$，则**近似误差必然不小于** $\varepsilon_r \geq (\Delta - L\delta)/2$。
 
 ---
 
