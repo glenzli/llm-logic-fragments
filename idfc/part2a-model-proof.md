@@ -174,19 +174,19 @@ $$\Lambda_\infty \leq \sum_{j=0}^{\infty} L^j = \frac{1}{1-L}$$
 
 $$\Pi_l \;\triangleq\; \prod_{j=1}^{l} L_j$$
 
-对任意两个初始状态 $x_A, x_B \in \mathcal{X}$，其对应 f-chain 的终态距离满足：
+对任意两个输入 $x_A, x_B \in \mathcal{X}$，其对应 f-chain 的终态距离满足：
 
 $$d\!\bigl(\hat{h}_l^{(A)},\, \hat{h}_l^{(B)}\bigr) \;\leq\; \Pi_l \;\cdot\; d(x_A,\, x_B)$$
 
-若 $\Pi_l \to 0$（即 $\sum_j \log L_j \to -\infty$，收缩步主导），则无论初始距离 $d(x_A, x_B)$ 多大，两条轨道的终态均收敛：$d(\hat{h}_l^{(A)}, \hat{h}_l^{(B)}) \to 0$，初始条件的影响被指数衰减殆尽。
+若 $\Pi_l \to 0$（即 $\sum_j \log L_j \to -\infty$，收缩步主导），则无论输入距离 $d(x_A, x_B)$ 多大，两条轨道的终态均收敛：$d(\hat{h}_l^{(A)}, \hat{h}_l^{(B)}) \to 0$，输入差异对输出的影响被指数衰减殆尽。
 
-定义**有效记忆深度** $l^\dagger = \max\{l \mid \Pi_l \geq \theta\}$（$\theta \in (0,1)$ 为保真阈值），超过此深度后初始条件对输出的贡献衰减至阈值 $\theta$ 以下。
+定义**有效记忆深度** $l^\dagger = \max\{l \mid \Pi_l \geq \theta\}$（$\theta \in (0,1)$ 为保真阈值），超过此深度后输入差异对输出的贡献衰减至阈值 $\theta$ 以下。
 
 **证明**：对局部 Lipschitz 条件连续应用 $l$ 次：
 $$d(\hat{h}_j^{(A)}, \hat{h}_j^{(B)}) \leq L_j \cdot d(\hat{h}_{j-1}^{(A)}, \hat{h}_{j-1}^{(B)})$$
 链式展开得 $d(\hat{h}_l^{(A)}, \hat{h}_l^{(B)}) \leq \Pi_l \cdot d(x_A, x_B)$。$\Pi_l \to 0$ 时右端趋零，故两轨道终态距离趋零。$\square$
 
-> **注（对偶结构）**：$\Pi_l$ 与 $\Lambda_l$ 控制系统的两个方向：$\Lambda_l$ 衡量**误差的累积放大**（新扰动如何传播），$\Pi_l$ 衡量**初始条件的保持程度**（旧信息如何延续）。收缩机制（$L_j < 1$）同时压低 $\Pi_l$（遗忘初始条件）和 $\Lambda_l$（抑制误差累积）；扩张机制（$L_j > 1$）则反之。两者的平衡决定了 IDFS 的长链稳定性。
+> **注（对偶结构）**：$\Pi_l$ 与 $\Lambda_l$ 控制系统的两个方向：$\Lambda_l$ 衡量**误差的累积放大**（新扰动如何传播），$\Pi_l$ 衡量**输入差异的保持程度**（不同输入的输出能否区分）。收缩机制（$L_j < 1$）同时压低 $\Pi_l$（不同输入趋向相同输出）和 $\Lambda_l$（抑制误差累积）；扩张机制（$L_j > 1$）则反之。两者的平衡决定了 IDFS 的长链稳定性。
 
 **推论 4（生成基约简，Basis Reduction）**：设 $R_0 \subseteq R$ 为 $R$ 的**生成基**，$d_{\max} \triangleq \max_{r_i \in R \setminus R_0} d(r_i, R_0)$。设 $\Phi$ 以误差 $\varepsilon_0$ 局部拟合 $R_0$（即对所有 $(r, \mathcal{X}_r) \in \mathcal{S},\, r \in R_0$：$\sup_{x \in \mathcal{X}_r} \|\Phi(x) - r(x)\| \leq \varepsilon_0$）。
 
