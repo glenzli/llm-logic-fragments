@@ -14,17 +14,17 @@
 
 ### 1.1 元组度量空间与变换空间
 
-设 $N \geq 1$ 为**维度数**。对每个维度 $k \in [N] \triangleq \{1, \ldots, N\}$，设 $(V_k, d_k)$ 为度量空间，并包含一个特殊的**零元素** $\mathbf{0}_k \in V_k$（表示该维度位置"不存在"）。
+设 $N \geq 1$ 为**维度数**。对每个维度 $k \in [N] \triangleq \{1, \ldots, N\}$，设 $(V_k, d_k)$ 为度量空间。在 $V_k$ 之外引入一个**缺失标记**（absent marker）$\bot_k \notin V_k$，令 $V_k^{\bot} \triangleq V_k \cup \{\bot_k\}$（$\bot_k$ 表示该维度位置"不存在"，与 $V_k$ 内部的任何代数零点无关）。
 
 定义**元组空间**：
 
-$$\mathcal{X} \;=\; V_1 \times V_2 \times \cdots \times V_N$$
+$$\mathcal{X} \;=\; V_1^{\bot} \times V_2^{\bot} \times \cdots \times V_N^{\bot}$$
 
-其元素为 $N$ 维元组 $x = (v_1, v_2, \ldots, v_N)$，$v_k \in V_k$（$v_k = \mathbf{0}_k$ 表示该维度位置"不存在"）。$\mathcal{X}$ 上配以**积度量**：
+其元素为 $N$ 维元组 $x = (v_1, v_2, \ldots, v_N)$，$v_k \in V_k^{\bot}$（$v_k = \bot_k$ 表示该维度位置"不存在"）。$\mathcal{X}$ 上配以**积度量**（仅对 $v_k \in V_k$ 的分量计算；含 $\bot_k$ 的分量视为不参与比较）：
 
-$$d(x, y) \;=\; \Bigl(\sum_{k=1}^{N} d_k(v_k, w_k)^p\Bigr)^{1/p}, \qquad 1 \leq p \leq \infty$$
+$$d(x, y) \;=\; \Bigl(\sum_{k:\, v_k,w_k \in V_k} d_k(v_k, w_k)^p\Bigr)^{1/p}, \qquad 1 \leq p \leq \infty$$
 
-（$p = \infty$ 时退化为 $d(x, y) = \max_k\, d_k(v_k, w_k)$。）$(\mathcal{X}, d)$ 构成度量空间。
+（$p = \infty$ 时退化为 $d(x, y) = \max_{k:\, v_k,w_k \in V_k}\, d_k(v_k, w_k)$。）$(\mathcal{X}, d)$ 构成度量空间。
 
 
 
@@ -34,9 +34,9 @@ $$\Omega = \{ \phi : \mathcal{X} \to \mathcal{X} \}$$
 
 对 $\phi \in \Omega$，定义其**定义域**为使 $\phi$ 产生非空输出的全部输入：
 
-$$\mathrm{dom}(\phi) \;\triangleq\; \bigl\{\, x \in \mathcal{X} \;\big|\; \phi(x) \neq \mathbf{0} \,\bigr\}$$
+$$\mathrm{dom}(\phi) \;\triangleq\; \bigl\{\, x \in \mathcal{X} \;\big|\; \phi(x) \neq \bot \,\bigr\}$$
 
-其中 $\mathbf{0} = (\mathbf{0}_1, \ldots, \mathbf{0}_N)$ 为 $\mathcal{X}$ 的全零元（所有分量均为零元）。$\phi(x) = \mathbf{0}$ 表示 $\phi$ 在 $x$ 处无输出（"不适用"），$\mathrm{dom}(\phi)$ 即 $\phi$ 实际发生作用的输入集合。
+其中 $\bot = (\bot_1, \ldots, \bot_N)$ 为 $\mathcal{X}$ 的**全缺失元**（所有分量均为缺失标记）。$\phi(x) = \bot$ 表示 $\phi$ 在 $x$ 处无输出（"不适用"），$\mathrm{dom}(\phi)$ 即 $\phi$ 实际发生作用的输入集合。
 
 $\Omega$ 在函数复合下构成**幺半群**：$\phi_2 \circ \phi_1 \in \Omega$，$\mathrm{id}_{\mathcal{X}} \in \Omega$。
 
@@ -115,9 +115,29 @@ $$\Lambda_l \;\triangleq\; \sum_{j=1}^{l} P_{j+1,l}\,, \qquad \Gamma_l \;\triang
 
 $$\bigl\|h_l - q(x)\bigr\| \;\leq\; \sum_{j=1}^{l} \varepsilon_{i_j} \cdot P_{j+1,l} \;+\; \sum_{j=1}^{l} \delta_j \cdot P_{j,l}$$
 
-**证明**：第 $j$ 步，取 $x'_j \in \mathcal{X}(r_{i_j})$ 为距 $h^*_{j-1}$ 最近的采样域点（$d(h^*_{j-1}, x'_j) = \delta_j$）。插入 $\Phi(h^*_{j-1})$ 并展开：
+**证明**：第 $j$ 步，取 $x'_j \in \mathcal{X}(r_{i_j})$ 为距 $h^*_{j-1}$ 最近的采样域点（$d(h^*_{j-1}, x'_j) = \delta_j$）。
 
-$$e_j \;\leq\; \underbrace{\|\Phi(h_{j-1}) - \Phi(h^*_{j-1})\|}_{\leq\, L_j \cdot e_{j-1}} \;+\; \underbrace{\|\Phi(h^*_{j-1}) - \Phi(x'_j)\|}_{\leq\, L_j \cdot \delta_j} \;+\; \underbrace{\|\Phi(x'_j) - r_{i_j}(x'_j)\|}_{\leq\, \varepsilon_{i_j}}$$
+由 $h_j = \Phi(h_{j-1})$，$h^*_j = r_{i_j}(h^*_{j-1})$，误差为：
+
+$$e_j = \bigl\|\Phi(h_{j-1}) - r_{i_j}(h^*_{j-1})\bigr\|$$
+
+插入两个中间点 $\Phi(h^*_{j-1})$ 和 $\Phi(x'_j)$，由三角不等式得：
+
+$$e_j \;\leq\; \bigl\|\bigl(\Phi(h_{j-1}) - \Phi(h^*_{j-1})\bigr) + \bigl(\Phi(h^*_{j-1}) - \Phi(x'_j)\bigr) + \bigl(\Phi(x'_j) - r_{i_j}(x'_j)\bigr)\bigr\|$$
+
+> **注（三项拆分的必要性）**
+>
+> **关于第三项**：$\varepsilon_{i_j}$ 的定义（§1.3）仅保证 $\Phi$ 在采样域 $\mathcal{X}(r_{i_j})$ 内对 $r_{i_j}$ 的误差受控。$x'_j \in \mathcal{X}(r_{i_j})$ 是采样域内最近点，故第三项 $\leq \varepsilon_{i_j}$；若直接用 $h^*_{j-1}$（可能在采样域外），无法套用 $\varepsilon_{i_j}$ 的界——这正是引入 $x'_j$ 并显式产生偏离代价 $\delta_j$ 的原因。
+>
+> **关于前两项为何不合并**：一个自然的替代是不引入 $h^*_{j-1}$ 作为中间点，而是直接对第一项和第二项合并，利用 $L$ 条件写：
+>
+> $$\bigl\|\Phi(h_{j-1}) - \Phi(x'_j)\bigr\| \;\leq\; L_j \cdot d(h_{j-1},\, x'_j)$$
+>
+> 然而 $d(h_{j-1}, x'_j)$ 等于 $e_{j-1} + \delta_j$（近似轨道到采样域最近点的距离），在 $e_{j-1}$ 已经积累较大时，这一距离可以极大，在某些定义域上甚至趋于无穷——导致上界过松以至无意义。若为了让上界有意义而强制要求 $L_j \to 0$（即极强的全局收缩），则由推论 3b，系统的长链会将一切状态差异——包括不同输入之间的区分——彻底压平，$\Phi$ 退化为常数映射，近似拟合能力丧失。因此，引入 $h^*_{j-1}$ 将路径拆分为**近似误差传播项**（第一项，权重 $e_{j-1}$）和**采样域偏离项**（第二项，权重 $\delta_j$）是必要的：两项分别被 $L_j$ 缩放，但乘的是各自有控制意义的距离，而非无界的 $d(h_{j-1}, x'_j)$。
+
+分别定界：
+
+$$e_j \;\leq\; \underbrace{\bigl\|\Phi(h_{j-1}) - \Phi(h^*_{j-1})\bigr\|}_{\leq\, L_j \cdot e_{j-1}} \;+\; \underbrace{\bigl\|\Phi(h^*_{j-1}) - \Phi(x'_j)\bigr\|}_{\leq\, L_j \cdot \delta_j} \;+\; \underbrace{\bigl\|\Phi(x'_j) - r_{i_j}(x'_j)\bigr\|}_{\leq\, \varepsilon_{i_j}}$$
 
 递推关系：$e_j \leq L_j e_{j-1} + L_j\delta_j + \varepsilon_{i_j}$，$e_0 = 0$。逐步展开前三步：
 
@@ -133,55 +153,85 @@ $$e_l \;\leq\; \sum_{j=1}^{l}\Bigl(\varepsilon_{i_j} + L_j\delta_j\Bigr)\cdot P_
 
 $$e_l \;\leq\; \sum_{j=1}^{l}\varepsilon_{i_j}\cdot P_{j+1,l} \;+\; \sum_{j=1}^{l}\delta_j\cdot P_{j,l}$$
 
-> **保守简化（均匀缩放）**：令 $\varepsilon_{\max} \triangleq \max_j \varepsilon_{i_j}$，$\delta_{\max} \triangleq \max_j \delta_j$，则界退化为：
+> **保守简化**：精细界可退化为以下三种等价可用的简化形式：
+>
+> **形式 A（均匀化各步误差）**：令 $\varepsilon_{\max} \triangleq \max_j \varepsilon_{i_j}$，$\delta_{\max} \triangleq \max_j \delta_j$：
 >
 > $$e_l \;\leq\; \varepsilon_{\max}\cdot\Lambda_l \;+\; \delta_{\max}\cdot\Gamma_l$$
 >
-> 若进一步 $\Phi \in \mathrm{Lip}_L$（全局），则 $\Gamma_l \leq L\Lambda_l$，界收缩为**单项**：
+> **形式 B（均匀化路径放大系数）**：以全局 $L$ 替换局部 $L_j$（$P_{j+1,l} \leq L^{l-j}$，$P_{j,l} \leq L^{l-j+1}$），各步 $\varepsilon_{i_j}$、$\delta_j$ 保持异质：
 >
-> $$e_l \;\leq\; (\varepsilon_{\max} + L\delta_{\max})\cdot\Lambda_l$$
+> $$e_l \;\leq\; \sum_{j=1}^{l}\bigl(\varepsilon_{i_j} + L\delta_j\bigr)\cdot L^{l-j}$$
+>
+> 其中 $\varepsilon_{i_j} + L\delta_j$ 为第 $j$ 步的**有效单步误差**（近似误差与放大一次的偏离代价之和），被后续 $L^{l-j}$ 放大。
+>
+> **形式 C（两者均均匀化）**：在形式 A 基础上再利用 $\Gamma_l \leq L\Lambda_l \leq L\cdot\dfrac{L^l-1}{L-1}$：
+>
+> $$e_l \;\leq\; (\varepsilon_{\max} + L\delta_{\max})\cdot\frac{L^l-1}{L-1}$$
+>
+> （$L=1$ 时极限为 $(\varepsilon_{\max}+\delta_{\max})\cdot l$。）形式 C **先验可计算**（只需三个标量 $L$、$\varepsilon_{\max}$、$\delta_{\max}$），代价是最松。形式 A 与形式 B 的松紧依具体路径和误差分布而定，不作一般比较。**降低误差的三条路径**：压低 $\varepsilon_{\max}$，控制 $\delta_{\max}$，控制局部 Lipschitz（进而控制 $\Lambda_l$）。
 
 $\square$
 
-> **注**：两项共享 $P_{j,l}$ 结构，但步骤 $j$ 的权重有细微差异：ε-项权重为 $P_{j+1,l}$（不含本步 $L_j$），δ-项权重为 $P_{j,l} = L_j \cdot P_{j+1,l}$（含本步 $L_j$）。因此**同一步 $j$ 的采样域偏离代价比单步近似误差代价高 $L_j$ 倍**：$L_j > 1$（扩张步）时 δ 惩罚尤为严苛，$L_j < 1$（收缩步）时 δ 惩罚被折减。两项的"主导步"均不一定是绝对值最大者——精确的主导步 $j^*$ 是使放大后贡献（$\varepsilon_{i_j} \cdot P_{j+1,l}$ 或 $\delta_j \cdot P_{j,l}$）最大的步骤，早期步骤往往占优。下表对三种典型情形分别分析：
+**推论 0（误差放大的三态分析，Three-Regime Analysis）**：CAC 精细界的两项共享 $P_{j,l}$ 结构，但步骤 $j$ 的权重有差异：ε-项权重为 $P_{j+1,l}$（不含本步 $L_j$），δ-项权重为 $P_{j,l} = L_j \cdot P_{j+1,l}$（含本步 $L_j$）。因此**同一步 $j$ 的采样域偏离代价比单步近似误差代价高 $L_j$ 倍**：$L_j > 1$（扩张步）时 δ 惩罚尤为严苛，$L_j < 1$（收缩步）时 δ 惩罚被折减。两项的主导步 $j^*$ 均不是绝对误差最大者——准确的主导步是使放大后贡献（$\varepsilon_{i_j} \cdot P_{j+1,l}$ 或 $\delta_j \cdot P_{j,l}$）最大的步骤，早期步骤往往占优。
+
+按 $P_{j,l}$ 的渐近行为，对两项分三种情形分析：
 
 | 情形 | 条件（$P_{j,l}$ 渐近） | ε-项 $\sum_j \varepsilon_{i_j} P_{j+1,l}$ | δ-项 $\sum_j \delta_j P_{j,l}$ | 对应推论 |
 |---|---|---|---|---|
-| **扩张** | $P_{1,l} \to \infty$ | 主导步 $j^* = \arg\max_j(\varepsilon_{i_j} P_{j+1,l})$，不一定是 $\varepsilon_{i_j}$ 最大者；只要存在 $\varepsilon_{i_j} > 0$，和式 $\to \infty$ | 权重 $P_{j,l} \geq P_{j+1,l}$，δ-项爆炸速度**不慢于** ε-项；只要存在 $\delta_j > 0$，和式 $\to \infty$ | **推论 0** |
+| **扩张** | $P_{1,l} \to \infty$ | 主导步 $j^* = \arg\max_j(\varepsilon_{i_j} P_{j+1,l})$，不一定是 $\varepsilon_{i_j}$ 最大者；只要存在 $\varepsilon_{i_j} > 0$，和式 $\to \infty$ | 权重 $P_{j,l} \geq P_{j+1,l}$，δ-项爆炸速度**不慢于** ε-项；只要存在 $\delta_j > 0$，和式 $\to \infty$ | — |
 | **稳定** | $\sup_{j,l} P_{j+1,l} \leq \kappa < \infty$ | $\leq \kappa\sum_j \varepsilon_{i_j}$；有界当且仅当 $\sum_j \varepsilon_{i_j} < \infty$；每步上限 $\kappa\varepsilon_{i_j}$ | $\leq (\sup_j L_j)\cdot \kappa \sum_j \delta_j$；全局 $L$ 下 $\leq L\kappa\sum_j\delta_j$；有界条件为 $\sum_j\delta_j < \infty$ | **推论 2** |
 | **饱和** | $\Lambda_\infty = \sum_{j\geq 1} P_{j+1,\infty} < C$ | $\leq \sup_j(\varepsilon_{i_j})\cdot\Lambda_\infty$；若 $\varepsilon_{i_j} \to 0$，可远紧于此 | $\leq \sup_j(\delta_j)\cdot\Gamma_\infty$，其中 $\Gamma_\infty = \sum_{j\geq 1} P_{j,\infty}$；全局 $L$ 下 $\Gamma_\infty \leq L\Lambda_\infty < LC$ | **推论 3** |
 
 ---
 
-**推论 0（均匀粗界，先验可计算）**：设 $\Phi \in \mathrm{Lip}_L(\mathcal{X})$（全局 $L$-Lipschitz），$\varepsilon_{\max} = \max_j \varepsilon_{i_j}$，$\delta_{\max} = \max_j \delta_j$。则 $L_j \leq L$ 对所有步成立，故：
+**推论 1（精细界的类级别紧性，Tightness of the Fine-Grained Bound）**：对任意给定序列 $\varepsilon_{i_j} \geq 0$、$\delta_j \geq 0$、路径 Lipschitz 序列 $\{L_j\}_{j=1}^l$（$L_j > 0$）以及 $l \geq 1$，**存在** IDFS $(F, \sigma)$ 和采样 $\mathcal{S}$，使得对某条 $q \in \mathcal{T}$（长度 $l$）和 $x \in \mathrm{dom}(q)$，f-链终值误差精确达到精细界：
 
-$$\Lambda_l \;\leq\; \sum_{j=1}^{l} L^{l-j} \;=\; \frac{L^l - 1}{L - 1}, \qquad \Gamma_l \leq L\Lambda_l \leq L \cdot \frac{L^l - 1}{L - 1}$$
+$$e_l \;=\; \sum_{j=1}^{l} \varepsilon_{i_j} \cdot P_{j+1,l} \;+\; \sum_{j=1}^{l} \delta_j \cdot P_{j,l}$$
 
-得单项粗界：
+即全精细界对 IDFS 类而言**不可改善**。
 
-$$\bigl\|h_l - q(x)\bigr\| \;\leq\; (\varepsilon_{\max} + L\delta_{\max})\cdot\frac{L^l - 1}{L - 1}$$
+**证明（存在性构造）**：取 $\mathcal{X} = \mathbb{R}$，配以绝对值度量 $d(x,y) = |x-y|$，设 $h_0 = h^*_0 = 0$。
 
-（$L = 1$ 时取极限 $(\varepsilon_{\max} + \delta_{\max})\cdot l$。）此界**先验可计算**（只需全局 Lipschitz $L$、$\varepsilon_{\max}$、$\delta_{\max}$，无需运行路径），但一般严格大于精细界 $\sum_j\varepsilon_{i_j}P_{j+1,l}+\sum_j\delta_j P_{j,l}$。
+**采样域的构造**：对第 $j$ 步，令 $r_{i_j}(y) \equiv 0$（零映射），采样域取单点 $\mathcal{X}(r_{i_j}) \triangleq \{-\delta_j\}$。理想轨道由此恒为零：$h^*_j = 0$。由定义：
 
-**结论**：降低链路误差有且仅有三条路径：压低单步拟合误差 $\varepsilon_{\max}$，或控制采样域偏离 $\delta_{\max}$，或控制路径局部 Lipschitz（进而控制 $\Lambda_l$）。
+$$d\!\bigl(h^*_{j-1},\, \mathcal{X}(r_{i_j})\bigr) = |0 - (-\delta_j)| = \delta_j$$
 
-**推论 1（CAC 界的类级别紧性，Tightness of the CAC Bound）**：对任意参数组合 $\varepsilon_{\max} > 0$、$\Lambda_l > 0$、$l \geq 1$，**存在** IDFS $(F, \sigma)$、相应的 $\mathcal{S}$ 和 $(q, \mathcal{X}_{i_1}) \in \mathcal{T}$ 及 $x \in \mathcal{X}_{i_1}$，使 f-链误差精确达到：
+故偏离距离精确等于任意给定的 $\delta_j \geq 0$。
 
-$$e_l \;=\; \varepsilon_{\max} \cdot \Lambda_l$$
+**近似算子的构造**：令 $\Phi$ 在第 $j$ 步的局部算子为：
 
-即 CAC 精细界对 IDFS 类而言**不可改善**。
+$$\Phi_j(y) \;\triangleq\; L_j(y + \delta_j) + \varepsilon_{i_j}$$
 
-**证明（代数构造）**：为展示任意可实现的局部 Lipschitz 序列 $\{L_j\}_{j=1}^l$ 均可达，选取 $\mathcal{X} = \mathbb{R}$（一维，全空间），常值映射条件自然满足。
-设计目标链为线性放缩序列 $r_j(x) = L_j x$。设计系统 $\Phi$ 在输入状态要求执行 $r_j$ 时，其实际生效的局部计算子为带常数平移的放缩：$\Phi_j(x) = L_j x + \varepsilon_{\max}$。
-在此构造下：
-1. $\Phi_j$ 的 Lipschitz 常数精确为 $L_j$。
-2. 对任意 $x$，单步近似误差 $\|\Phi_j(x) - r_j(x)\| = \varepsilon_{\max}$ 恒成立。
-以 $x = 0$ 为起点，真实轨道 $h^*_j = 0$（恒为零）。
-近似轨道递推式为 $\hat{h}_j = \Phi_j(\hat{h}_{j-1}) = L_j \hat{h}_{j-1} + \varepsilon_{\max}$，初始 $\hat{h}_0 = 0$。展开递推：
-$$\hat{h}_1 = \varepsilon_{\max}$$
-$$\hat{h}_2 = L_2 \varepsilon_{\max} + \varepsilon_{\max}$$
-$$\hat{h}_l = \sum_{j=1}^{l} \varepsilon_{\max} \prod_{k=j+1}^{l} L_k = \varepsilon_{\max} \cdot \Lambda_l$$
-故 $e_l = \|\hat{h}_l - 0\| = \varepsilon_{\max} \cdot \Lambda_l$。在多维空间 $\mathbb{R}^d$ 中，只需将上述构造沿着单一特定特征向量 $c$ 展开即可。此构造证明了 CAC 精细界不可改善。$\square$
+则：$\mathrm{Lip}(\Phi_j) = L_j$（精确）；在采样点 $x'_j = -\delta_j$ 处：
+
+$$\bigl\|\Phi_j(x'_j) - r_{i_j}(x'_j)\bigr\| = \bigl|L_j \cdot 0 + \varepsilon_{i_j} - 0\bigr| = \varepsilon_{i_j}$$
+
+单步近似误差精确等于给定的 $\varepsilon_{i_j} \geq 0$。
+
+**误差递推**：对第 $j$ 步套用主定理的三项拆分，取 $x'_j = -\delta_j$（采样域唯一点，$d(h^*_{j-1}, x'_j) = \delta_j$）：
+
+$$e_j = \bigl\|\Phi_j(h_{j-1}) - r_{i_j}(h^*_{j-1})\bigr\| = \bigl|\Phi_j(h_{j-1}) - 0\bigr| = \Phi_j(h_{j-1})$$
+
+其中第二个等号来自 $r_{i_j} \equiv 0$，第三个等号是因为 $\Phi_j(h_{j-1}) \geq 0$——这由以下各项的非负性保证：
+- $h_0 = 0$，归纳假设 $h_{j-1} = e_{j-1} \geq 0$；
+- $\Phi_j(y) = L_j(y + \delta_j) + \varepsilon_{i_j}$，其中 $L_j > 0$，$\delta_j \geq 0$，$\varepsilon_{i_j} \geq 0$；
+- 归纳可知 $h_{j-1} + \delta_j \geq 0$（因 $h_{j-1} \geq 0$，$\delta_j \geq 0$），故 $\Phi_j(h_{j-1}) \geq 0$，即 $e_j = h_j \geq 0$。
+
+由 $h^*_j = 0$，误差 $e_j = |h_j - 0| = h_j$，展开 $\Phi_j$ 得递推：
+
+$$e_j = \Phi_j(h_{j-1}) = L_j(h_{j-1} + \delta_j) + \varepsilon_{i_j} = L_j e_{j-1} + L_j\delta_j + \varepsilon_{i_j}$$
+
+对照三项拆分的各项界限，此处**三项均精确取等**（非不等式）：
+- 第一项：$\|\Phi_j(h_{j-1}) - \Phi_j(h^*_{j-1})\| = L_j|h_{j-1} - 0| = L_j e_{j-1}$（$\Phi_j$ 的 Lipschitz 常数精确为 $L_j$）；
+- 第二项：$\|\Phi_j(h^*_{j-1}) - \Phi_j(x'_j)\| = L_j|0 - (-\delta_j)| = L_j\delta_j$（同上）；
+- 第三项：$\|\Phi_j(x'_j) - r_{i_j}(x'_j)\| = |L_j \cdot 0 + \varepsilon_{i_j} - 0| = \varepsilon_{i_j}$（精确）。
+
+三项同号（均 $\geq 0$），无任何抵消，等号逐步成立。展开递推精确得：
+
+$$e_l = \sum_{j=1}^{l} (\varepsilon_{i_j} + L_j\delta_j)\cdot P_{j+1,l} = \sum_{j=1}^{l} \varepsilon_{i_j} P_{j+1,l} + \sum_{j=1}^{l} \delta_j P_{j,l}$$
+
+与精细界完全吻合。$\square$
 
 **推论 2（有效链长，Effective Chain Length）**：设容忍误差为 $\delta > 0$。f-链误差 $e_l \leq \delta$ 的充要条件为：
 
@@ -193,7 +243,7 @@ $$l^{**} \;=\; \max\bigl\{\, l \;\big|\; \exists\, (q, \mathcal{X}_{i_1}) \in \m
 
 **证明**：直接由 CAC 定理：$e_l \leq \varepsilon_{\max} \cdot \Lambda_l \leq \delta$。$\square$
 
-**保守特例（引用推论 0）**：取 $\Phi \in \mathrm{Lip}_L$，则 $\Lambda_l \leq (L^l-1)/(L-1)$，条件变为可显式求解：
+**保守特例（全局 $L$-Lipschitz）**：取 $\Phi \in \mathrm{Lip}_L$，则 $\Lambda_l \leq (L^l-1)/(L-1)$，条件变为可显式求解：
 
 $$l^* = \left\lfloor \frac{\log\!\left(1 + \dfrac{\delta(L-1)}{\varepsilon_{\max}}\right)}{\log L} \right\rfloor \quad (L > 1), \qquad l^* = \left\lfloor \frac{\delta}{\varepsilon_{\max}} \right\rfloor \quad (L = 1)$$
 
