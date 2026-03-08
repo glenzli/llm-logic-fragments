@@ -188,7 +188,7 @@ $$d(\hat{h}_j^{(A)}, \hat{h}_j^{(B)}) \leq L_j \cdot d(\hat{h}_{j-1}^{(A)}, \hat
 
 > **注（对偶结构）**：$\Pi_l$ 与 $\Lambda_l$ 控制系统的两个方向：$\Lambda_l$ 衡量**误差的累积放大**（单步近似误差如何沿链传播），$\Pi_l$ 衡量**输入差异的保留程度**（不同输入的输出能否区分）。收缩机制（$L_j < 1$）同时压低 $\Pi_l$（输出坍缩，输入可区分性消失）和 $\Lambda_l$（抑制误差累积）；扩张机制（$L_j > 1$）则反之。两者的平衡决定了 IDFS 的长链稳定性。
 
-**推论 3c（输入敏感性爆炸，Input Sensitivity Explosion）**：设 f-链第 $j$ 步存在**扩张下界** $c_j \geq 1$，使得：
+**推论 3c（输入敏感性爆炸，Input Sensitivity Explosion）**：设 f-链的**每一步** $j = 1, \ldots, l$ 均存在**扩张下界** $c_j \geq 1$，使得：
 
 $$d\!\bigl(\Phi(\hat{h}_{j-1}^{(A)}),\, \Phi(\hat{h}_{j-1}^{(B)})\bigr) \;\geq\; c_j \cdot d\!\bigl(\hat{h}_{j-1}^{(A)},\, \hat{h}_{j-1}^{(B)}\bigr)$$
 
