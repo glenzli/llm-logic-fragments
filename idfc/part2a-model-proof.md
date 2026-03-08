@@ -170,41 +170,41 @@ $$\Lambda_\infty \leq \sum_{j=0}^{\infty} L^j = \frac{1}{1-L}$$
 
 **证明**：$L < 1$ 时 $\Phi$ 是完备度量空间 $(\mathcal{X}, d)$ 上的压缩映射，由 **Banach 压缩映射定理**直接得不动点存在唯一性及轨道收敛。$\square$
 
-**推论 3b（输入可区分性的长链衰减，Long-chain Decay of Input Distinguishability）**：设 f-链的**每一步** $j = 1, \ldots, l$ 的路径局部 Lipschitz 为 $L_j$，定义**输入分离系数**：
+**推论 3b（扰动的长链衰减，Long-chain Decay of Perturbations）**：设 f-链步骤 $1, \ldots, l$ 的路径局部 Lipschitz 为 $L_j$。设第 $k-1$ 步存在任意来源的**状态扰动** $\delta_{k-1} \triangleq d(\hat{h}_{k-1}^{(A)}, \hat{h}_{k-1}^{(B)}) > 0$——无论其来自原始输入差异还是前 $k-1$ 步的近似误差积累——若**尾部乘积** $\prod_{j=k}^{l} L_j \to 0$（即 $\sum_{j=k}^{\infty} \log L_j = -\infty$，收缩步主导），则：
 
-$$\Pi_l \;\triangleq\; \prod_{j=1}^{l} L_j$$
+$$d\!\bigl(\hat{h}_l^{(A)},\, \hat{h}_l^{(B)}\bigr) \;\leq\; \prod_{j=k}^{l} L_j \;\cdot\; \delta_{k-1} \;\to\; 0$$
 
-对任意两个输入 $x_A, x_B \in \mathcal{X}$，其对应 f-chain 的终态距离满足：
+无论 $\delta_{k-1}$ 多大，f-chain 终态均收敛——IDFS **抹除第 $k-1$ 步之前的一切扰动**，无论扰动来自输入差异、近似误差还是任何其他来源，均被尾部收缩机制彻底压制至零。
 
-$$d\!\bigl(\hat{h}_l^{(A)},\, \hat{h}_l^{(B)}\bigr) \;\leq\; \Pi_l \;\cdot\; d(x_A,\, x_B)$$
+**特例（输入差异）**：取 $k = 1$，$\delta_0 = d(x_A, x_B)$，则退化为对原始输入差异的衰减：$d(\hat{h}_l^{(A)}, \hat{h}_l^{(B)}) \leq \prod_{j=1}^{l} L_j \cdot d(x_A, x_B)$。
 
-若 $\Pi_l \to 0$（即 $\sum_j \log L_j \to -\infty$，收缩步主导），则无论两个输入的原始距离 $d(x_A, x_B)$ 多大，f-chain 终态均收敛：$d(\hat{h}_l^{(A)}, \hat{h}_l^{(B)}) \to 0$——即 IDFS **失去区分不同输入的能力**，所有输入的长链输出坍缩至同一点。
+定义**有效区分深度** $l^\dagger = \max\{l \mid \prod_{j=k}^{l} L_j \geq \theta\}$（$\theta \in (0,1)$ 为可区分阈值），超过此深度后任意扰动均衰减至不可区分范围内。
 
-定义**有效区分深度** $l^\dagger = \max\{l \mid \Pi_l \geq \theta\}$（$\theta \in (0,1)$ 为可区分阈值），超过此深度后任意两个输入的输出差异已衰减至不可区分范围内。
-
-**证明**：对局部 Lipschitz 条件连续应用 $l$ 次：
-$$d(\hat{h}_j^{(A)}, \hat{h}_j^{(B)}) \leq L_j \cdot d(\hat{h}_{j-1}^{(A)}, \hat{h}_{j-1}^{(B)})$$
-链式展开得 $d(\hat{h}_l^{(A)}, \hat{h}_l^{(B)}) \leq \Pi_l \cdot d(x_A, x_B)$。$\Pi_l \to 0$ 时右端趋零。$\square$
+**证明**：对局部 Lipschitz 条件连续应用，从第 $k$ 步截断：
+$$d(\hat{h}_l^{(A)}, \hat{h}_l^{(B)}) \leq \prod_{j=k}^{l} L_j \cdot d(\hat{h}_{k-1}^{(A)}, \hat{h}_{k-1}^{(B)}) = \prod_{j=k}^{l} L_j \cdot \delta_{k-1}$$
+$\delta_{k-1}$ 为有限正数，尾部乘积 $\to 0$ 时右端趋零。$\square$
 
 > **注（对偶结构）**：$\Pi_l$（输入分离系数）与 $\Lambda_l$ 控制系统的两个方向：$\Lambda_l$ 衡量**误差的累积放大**（单步近似误差如何沿链传播），$\Pi_l$ 衡量**输入分离的保持程度**（不同输入的输出能否区分）。收缩机制（$L_j < 1$）同时压低 $\Pi_l$（输出坍缩，输入可区分性消失）和 $\Lambda_l$（抑制误差累积）；扩张机制（$L_j > 1$）则反之。两者的平衡决定了 IDFS 的长链稳定性。
 
-**推论 3c（输入敏感性爆炸，Input Sensitivity Explosion）**：设 f-链的**每一步** $j = 1, \ldots, l$ 均存在**扩张下界** $c_j \geq 1$，使得：
+**推论 3c（扰动的长链爆炸，Long-chain Explosion of Perturbations）**：设从第 $k$ 步（$k \geq 1$）起，f-链的每一步 $j = k, \ldots, l$ 均存在**扩张下界** $c_j \geq 1$，使得：
 
-$$d\!\bigl(\Phi(\hat{h}_{j-1}^{(A)}),\, \Phi(\hat{h}_{j-1}^{(B)})\bigr) \;\geq\; c_j \cdot d\!\bigl(\hat{h}_{j-1}^{(A)},\, \hat{h}_{j-1}^{(B)}\bigr)$$
+$$d\!\bigl(\hat{h}_j^{(A)},\, \hat{h}_j^{(B)}\bigr) \;\geq\; c_j \cdot d\!\bigl(\hat{h}_{j-1}^{(A)},\, \hat{h}_{j-1}^{(B)}\bigr)$$
 
-定义**输入分离系数（下界）**：
+定义**尾部扰动放大系数（下界）**：
 
-$$\Pi_l^{-} \;\triangleq\; \prod_{j=1}^{l} c_j$$
+$$\Pi_{k,l}^{-} \;\triangleq\; \prod_{j=k}^{l} c_j$$
 
-则对任意两个输入 $x_A \neq x_B$，f-chain 终态距离满足：
+设第 $k-1$ 步存在任意来源的**状态扰动** $\delta_{k-1} \triangleq d(\hat{h}_{k-1}^{(A)}, \hat{h}_{k-1}^{(B)}) > 0$——无论其来自原始输入差异还是前 $k-1$ 步的近似误差积累——则 f-chain 终态距离满足：
 
-$$d\!\bigl(\hat{h}_l^{(A)},\, \hat{h}_l^{(B)}\bigr) \;\geq\; \Pi_l^{-} \cdot d(x_A,\, x_B)$$
+$$d\!\bigl(\hat{h}_l^{(A)},\, \hat{h}_l^{(B)}\bigr) \;\geq\; \Pi_{k,l}^{-} \cdot \delta_{k-1}$$
 
-**进一步**：若 $\Pi_l^{-} \to \infty$（等价于 $\sum_{j=1}^{\infty} \log c_j = +\infty$），则对任意 $x_A \neq x_B$，终态距离趋无穷——IDFS 对输入表现出极端敏感性，任意微小的输入差异均被无限放大。
+**进一步**：若 $\Pi_{k,l}^{-} \to \infty$（等价于 $\sum_{j=k}^{\infty} \log c_j = +\infty$），则终态距离趋无穷——无论 $\delta_{k-1}$ 多小，只要非零，尾部扩张机制将其**无限放大**。前 $k-1$ 步如何产生 $\delta_{k-1}$ 无关紧要，爆炸由第 $k$ 步之后的乘积驱动。
 
-**证明**：对扩张下界条件连续应用 $l$ 次，链式展开得 $d(\hat{h}_l^{(A)}, \hat{h}_l^{(B)}) \geq \Pi_l^{-} \cdot d(x_A, x_B)$。当 $\Pi_l^{-} \to \infty$ 时，对任意 $x_A \neq x_B$，右端趋无穷。$\square$
+**特例（输入差异）**：取 $k = 1$，$\delta_0 = d(x_A, x_B)$，则退化为对原始输入差异的放大：$d(\hat{h}_l^{(A)}, \hat{h}_l^{(B)}) \geq \Pi_{1,l}^{-} \cdot d(x_A, x_B)$。
 
-> **注（驱动条件是 $\Pi_l^{-}$，而非 $c_j > 1$）**：$c_j \geq 1$（每步存在扩张下界）仅是建立不等式所需的前提，**并不蕴含** $\Pi_l^{-} \to \infty$——例如 $c_j = 1 + 1/j^2 > 1$ 时 $\Pi_l^{-}$ 收敛至有限值。输入敏感性爆炸的真正驱动量是 $\Pi_l^{-}$ 本身，即各步扩张下界的**乘积积累**。类比推论3b：$\Pi_l \to 0$ 由各步收缩因子的乘积驱动，二者结构完全对称。推论7是推论3c在 IDFS $\sigma$-决策边界处的**结构性实例**——边界跨越时 $c_j \to \infty$，使 $\Pi_l^{-}$ 以极端速度发散。
+**证明**：对扩张下界条件从第 $k$ 步起连续应用，链式展开得 $d(\hat{h}_l^{(A)}, \hat{h}_l^{(B)}) \geq \Pi_{k,l}^{-} \cdot \delta_{k-1}$。$\delta_{k-1} > 0$ 为有限正数，$\Pi_{k,l}^{-} \to \infty$ 时右端趋无穷。$\square$
+
+> **注（驱动条件是尾部乘积；扰动来源无关紧要）**：起始步 $k$ 任意，前 $k-1$ 步可扩张、可收缩、可无约束，不影响结论——关键只是 $\delta_{k-1} > 0$ 存在。尾部乘积 $\Pi_{k,l}^{-} \to \infty$ 是爆炸的充分条件，而非要求每步 $c_j > 1$（例如 $c_j = 1 + 1/j^2$ 时乘积收敛，不会爆炸）。与推论3b完全对称：3b中收缩尾部乘积将任意有限扰动压至零，3c中扩张尾部乘积将任意非零扰动放大至无穷——两者均与扰动的历史来源无关。推论7是推论3c在 IDFS $\sigma$-决策边界处的**结构性实例**——边界跨越时 $c_j \to \infty$，使 $\Pi_{k,l}^{-}$ 以极端速度发散。
 
 ---
 
