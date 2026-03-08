@@ -188,23 +188,23 @@ $$d(\hat{h}_j^{(A)}, \hat{h}_j^{(B)}) \leq L_j \cdot d(\hat{h}_{j-1}^{(A)}, \hat
 
 > **注（对偶结构）**：$\Pi_l$ 与 $\Lambda_l$ 控制系统的两个方向：$\Lambda_l$ 衡量**误差的累积放大**（单步近似误差如何沿链传播），$\Pi_l$ 衡量**输入差异的保留程度**（不同输入的输出能否区分）。收缩机制（$L_j < 1$）同时压低 $\Pi_l$（输出坍缩，输入可区分性消失）和 $\Lambda_l$（抑制误差累积）；扩张机制（$L_j > 1$）则反之。两者的平衡决定了 IDFS 的长链稳定性。
 
-**推论 3c（输入敏感性爆炸，Input Sensitivity Explosion）**：设 f-链第 $j$ 步 $\Phi$ 满足**扩张下界**（co-Lipschitz 条件）：存在 $c_j > 1$ 使得
+**推论 3c（输入敏感性爆炸，Input Sensitivity Explosion）**：设 f-链第 $j$ 步存在**扩张下界** $c_j \geq 1$，使得：
 
 $$d\!\bigl(\Phi(\hat{h}_{j-1}^{(A)}),\, \Phi(\hat{h}_{j-1}^{(B)})\bigr) \;\geq\; c_j \cdot d\!\bigl(\hat{h}_{j-1}^{(A)},\, \hat{h}_{j-1}^{(B)}\bigr)$$
 
-定义**扩张系数**：
+定义**累积扩张系数**：
 
-$$\Pi_l^- \;\triangleq\; \prod_{j=1}^{l} c_j$$
+$$\Pi_l^{-} \;\triangleq\; \prod_{j=1}^{l} c_j$$
 
-则任意两个输入 $x_A \neq x_B$ 的 f-chain 终态满足：
+则对任意两个输入 $x_A \neq x_B$，f-chain 终态距离满足：
 
-$$d\!\bigl(\hat{h}_l^{(A)},\, \hat{h}_l^{(B)}\bigr) \;\geq\; \Pi_l^- \cdot d(x_A,\, x_B)$$
+$$d\!\bigl(\hat{h}_l^{(A)},\, \hat{h}_l^{(B)}\bigr) \;\geq\; \Pi_l^{-} \cdot d(x_A,\, x_B)$$
 
-若 $\Pi_l^- \to \infty$，则初始任意微小的输入差异均被**指数放大**，IDFS 对输入表现出极端敏感性。
+**进一步**：若 $\Pi_l^{-} \to \infty$（等价于 $\sum_{j=1}^{\infty} \log c_j = +\infty$），则对任意 $x_A \neq x_B$，终态距离趋无穷——IDFS 对输入表现出极端敏感性，任意微小的输入差异均被无限放大。
 
-**证明**：对 co-Lipschitz 条件连续应用 $l$ 次，链式展开得下界 $\Pi_l^- \cdot d(x_A, x_B)$。$\Pi_l^- \to \infty$ 时，对任意 $x_A \neq x_B$，终态距离趋无穷。$\square$
+**证明**：对扩张下界条件连续应用 $l$ 次，链式展开得 $d(\hat{h}_l^{(A)}, \hat{h}_l^{(B)}) \geq \Pi_l^{-} \cdot d(x_A, x_B)$。当 $\Pi_l^{-} \to \infty$ 时，对任意 $x_A \neq x_B$，右端趋无穷。$\square$
 
-> **注（与推论3b对偶）**：推论3b（$\Pi_l \to 0$，收缩）与推论3c（$\Pi_l^- \to \infty$，扩张）构成完整的对称图景：前者刻画 IDFS 失去区分不同输入的能力，后者刻画 IDFS 将微小输入差异无限放大。推论7是推论3c在 IDFS $\sigma$-决策边界处的**结构性实例**——当两点跨越边界时，局部扩张下界自动以 $c_j \to \infty$ 的速度发散，无需额外假设。
+> **注（驱动条件是 $\Pi_l^{-}$，而非 $c_j > 1$）**：$c_j \geq 1$（每步存在扩张下界）仅是建立不等式所需的前提，**并不蕴含** $\Pi_l^{-} \to \infty$——例如 $c_j = 1 + 1/j^2 > 1$ 时 $\Pi_l^{-}$ 收敛至有限值。输入敏感性爆炸的真正驱动量是 $\Pi_l^{-}$ 本身，即各步扩张下界的**乘积积累**。类比推论3b：$\Pi_l \to 0$ 由各步收缩因子的乘积驱动，二者结构完全对称。推论7是推论3c在 IDFS $\sigma$-决策边界处的**结构性实例**——边界跨越时 $c_j \to \infty$，使 $\Pi_l^{-}$ 以极端速度发散。
 
 ---
 
