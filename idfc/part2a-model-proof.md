@@ -170,7 +170,7 @@ $$\Lambda_\infty \leq \sum_{j=0}^{\infty} L^j = \frac{1}{1-L}$$
 
 **证明**：$L < 1$ 时 $\Phi$ 是完备度量空间 $(\mathcal{X}, d)$ 上的压缩映射，由 **Banach 压缩映射定理**直接得不动点存在唯一性及轨道收敛。$\square$
 
-**推论 3b（输入可区分性的长链衰减，Long-chain Decay of Input Distinguishability）**：设 f-链第 $j$ 步的路径局部 Lipschitz 为 $L_j$，定义**输入敏感性系数**：
+**推论 3b（输入可区分性的长链衰减，Long-chain Decay of Input Distinguishability）**：设 f-链的**每一步** $j = 1, \ldots, l$ 的路径局部 Lipschitz 为 $L_j$，定义**输入分离系数**：
 
 $$\Pi_l \;\triangleq\; \prod_{j=1}^{l} L_j$$
 
@@ -186,13 +186,13 @@ $$d\!\bigl(\hat{h}_l^{(A)},\, \hat{h}_l^{(B)}\bigr) \;\leq\; \Pi_l \;\cdot\; d(x
 $$d(\hat{h}_j^{(A)}, \hat{h}_j^{(B)}) \leq L_j \cdot d(\hat{h}_{j-1}^{(A)}, \hat{h}_{j-1}^{(B)})$$
 链式展开得 $d(\hat{h}_l^{(A)}, \hat{h}_l^{(B)}) \leq \Pi_l \cdot d(x_A, x_B)$。$\Pi_l \to 0$ 时右端趋零。$\square$
 
-> **注（对偶结构）**：$\Pi_l$ 与 $\Lambda_l$ 控制系统的两个方向：$\Lambda_l$ 衡量**误差的累积放大**（单步近似误差如何沿链传播），$\Pi_l$ 衡量**输入差异的保留程度**（不同输入的输出能否区分）。收缩机制（$L_j < 1$）同时压低 $\Pi_l$（输出坍缩，输入可区分性消失）和 $\Lambda_l$（抑制误差累积）；扩张机制（$L_j > 1$）则反之。两者的平衡决定了 IDFS 的长链稳定性。
+> **注（对偶结构）**：$\Pi_l$（输入分离系数）与 $\Lambda_l$ 控制系统的两个方向：$\Lambda_l$ 衡量**误差的累积放大**（单步近似误差如何沿链传播），$\Pi_l$ 衡量**输入分离的保持程度**（不同输入的输出能否区分）。收缩机制（$L_j < 1$）同时压低 $\Pi_l$（输出坍缩，输入可区分性消失）和 $\Lambda_l$（抑制误差累积）；扩张机制（$L_j > 1$）则反之。两者的平衡决定了 IDFS 的长链稳定性。
 
 **推论 3c（输入敏感性爆炸，Input Sensitivity Explosion）**：设 f-链的**每一步** $j = 1, \ldots, l$ 均存在**扩张下界** $c_j \geq 1$，使得：
 
 $$d\!\bigl(\Phi(\hat{h}_{j-1}^{(A)}),\, \Phi(\hat{h}_{j-1}^{(B)})\bigr) \;\geq\; c_j \cdot d\!\bigl(\hat{h}_{j-1}^{(A)},\, \hat{h}_{j-1}^{(B)}\bigr)$$
 
-定义**累积扩张系数**：
+定义**输入分离系数（下界）**：
 
 $$\Pi_l^{-} \;\triangleq\; \prod_{j=1}^{l} c_j$$
 
