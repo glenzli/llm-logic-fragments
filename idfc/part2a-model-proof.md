@@ -2,7 +2,7 @@
 
 > **前置**：见 [Part 1 导论](part1-intro.md) 了解非正式动机与预测概览。
 >
-> **本文内容**：§1 形式定义（度量空间 $(\mathcal{X},d)$、有限子集 $R \subset \Omega$/完整变换空间 $\Omega$；**IDFS 泛化定义** $(F,\sigma)$——纯抽象理论，不预设神经网络）；§2 核心假说 CAC 的严格抽象陈述；§3 定理完整证明（Telescope 展开 + UAT 补充 + TSC 框架）。神经网络的具体代数实例化见 [**Part 2c**](part2c-nn-algebraic.md)。
+> **本文内容**：§1 形式定义（元组度量空间 $\mathcal{X} = V_1 \times \cdots \times V_N$、变换空间 $\Omega$、有限规则集 $R$；**IDFS 泛化定义** $(F,\sigma)$——纯抽象理论，不预设神经网络）；§2 核心假说 CAC 的严格抽象陈述；§3 定理完整证明（Telescope 展开 + UAT 补充 + TSC 框架）。神经网络的具体代数实例化见 [**Part 2c**](part2c-nn-algebraic.md)。
 >
 > **后续**：[Part 3](part3-deductions.md) 从本文定理推导全部推论；[Part 4](part4-empirical.md) 以 Transformer/Mamba/MoE 等架构分析与多组实验场景（幻觉、ICL、量化、Reversal Curse、Sycophancy 等）验证并锚定本文理论预测。
 
@@ -12,19 +12,31 @@
 
 ## 1. 基本设定
 
-### 1.1 度量空间与变换空间
+### 1.1 元组度量空间与变换空间
 
-设 $(\mathcal{X}, d)$ 为度量空间。
+设 $N \geq 1$ 为**维度数**。对每个维度 $k \in [N] \triangleq \{1, \ldots, N\}$，设 $(V_k, d_k)$ 为度量空间，并包含一个特殊的**零元素** $\mathbf{0}_k \in V_k$（表示该维度位置"不存在"）。
+
+定义**元组空间**：
+
+$$\mathcal{X} \;=\; V_1 \times V_2 \times \cdots \times V_N$$
+
+其元素为 $N$ 维元组 $x = (v_1, v_2, \ldots, v_N)$，$v_k \in V_k$。称 $v_k = \mathbf{0}_k$ 的位置为**缺席维度**，$\mathrm{supp}(x) \triangleq \{k \mid v_k \neq \mathbf{0}_k\}$ 为 $x$ 的**活跃支撑集**。$\mathcal{X}$ 上配以**积度量**：
+
+$$d(x, y) \;=\; \Bigl(\sum_{k=1}^{N} d_k(v_k, w_k)^p\Bigr)^{1/p}, \qquad 1 \leq p \leq \infty$$
+
+（$p = \infty$ 时退化为 $d(x, y) = \max_k\, d_k(v_k, w_k)$。）$(\mathcal{X}, d)$ 构成度量空间。
+
+对非空指标子集 $I = \{i_1, \ldots, i_n\} \subseteq [N]$（有序），记**活跃积空间**：
+
+$$V_I \;\triangleq\; V_{i_1} \times V_{i_2} \times \cdots \times V_{i_n}$$
 
 定义**变换空间**：
 
 $$\Omega = \{ \phi : \mathcal{X} \to \mathcal{X} \}$$
 
-$\Omega$ 在函数复合下构成**幺半群**：$\phi_2 \circ \phi_1 \in \Omega$，$\text{id}_{\mathcal{X}} \in \Omega$。
+$\Omega$ 在函数复合下构成**幺半群**：$\phi_2 \circ \phi_1 \in \Omega$，$\mathrm{id}_{\mathcal{X}} \in \Omega$。
 
-设 $R$ 为 $\Omega$ 的一个有限子集：
-
-$$R = \{r_1, r_2, \ldots, r_m\} \subset \Omega$$
+设 $R = \{r_1, r_2, \ldots, r_m\} \subset \Omega$ 为 $\Omega$ 的一个有限子集。对每条规则 $r_i \in R$，指定其**输入维度集** $I_i^{\mathrm{in}} \subseteq [N]$ 与**输出维度集** $I_i^{\mathrm{out}} \subseteq [N]$：$r_i$ 仅读取元组中 $I_i^{\mathrm{in}}$ 所对应的分量，并将输出写入 $I_i^{\mathrm{out}}$ 所对应的维度，其余维度保持零元或透传。
 
 $R^*$ 为 $R$ 在复合运算下的**自由幺半群**：
 
@@ -32,13 +44,19 @@ $$R^* = \{ r_{i_k} \circ \cdots \circ r_{i_1} \mid k \geq 0,\ r_{i_j} \in R \}$$
 
 $R^*$ 中长度为 $l$ 的元素 $q = r_{i_l} \circ \cdots \circ r_{i_1}$ 称为 **$r$-链**（$r$-chain），$l$ 为其**长度**（$l = 0$ 对应幺元 $\mathrm{id}_{\mathcal{X}}$）。
 
-设 $\mathcal{S} = \{(r_i, \mathcal{X}_i)\}_{i=1}^{m}$ 为有限个**采样对**的集合，其中 $r_i \in R$，$\mathcal{X}_i \subseteq \mathcal{X}$ 为 $r_i$ 的限定输入域。
+设 $\mathcal{S} = \{(r_i, \mathcal{X}_i)\}_{i=1}^{m}$ 为有限个**采样对**的集合，其中 $r_i \in R$，$\mathcal{X}_i$ 为 $r_i$ 的**训练观测域**：
+
+$$\mathcal{X}_i \;\subseteq\; V_{I_i^{\mathrm{in}}}$$
+
+即 $\mathcal{X}_i$ 是 $r_i$ 输入维度对应积空间的某个子集（训练/采样所覆盖的范围，一般 $\mathcal{X}_i \subsetneq V_{I_i^{\mathrm{in}}}$）。
 
 设 $\mathcal{T}$ 为 $\mathcal{S}$ 在 $R^*$ 上的**相容扩展集**：
 
-$$\mathcal{T} = \bigl\{\, (q,\, \mathcal{X}_{i_1}) \mid q = r_{i_l} \circ \cdots \circ r_{i_1} \in R^*,\; (r_{i_j}, \mathcal{X}_{i_j}) \in \mathcal{S},\; r_{i_j}(\mathcal{X}_{i_j}) \subseteq \mathcal{X}_{i_{j+1}}\ (\forall\, j < l) \,\bigr\}$$
+$$\mathcal{T} = \Bigl\{\, \bigl(q,\; V_{I_{i_1}^{\mathrm{in}}}\bigr) \;\Big|\; q = r_{i_l} \circ \cdots \circ r_{i_1} \in R^*,\; (r_{i_j}, \mathcal{X}_{i_j}) \in \mathcal{S},\; I_{i_j}^{\mathrm{out}} \subseteq I_{i_{j+1}}^{\mathrm{in}}\; (\forall\, j < l) \,\Bigr\}$$
 
-$\mathcal{T}$ 中的 $q$ 必须满足**域链相容条件**：每个分量 $r_{i_j}$ 属于 $\mathcal{S}$，且前一分量的输出落入后一分量的限定域。$(q, \mathcal{X}_{i_1}) \in \mathcal{T}$ 即表明 $q$ 从 $\mathcal{X}_{i_1}$ 出发是合法的。
+$\mathcal{T}$ 中的 $q$ 须满足**维度链相容条件**：每步 $r_{i_j}$ 的输出维度集 $I_{i_j}^{\mathrm{out}}$ 包含于下一步 $r_{i_{j+1}}$ 的输入维度集 $I_{i_{j+1}}^{\mathrm{in}}$（即上一步的输出"被下一步接收"）。与 $\mathcal{S}$ 不同，$\mathcal{T}$ 中 $q$ 的输入域提升为**完整积空间** $V_{I_{i_1}^{\mathrm{in}}}$（而非训练子集 $\mathcal{X}_{i_1}$），表明若维度链相容，则链 $q$ 对该维度子集的**全部**可能输入均合法。
+
+> **注（泛化动机）**：在原框架中，$\mathcal{X}$ 是单一抽象度量空间，所有规则共享同一个域。元组结构允许不同的 $r_i$ 操作**不同维度子集**（不同的"语义槽"或"词表分量"），从而实现两个层次的组合性：(1) **推理步骤的组合**——$r$-链按维度相容条件顺序拼接；(2) **词表/概念空间的组合**——不同 $r_i$ 的输入/输出维度集可以重叠、嵌套或互补，整个框架能抽象人类知识的异构组合，而非局限于单一共享空间。
 
 ### 1.2 输入驱动函数系统（IDFS）
 
