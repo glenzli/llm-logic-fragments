@@ -20,23 +20,27 @@
 
 $$\mathcal{X} \;=\; V_1 \times V_2 \times \cdots \times V_N$$
 
-其元素为 $N$ 维元组 $x = (v_1, v_2, \ldots, v_N)$，$v_k \in V_k$。称 $v_k = \mathbf{0}_k$ 的位置为**缺席维度**，$\mathrm{supp}(x) \triangleq \{k \mid v_k \neq \mathbf{0}_k\}$ 为 $x$ 的**活跃支撑集**。$\mathcal{X}$ 上配以**积度量**：
+其元素为 $N$ 维元组 $x = (v_1, v_2, \ldots, v_N)$，$v_k \in V_k$（$v_k = \mathbf{0}_k$ 表示该维度位置"不存在"）。$\mathcal{X}$ 上配以**积度量**：
 
 $$d(x, y) \;=\; \Bigl(\sum_{k=1}^{N} d_k(v_k, w_k)^p\Bigr)^{1/p}, \qquad 1 \leq p \leq \infty$$
 
 （$p = \infty$ 时退化为 $d(x, y) = \max_k\, d_k(v_k, w_k)$。）$(\mathcal{X}, d)$ 构成度量空间。
 
-对非空指标子集 $I = \{i_1, \ldots, i_n\} \subseteq [N]$（有序），记**活跃积空间**：
 
-$$V_I \;\triangleq\; V_{i_1} \times V_{i_2} \times \cdots \times V_{i_n}$$
 
 定义**变换空间**：
 
 $$\Omega = \{ \phi : \mathcal{X} \to \mathcal{X} \}$$
 
+对 $\phi \in \Omega$，定义其**定义域**为使 $\phi$ 产生非空输出的全部输入：
+
+$$\mathrm{dom}(\phi) \;\triangleq\; \bigl\{\, x \in \mathcal{X} \;\big|\; \phi(x) \neq \mathbf{0} \,\bigr\}$$
+
+其中 $\mathbf{0} = (\mathbf{0}_1, \ldots, \mathbf{0}_N)$ 为 $\mathcal{X}$ 的全零元（所有分量均为零元）。$\phi(x) = \mathbf{0}$ 表示 $\phi$ 在 $x$ 处无输出（"不适用"），$\mathrm{dom}(\phi)$ 即 $\phi$ 实际发生作用的输入集合。
+
 $\Omega$ 在函数复合下构成**幺半群**：$\phi_2 \circ \phi_1 \in \Omega$，$\mathrm{id}_{\mathcal{X}} \in \Omega$。
 
-设 $R = \{r_1, r_2, \ldots, r_m\} \subset \Omega$ 为 $\Omega$ 的一个有限子集。对每条规则 $r_i \in R$，指定其**输入维度集** $I_i^{\mathrm{in}} \subseteq [N]$ 与**输出维度集** $I_i^{\mathrm{out}} \subseteq [N]$：$r_i$ 仅读取元组中 $I_i^{\mathrm{in}}$ 所对应的分量，并将输出写入 $I_i^{\mathrm{out}}$ 所对应的维度，其余维度保持零元或透传。
+设 $R = \{r_1, r_2, \ldots, r_m\} \subset \Omega$ 为 $\Omega$ 的一个有限子集。
 
 $R^*$ 为 $R$ 在复合运算下的**自由幺半群**：
 
@@ -44,19 +48,16 @@ $$R^* = \{ r_{i_k} \circ \cdots \circ r_{i_1} \mid k \geq 0,\ r_{i_j} \in R \}$$
 
 $R^*$ 中长度为 $l$ 的元素 $q = r_{i_l} \circ \cdots \circ r_{i_1}$ 称为 **$r$-链**（$r$-chain），$l$ 为其**长度**（$l = 0$ 对应幺元 $\mathrm{id}_{\mathcal{X}}$）。
 
-设 $\mathcal{S} = \{(r_i, \mathcal{X}_i)\}_{i=1}^{m}$ 为有限个**采样对**的集合，其中 $r_i \in R$，$\mathcal{X}_i$ 为 $r_i$ 的**训练观测域**：
+设 $\mathcal{S}$ 为 $R$ 的一次**采样**（sampling of $R$）：对每条规则 $r \in R$，指定其**采样域** $\mathcal{X}(r) \subseteq \mathrm{dom}(r)$，即在 $r$ 的定义域中选取的一个子集（一般有 $\mathcal{X}(r) \subsetneq \mathrm{dom}(r)$）。形式上：
 
-$$\mathcal{X}_i \;\subseteq\; V_{I_i^{\mathrm{in}}}$$
+$$\mathcal{S} \;=\; \bigl\{\, (r,\, \mathcal{X}(r)) \;\big|\; r \in R,\; \mathcal{X}(r) \subseteq \mathrm{dom}(r) \,\bigr\}$$
 
-即 $\mathcal{X}_i$ 是 $r_i$ 输入维度对应积空间的某个子集（训练/采样所覆盖的范围，一般 $\mathcal{X}_i \subsetneq V_{I_i^{\mathrm{in}}}$）。
+设 $\mathcal{T}$ 为 $\mathcal{S}$ 生成的**有效链集**（Valid Chain Set）：
 
-设 $\mathcal{T}$ 为 $\mathcal{S}$ 在 $R^*$ 上的**相容扩展集**：
+$$\mathcal{T} = \bigl\{\, q \in R^* \;\big|\; \mathrm{dom}(q) \neq \emptyset \,\bigr\}$$
 
-$$\mathcal{T} = \Bigl\{\, \bigl(q,\; V_{I_{i_1}^{\mathrm{in}}}\bigr) \;\Big|\; q = r_{i_l} \circ \cdots \circ r_{i_1} \in R^*,\; (r_{i_j}, \mathcal{X}_{i_j}) \in \mathcal{S},\; I_{i_j}^{\mathrm{out}} \subseteq I_{i_{j+1}}^{\mathrm{in}}\; (\forall\, j < l) \,\Bigr\}$$
+$\mathcal{T}$ 即 $R^*$ 中所有**定义域非空**的 $r$-链：每个 $q \in \mathcal{T}$ 的输入域为 $\mathrm{dom}(q)$，由 $q$ 的映射行为完全决定。
 
-$\mathcal{T}$ 中的 $q$ 须满足**维度链相容条件**：每步 $r_{i_j}$ 的输出维度集 $I_{i_j}^{\mathrm{out}}$ 包含于下一步 $r_{i_{j+1}}$ 的输入维度集 $I_{i_{j+1}}^{\mathrm{in}}$（即上一步的输出"被下一步接收"）。与 $\mathcal{S}$ 不同，$\mathcal{T}$ 中 $q$ 的输入域提升为**完整积空间** $V_{I_{i_1}^{\mathrm{in}}}$（而非训练子集 $\mathcal{X}_{i_1}$），表明若维度链相容，则链 $q$ 对该维度子集的**全部**可能输入均合法。
-
-> **注（泛化动机）**：在原框架中，$\mathcal{X}$ 是单一抽象度量空间，所有规则共享同一个域。元组结构允许不同的 $r_i$ 操作**不同维度子集**（不同的"语义槽"或"词表分量"），从而实现两个层次的组合性：(1) **推理步骤的组合**——$r$-链按维度相容条件顺序拼接；(2) **词表/概念空间的组合**——不同 $r_i$ 的输入/输出维度集可以重叠、嵌套或互补，整个框架能抽象人类知识的异构组合，而非局限于单一共享空间。
 
 ### 1.2 输入驱动函数系统（IDFS）
 
@@ -82,58 +83,87 @@ $$d\bigl(\Phi(x),\, \Phi(y)\bigr) \leq L \cdot d(x, y) \quad \forall\, x, y \in 
 
 ### 1.3 单步近似误差
 
-**定义（单步近似误差）**：设 $(r_i, \mathcal{X}_i) \in \mathcal{S}$。定义 $\Phi$ 在 $\mathcal{X}_i$ 上对 $r_i$ 的**逐点近似误差**为：
+**定义（单步近似误差）**：设 $(r_i, \mathcal{X}(r_i)) \in \mathcal{S}$。定义 $\Phi$ 在 $\mathcal{X}(r_i)$ 上对 $r_i$ 的**逐点近似误差**为：
 
-$$\varepsilon_i \;\triangleq\; \sup_{x \in \mathcal{X}_i} \bigl\|\Phi(x) - r_i(x)\bigr\|$$
+$$\varepsilon_i \;\triangleq\; \sup_{x \in \mathcal{X}(r_i)} \bigl\|\Phi(x) - r_i(x)\bigr\|$$
 
-记 $\varepsilon_{\max} = \max_{(r_i,\, \mathcal{X}_i) \in \mathcal{S}}\, \varepsilon_i$。
+记 $\varepsilon_{\max} = \max_{(r_i,\, \mathcal{X}(r_i)) \in \mathcal{S}}\, \varepsilon_i$。
 
 
 ---
 
 ## 2. CAC 定理
 
-**定理（组合近似封闭性，Compositional Approximation Closure，CAC；亦称组合泛化定理，CGT）**：设 $(F, \sigma)$ 为 IDFS，$\Phi \in \mathrm{Lip}(\mathcal{X})$（§1.2）；设 $\mathcal{S} = \{(r_i, \mathcal{X}_i)\}$（§1.1）上各步单步近似误差为 $\varepsilon_{i_j}$（§1.3），记 $\varepsilon_{\max} = \max_j \varepsilon_{i_j}$。
+**定理（组合近似封闭性，Compositional Approximation Closure，CAC；亦称组合泛化定理，CGT）**：设 $(F, \sigma)$ 为 IDFS，$\Phi \in \mathrm{Lip}(\mathcal{X})$（§1.2）；设 $\mathcal{S}$ 为 $R$ 的一次采样（§1.1），各步单步近似误差为 $\varepsilon_{i_j}$（§1.3）。
 
-对任意 $(q, \mathcal{X}_{i_1}) \in \mathcal{T}$（其中 $q = r_{i_l} \circ \cdots \circ r_{i_1}$，长度为 $l$）和 $x \in \mathcal{X}_{i_1}$，记 $L_j \triangleq \mathrm{Lip}(\Phi\!\restriction_{(\hat{h}_{j-1},\, h^*_{j-1})})$ 为第 $j$ 步的**路径局部 Lipschitz 常数**，定义**累积放大系数**：
+对任意 $q \in \mathcal{T}$（其中 $q = r_{i_l} \circ \cdots \circ r_{i_1}$，长度为 $l$）和 $x \in \mathrm{dom}(q)$，定义**理想轨道**与**近似轨道**：
 
-$$\Lambda_l \;\triangleq\; \sum_{j=1}^{l} \prod_{k=j+1}^{l} L_k \qquad \text{（空积：}j=l\text{ 时定义为 }1\text{）}$$
+$$h^*_0 = x, \quad h^*_j = r_{i_j}(h^*_{j-1}) \qquad \text{（理想轨道，沿 }r\text{-链执行）}$$
+$$h_0 = x, \quad h_j = \Phi(h_{j-1}) \qquad \text{（近似轨道，沿 }\Phi\text{ 执行）}$$
 
-则 f-链终值误差满足：
+记 $e_j = \|h_j - h^*_j\|$（第 $j$ 步误差），$e_0 = 0$。记 $L_j \triangleq \mathrm{Lip}(\Phi\!\restriction_{(h_{j-1},\, h^*_{j-1})})$ 为第 $j$ 步的**路径局部 Lipschitz 常数**。记**尾部乘积**：
 
-$$\bigl\|\hat{h}_l - q(x)\bigr\| \;\leq\; \varepsilon_{\max} \cdot \Lambda_l$$
+$$P_{j,l} \;\triangleq\; \prod_{k=j}^{l} L_k \qquad \text{（$j > l$ 时约定空积 $P_{j,l} = 1$）}$$
 
-**证明**：令 $h_j^* = r_{i_j}(h_{j-1}^*)$（$h_0^* = x$），$e_j = \|\hat{h}_j - h_j^*\|$，$e_0 = 0$。第 $j$ 步插入 $\Phi(h^*_{j-1})$，三角不等式：
+定义**误差累积放大系数**与**偏离累积放大系数**：
 
-$$e_j \;\leq\; \underbrace{\|\Phi(\hat{h}_{j-1}) - \Phi(h^*_{j-1})\|}_{\leq\, L_j \cdot e_{j-1}} \;+\; \underbrace{\|\Phi(h^*_{j-1}) - r_{i_j}(h^*_{j-1})\|}_{\leq\, \varepsilon_{i_j} \,\leq\, \varepsilon_{\max}}$$
+$$\Lambda_l \;\triangleq\; \sum_{j=1}^{l} P_{j+1,l}\,, \qquad \Gamma_l \;\triangleq\; \sum_{j=1}^{l} P_{j,l}$$
 
-递推关系：$e_j \leq L_j\,e_{j-1} + \varepsilon_{\max}$，$e_0 = 0$。逐步展开：
+（关系：$\Gamma_l = \sum_{j=1}^l L_j P_{j+1,l}$；若 $\Phi \in \mathrm{Lip}_L$，则 $\Gamma_l \leq L\Lambda_l$。）
 
-$$e_l \leq \varepsilon_{i_1}\!\cdot\!\prod_{k=2}^{l}L_k \;+\; \varepsilon_{i_2}\!\cdot\!\prod_{k=3}^{l}L_k \;+\; \cdots \;+\; \varepsilon_{i_l} \;\leq\; \varepsilon_{\max}\!\cdot\!\sum_{j=1}^{l}\prod_{k=j+1}^{l}L_k \;=\; \varepsilon_{\max}\cdot\Lambda_l$$
+对每步 $j$，记 $\delta_j \triangleq d\!\bigl(h^*_{j-1},\, \mathcal{X}(r_{i_j})\bigr)$ 为理想轨道第 $j-1$ 步距采样域 $\mathcal{X}(r_{i_j})$ 的偏离距离。则 f-链终值误差满足：
+
+$$\bigl\|h_l - q(x)\bigr\| \;\leq\; \sum_{j=1}^{l} \varepsilon_{i_j} \cdot P_{j+1,l} \;+\; \sum_{j=1}^{l} \delta_j \cdot P_{j,l}$$
+
+**证明**：第 $j$ 步，取 $x'_j \in \mathcal{X}(r_{i_j})$ 为距 $h^*_{j-1}$ 最近的采样域点（$d(h^*_{j-1}, x'_j) = \delta_j$）。插入 $\Phi(h^*_{j-1})$ 并展开：
+
+$$e_j \;\leq\; \underbrace{\|\Phi(h_{j-1}) - \Phi(h^*_{j-1})\|}_{\leq\, L_j \cdot e_{j-1}} \;+\; \underbrace{\|\Phi(h^*_{j-1}) - \Phi(x'_j)\|}_{\leq\, L_j \cdot \delta_j} \;+\; \underbrace{\|\Phi(x'_j) - r_{i_j}(x'_j)\|}_{\leq\, \varepsilon_{i_j}}$$
+
+递推关系：$e_j \leq L_j e_{j-1} + L_j\delta_j + \varepsilon_{i_j}$，$e_0 = 0$。逐步展开前三步：
+
+$$e_1 \leq \varepsilon_{i_1} + L_1\delta_1$$
+$$e_2 \leq L_2 e_1 + (\varepsilon_{i_2} + L_2\delta_2) \leq (\varepsilon_{i_1} + L_1\delta_1)\cdot L_2 + (\varepsilon_{i_2} + L_2\delta_2)$$
+$$e_3 \leq L_3 e_2 + (\varepsilon_{i_3} + L_3\delta_3) \leq (\varepsilon_{i_1} + L_1\delta_1)\cdot L_3L_2 + (\varepsilon_{i_2} + L_2\delta_2)\cdot L_3 + (\varepsilon_{i_3} + L_3\delta_3)$$
+
+第 $j$ 步新增项 $(\varepsilon_{i_j} + L_j\delta_j)$ 在后续各步中被乘以 $P_{j+1,l}$，归纳得：
+
+$$e_l \;\leq\; \sum_{j=1}^{l}\Bigl(\varepsilon_{i_j} + L_j\delta_j\Bigr)\cdot P_{j+1,l}$$
+
+分离两项，利用 $L_j \cdot P_{j+1,l} = P_{j,l}$：
+
+$$e_l \;\leq\; \sum_{j=1}^{l}\varepsilon_{i_j}\cdot P_{j+1,l} \;+\; \sum_{j=1}^{l}\delta_j\cdot P_{j,l}$$
+
+> **保守简化（均匀缩放）**：令 $\varepsilon_{\max} \triangleq \max_j \varepsilon_{i_j}$，$\delta_{\max} \triangleq \max_j \delta_j$，则界退化为：
+>
+> $$e_l \;\leq\; \varepsilon_{\max}\cdot\Lambda_l \;+\; \delta_{\max}\cdot\Gamma_l$$
+>
+> 若进一步 $\Phi \in \mathrm{Lip}_L$（全局），则 $\Gamma_l \leq L\Lambda_l$，界收缩为**单项**：
+>
+> $$e_l \;\leq\; (\varepsilon_{\max} + L\delta_{\max})\cdot\Lambda_l$$
 
 $\square$
 
-> **注**：$L_j$ 是 $\Phi$ 在二点对 $(\hat{h}_{j-1}, h^*_{j-1})$ 上的局部 Lipschitz，由路径决定，无需提前知道。$\Lambda_l$ 随 $\{L_j\}$ 的分布不同而呈现截然不同的渐近行为，下表给出三种典型分类：
+> **注**：$L_j$ 是 $\Phi$ 在二点对 $(\hat{h}_{j-1}, h^*_{j-1})$ 上的局部 Lipschitz，由路径决定，无需提前知道。精细界的两项均以 $P_{j,l}$ 为核心：第一项 $\sum_j \varepsilon_{i_j} P_{j+1,l}$ 中，步骤 $j$ 的实际威胁不是 $\varepsilon_{i_j}$ 本身，而是 $\varepsilon_{i_j} \cdot P_{j+1,l}$——早期误差被后续放大倍数加权，后期误差几乎原样进入界。**由于 $\delta_j \geq 0$（距离非负），第二项始终是非负惩罚，只会加重误差。** 特别地，当所有 $\delta_j = 0$（理想轨道每步均落在对应采样域内）时，第二项消失，界退化为 $\sum_j \varepsilon_{i_j} P_{j+1,l}$。下表按 $P_{j,l}$ 的渐近行为分三种情形：
 
-| 情形 | 条件 | $\Lambda_l$ 行为 | 对应推论 |
-|---|---|---|---|
-| **扩张** | $\prod_{k=1}^{l} L_k \to \infty$（扩张步主导） | $\Lambda_l$ 指数增长，$\Lambda_\infty = \infty$ | **推论 0**（全局 Lipschitz 保守界）仍有约束力 |
-| **线性/稳定** | $\sup_{l \geq j}\prod_{k=j+1}^{l} L_k \leq M < \infty$（尾部乘积一致有界） | $\Lambda_l \leq M \cdot l$，线性增长，$\Lambda_\infty = \infty$ | **推论 2**（有效链长）给出可靠深度 |
-| **饱和** | $\sum_{j=1}^{\infty} \prod_{k=j+1}^{\infty} L_k < C$ | $\Lambda_\infty \leq C$，全局有界 | **推论 3**（收缩饱和）适用 |
+| 情形 | 条件（$P_{j,l}$ 行为） | $\sum_j \varepsilon_{i_j} \cdot P_{j+1,l}$ 项 | $\sum_j \delta_j \cdot P_{j,l}$ 项 | 对应推论 |
+|---|---|---|---|---|
+| **扩张** | $P_{1,l} = \prod_{k=1}^{l} L_k \to \infty$ | 只要存在非零 $\varepsilon_{i_j}$，加权和爆炸 | 只要存在 $\delta_j > 0$，同步爆炸 | **推论 0** |
+| **稳定** | $\sup_{j,l} P_{j+1,l} \leq M < \infty$ | $\leq M \sum_j \varepsilon_{i_j}$，由各步误差累积控制 | $\leq M \sum_j \delta_j$，由各步偏离累积控制 | **推论 2** |
+| **饱和** | $\Lambda_\infty = \sum_{j \geq 1} P_{j+1,\infty} < C$ | $\leq \sup_j(\varepsilon_{i_j}) \cdot C$，全局有界 | 若 $\delta_j \leq \bar\delta$，受 $\bar\delta \sum_j P_{j,\infty}$ 控制 | **推论 3** |
 
 ---
 
-**推论 0（全局 Lipschitz 保守上界，先验可计算）**：若 $\Phi \in \mathrm{Lip}_L(\mathcal{X})$（全局 $L$-Lipschitz），则 $L_j \leq L$ 对所有步成立，故：
+**推论 0（均匀粗界，先验可计算）**：设 $\Phi \in \mathrm{Lip}_L(\mathcal{X})$（全局 $L$-Lipschitz），$\varepsilon_{\max} = \max_j \varepsilon_{i_j}$，$\delta_{\max} = \max_j \delta_j$。则 $L_j \leq L$ 对所有步成立，故：
 
-$$\Lambda_l \;\leq\; \sum_{j=1}^{l} L^{l-j} \;=\; \frac{L^l - 1}{L - 1} \qquad (L > 1)$$
+$$\Lambda_l \;\leq\; \sum_{j=1}^{l} L^{l-j} \;=\; \frac{L^l - 1}{L - 1}, \qquad \Gamma_l \leq L\Lambda_l \leq L \cdot \frac{L^l - 1}{L - 1}$$
 
-从而：
+得单项粗界：
 
-$$\bigl\|\hat{h}_l - q(x)\bigr\| \;\leq\; \varepsilon_{\max} \cdot \frac{L^l - 1}{L - 1}$$
+$$\bigl\|h_l - q(x)\bigr\| \;\leq\; (\varepsilon_{\max} + L\delta_{\max})\cdot\frac{L^l - 1}{L - 1}$$
 
-（$L = 1$ 时右端取极限 $l \cdot \varepsilon_{\max}$。）此界**先验可计算**（只需知道全局 Lipschitz $L$，无需运行路径），但一般严格大于精细界 $\varepsilon_{\max} \cdot \Lambda_l$。
+（$L = 1$ 时取极限 $(\varepsilon_{\max} + \delta_{\max})\cdot l$。）此界**先验可计算**（只需全局 Lipschitz $L$、$\varepsilon_{\max}$、$\delta_{\max}$，无需运行路径），但一般严格大于精细界 $\sum_j\varepsilon_{i_j}P_{j+1,l}+\sum_j\delta_j P_{j,l}$。
 
-**结论**：降低链路误差有且仅有两条路径：压低单步拟合误差 $\varepsilon_{\max}$，或控制路径局部 Lipschitz（进而控制 $\Lambda_l$）。
+**结论**：降低链路误差有且仅有三条路径：压低单步拟合误差 $\varepsilon_{\max}$，或控制采样域偏离 $\delta_{\max}$，或控制路径局部 Lipschitz（进而控制 $\Lambda_l$）。
 
 **推论 1（CAC 界的类级别紧性，Tightness of the CAC Bound）**：对任意参数组合 $\varepsilon_{\max} > 0$、$\Lambda_l > 0$、$l \geq 1$，**存在** IDFS $(F, \sigma)$、相应的 $\mathcal{S}$ 和 $(q, \mathcal{X}_{i_1}) \in \mathcal{T}$ 及 $x \in \mathcal{X}_{i_1}$，使 f-链误差精确达到：
 
