@@ -143,13 +143,13 @@ $$e_l \;\leq\; \sum_{j=1}^{l}\varepsilon_{i_j}\cdot P_{j+1,l} \;+\; \sum_{j=1}^{
 
 $\square$
 
-> **注**：$L_j$ 是 $\Phi$ 在二点对 $(\hat{h}_{j-1}, h^*_{j-1})$ 上的局部 Lipschitz，由路径决定，无需提前知道。精细界的两项均以 $P_{j,l}$ 为核心：第一项 $\sum_j \varepsilon_{i_j} P_{j+1,l}$ 中，步骤 $j$ 的实际威胁不是 $\varepsilon_{i_j}$ 本身，而是 $\varepsilon_{i_j} \cdot P_{j+1,l}$——早期误差被后续放大倍数加权，后期误差几乎原样进入界。**由于 $\delta_j \geq 0$（距离非负），第二项始终是非负惩罚，只会加重误差。** 特别地，当所有 $\delta_j = 0$（理想轨道每步均落在对应采样域内）时，第二项消失，界退化为 $\sum_j \varepsilon_{i_j} P_{j+1,l}$。下表按 $P_{j,l}$ 的渐近行为分三种情形：
+> **注**：两项共享 $P_{j,l}$ 结构，但步骤 $j$ 的权重有细微差异：ε-项权重为 $P_{j+1,l}$（不含本步 $L_j$），δ-项权重为 $P_{j,l} = L_j \cdot P_{j+1,l}$（含本步 $L_j$）。因此**同一步 $j$ 的采样域偏离代价比单步近似误差代价高 $L_j$ 倍**：$L_j > 1$（扩张步）时 δ 惩罚尤为严苛，$L_j < 1$（收缩步）时 δ 惩罚被折减。两项的"主导步"均不一定是绝对值最大者——精确的主导步 $j^*$ 是使放大后贡献（$\varepsilon_{i_j} \cdot P_{j+1,l}$ 或 $\delta_j \cdot P_{j,l}$）最大的步骤，早期步骤往往占优。下表对三种典型情形分别分析：
 
-| 情形 | 条件（$P_{j,l}$ 行为） | $\sum_j \varepsilon_{i_j} \cdot P_{j+1,l}$ 项 | $\sum_j \delta_j \cdot P_{j,l}$ 项 | 对应推论 |
+| 情形 | 条件（$P_{j,l}$ 渐近） | ε-项 $\sum_j \varepsilon_{i_j} P_{j+1,l}$ | δ-项 $\sum_j \delta_j P_{j,l}$ | 对应推论 |
 |---|---|---|---|---|
-| **扩张** | $P_{1,l} = \prod_{k=1}^{l} L_k \to \infty$ | 只要存在非零 $\varepsilon_{i_j}$，加权和爆炸 | 只要存在 $\delta_j > 0$，同步爆炸 | **推论 0** |
-| **稳定** | $\sup_{j,l} P_{j+1,l} \leq M < \infty$ | $\leq M \sum_j \varepsilon_{i_j}$，由各步误差累积控制 | $\leq M \sum_j \delta_j$，由各步偏离累积控制 | **推论 2** |
-| **饱和** | $\Lambda_\infty = \sum_{j \geq 1} P_{j+1,\infty} < C$ | $\leq \sup_j(\varepsilon_{i_j}) \cdot C$，全局有界 | 若 $\delta_j \leq \bar\delta$，受 $\bar\delta \sum_j P_{j,\infty}$ 控制 | **推论 3** |
+| **扩张** | $P_{1,l} \to \infty$ | 主导步 $j^* = \arg\max_j(\varepsilon_{i_j} P_{j+1,l})$，不一定是 $\varepsilon_{i_j}$ 最大者；只要存在 $\varepsilon_{i_j} > 0$，和式 $\to \infty$ | 权重 $P_{j,l} \geq P_{j+1,l}$，δ-项爆炸速度**不慢于** ε-项；只要存在 $\delta_j > 0$，和式 $\to \infty$ | **推论 0** |
+| **稳定** | $\sup_{j,l} P_{j+1,l} \leq \kappa < \infty$ | $\leq \kappa\sum_j \varepsilon_{i_j}$；有界当且仅当 $\sum_j \varepsilon_{i_j} < \infty$；每步上限 $\kappa\varepsilon_{i_j}$ | $\leq (\sup_j L_j)\cdot \kappa \sum_j \delta_j$；全局 $L$ 下 $\leq L\kappa\sum_j\delta_j$；有界条件为 $\sum_j\delta_j < \infty$ | **推论 2** |
+| **饱和** | $\Lambda_\infty = \sum_{j\geq 1} P_{j+1,\infty} < C$ | $\leq \sup_j(\varepsilon_{i_j})\cdot\Lambda_\infty$；若 $\varepsilon_{i_j} \to 0$，可远紧于此 | $\leq \sup_j(\delta_j)\cdot\Gamma_\infty$，其中 $\Gamma_\infty = \sum_{j\geq 1} P_{j,\infty}$；全局 $L$ 下 $\Gamma_\infty \leq L\Lambda_\infty < LC$ | **推论 3** |
 
 ---
 
