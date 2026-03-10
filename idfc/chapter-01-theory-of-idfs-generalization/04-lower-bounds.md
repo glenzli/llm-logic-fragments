@@ -1,6 +1,7 @@
 ## 逼近误差的下界
 
-> **注**：本节从下界视角约束逼近误差。主定理（CAB）建立端到端复合系统的逼近误差绝对下界；推论 2 是 CAB 在 $l = 1$（单步）且两点同属采样域时的特化，为 CAC 中逐步近似误差 $\varepsilon_{i_j}$ 提供结构性下界。
+### 4.1 组合近似瓶颈定理
+
 
 **定理（组合近似瓶颈定理，Compositional Approximation Bottleneck，CAB）**：
 设系统以容差集 $\mathcal{E}$ 拟合了微观采样集 $\mathcal{S}$。对任意长度为 $l$ 的宏观有效链 $q \in \mathcal{T}_l$，设其对应的端到端物理系统映射为 $l$ 次迭代的复合 $\Phi_q = \Phi \circ \dots \circ \Phi$。
@@ -115,6 +116,8 @@ $$\varepsilon^*_y \;\geq\; \Delta \;-\; \mathcal{A}_l(\delta)$$
 > 三项之和即为系统所能承受的**目标变分天花板**：低于此天花板，系统有足够的资源逼近目标变分；高于此天花板，逼近必然失败。
 
 > **注（饱和体制下的变分封顶）**：在§3 推论 5 的饱和条件下（$\Lambda_\infty < \infty$，$\Gamma_\infty < \infty$，$\Theta_{1,\infty} \to 0$），逼近阈值收敛至与输入距离 $\delta$ 无关的常数：$\mathcal{A}_\infty = \varepsilon_{max}\Lambda_\infty + \delta_{max}\Gamma_\infty$。此时目标变分天花板为有限常数——无论两个输入相距多远，系统所能逼近的目标变分不超过 $\mathcal{A}_\infty$。这从下界方向印证了推论 5 的上界结论：在强收缩下，系统对任意长逻辑组合具有"无限泛化免疫力"，但代价是丧失了逼近高变分目标的能力。
+
+### 4.2 判别性拟合缺口定理
 
 **命题 2（不可完美拟合集的正测度性，Positive Measure of Imperfect Fitting Sets）**：设 $(\mathcal{X}, d, \mu)$ 为度量概率空间，$\mu$ 完全支撑。设 $\Phi \in \mathrm{Lip}_L(\mathcal{X})$，$(r, \mathcal{X}_r) \in \mathcal{S}$，$\mathcal{X}_r$ 紧致且 $\mathrm{int}(\mathcal{X}_r) \neq \emptyset$。若 $r$ 具有 $(\rho, \Delta)$-变分且 $\Delta > L\rho$，则对任意 $\tau < (\Delta - L\rho)/2$：
 

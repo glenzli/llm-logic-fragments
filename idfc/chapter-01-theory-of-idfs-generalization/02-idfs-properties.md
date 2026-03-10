@@ -1,4 +1,6 @@
-## IDFS 容量极限与结构简并
+## IDFS 的基本性质
+
+### 2.1 容量极限与结构简并
 
 **引理 1（组合耗尽与路由满射，Combinatorial Exhaustion and Routing Surjection）**：
 设 IDFS $(F, \sigma)$ 在 $\mathcal{X}$ 的某子集 $\mathcal{X}_{sub}$ 上以容差 $\epsilon$ 近似了由微观采样集 $\mathcal{S}$ 定义的目标集 $\mathcal{M}_\mathcal{S}$。若目标集的度量熵远超底层基算子的连续变形熵，即产生巨大的**信息阻抗（Information Impedance）**：
@@ -33,7 +35,7 @@ $$\sigma(x_2) \;=\; \sigma_l(x_1) \;\triangleq\; \sigma\bigl(\Phi^{l-1}(x_1)\big
 
 ---
 
-## IDFS 动力系统与决策流形
+### 2.2 动力系统与决策流形
 
 > **注**：以下命题刻画 IDFS 迭代映射 $\Phi$ 本身的动力学稳定性，不直接依赖 CAC 误差上界中的 $\varepsilon_{i_j}$、$\delta_j$ 结构；而是关于 Lipschitz 算子在长链迭代下的扰动传播行为及 $\sigma$-决策边界的不连续性质。
 
