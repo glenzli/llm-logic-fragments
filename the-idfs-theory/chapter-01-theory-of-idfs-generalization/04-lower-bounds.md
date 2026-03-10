@@ -116,7 +116,38 @@ $$\varepsilon^*_y \;\geq\; \Delta \;-\; \mathcal{A}_l(\delta)$$
 
 > **注（饱和体制下的变分封顶）**：在§3 推论 5 的饱和条件下（$\Lambda_\infty < \infty$，$\Gamma_\infty < \infty$，$\Theta_{1,\infty} \to 0$），逼近阈值收敛至与输入距离 $\delta$ 无关的常数：$\mathcal{A}_\infty = \varepsilon_{max}\Lambda_\infty + \delta_{max}\Gamma_\infty$。此时目标变分天花板为有限常数——无论两个输入相距多远，系统所能逼近的目标变分不超过 $\mathcal{A}_\infty$。这从下界方向印证了推论 5 的上界结论：在强收缩下，系统对任意长逻辑组合具有"无限泛化免疫力"，但代价是丧失了逼近高变分目标的能力。
 
-### 4.2 判别性拟合缺口定理（DFG）
+### 4.2 容量-精度不等式（CPI）
+
+**定理（容量-精度不等式，Capacity-Precision Inequality，CPI）**：设 $(\mathcal{X}, d)$ 为度量空间，$A \subseteq \mathcal{X}$ 紧致。设 $r: A \to \mathcal{X}$ 在 $A$ 上具有 $k$-判别性（co-Lipschitz）：$d(r(x), r(y)) \geq k \cdot d(x,y)$，$k > 0$。设 IDFS $(F, \sigma)$ 的组合映射 $\Phi \in \mathrm{Lip}_L(\mathcal{X})$，路由分支数为 $|\mathrm{Im}(\sigma)|$。
+
+若系统在 $A$ 上实现全局误差 $\sup_{x \in A} d(\Phi(x), r(x)) \leq \epsilon$，则路由容量必须满足：
+
+$$|\mathrm{Im}(\sigma)| \;\geq\; \frac{\mathcal{N}\bigl(A,\; 2\epsilon/k\bigr)}{\mathcal{N}\bigl(A,\; \epsilon/L\bigr)}$$
+
+其中 $\mathcal{N}(A, \delta)$ 为 $A$ 的 $\delta$-覆盖数（即最少需要多少个半径为 $\delta$ 的球覆盖 $A$）。
+
+**证明**（路由分区 + Lipschitz 覆盖传递）：
+
+1. **覆盖传递**：由 $\sup_{x \in A} d(\Phi(x), r(x)) \leq \epsilon$，对任意 $r(x) \in r(A)$，存在 $\Phi(x)$ 使 $d(\Phi(x), r(x)) \leq \epsilon$。因此 $r(A) \subseteq B(\Phi(A), \epsilon)$——即 $\Phi(A)$ 是 $r(A)$ 的 $\epsilon$-网。由三角不等式，$\Phi(A)$ 的任意 $\epsilon$-覆盖给出 $r(A)$ 的 $2\epsilon$-覆盖：
+$$\mathcal{N}(r(A),\, 2\epsilon) \;\leq\; \mathcal{N}(\Phi(A),\, \epsilon)$$
+
+2. **路由分区**：$\sigma$ 将 $A$ 分为至多 $|\mathrm{Im}(\sigma)|$ 个分区 $\{C_i\}$，每个分区内 $\Phi|_{C_i}$ 为固定 $L$-Lipschitz 映射。由 Lipschitz 映射的覆盖数保持性：
+$$\mathcal{N}(\Phi(A \cap C_i),\, \epsilon) \;\leq\; \mathcal{N}(A \cap C_i,\, \epsilon/L) \;\leq\; \mathcal{N}(A,\, \epsilon/L)$$
+由 union bound：
+$$\mathcal{N}(\Phi(A),\, \epsilon) \;\leq\; |\mathrm{Im}(\sigma)| \cdot \mathcal{N}(A,\, \epsilon/L)$$
+
+3. **co-Lipschitz 放大**：$r$ 的 $k$-判别性意味着 $r^{-1}$（在像集上）是 $1/k$-Lipschitz，故：
+$$\mathcal{N}(r(A),\, 2\epsilon) \;\geq\; \mathcal{N}(A,\, 2\epsilon/k)$$
+
+4. 合并 1–3：$|\mathrm{Im}(\sigma)| \cdot \mathcal{N}(A, \epsilon/L) \geq \mathcal{N}(A, 2\epsilon/k)$，移项即得。$\square$
+
+> **注（无测度依赖）**：整个证明仅使用度量空间的紧致性和覆盖数，不涉及任何测度、体积或维度概念。这使得 CPI 定理在比 DFG 定理（§4.3）**严格更弱**的假设下成立——代价是结论从"不可拟合集的测度下界"退化为"路由容量的组合下界"。
+
+> **注（覆盖数比的物理含义）**：当 $k > 2L$（即目标的判别强度至少是系统光滑度的两倍）时，分子的覆盖尺度 $2\epsilon/k < \epsilon/L$ 严格小于分母的覆盖尺度，故分子对应**更精细**的覆盖——覆盖数比 $> 1$，路由容量受到非平凡约束。比值的大小取决于 $A$ 的度量熵随尺度的增长速率：对 $D$-维空间（$\mathcal{N}(A, \delta) \asymp \delta^{-D}$），比值为 $(2L/k)^D$，呈指数级增长。
+
+> **注（与§2 命题 1 的联系）**：CPI 定理的容量下界与 §2.1 命题 1（组合耗尽与路由满射）在结构上深度对偶。命题 1 从信息论角度建立 $|\mathrm{Im}(\sigma)| \geq e^{I_\epsilon(\mathcal{S}) - C_\epsilon}$（目标度量熵超出基算子变形熵的指数倍）；CPI 从覆盖数角度建立 $|\mathrm{Im}(\sigma)| \geq \mathcal{N}(A, 2\epsilon/k) / \mathcal{N}(A, \epsilon/L)$（目标辨识需求超出系统解析力的覆盖数比）。两者独立成立，在不同的数学框架下各自刻画了同一物理事实：**判别性目标对路由多样性的刚性需求**。
+
+### 4.3 判别性拟合缺口定理（DFG）
 
 **引理（不可完美拟合集的正测度性，Positive Measure of Imperfect Fitting Sets）**：设 $(\mathcal{X}, d, \mu)$ 为度量概率空间，$\mu$ 完全支撑。设 $\Phi \in \mathrm{Lip}_L(\mathcal{X})$，$(r, \mathcal{X}_r) \in \mathcal{S}$，$\mathcal{X}_r$ 紧致且 $\mathrm{int}(\mathcal{X}_r) \neq \emptyset$。若 $r$ 具有 $(\rho, \Delta)$-变分且 $\Delta > L\rho$，则对任意 $\tau < (\Delta - L\rho)/2$：
 
