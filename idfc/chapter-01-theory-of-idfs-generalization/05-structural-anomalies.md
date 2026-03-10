@@ -1,6 +1,6 @@
 ## 结构特异性
 
-> **注**：以下命题刻画 IDFS 采样框架 $\mathcal{S}$ 的方向性：在没有互逆采样对的前提下，知识约束 $\varepsilon$（命题 1）和采样域偏离 $\delta$（命题 2）在正逆两个方向均存在结构性不对称，彼此独立互不蕴含。
+### 5.1 采样约束的方向不对称性
 
 **命题 1（逆映射逼近的不对称性，Asymmetry of Inverse Approximation）**：设 $r \in R$ 为可逆映射，$(r, \mathcal{X}_r) \in \mathcal{S}$，且 $(r^{-1}, r(\mathcal{X}_r)) \notin \mathcal{S}$。设 IDFS $(F, \sigma)$ 满足 $\sup_{x \in \mathcal{X}_r} d(\Phi(x), r(x)) \leq \varepsilon_r$。
 

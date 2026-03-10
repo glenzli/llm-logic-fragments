@@ -1,6 +1,6 @@
 ## 逼近误差的上界
 
-### 3.1 组合近似封闭定理
+### 3.1 组合近似封闭定理（CAC）
 
 **定理（组合近似封闭性，Compositional Approximation Closure，CAC；亦称组合泛化定理，Combinatorial Generalization Theorem，CGT）**：设 $\mathcal{F} \triangleq (F, \sigma)$ 为 IDFS，$\Phi \in \mathrm{Lip}(\mathcal{X})$（§1.2）。若该基础 IDFS 以容差集 $\mathcal{E}$ 拟合了微观采样集 $\mathcal{S}$（§1.3），则由其诱导出的 $l$-步宏观系统 $\mathcal{F}_l \triangleq (F, \sigma_l)$，必将以宏观容差集 $\mathcal{E}^*$ 拟合由 $\mathcal{S}$ 生成的、深度限定为 $l$ 的宏观有效链集 $\mathcal{T}_l$（§1.1）。
 
