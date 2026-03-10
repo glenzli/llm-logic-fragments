@@ -107,3 +107,27 @@ $$L_j \;\geq\; \frac{\Delta}{d(a,b)} - L_{f_{k'}} \;\xrightarrow{d(a,b) \to 0}\;
 > **注（与命题 4 的关系）**：命题 5 是**命题 4 在 IDFS $\sigma$-边界处的结构性实例**。命题 4 要求以 co-Lipschitz 下界 $c_j > 1$ 作为前提条件；而命题 5 表明，当两点跨越 $\sigma$-决策边界时，该条件由 IDFS 结构**自动满足**，且下界以 $c_j \geq \Delta/d(a,b) - L_{f_{k'}} \to +\infty$ 的速度发散——即 IDFS 在边界附近天然具备极端扩张性。这是 $\sigma$ 将连续空间映射到离散函数集的内在代价：**边界处的不连续性产生无界局部扩张，是命题 4 最极端的退化情形**。
 
 > **注（与§4 推论 2 的三元纠缠的关系）**：§4 推论 2 的注指出，将分析从采样域 $\mathcal{X}(r)$ 扩展至 $\mathrm{dom}(r)$ 时，$\sigma$ 的决策边界使全局 Lipschitz 常数 $L$ 无法刻画 $\Phi$ 在 $\mathcal{X}(r)$ 外的光滑度，由此产生 $(\varepsilon_r, L, \sigma)$ 三元纠缠。命题 5 给出了这一现象的精确机制：$\sigma$ 在 $\partial\mathcal{X}(r)$ 处选择不同函数，等价于跨越决策边界，此时路径局部 Lipschitz $L_j \to \infty$——这正是单一标量 $L$ 失效、$\sigma$ 必须显式出现的数学来源。换言之，**命题 5 是三元纠缠的形式基础**：正是 $\sigma$-边界处的 $L_j$ 无界性，使得 $\mathrm{dom}(r)$ 上的变分分析无法仅依赖 $(\varepsilon_r, L)$ 二元完成。此外，$L_j \to \infty$ 在 CAC 精细界中产生**双重不对称爆炸**：ε-项权重为 $\Theta_{j+1,l}$（不含本步 $L_j$），而 δ-项权重为 $\Theta_{j,l} = L_j \cdot \Theta_{j+1,l}$——因此同一次边界跨越中，δ 代价的爆炸速度比 ε 代价**额外快一个 $L_j$ 因子**，采样域偏离在边界附近会被优先且更剧烈地放大。
+
+### 2.3 结构性非均匀张力
+
+§2.2 揭示了 IDFS 迭代映射的动力学行为：收缩尾积压平扰动（命题 3），扩张尾积放大扰动（命题 4），$\sigma$-边界更产生局部 $L_j \to \infty$ 的极端扩张（命题 5）。这自然引出一个系统设计层面的问题：基函数集 $F$ 的 Lipschitz 常数**必须**有多大的变异范围？本节表明，这一变异范围由目标任务集的多样性从下方强制决定。
+
+回顾 §1.2 定义的**基函数 Lipschitz 跨度** $\kappa_F = \sup_F \mathrm{Lip}(f) / \inf_F \mathrm{Lip}(f)$。由于系统长链的局部 Lipschitz 常数 $L_j$ 仅能由 $\sigma$ 从 $F$ 中挑选，$\kappa_F$ 构成了沿任何路径 $q$ 展现的 Lipschitz 分散度 $\kappa(q)$（见 §5）的严格上界：$\kappa(q) \leq \kappa_F$。
+
+**定义（目标 Lipschitz 跨度，Target Lipschitz Span）**：记 $R$ 为要求系统建模或逼近的目标规则集（或复杂系统的一个子域集）。定义 $R$ 的 **Lipschitz 跨度** $\gamma_R \geq 1$ 为：
+
+$$\gamma_R \;\triangleq\; \frac{\sup_{r \in R} \mathrm{Lip}(r)}{\inf_{r \in R} \mathrm{Lip}(r)}$$
+
+$\gamma_R$ 量化了目标任务内部的**动力学异质性**——$R$ 同时包含强收缩规则（$\mathrm{Lip}(r) \ll 1$）和强扩张规则（$\mathrm{Lip}(r) \gg 1$）时，$\gamma_R \gg 1$。
+
+**命题 6（泛化性的结构性异质下界，Structural Heterogeneity Lower Bound for Generalization）**：设 IDFS 能够以局部有效的方式逼近目标集 $R$——即对任一 $r \in R$，存在路径使系统沿此路径展现出与 $\mathrm{Lip}(r)$ 同量级的平均扩张/收缩率。则必有：
+
+$$\kappa_F \;\geq\; \gamma_R$$
+
+**证明**：系统沿深度 $l$ 的路径，每步 $L_j = \mathrm{Lip}(f_{\sigma_j}) \in [\inf_F \mathrm{Lip}(f),\; \sup_F \mathrm{Lip}(f)]$。几何均值满足 $\bar{L} = (\prod_j L_j)^{1/l} \in [\inf_F \mathrm{Lip}(f),\; \sup_F \mathrm{Lip}(f)]$（因几何均值不超出因子范围）。
+
+逼近最扩张目标（$\mathrm{Lip}(r) = \sup_R$）要求 $\bar{L} \geq \sup_R \mathrm{Lip}(r)$，故 $\sup_F \mathrm{Lip}(f) \geq \sup_R \mathrm{Lip}(r)$。逼近最收缩目标（$\mathrm{Lip}(r) = \inf_R$）要求 $\bar{L} \leq \inf_R \mathrm{Lip}(r)$，故 $\inf_F \mathrm{Lip}(f) \leq \inf_R \mathrm{Lip}(r)$。两式取比：$\kappa_F = \sup_F / \inf_F \geq \sup_R / \inf_R = \gamma_R$。$\square$
+
+> **注（异质性并非缺陷，而是泛化的内禀代价）**：$\kappa_F \to 1$（正则化至等距映射）必然导致 $\gamma_R \to 1$——系统丧失对多样化目标的泛化能力。要使 IDFS 通用，$\kappa_F \geq \gamma_R$ 的高异质性是必须支付的**结构性代价**。这也是 §3—§5 展开的长链误差与走廊约束之所以重要的根源——$\kappa_F$ 无法被一劳永逸地抹平。
+
+> **注（与命题 5 的联系）**：命题 5 表明 $\sigma$-边界附近 $L_j \to \infty$。这是 $\kappa_F$ 大的一个**结构性来源**——跨边界路径上的最大 $L_j$ 不受约束，直接推高 $\sup_F \mathrm{Lip}(f)$，从而放大 $\kappa_F$。命题 5 与命题 6 合在一起表明：$\sigma$ 的离散性既是 IDFS 表达力的来源（允许分段逼近不同目标），也是异质性的内禀制造者。

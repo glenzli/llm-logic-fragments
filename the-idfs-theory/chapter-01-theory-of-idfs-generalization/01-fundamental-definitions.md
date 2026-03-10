@@ -103,6 +103,10 @@ $$d\bigl(\Phi(x),\, \Phi(y)\bigr) \leq L \cdot d(x, y) \quad \forall\, x, y \in 
    此时，具体的局部端到端物理扩张存在一个更为紧致的确切演化上界（其中 $\Theta_{1,l} \leq L^l$ 恒成立）：
    $$d\bigl(\Phi^l(x),\, \Phi^l(y)\bigr) \leq \Theta_{1,l} \cdot d(x, y)$$
 
+3. **基函数 Lipschitz 跨度（Base Lipschitz Span）**：定义 $F$ 的 **Lipschitz 跨度** $\kappa_F \geq 1$ 为基函数库中最强与最弱 Lipschitz 常数之比（约定 $\inf_{f \in F} \mathrm{Lip}(f) > 0$）：
+   $$\kappa_F \;\triangleq\; \frac{\sup_{f \in F} \mathrm{Lip}(f)}{\inf_{f \in F} \mathrm{Lip}(f)}$$
+   $\kappa_F$ 刻画了系统基函数库的内在非均匀性。$\kappa_F = 1$ 当且仅当所有 $f \in F$ 具有相同的 Lipschitz 常数。其结构性意义见 §2.3。
+
 
 
 ### 1.3 单步近似误差与容差集
