@@ -43,7 +43,7 @@ $$\varepsilon^*_y = d(f^{(y)}(h_y),\, q(y)) \;\geq\; \inf_{h \in \mathcal{X}} d(
 $$\varepsilon^*_y \;\geq\; \max \Big( |\Delta - \varepsilon_x| - \Theta_{1,l} \cdot \delta, \;\; \varepsilon_{y,\text{out}} \Big)$$
 $\square$
 
-> **注（拟合跗跗板效应，The Fitting Seesaw Effect）**：项 $|\Delta - \varepsilon_x| - \Theta_{1,l} \cdot \delta$ 揭示了一个非对称的“跗跗板效应”。当系统的全局扩张率受限（$\Theta_{1,l}$ 较小）而目标链 $q$ 在 $(x, y)$ 间呈现剧烈变分（$\Delta$ 极大）时：若在参考点 $x$ 处达到完美拟合（$\varepsilon_x \to 0$），则 $y$ 处的宏观容差被刚性托底至 $\varepsilon^*_y \geq \Delta - \Theta_{1,l}\delta$。即系统**不可能同时在相邻两点上实现任意低误差**——局部的极高精度必然引爆邻近的泛化误差。
+> **注（拟合跷跷板效应，The Fitting Seesaw Effect）**：项 $|\Delta - \varepsilon_x| - \Theta_{1,l} \cdot \delta$ 揭示了一个非对称的“跷跷板效应”。当系统的全局扩张率受限（$\Theta_{1,l}$ 较小）而目标链 $q$ 在 $(x, y)$ 间呈现剧烈变分（$\Delta$ 极大）时：若在参考点 $x$ 处达到完美拟合（$\varepsilon_x \to 0$），则 $y$ 处的宏观容差被刚性托底至 $\varepsilon^*_y \geq \Delta - \Theta_{1,l}\delta$。即系统**不可能同时在相邻两点上实现任意低误差**——局部的极高精度必然引爆邻近的泛化误差。
 
 > **注（末端结构瓶颈 $\varepsilon_{y,\text{out}}$ 的含义）**：项 $\varepsilon_{y,\text{out}}$ 剖离出了 IDFS 末端算子层的结构刚性。无论前置映射 $\Phi'_q$ 将中间态流形扭曲得多么复杂，IDFS 的端到端最终输出必须经过某个底层算子 $f \in F$ 映射回输出空间。若目标像点 $q(y)$ 不在任何 $f \in F$ 的可达集 $\bigcup_{f \in F} f(\mathcal{X})$ 中，则 $\varepsilon_{y,\text{out}} > 0$ 成为不可消除的常数瓶颈：此时前置计算中的一切精妙运算皆无用武之地，端到端误差被末端算子的结构底盖死死卡定。
 
