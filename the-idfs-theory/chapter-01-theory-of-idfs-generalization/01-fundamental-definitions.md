@@ -48,7 +48,7 @@ $\mathcal{T}_l$ 即 $R^*$ 中所有长度有界且**定义域非空**的 $r$-链
 
 ### 1.2 输入驱动函数系统（IDFS）
 
-**定义（输入驱动函数系统，Input-Driven Function System，IDFS）**：定义系统底座拓扑与其对信号的动态响应共同构成的一个复合结构体系为**输入驱动函数系统**，记作宏观系统映射 $\mathcal{F} \triangleq (F, \sigma)$，其中：
+**定义（输入驱动函数系统，Input-Driven Function System，IDFS）**：定义系统底座拓扑与其对信号的动态响应共同构成的一个复合结构体系为**输入驱动函数系统**，记作宏观系统映射 $\mathcal{F} = (F, \sigma)$，其中：
 
 1. **函数集与基础拓扑约束** $F = \{f_1, f_2, \ldots, f_M\} \subset \Omega$：$\mathcal{X}$ 上有限个保 $\bot$ 映射的集合，$M = |F|$ 为函数集的大小。为保证系统宏观近似的可计算性与泛化能力，基础算子 $f \in F$ 需满足以下拓扑约束：
    - **像集全有界性（Total Boundedness）**：任意算子 $f \in F$ 的像集 $f(\mathcal{X})$ 为**全有界集**（对任意 $\epsilon > 0$，$f(\mathcal{X})$ 可被有限个 $\epsilon$-球覆盖）。
@@ -80,7 +80,7 @@ $$\Phi(x) \;\triangleq\; \sigma(x)(x)$$
 即 $\Phi(x) = \sigma(x)(x) = (f_{i_k} \circ f_{i_{k-1}} \circ \cdots \circ f_{i_1})(x)$。
 
 > **命题（组合合法性与 IDFS 复合封闭性，Compositional Validity & IDFS Closure）**：
-> 对任意满足 $(F, \sigma)$ 的 IDFS 体系，其全局单步映射 $\Phi$ 及任意 $l$ 步复合 $\Phi^l$ 具备以下代数与系统封闭性：
+> 对任意 IDFS $\mathcal{F} = (F, \sigma)$，其全局单步映射 $\Phi$ 及任意 $l$ 步复合 $\Phi^l$ 具备以下代数与系统封闭性：
 > 
 > **证明**：
 > 1. **单步变换闭包（$\Phi \in \Omega$）**：由 $F \subset \Omega$，$\forall f_i \in F$ 均满足 $f_i(\bot) = \bot$。根据 $\Omega$ 的复合封闭性，选择映射产生的任意微观链 $\sigma(x) \in F^* \subseteq \Omega$。特别地，$\Phi(\bot) = \sigma(\bot)(\bot)$；由于 $\sigma(\bot)$ 为某条微观链 $f_{i_k} \circ \cdots \circ f_{i_1}$，而每个 $f_i(\bot) = \bot$，故 $\Phi(\bot) = \bot$。因此 $\Phi \in \Omega$。
@@ -90,7 +90,7 @@ $$\Phi(x) \;\triangleq\; \sigma(x)(x)$$
 >    $$\sigma_l(x) \;\triangleq\; \sigma\bigl(\Phi^{l-1}(x)\bigr) \circ \cdots \circ \sigma\bigl(\Phi(x)\bigr) \circ \sigma(x)$$
 >    这具有极其深刻的物理与结构意义：复杂动力系统的任意多步长链演化（乃至宏观的复合推理链 $\Phi^l$），在底层的数学架构上**完全等价于单次极致膨胀的 IDFS 运算** $\mathcal{F}_l$。IDFS 模型不仅统摄了微观层面的算子拼接，还在宏观生成尺度上呈现出完美的**数学分形与代数系统自相似性（Fractal Self-Similarity）**。$\square$
 
-**系统要求（Lipschitz 约束与级联扩张定律）**：$(F, \sigma)$ 须满足在全空间上具有全局单步 Lipschitz 连续性，即存在常数 $L \geq 0$ 使得 $\Phi \in \mathrm{Lip}_L(\mathcal{X})$：
+**系统要求（Lipschitz 约束与级联扩张定律）**：IDFS $\mathcal{F} = (F, \sigma)$ 须满足在全空间上具有全局单步 Lipschitz 连续性，即存在常数 $L \geq 0$ 使得 $\Phi \in \mathrm{Lip}_L(\mathcal{X})$：
 
 $$d\bigl(\Phi(x),\, \Phi(y)\bigr) \leq L \cdot d(x, y) \quad \forall\, x, y \in \mathcal{X}$$
 
@@ -115,7 +115,7 @@ $$\varepsilon_i \;\triangleq\; \sup_{x \in \mathcal{X}(r_i)} d\bigl(\Phi(x),\, r
 
 $$\mathcal{E} \;\triangleq\; \bigl\{\, \varepsilon_i \;\big|\; (r_i, \mathcal{X}(r_i)) \in \mathcal{S} \,\bigr\}$$
 
-记 $\varepsilon_{\max} = \max\, \varepsilon_i$。此时称 IDFS $(F, \sigma)$ **以容差集 $\mathcal{E}$ 拟合了采样集 $\mathcal{S}$**。
+记 $\varepsilon_{\max} = \max\, \varepsilon_i$。此时称 IDFS $\mathcal{F} = (F, \sigma)$ **以容差集 $\mathcal{E}$ 拟合了采样集 $\mathcal{S}$**。
 
 
 ### 1.4 $\Delta$-不可完美拟合集

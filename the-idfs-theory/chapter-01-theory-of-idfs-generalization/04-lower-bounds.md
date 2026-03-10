@@ -47,7 +47,7 @@ $\square$
 
 > **注（末端结构瓶颈 $\varepsilon_{y,\text{out}}$ 的含义）**：项 $\varepsilon_{y,\text{out}}$ 剖离出了 IDFS 末端算子层的结构刚性。无论前置映射 $\Phi'_q$ 将中间态流形扭曲得多么复杂，IDFS 的端到端最终输出必须经过某个底层算子 $f \in F$ 映射回输出空间。若目标像点 $q(y)$ 不在任何 $f \in F$ 的可达集 $\bigcup_{f \in F} f(\mathcal{X})$ 中，则 $\varepsilon_{y,\text{out}} > 0$ 成为不可消除的常数瓶颈：此时前置计算中的一切精妙运算皆无用武之地，端到端误差被末端算子的结构底盖死死卡定。
 
-**推论 1（CAB 界的类紧性，Class-Level Tightness of the CAB Bound）**：对任意给定的标量 $\varepsilon_x \geq 0$、$\Delta > 0$、$\delta > 0$、$L > 0$ 和正整数 $l$，只要 $\Delta > \varepsilon_x + L^l\delta$（即拓扑死锁界为正），**一定存在**具体 IDFS $(F, \sigma)$ 使得 CAB 拓扑死锁界精确取等：
+**推论 1（CAB 界的类紧性，Class-Level Tightness of the CAB Bound）**：对任意给定的标量 $\varepsilon_x \geq 0$、$\Delta > 0$、$\delta > 0$、$L > 0$ 和正整数 $l$，只要 $\Delta > \varepsilon_x + L^l\delta$（即拓扑死锁界为正），**一定存在**具体的 IDFS 构造 $(F, \sigma)$ 使得 CAB 拓扑死锁界精确取等：
 
 $$\varepsilon^*_y \;=\; \Delta \;-\; \varepsilon_x \;-\; \Theta_{1,l} \cdot \delta$$
 
@@ -93,7 +93,7 @@ $$\varepsilon^*_y \;\geq\; \Delta_q - \varepsilon_x - L\delta \;\geq\; \Delta - 
 
 > **注（扩展到 $\mathrm{dom}(r)$ 时的三元纠缠）**：推论 2 的分析严格限于采样域 $\mathcal{X}(r)$，其中 $\sigma$ 隐含于 $\Phi$ 的构造而不显式出现，两元张力 $(\varepsilon_r, L)$ 足以刻画。若将分析扩展至整个 $\mathrm{dom}(r) \supseteq \mathcal{X}(r)$，则在 $\mathrm{dom}(r) \setminus \mathcal{X}(r)$ 的区域内，$\Phi(z) = \sigma(z)(z)$ 不受采样约束，$\sigma$ 的决策边界可能在 $\partial\mathcal{X}(r)$ 处被激活：由§6 命题 4，跨越边界时路径局部 Lipschitz $L_j \to \infty$，全局常数 $L$ 不再能刻画 $\Phi$ 在 $\mathcal{X}(r)$ 外的光滑度。此时变分约束涉及**三元纠缠** $(\varepsilon_r,\, L,\, \sigma)$——三者无法分别独立优化，对 $\mathrm{dom}(r)$ 的分析须同时约束 $\sigma$ 在 $\partial\mathcal{X}(r)$ 处的边界曲率。因此推论 2 的主体保持在 $\mathcal{X}(r)$ 上以确保形式严格性；三元纠缠的正式处理见§6 命题 4。
 
-**命题 1（逼近可行性条件，Approximation Feasibility Condition）**：由 CAC 定理（§3，上界）与 CAB 定理（下界）联合推得。设 IDFS $(F, \sigma)$ 以微观容差 $\varepsilon_{max}$ 和微观偏离 $\delta_{max}$ 拟合了采样集 $\mathcal{S}$。对任意有效链 $q \in \mathcal{T}_l$ 和任意 $x, y \in \mathrm{dom}(q)$（$d(x,y) = \delta$），记目标变分 $\Delta = d(q(x), q(y))$。
+**命题 1（逼近可行性条件，Approximation Feasibility Condition）**：由 CAC 定理（§3，上界）与 CAB 定理（下界）联合推得。设 IDFS $\mathcal{F} = (F, \sigma)$ 以微观容差 $\varepsilon_{max}$ 和微观偏离 $\delta_{max}$ 拟合了采样集 $\mathcal{S}$。对任意有效链 $q \in \mathcal{T}_l$ 和任意 $x, y \in \mathrm{dom}(q)$（$d(x,y) = \delta$），记目标变分 $\Delta = d(q(x), q(y))$。
 
 定义**逼近阈值（Approximation Threshold）**：
 
@@ -118,7 +118,7 @@ $$\varepsilon^*_y \;\geq\; \Delta \;-\; \mathcal{A}_l(\delta)$$
 
 ### 4.2 容量-精度不等式（CPI）
 
-**定理（容量-精度不等式，Capacity-Precision Inequality，CPI）**：设 $(\mathcal{X}, d)$ 为度量空间，$A \subseteq \mathcal{X}$ 紧致。设 $r: A \to \mathcal{X}$ 在 $A$ 上具有 $k$-判别性（co-Lipschitz）：$d(r(x), r(y)) \geq k \cdot d(x,y)$，$k > 0$。设 IDFS $(F, \sigma)$ 的组合映射 $\Phi \in \mathrm{Lip}_L(\mathcal{X})$，路由分支数为 $|\mathrm{Im}(\sigma)|$。
+**定理（容量-精度不等式，Capacity-Precision Inequality，CPI）**：设 $(\mathcal{X}, d)$ 为度量空间，$A \subseteq \mathcal{X}$ 紧致。设 $r: A \to \mathcal{X}$ 在 $A$ 上具有 $k$-判别性（co-Lipschitz）：$d(r(x), r(y)) \geq k \cdot d(x,y)$，$k > 0$。设 IDFS $\mathcal{F} = (F, \sigma)$ 的计算映射 $\Phi \in \mathrm{Lip}_L(\mathcal{X})$，路由分支数为 $|\mathrm{Im}(\sigma)|$。
 
 若系统在 $A$ 上实现全局误差 $\sup_{x \in A} d(\Phi(x), r(x)) \leq \epsilon$，则路由容量必须满足：
 
