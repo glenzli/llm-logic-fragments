@@ -275,31 +275,49 @@ $$\varepsilon^* \;=\; \varepsilon_0 \cdot \min_{R_0 \;\text{生成}\; R}\; \max_
 **证明**：直接由推论 6 的域链相容特例，对所有可行的 $R_0$ 取最优（最小化误差放大因子）即得。$\square$
 
 
-### 3.2 泛化的理想统计界与漂移-扩散定律
+### 3.2 统计精化界与漂移-扩散定律
 
-在 3.1 节的组合近似封闭定理（CAC）中，我们得出了宏观误差在最坏情况下的线性级联（随链长呈 $\mathcal{O}(l)$ 增长）。然而，在理论物理与高维统计学视角下，若系统在演化中能保持理想的“几何对称性”，其误差的累积将发生本质的拓扑降级。本节将推导 IDFS $\mathcal{F} = (F, \sigma)$ 在长链演化中的统计学绝对存活上限——**泛化的理想统计界（The Statistical Ideal Bound）**。
+在 3.1 节的组合近似封闭定理（CAC）中，我们得出了宏观误差随链长的级联增长，一般将其视为 $\mathcal{O}(l)$ 线性级联（严格而言 CAC 的渐近行为取决于 $\Theta_{j,l}$ 的结构，在不同 Lipschitz 态下呈现不同阶增长，将在后续章节中给出详细论证）。CAC 界是纯确定性的——它对 $\mathcal{X}$ 的几何结构和误差序列的统计性质不做任何假设，因此代价是最保守的。本节将逐步引入空间几何与时间相关性两个维度的假设，**层层收紧** CAC 界，最终抵达理论极限。
 
-#### 前提：高维正交性与鞅差序列假设
+#### 前提：空间几何参数与时间相关性参数
 
-要打破最坏情况下的三角不等式绝对值叠加，假设 IDFS 的度量空间 $\mathcal{X}$ 局部同胚于黎曼流形或希尔伯特空间 $\mathcal{H}$，从而允许我们在切空间中引入内积与正交性。
+**定义（type-$p$ 空间参数）**：设 $\mathcal{X}$ 的局部切空间具有 Banach 空间结构，其 **type 指数** $p \in [1, 2]$ 刻画了空间对独立随机向量叠加的对消能力。type-$p$ 不等式保证：对零均值独立随机向量 $\{v_j\}$，
 
-**定义（鞅差序列假设，Martingale Difference Sequence Assumption，MDS）**：设系统在第 $j$ 步的微观逼近误差（在切空间局部展开）为随机向量 $\epsilon_j$。设 $\mathbb{F}_{j-1}$ 为系统前 $j-1$ 步演化生成的历史完备信息（$\sigma$-代数）。若系统对未知流形的预测不具备任何方向性的偏差，则 $\epsilon_j$ 构成一个**鞅差序列**，满足：
+$$\mathbb{E}\!\left[\left\|\sum_j v_j\right\|^p\right] \;\leq\; T_p^p \cdot \sum_j \mathbb{E}\!\left[\|v_j\|^p\right]$$
 
-$$\mathbb{E}[\epsilon_j \mid \mathbb{F}_{j-1}] \;=\; 0$$
+其中 $T_p$ 为空间的 type 常数。$p = 1$ 对应一般度量空间（无对消），$p = 2$ 对应希尔伯特空间（完全正交对消）。
 
-> **物理含义**：系统在任何一步的猜测误差，其方向在高维切空间中是纯粹的白噪声，不包含结构性的漂移。在一般工程现实中，有限容量的拟合系统通常无法严格满足 MDS 假设；但在纯粹的理论极限下，满足 MDS 的系统等价于在**无偏先验（Unbiased Prior）**下的**最优贝叶斯估计器（Optimal Bayesian Estimator）**，其每次外推仅受内禀信息熵的不确定性限制。
+**定义（有效相关长度 $\tau_c$）**：设系统在第 $j$ 步的微观逼近误差（在切空间局部展开）为随机向量 $\epsilon_j$，$\mathbb{F}_{j-1}$ 为系统前 $j-1$ 步演化生成的历史完备信息（$\sigma$-代数）。定义**有效相关长度** $\tau_c \geq 1$ 为使得 $|i - j| > \tau$ 时 $\epsilon_i$ 与 $\epsilon_j$ 近似独立的最小间隔。$\tau_c = 1$ 对应完全独立（鞅差序列），$\tau_c = l$ 对应完全相关。
 
-#### 定理（理想鞅差紧致界，The Ideal Martingale Bound）
+> **注**：$\tau_c = 1$ 且 $\mathbb{E}[\epsilon_j \mid \mathbb{F}_{j-1}] = 0$ 即满足鞅差序列假设（Martingale Difference Sequence，MDS）。在一般工程现实中，有限容量的拟合系统通常无法严格满足 MDS；但在纯粹的理论极限下，满足 MDS 的系统等价于在**无偏先验（Unbiased Prior）**下的**最优贝叶斯估计器（Optimal Bayesian Estimator）**，其每次外推仅受内禀信息熵的不确定性限制。
 
-**定理**：若 IDFS 的演化误差满足 MDS 假设，且局部的切空间线性化算子 $T_{j,l} = \prod_{k=j+1}^l D\Phi(h_{k-1})$（雅可比矩阵）的算子范数受限于 $\Theta_{j,l}$，则宏观演化 $l$ 步后的总均方误差（Mean Squared Error）满足平方根级联：
+#### 定理（统计精化界，The Statistical Refinement Bound，SRB）
+
+**定理**：设 IDFS $\mathcal{F} = (F, \sigma)$ 的度量空间 $\mathcal{X}$ 的局部切空间为 type-$p$ Banach 空间（$1 \leq p \leq 2$），系统演化误差序列 $\{\epsilon_j\}$ 的有效相关长度为 $\tau_c$，局部线性化算子 $T_{j,l} = \prod_{k=j+1}^l D\Phi(h_{k-1})$ 的算子范数受限于 $\Theta_{j,l}$。则宏观演化 $l$ 步后的总误差满足：
+
+$$\|E_l\| \;\sim\; \mathcal{O}\!\left(\tau_c^{1-1/p} \cdot l^{1/p}\right)$$
+
+**证明精要**：将 $l$ 步误差序列分为 $\lfloor l/\tau_c \rfloor$ 个长度为 $\tau_c$ 的块。块内误差可相干叠加（最坏情况），每块误差 $\sim \mathcal{O}(\tau_c)$。块间近似独立，在 type-$p$ 空间中对 $\lfloor l/\tau_c \rfloor$ 个独立块应用 type-$p$ 不等式，得块间叠加 $\sim \mathcal{O}((l/\tau_c)^{1/p})$。两者合成：$\mathcal{O}(\tau_c \cdot (l/\tau_c)^{1/p}) = \mathcal{O}(\tau_c^{1-1/p} \cdot l^{1/p})$。$\square$
+
+> **注（退化验证）**：
+> - $(p = 2,\, \tau_c = 1)$：$\mathcal{O}(1^{1/2} \cdot l^{1/2}) = \mathcal{O}(\sqrt{l})$，退化为理想统计界（下方推论）。
+> - $(p = 1,\, \tau_c = l)$：$\mathcal{O}(l^{0} \cdot l) = \mathcal{O}(l)$，退化为 CAC 界。
+> - $(p = 1,\, \tau_c = 1)$：$\mathcal{O}(1^{0} \cdot l) = \mathcal{O}(l)$，一般空间即使独立也无正交对消。
+> - $(p = 2,\, \tau_c = l)$：$\mathcal{O}(l^{1/2} \cdot l^{1/2}) = \mathcal{O}(l)$，希尔伯特空间但完全相关也无对消。
+
+#### 推论（理想统计界，The Statistical Ideal Bound，SIB）
+
+**推论**：若 $\mathcal{X}$ 局部同胚于希尔伯特空间（$p = 2$）且误差满足鞅差序列假设（$\tau_c = 1$），则统计精化界退化为：
 
 $$\sqrt{\mathbb{E}[\|E_l\|^2]} \;\leq\; \sqrt{ \sum_{j=1}^l \left( \Theta_{j,l} \cdot \sqrt{\mathbb{E}[\|\epsilon_j\|^2]} \right)^2 }$$
 
-**证明**：在局部线性化近似下，第 $l$ 步的总误差可展开为各步单步误差沿轨迹映射至末端的累加：$E_l \approx \sum_{j=1}^l T_{j,l}(\epsilon_j)$。由于 $\epsilon_j$ 零均值且基于历史条件独立，经过确定性线性算子映射后的误差序列 $\{T_{j,l}(\epsilon_j)\}$ 在切空间中保持正交，即交叉项 $\mathbb{E}[\langle T_{i,l}(\epsilon_i), T_{j,l}(\epsilon_j) \rangle] = 0 \quad (\forall i \neq j)$。根据 Bienaymé 等式，总误差的平方期望等于各部分误差平方期望之和。取算子范数放缩 $\|T_{j,l}\| \leq \Theta_{j,l}$，两边开均方根，得证。$\square$
+**证明**：在 $p = 2$（希尔伯特空间）下，$\epsilon_j$ 零均值且 $\tau_c = 1$（逐步独立），经确定性线性算子映射后的误差序列 $\{T_{j,l}(\epsilon_j)\}$ 在切空间中保持正交，即 $\mathbb{E}[\langle T_{i,l}(\epsilon_i), T_{j,l}(\epsilon_j) \rangle] = 0 \quad (\forall i \neq j)$。根据 Bienaymé 等式，总误差的平方期望等于各部分误差平方期望之和。取算子范数放缩 $\|T_{j,l}\| \leq \Theta_{j,l}$，两边开均方根，得证。$\square$
 
-#### 泛化误差的“漂移-扩散定律”（Drift-Diffusion Law）
+> **注**：SIB 是统计精化界在 $(p, \tau_c)$ 参数空间中的**极端理想点**——它同时要求空间具备最强的正交对消能力（Hilbert）和误差具备最弱的时间相关性（完全独立），因此给出了最紧的渐近阶 $\mathcal{O}(\sqrt{l})$。这是动力学系统在多步迭代下泛化误差的**绝对涨落底线**。
 
-在一般系统中，受限于微观基函数集 $F$ 的局部结构偏置以及有效采样覆盖的有限性，系统的单步误差演化通常无法自发满足严格的 MDS 假设。单步误差向量必定包含一个系统性的方向偏置（Drift）。将真实误差 $\epsilon_j$ 进行正交分解：
+#### 推论（漂移-扩散定律，Drift-Diffusion Law）
+
+**推论**：在一般系统中，受限于微观基函数集 $F$ 的局部结构偏置以及有效采样覆盖的有限性，系统的单步误差演化通常无法自发满足严格的 MDS 假设。单步误差向量必定包含一个系统性的方向偏置（Drift）。将真实误差 $\epsilon_j$ 进行正交分解：
 
 $$\epsilon_j \;=\; \mu_j \;+\; \eta_j$$
 
@@ -307,12 +325,13 @@ $$\epsilon_j \;=\; \mu_j \;+\; \eta_j$$
 - $\mu_j \triangleq \mathbb{E}[\epsilon_j \mid \mathbb{F}_{j-1}]$ 为系统性偏置向量（Drift）；
 - $\eta_j$ 为零均值的纯随机噪声向量（Diffusion）。
 
-代入线性化演化积分，宏观总误差的绝对数学期望被分解为两项：
+代入线性化演化积分，宏观总误差被分解为两项：
 
-$$\mathbb{E}[\|E_l\|^2] \;\approx\; \underbrace{ \left\| \sum_{j=1}^l T_{j,l}(\mu_j) \right\|^2 }_{\text{系统漂移项（最坏现实界）：} \mathcal{O}(l^2)} \;+\; \underbrace{ \sum_{j=1}^l \mathbb{E}\left[ \|T_{j,l}(\eta_j)\|^2 \right] }_{\text{随机扩散项（理想统计界）：} \mathcal{O}(l)}$$
+$$\mathbb{E}[\|E_l\|^2] \;\approx\; \underbrace{ \left\| \sum_{j=1}^l T_{j,l}(\mu_j) \right\|^2 }_{\text{系统漂移项：} \mathcal{O}(l^2)} \;+\; \underbrace{ \sum_{j=1}^l \mathbb{E}\left[ \|T_{j,l}(\eta_j)\|^2 \right] }_{\text{随机扩散项：} \mathcal{O}(\tau_c^{2-2/p} \cdot l^{2/p})}$$
 
-开方后，系统的泛化总误差下界呈现为经典的漂移-扩散动力学形式：
+开方后，系统的泛化总误差呈现为漂移-扩散动力学形式：
 
-$$Error_{total} \;\sim\; \mathcal{O}(l) \cdot \|\mu_{bias}\| \;+\; \mathcal{O}(\sqrt{l}) \cdot \|\eta_{noise}\|$$
+$$Error_{total} \;\sim\; \underbrace{\mathcal{O}(l) \cdot \|\mu_{bias}\|}_{\text{漂移（不可压缩）}} \;+\; \underbrace{\mathcal{O}\!\left(\tau_c^{1-1/p} \cdot l^{1/p}\right) \cdot \|\eta_{noise}\|}_{\text{扩散（空间几何 × 时间相关性）}}$$
 
-> **注（理想扩散屏障）**：此定律表明，上述 $\mathcal{O}(\sqrt{l})$ 的扩散项构成了动力学系统演化的**绝对涨落底线**。即使一个极其完美的系统排除了所有的各向异性偏置（$\mu_{bias} \to 0$），在面对深度的逻辑组合链时，多步迭代的微小变分依然会以空间随机游走的形式呈平方根发散。对于包含强系统性漂移 $\mu_{bias} \neq 0$ 的常规系统，误差演化将毫无悬念地坠入 $\mathcal{O}(l)$ 的 CAC 灾难界；而任何试图将宏观长链误差控制在理想的 $\mathcal{O}(\sqrt{l})$ 内的演化架构，必须通过极高强度的对抗或校验机制来强制抹平 $\mu_{bias}$。
+> **注（漂移-扩散的不对称性）**：漂移项始终以 $\mathcal{O}(l)$ 线性增长——这是确定性相干叠加的必然结果，与空间几何和时间相关性均无关。因此，包含强系统性漂移（$\mu_{bias} \neq 0$）的系统必然坠入 CAC 灾难界。空间几何参数 $p$ 和时间相关长度 $\tau_c$ **仅能改善噪声项的涨落底线**，而无法触及漂移项——后者的消除必须依赖外部的对抗或校验机制。
+
