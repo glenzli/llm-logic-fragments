@@ -1,8 +1,8 @@
 ## 基本定义
 
-### 1.1 状态空间与变换空间
+### 1.1 度量空间与变换空间
 
-设 $(\mathcal{X}, d)$ 为**度量空间**（状态空间）。指定一个**空元素** $\bot \in \mathcal{X}$，表示"无输出"或"不适用"。
+设 $(\mathcal{X}, d)$ 为**度量空间**。指定一个**空元素** $\bot \in \mathcal{X}$，表示"无输出"或"不适用"。
 
 定义**变换空间**：
 
@@ -40,7 +40,7 @@ $\mathcal{T}_l$ 即 $R^*$ 中所有长度有界且**定义域非空**的 $r$-链
 > 微观采样集 $\mathcal{S}$ 在拓扑空间中并非无结构的散点，它定义了一个庞大的**目标集（Target Set）** $\mathcal{M}_\mathcal{S} \triangleq \{ (r, x) \mid (r, \mathcal{X}(r)) \in \mathcal{S},\, x \in \mathcal{X}(r) \} \subset \Omega \times \mathcal{X}$。为赋予其度量结构，我们在 $\Omega$ 上引入自然的上确界度量 $d_\Omega(r_i, r_j) \triangleq \sup_{x \in \mathrm{dom}(r_i) \cap \mathrm{dom}(r_j)} d(r_i(x), r_j(x))$（$\mathrm{dom}(r_i) \cap \mathrm{dom}(r_j) = \emptyset$ 时约定 $d_\Omega(r_i, r_j) = 0$），从而在积空间 $\Omega \times \mathcal{X}$ 上诱导积度量。对于给定的观测精度 $\epsilon > 0$，为度量该目标集所蕴含的空间信息量，我们定义采样集的**度量熵（Sample-Induced Metric Entropy）** 为覆盖该目标集所需的最小 $\epsilon$-球数量的对数：
 > $$I_\epsilon(\mathcal{S}) \;\triangleq\; \log \mathcal{N}\bigl(\epsilon, \mathcal{M}_\mathcal{S}\bigr)$$
 > 
-> **注（组合爆炸的数学本源）**：当状态空间 $\mathcal{X}$ 承载离散序列生成（如自然语言处理）或复杂逻辑推理任务时，$\mathcal{X}$ 可被具体实例化为**有限维积空间**。设词汇表（或符号集）为 $(V, d_V)$，序列长度为 $N$，则状态空间具体化为 $\mathcal{X} = V^N$（或含缺失标记的 $(V \cup \{\bot_0\})^N$，其中 $\bot = (\bot_0, \ldots, \bot_0)$）。在此实例化下，若不同词元或逻辑分支在目标集 $\mathcal{M}_\mathcal{S}$ 上具有**高正交性**——即局部微小改变导致语义目标发生剧烈跳跃，使得不同序列需要独立的 $\epsilon$-球覆盖——则目标集呈现指数级碎裂的崎岖结构。其 $\epsilon$-覆盖数随序列长度呈指数级增长：$\mathcal{N}(\epsilon, \mathcal{M}_\mathcal{S}) \sim \mathcal{O}\bigl(|V|^N\bigr)$。因此，度量熵呈现线性发散下界：
+> **注（组合爆炸的数学本源）**：当度量空间 $\mathcal{X}$ 承载离散序列生成（如自然语言处理）或复杂逻辑推理任务时，$\mathcal{X}$ 可被具体实例化为**有限维积空间**。设词汇表（或符号集）为 $(V, d_V)$，序列长度为 $N$，则空间具体化为 $\mathcal{X} = V^N$（或含缺失标记的 $(V \cup \{\bot_0\})^N$，其中 $\bot = (\bot_0, \ldots, \bot_0)$）。在此实例化下，若不同词元或逻辑分支在目标集 $\mathcal{M}_\mathcal{S}$ 上具有**高正交性**——即局部微小改变导致语义目标发生剧烈跳跃，使得不同序列需要独立的 $\epsilon$-球覆盖——则目标集呈现指数级碎裂的崎岖结构。其 $\epsilon$-覆盖数随序列长度呈指数级增长：$\mathcal{N}(\epsilon, \mathcal{M}_\mathcal{S}) \sim \mathcal{O}\bigl(|V|^N\bigr)$。因此，度量熵呈现线性发散下界：
 > $$I_\epsilon(\mathcal{S}) \;=\; \Omega\bigl(N \cdot \log |V|\bigr)$$
 > 随着逻辑链推导步数（上下文长度）$N$ 的不断增长，目标世界所需记忆的信息量趋向于无穷大（$I_\epsilon(\mathcal{S}) \to \infty$）。这构成了后续所有组合近似与误差分析的极限背景板。
 
@@ -73,7 +73,7 @@ $\mathcal{T}_l$ 即 $R^*$ 中所有长度有界且**定义域非空**的 $r$-链
 > 
 > **注（双容量的各自用途）**：像集容量 $\mathcal{C}_{\mathrm{img}}$ 是系统输出值域复杂度的**紧上界**，与链深 $\mathcal{D}$ 无关——更深的路由不扩展输出范围。路由容量 $\mathcal{C}_{\mathrm{route}}$ 则刻画了系统对不同输入做出差异化响应的能力，呈现 **离散路由熵（$\mathcal{D}\log M$） + 连续算子熵（$C_\epsilon$）** 的信息论双生结构。
 
-对初始点 $x \in \mathcal{X}$，$\sigma(x)$ 确定哪条链，执行该链即完成一次**计算步骤**，引入记号 $\Phi \in \Omega$ 代表系统在整个状态空间上诱导出的全局单步映射：
+对初始点 $x \in \mathcal{X}$，$\sigma(x)$ 确定哪条链，执行该链即完成一次**计算步骤**，引入记号 $\Phi \in \Omega$ 代表系统在整个度量空间上诱导出的全局单步映射：
 
 $$\Phi(x) \;\triangleq\; \sigma(x)(x)$$
 
