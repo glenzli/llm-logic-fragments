@@ -273,3 +273,48 @@ $$\varepsilon^* \;=\; \varepsilon_0 \cdot \min_{R_0 \;\text{生成}\; R}\; \max_
 即 $\varepsilon^*$ 是在域链相容理想化条件下，遍历所有生成基选择后的**最优精度下界**。在现实场景（$\delta > 0$）中，实际覆盖精度总满足 $\varepsilon_{\mathrm{actual}} \geq \varepsilon^*$，$\varepsilon^*$ 一般不可达，仅作为理论参照。
 
 **证明**：直接由推论 6 的域链相容特例，对所有可行的 $R_0$ 取最优（最小化误差放大因子）即得。$\square$
+
+
+### 3.2 泛化的理想统计界与漂移-扩散定律
+
+在 3.1 节的组合近似封闭定理（CAC）中，我们得出了宏观误差在最坏情况下的线性级联（$\mathcal{O}(l)$ 爆发）。然而，在纯粹的理论物理与高维统计学视角下，若系统在面对未知时能保持绝对的“几何对称性”，其误差的累积将发生本质的拓扑降级。本节将推导 IDFS $\mathcal{F} = (F, \sigma)$ 在长链演化中的绝对存活上限——**泛化的理想统计界（The Statistical Ideal Bound）**。
+
+#### 3.2.1 纯数学前提：高维正交性与鞅差序列假设
+
+要打破最坏情况下的三角不等式绝对值叠加，IDFS 的度量空间 $\mathcal{X}$ 必须局部同胚于希尔伯特空间 $\mathcal{H}$（以便引入内积与正交性）。
+
+**定义（各向同性误差与鞅差序列假设，Martingale Difference Sequence Assumption，MDS）**：设系统在第 $j$ 步的微观逼近误差为随机向量 $\epsilon_j$。设 $\mathbb{F}_{j-1}$ 为系统前 $j-1$ 步演化生成的历史完备信息（$\sigma$-代数）。若系统对未知流形的预测不具备任何结构性的方向偏见，则 $\epsilon_j$ 构成一个**鞅差序列**，严格满足：
+
+$$\mathbb{E}[\epsilon_j \mid \mathbb{F}_{j-1}] \;=\; 0$$
+
+> **物理含义**：系统在任何一步的猜测，其误差方向在高维切空间中是纯粹的白噪声。它没有被训练集的密度偏见或自回归的惯性所“绑架”。
+
+#### 3.2.2 定理 1.c：理想鞅差紧致界（The Ideal Martingale Bound）
+
+**定理 1.c**：若 IDFS 的演化误差满足 MDS 假设，设局部线性化放大算子（雅可比矩阵的泛函推广）为 $T_{j,l} = \prod_{k=j+1}^l D\Phi_{x_k}$，则宏观演化 $l$ 步后的总均方误差（Mean Squared Error）严格满足平方根级联：
+
+$$\sqrt{\mathbb{E}[\|E_l\|^2]} \;\leq\; \sqrt{ \sum_{j=1}^l \left( \Theta_{j,l} \cdot \sqrt{\mathbb{E}[\|\epsilon_j\|^2]} \right)^2 }$$
+
+**证明精要**：由于 $\epsilon_j$ 零均值且基于历史条件独立，经过确定性线性算子映射后的误差序列 $\{T_{j,l}(\epsilon_j)\}$ 在希尔伯特空间中保持正交（$\mathbb{E}[\langle \epsilon_i, \epsilon_j \rangle] = 0, \forall i \neq j$）。根据 Bienaymé 等式，总误差的平方期望等于各步误差平方期望之和，交叉项被彻底抹杀。两边开均方根，得证。$\square$
+
+#### 3.2.3 泛化误差的“漂移-扩散定律”（Drift-Diffusion Law）
+
+现实中的连续系统（如大语言模型 LLM）由于数据分布的不对称、激活函数的空间截断以及自回归的惯性，**绝对无法自发满足 MDS 假设**。其单步误差必定包含一个系统性的方向偏置（Drift）。将真实误差进行正交分解：
+
+$$\epsilon_j \;=\; \mu_j \;+\; \eta_j$$
+
+其中：
+- $\mu_j \triangleq \mathbb{E}[\epsilon_j \mid \mathbb{F}_{j-1}]$ 为系统性偏置向量；
+- $\eta_j$ 为零均值的纯白噪声向量。
+
+代入演化积分，宏观总误差的绝对数学期望被撕裂为两项：
+
+$$\mathbb{E}[\|E_l\|^2] \;\approx\; \underbrace{ \left\| \sum_{j=1}^l T_{j,l}(\mu_j) \right\|^2 }_{\text{系统漂移项（最坏现实界）：} \mathcal{O}(l^2)} \;+\; \underbrace{ \sum_{j=1}^l \mathbb{E}\left[ \|T_{j,l}(\eta_j)\|^2 \right] }_{\text{随机扩散项（理想统计界）：} \mathcal{O}(l)}$$
+
+开方后，真实系统的泛化总误差下界呈现为经典扩散动力学形式：
+
+$$Error_{total} \;\sim\; \mathcal{O}(l) \cdot \|\mu_{bias}\| \;+\; \mathcal{O}(\sqrt{l}) \cdot \|\eta_{noise}\|$$
+
+> **注（泛化理论的“卡诺热机效率”，The Carnot Limit of Generalization）**：定理 1.c 所刻画的 $\mathcal{O}(\sqrt{l})$ 扩散项，是 IDFS 泛化能力的**“卡诺极限”**。它证明了即使系统排除了所有的偏见与惯性（$\mu_{bias} \to 0$），在面对未知的逻辑长链时，误差依然会以空间随机游走（布朗运动）的形式呈平方根发散。
+> 
+> 此定律为当前所有 AI 工程技术提供了终极的物理学解释：无论是**多数投票（Self-Consistency）**、**蒙特卡洛树搜索（MCTS）**，还是**强化学习的反思机制**，其数学本质均是通过消耗指数级的外部算力或引入离散验证算子（如基于搜索或外挂验证），强行抵消系统固有的漂移偏置（$\mu_{bias}$），以极其高昂的物理势能（算力/热力学代价），阻止系统向 $\mathcal{O}(l)$ 的 CAC 灾难界滑落，并试图将其逼近 $\mathcal{O}(\sqrt{l})$ 的理想渐近线。
