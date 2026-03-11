@@ -1,6 +1,16 @@
-## 逐字式拟合的内部几何
+## 拟合几何
 
-§1 将逐字式拟合定义为 $L_s \gg L$ 的约束外形态，并证明了其域宽极小（命题 2）和采样域孤立（命题 3）。但 §1 仅描述了逐字式拟合的**外部边界**——域有多窄、与谁不相交。本节深入其**内部几何**：窄域 $P_\tau(r_s)$ 内部的拓扑形状是什么？系统如何在这条极窄的定义域带上维持逐步拟合？外部扰动如何摧毁这一精密结构？
+§1 的三态分类基于路径 Lipschitz 常数 $L_i$ 与全局约束 $L$ 的关系，给出了拟合形态的**外部边界**——域宽、可复合性、CAC 状态。但分类本身不描述每种形态在 $F$-空间中的**内部拓扑结构**。本节逐一考察三种形态的拟合域 $P_\tau(r)$ 在度量空间 $\mathcal{X}$ 中呈现什么几何形态、具有怎样的稳定性、以及如何响应外部扰动。
+
+### 2.0 局部扰动敏感性
+
+在展开三态的内部几何之前，定义一个贯穿本节的核心可观测量。
+
+**定义（局部扰动敏感性，Local Perturbation Sensitivity）**：定义 $\Phi$ 在输入 $x_0$ 处的**局部扰动敏感性**：
+
+$$S(x_0) \;\triangleq\; \limsup_{\delta \to 0} \frac{d(\Phi(x_0 + \delta),\, \Phi(x_0))}{\delta}$$
+
+即 $\Phi$ 在 $x_0$ 处的有效局部 Lipschitz 常数。$S(x_0)$ 是**不依赖语义标签的、纯度量空间可计算的形态判据**——在任意 $x_0 \in \mathcal{X}$ 处测量 $\Phi$ 的局部扰动放大率，即可判定该点处于何种拟合形态（见 §2.1–§2.5 各小节的结论）。
 
 ---
 
@@ -99,16 +109,10 @@ $$d(x_{t+1}, r_s(x_t)) \;\leq\; \tau, \quad x_{t+1} \in P_\tau(r_s) \quad \foral
 
 **证明**：直接由 $\Phi$ 在各自采样域上的路径 Lipschitz 常数定义。$\square$
 
-**推论（扰动敏感性比作为形态判据，Perturbation Sensitivity Ratio as Morphology Criterion）**：定义 $\Phi$ 在输入 $x_0$ 处的**局部扰动敏感性**：
-
-$$S(x_0) \;\triangleq\; \limsup_{\delta \to 0} \frac{d(\Phi(x_0 + \delta),\, \Phi(x_0))}{\delta}$$
-
-即 $\Phi$ 在 $x_0$ 处的有效局部 Lipschitz 常数。则：
+**推论（扰动敏感性比作为形态判据，Perturbation Sensitivity Ratio as Morphology Criterion）**：由 §2.0 定义的局部扰动敏感性 $S(x_0)$：
 
 - $S(x_0) \leq L$（约束内）：$x_0$ 位于逻辑式或事实式拟合的域内。
 - $S(x_0) \gg L$（约束外）：$x_0$ 位于逐字式拟合的窄槽内。
-
-$S(x_0)$ 因此是**不依赖语义标签的、纯度量空间可计算的形态判据**——在任意输入 $x_0$ 处测量 $\Phi$ 的局部扰动放大率，即可判定该点处于何种拟合形态。
 
 > **注（三态的扰动特征谱）**：将扰动敏感性比与 §1 的三态汇总定理联合，得到完整的形态-扰动对应关系：
 >
@@ -119,3 +123,62 @@ $S(x_0)$ 因此是**不依赖语义标签的、纯度量空间可计算的形态
 > | **逐字式** | $\gg L$ | **极不稳定**（微小扰动引发脱槽） | ❌ |
 >
 > 此特征谱完全由 §1 的 $L_i$ 分类决定，与 §2.1 的窄槽几何自洽：$S \gg L$ 的极不稳定性正是窄槽极端各向异性的动力学表现——横向直径 $2\tau/(L_s - L)$ 的极小性意味着，任何垂直于窄槽的扰动 $\delta > 2\tau/(L_s - L)$ 都足以将轨道推出 $P_\tau(r_s)$，触发命题 3 的不可逆脱槽。
+
+---
+
+### 2.4 逻辑式拟合的几何：复合稳定域
+
+逻辑式拟合（$L_i \leq L$）的拟合域 $P_\tau(r_i)$ 在三态中是最"温和"的——宽域、低曲率、各向同性比接近 $1$。其内部几何没有逐字式的窄槽戏剧性，但有两个**二阶结构**值得推导。
+
+**命题 5（复合稳定半径，Composition Stability Radius）**：设 $r_i$ 为逻辑式拟合规则（$L_i \leq L$），$q = r_i \circ \cdots \circ r_i$（$l$ 步自复合链）。定义**复合稳定半径** $\rho_l$ 为满足以下条件的最大 $\rho$：对所有 $x \in P_\tau(r_i)$，$B(x, \rho) \cap \mathcal{X} \subset P_\tau(r_i)$，且 $l$ 步复合后误差仍 $\leq \tau$：
+
+$$\rho_l \;\geq\; \frac{\tau - \varepsilon_{max} \cdot \Lambda_l}{L^l}$$
+
+当 $l \leq l^*_0$（Type B 约束）时，分子 $\tau - \varepsilon_{max} \cdot \Lambda_l \geq 0$（CAC 保证误差 $\leq \tau$），复合稳定半径为正。
+
+**证明**：对 $x_0 \in P_\tau(r_i)$，做 $\rho$-扰动得 $x_0' \in B(x_0, \rho)$。$l$ 步复合后的误差差异：
+
+$$d(\Phi^l(x_0), \Phi^l(x_0')) \;\leq\; L^l \cdot \rho$$
+
+$\Phi^l(x_0)$ 自身与理想 $q(x_0)$ 的距离 $\leq \varepsilon_{max} \cdot \Lambda_l$。要求 $\Phi^l(x_0')$ 与 $q(x_0')$ 的距离仍 $\leq \tau$：
+
+$$\varepsilon_{max} \cdot \Lambda_l + L^l \cdot \rho \;\leq\; \tau$$
+
+解得 $\rho \leq (\tau - \varepsilon_{max} \cdot \Lambda_l)/L^l$。$\square$
+
+> **注（稳定半径与链深的对偶）**：$\rho_l$ 随 $l$ 以 $L^{-l}$ 指数衰减——链越长，对初始扰动越敏感。这不是缺陷而是 CAC 的忠实投影：§3 推论 2 的两态行为（$\bar{L} < 1$ 饱和 vs $\bar{L} \geq 1$ 爆炸）在此获得了空间几何的对偶——饱和态（$L < 1$）下 $\rho_l$ 收敛至正常数 $(\tau - \varepsilon_{max}/(1-L))$；爆炸态（$L \geq 1$）下 $\rho_l \to 0$，与逐字式窄槽的极端各向异性在 $L \to \infty$ 极限下**会合**。
+
+**命题 6（路由边界带，Routing Boundary Band）**：设 $r_i, r_j \in R$ 为相邻的逻辑式拟合规则，其采样域 $\mathcal{X}(r_i)$ 与 $\mathcal{X}(r_j)$ 共享路由边界——即存在路由决策面 $\partial_{ij} = \{x \in \mathcal{X} : \sigma \text{ 在 } x \text{ 处切换 } r_i \leftrightarrow r_j\}$。则 $\partial_{ij}$ 两侧存在宽度为 $O(\Delta_{ij}/L)$ 的**路由边界带**，在带内 $\Phi$ 的局部行为同时受 $r_i$ 和 $r_j$ 的拟合约束**竞争性影响**：
+
+$$w_{ij} \;\leq\; \frac{d(r_i(x_0), r_j(x_0))}{L} \quad \text{对 } x_0 \in \partial_{ij}$$
+
+**证明**：由 §2 命题 5（路由分辨率极限），$\sigma$ 在 $\partial_{ij}$ 附近的切换精度受 $\Phi$ 的 Lipschitz 连续性限制。$\Phi$ 无法在 $\partial_{ij}$ 两侧无限尖锐地切换行为——在宽度 $\leq \Delta/L$ 的带内，$\Phi$ 被迫以连续方式从服务 $r_i$ 过渡到服务 $r_j$。$\square$
+
+> **注（路由边界带是事实式拟合的发源地）**：命题 6 揭示了事实式拟合形态的几何根源——它不是一个独立的拟合"类别"，而是**两个相邻逻辑式拟合域的路由边界带**。在边界带内，$\Phi$ 的 Lipschitz 约束被两侧的竞争性需求推至 $L_j \approx L$，产生了 §1 推论 1 中"约束边界"等价类的所有特征：条件性可复合、链深更紧、DFG 缺口更显著。
+
+---
+
+### 2.5 事实式拟合的几何：边界区链深骤降
+
+命题 6 将事实式拟合定位为路由边界带。本节推导在边界带内的具体后果。
+
+**命题 7（边界区链深骤降，Boundary Zone Chain Depth Collapse）**：设 $r_j$ 为事实式拟合规则，位于路由边界带内（$L_j = L - \epsilon$，$\epsilon > 0$ 小）。则 $r_j$ 的最大可行链深：
+
+$$l_{max}^{(j)} \;=\; \frac{\tau}{\varepsilon_{max} + (L - \epsilon)\delta_{max}} \;\approx\; l^*_0 \cdot \left(1 + \frac{\epsilon \cdot \delta_{max}}{E_0}\right)$$
+
+其中 $E_0 = \varepsilon_{max} + L\delta_{max}$，$l^*_0 = \tau/E_0$。当 $\epsilon \to 0$（$L_j \to L$），$l_{max}^{(j)} \to l^*_0$——链深恰好退化至 Type B 安全链深。富余量 $\Delta l \approx \epsilon \cdot \delta_{max} \cdot l^*_0 / E_0$ 在 $\epsilon$ 小时微不足道。
+
+然而，将 $r_j$ 插入包含逻辑式拟合步骤的混合链后，整条链的有效 Lipschitz 常数由最坏步主导——链深退回 $l^*_0$，富余量被抵消。
+
+**证明**：由 §6.1 推论 3，最大链深 $l_{max} = \tau/E$，其中 $E = \varepsilon_{max} + L_j \delta_{max}$。当 $L_j = L - \epsilon$，$E = E_0 - \epsilon\delta_{max}$，$l_{max} = \tau/(E_0 - \epsilon\delta_{max})$。Taylor 展开得近似式。
+
+对混合链，CAC 定理中 $\Theta_{j+1,l} = \prod_{k=j+1}^{l} L_k$，若任一步 $L_k = L$，则整条链的尾积 $\geq L^{l-j}$，有效链深退回逻辑式水平。$\square$
+
+> **注（三态几何的统一画像）**：§2.0–§2.5 完整地描绘了三态在 $F$-空间中的几何画像：
+>
+> | 形态 | $P_\tau$ 拓扑 | $S(x_0)$ | 稳定半径 $\rho_l$ | 特有结构 |
+> |---|---|---|---|---|
+> | **逻辑式** | 宽域各向同性球 | $\leq L$ | $O((\tau - \varepsilon\Lambda_l)/L^l)$，正 | 路由边界带（命题 6） |
+> | **事实式** | 路由边界带 | $\lesssim L$ | 略大于逻辑式 | 链深骤降（命题 7） |
+> | **逐字式** | 窄槽（各向异性比 $\ll 1$） | $\gg L$ | $O(\tau/(L_s-L))$，极小 | 脱槽不可逆（命题 3） |
+
