@@ -9,19 +9,41 @@
 $$h^*_0 = x, \quad h^*_j = r_{i_j}(h^*_{j-1}) \qquad \text{（理想轨道，沿 }r\text{-链执行）}$$
 $$h_0 = x, \quad h_j = \Phi(h_{j-1}) \qquad \text{（近似轨道，沿 }\Phi\text{ 执行）}$$
 
-记 $e_j = d(h_j,\, h^*_j)$（第 $j$ 步误差），$e_0 = 0$。记 $L_j \triangleq \mathrm{Lip}(\Phi\!\restriction_{(h_{j-1},\, h^*_{j-1})})$ 为第 $j$ 步的**路径局部 Lipschitz 常数**。记**尾部乘积**：
+记 $e_j = d(h_j,\, h^*_j)$（第 $j$ 步误差），$e_0 = 0$。记第 $j$ 步的理想中间态 $h^*_{j-1}$ 处，$\sigma$ 所选定的激活链（§1.2）为 $\sigma(h^*_{j-1}) \in F^*$。定义该步的 **理想轨道激活链 Lipschitz 常数**：
+
+$$L_j \;\triangleq\; \mathrm{Lip}\bigl(\sigma(h^*_{j-1})\bigr)$$
+
+$L_j$ 是理想轨道在第 $j$ 步所选定的**激活链** $\sigma(h^*_{j-1})$ 在相关邻域内的度量性质——不涉及其他路由区域的激活链行为，也不涉及实际轨道 $h_{j-1}$ 的路由分配。记**尾部乘积**：
 
 $$\Theta_{j,l} \;\triangleq\; \prod_{k=j}^{l} L_k \qquad \text{（$j > l$ 时约定空积 $\Theta_{j,l} = 1$）}$$
 
-定义**误差累积放大系数**与**偏离累积放大系数**：
+定义**误差累积放大系数**与**系统偏离累积放大系数**：
 
 $$\Lambda_l \;\triangleq\; \sum_{j=1}^{l} \Theta_{j+1,l}\,, \qquad \Gamma_l \;\triangleq\; \sum_{j=1}^{l} \Theta_{j,l}$$
 
-（关系：$\Gamma_l = \sum_{j=1}^l L_j \Theta_{j+1,l}$；若 $\Phi \in \mathrm{Lip}_L$，则 $\Gamma_l \leq L\Lambda_l$。）
+（关系：$\Gamma_l = \sum_{j=1}^l L_j \Theta_{j+1,l}$；若各 $L_j$ 一致为 $L$，则 $\Gamma_l = L\Lambda_l$。）
 
-对每步 $j$，记 $\delta_j \triangleq d\!\bigl(h^*_{j-1},\, \mathcal{X}(r_{i_j})\bigr)$ 为理想轨道第 $j-1$ 步距微观采样域 $\mathcal{X}(r_{i_j})$ 的偏离距离。则系统在整个链 $q$ 上的宏观容差界满足：
+对每步 $j$，记 $x'_j \in \mathcal{X}(r_{i_j})$ 为距理想中间态 $h^*_{j-1}$ 最近的采样域点，$\delta_j \triangleq d(h^*_{j-1}, x'_j)$ 为偏离距离。定义第 $j$ 步的**目标域外变分（Target Out-of-Domain Variation）**：
 
-$$\varepsilon^*_q \;\triangleq\; \sup_{x \in \mathrm{dom}(q)} d\bigl(h_l,\, q(x)\bigr) \;\leq\; \sum_{j=1}^{l} \varepsilon_{i_j} \cdot \Theta_{j+1,l} \;+\; \sum_{j=1}^{l} \delta_j \cdot \Theta_{j,l}$$
+$$\rho_j \;\triangleq\; d\bigl(r_{i_j}(x'_j),\, r_{i_j}(h^*_{j-1})\bigr)$$
+
+$\rho_j$ 度量的是目标规则 $r_{i_j}$ 自身在采样域边界 $x'_j$ 与理想轨道点 $h^*_{j-1}$ 之间的输出差异——这是一个不依赖任何正则性假设（$r$ 无需 Lipschitz）的纯度量空间可观测量。当 $\delta_j = 0$（理想轨道在采样域内）时自动有 $\rho_j = 0$。
+
+由于 $\Phi = (F, \sigma)$ 是由路由引擎 $\sigma$ 拼缀的**分段映射**（§1.2：$\Phi(x) = \sigma(x)(x)$），累积误差 $e_{j-1}$ 可能将实际轨道 $h_{j-1}$ 推过路由决策边界，导致 $\sigma(h_{j-1}) \neq \sigma(h^*_{j-1})$——即实际轨道与理想轨道被分配到**不同的激活链**。同理，理想轨道点 $h^*_{j-1}$ 与最近采样点 $x'_j$ 也可能处于不同路由区域。定义第 $j$ 步的**路由失准惩罚（Routing Misalignment Penalty）**：
+
+$$\Delta_{\sigma,j} \;\triangleq\; \underbrace{d\bigl(\sigma(h_{j-1})(h_{j-1}),\; \sigma(h^*_{j-1})(h_{j-1})\bigr)}_{\Delta^{err}_j\;:\;\text{误差致路由偏转}} \;+\; \underbrace{d\bigl(\sigma(h^*_{j-1})(x'_j),\; \sigma(x'_j)(x'_j)\bigr)}_{\Delta^{sam}_j\;:\;\text{采样域路由失配}}$$
+
+$\Delta^{err}_j$ 度量的是：由于累积误差使实际状态 $h_{j-1}$ 被路由到了"错误的"激活链 $\sigma(h_{j-1})$，该激活链与理想激活链 $\sigma(h^*_{j-1})$ 在 **同一输入** $h_{j-1}$ 处的输出差异。$\Delta^{sam}_j$ 度量的是：理想轨道的激活链 $\sigma(h^*_{j-1})$ 与最近采样点的激活链 $\sigma(x'_j)$ 在 $x'_j$ 处的输出差异。两项均为纯粹属于**系统路由拓扑 $\sigma$** 的物理量——它们与目标 $r$ 无关，与拟合误差 $\varepsilon$ 无关，纯粹反映 $\sigma$ 的离散分段结构对连续逼近链的干扰代价。当 $\sigma(h_{j-1}) = \sigma(h^*_{j-1})$ 时 $\Delta^{err}_j = 0$；当 $\sigma(h^*_{j-1}) = \sigma(x'_j)$ 时 $\Delta^{sam}_j = 0$。在实际系统中 $\Delta^{sam}_j$ 通常极小（$x'_j$ 与 $h^*_{j-1}$ 仅距 $\delta_j$，大概率共路由），主导项为 $\Delta^{err}_j$——即**累积误差跨越路由边界时的拓扑跳变代价**。
+
+> **注（$\Delta_{\sigma}$ 与 $\rho$ 的对偶结构）**：$\rho_j$ 与 $\Delta_{\sigma,j}$ 形成一对精确对偶——$\rho_j$ 刻画的是**目标** $r$ 在域外的行为变化（目标的不连续性代价），$\Delta_{\sigma,j}$ 刻画的是**系统** $\Phi$ 在路由边界处的行为变化（系统的不连续性代价）。两者分别守护误差界中"理想世界"与"实际系统"各自的拓扑完整性。
+>
+> **注（$\Delta_{\sigma}$ 与 §2.5 命题 5 的关系）**：§2.5 命题 5 证明了路由分辨率极限 $d(a,b) \geq \Delta/L$。$\Delta^{err}_j$ 正是该命题的定量后果：当累积误差 $e_{j-1}$ 超过理想轨道到最近路由边界的距离 $d(h^*_{j-1}, \partial\mathrm{Link})$ 时（§2.5 所述的分辨率死锁临界），$\sigma$ 不可避免地将实际状态分配到**不同激活链**，$\Delta^{err}_j > 0$ 随即被触发。命题 5 所揭示的离散曲率爆发（接近边界时 $L_j \to L$）是 $\Delta^{err}_j$ 的**连续面预兆**；$\Delta^{err}_j$ 本身是**跨越边界后的离散面后果**。二者合成了路由边界的完整双重危害。
+
+则系统在整个链 $q$ 上的宏观容差界满足：
+
+$$\varepsilon^*_q \;\triangleq\; \sup_{x \in \mathrm{dom}(q)} d\bigl(h_l,\, q(x)\bigr) \;\leq\; \sum_{j=1}^{l} \bigl(\varepsilon_{i_j} + \rho_j + \Delta_{\sigma,j}\bigr) \cdot \Theta_{j+1,l} \;+\; \sum_{j=1}^{l}\delta_j\cdot \Theta_{j,l}$$
+
+第一项中，$\varepsilon_{i_j} + \rho_j + \Delta_{\sigma,j}$ 构成第 $j$ 步的**有效局部失配（Effective Local Mismatch）**——系统在采样点处的逼近误差（$\varepsilon$）、目标自身在域外的变分（$\rho$）、以及路由拓扑跳变的代价（$\Delta_\sigma$）之三重叠加。三项分别刻画三个**独立的物理来源**：$\varepsilon$ 源于系统 $\Phi$ 的拟合不完美，$\rho$ 源于目标 $r$ 的域外行为，$\Delta_\sigma$ 源于路由引擎 $\sigma$ 的离散分段结构。第二项 $\delta_j \cdot \Theta_{j,l}$ 为系统对采样域间隙的拉伸放大代价。
 
 **证明**：第 $j$ 步，取 $x'_j \in \mathcal{X}(r_{i_j})$ 为距 $h^*_{j-1}$ 最近的采样域点（$d(h^*_{j-1}, x'_j) = \delta_j$）。
 
@@ -29,55 +51,75 @@ $$\varepsilon^*_q \;\triangleq\; \sup_{x \in \mathrm{dom}(q)} d\bigl(h_l,\, q(x)
 
 $$e_j = d\bigl(\Phi(h_{j-1}),\, r_{i_j}(h^*_{j-1})\bigr)$$
 
-插入两个中间点 $\Phi(h^*_{j-1})$ 和 $\Phi(x'_j)$，由三角不等式得：
+插入中间点 $\Phi(h^*_{j-1})$，由第一次三角不等式得：
 
-$$e_j \;\leq\; d\bigl(\Phi(h_{j-1}),\, \Phi(h^*_{j-1})\bigr) + d\bigl(\Phi(h^*_{j-1}),\, \Phi(x'_j)\bigr) + d\bigl(\Phi(x'_j),\, r_{i_j}(x'_j)\bigr)$$
+$$e_j \;\leq\; \underbrace{d\bigl(\Phi(h_{j-1}),\, \Phi(h^*_{j-1})\bigr)}_{\text{(A) 误差传播 + 路由跳变}} \;+\; d\bigl(\Phi(h^*_{j-1}),\, r_{i_j}(h^*_{j-1})\bigr)$$
 
-> **注（三项拆分的必要性）**
+**对 (A) 项的路由感知分解**：$\Phi$ 是分段映射 $\Phi(x) = \sigma(x)(x)$（§1.2）。实际轨道与理想轨道可能被路由到不同激活链：$\Phi(h_{j-1}) = \sigma(h_{j-1})(h_{j-1})$，$\Phi(h^*_{j-1}) = \sigma(h^*_{j-1})(h^*_{j-1})$。插入桥接点 $\sigma(h^*_{j-1})(h_{j-1})$——用**理想轨道的激活链**作用于**实际状态**——再次运用三角不等式：
+
+$$d\bigl(\Phi(h_{j-1}),\, \Phi(h^*_{j-1})\bigr) \;\leq\; \underbrace{d\bigl(\sigma(h_{j-1})(h_{j-1}),\; \sigma(h^*_{j-1})(h_{j-1})\bigr)}_{\text{(I') 路由跳变惩罚}\;=\;\Delta^{err}_j} \;+\; \underbrace{d\bigl(\sigma(h^*_{j-1})(h_{j-1}),\; \sigma(h^*_{j-1})(h^*_{j-1})\bigr)}_{\text{(I) 同激活链内误差传播}\;\leq\; L_j \cdot e_{j-1}}$$
+
+第 (I) 项由**单一激活链** $\sigma(h^*_{j-1})$ 的 Lipschitz 性质定界——不涉及任何跨路由区域的拉伸，$L_j$ 的使用是完全合法的。第 (I') 项是纯粹的路由拓扑代价：两条不同激活链在**同一输入** $h_{j-1}$ 处的输出差异。当 $\sigma(h_{j-1}) = \sigma(h^*_{j-1})$ 时（无路由跨越），$\Delta^{err}_j = 0$。
+
+**对 $d(\Phi(h^*_{j-1}), r_{i_j}(h^*_{j-1}))$ 的路由感知拆分**：$h^*_{j-1}$ 可能不在采样域 $\mathcal{X}(r_{i_j})$ 内，$\varepsilon_{i_j}$ 的约束不能直接套用。通过桥接采样域内的最近点 $x'_j$，由第二次三角不等式展开。首先对 $\Phi$-差项做路由感知分解——插入桥接点 $\sigma(h^*_{j-1})(x'_j)$：
+
+$$d\bigl(\Phi(h^*_{j-1}),\, \Phi(x'_j)\bigr) \;\leq\; \underbrace{d\bigl(\sigma(h^*_{j-1})(h^*_{j-1}),\; \sigma(h^*_{j-1})(x'_j)\bigr)}_{\text{(II) 同激活链内系统偏离}\;\leq\; L_j \cdot \delta_j} \;+\; \underbrace{d\bigl(\sigma(h^*_{j-1})(x'_j),\; \sigma(x'_j)(x'_j)\bigr)}_{\text{(II') 采样域路由失配}\;=\;\Delta^{sam}_j}$$
+
+第 (II) 项由**同一激活链** $\sigma(h^*_{j-1})$ 的 Lipschitz 性定界——$L_j$ 同样合法，因为它与 (I) 项中使用的是**完全相同的激活链**。第 (II') 项度量理想激活链与采样点处激活链在 $x'_j$ 处的差异。结合剩余两项不变：
+
+$$\underbrace{d\bigl(\Phi(x'_j),\, r_{i_j}(x'_j)\bigr)}_{\text{(III) 采样域内逼近误差}\;\leq\; \varepsilon_{i_j}} \;+\; \underbrace{d\bigl(r_{i_j}(x'_j),\, r_{i_j}(h^*_{j-1})\bigr)}_{\text{(IV) 目标域外变分}\;=\; \rho_j}$$
+
+> **注（六项拆分的物理解剖）**
 >
-> **关于第三项**：$\varepsilon_{i_j}$ 的定义（§1.3）仅保证 $\Phi$ 在采样域 $\mathcal{X}(r_{i_j})$ 内对 $r_{i_j}$ 的误差受控。$x'_j \in \mathcal{X}(r_{i_j})$ 是采样域内最近点，故第三项 $\leq \varepsilon_{i_j}$；若直接用 $h^*_{j-1}$（可能在采样域外），无法套用 $\varepsilon_{i_j}$ 的界——这正是引入 $x'_j$ 并显式产生偏离代价 $\delta_j$ 的原因。
+> - **(I) 同激活链内误差传播**（$\leq L_j e_{j-1}$）：前序累积误差被理想轨道所选定的激活链 $\sigma(h^*_{j-1})$ 以其局部 Lipschitz 常数 $L_j$ 放大。
+> - **(I') 误差致路由偏转**（$= \Delta^{err}_j$）：累积误差将实际状态推过路由边界，导致系统调用了"错误的"激活链。这是 §2.5 命题 5（路由分辨率极限）在误差链中的直接后果——当 $e_{j-1} > d(h^*_{j-1}, \partial\mathrm{Link})$ 时，路由跳变不可避免。
+> - **(II) 同激活链内系统偏离放大**（$\leq L_j \delta_j$）：理想中间态 $h^*_{j-1}$ 偏离采样域的几何代价被 $\sigma(h^*_{j-1})$ 放大。
+> - **(II') 采样域路由失配**（$= \Delta^{sam}_j$）：理想轨道与最近采样点的路由选择差异。通常 $\Delta^{sam}_j \approx 0$。
+> - **(III) 采样域内逼近误差**（$\leq \varepsilon_{i_j}$）：$\Phi$ 在采样域内对 $r_{i_j}$ 的局部拟合误差。
+> - **(IV) 目标域外变分**（$= \rho_j$）：目标规则 $r_{i_j}$ 自身在采样点 $x'_j$ 与理想中间态 $h^*_{j-1}$ 之间的输出差异。不依赖对 $r$ 的正则性假设。
 >
-> **关于前两项为何不合并**：一个自然的替代是不引入 $h^*_{j-1}$ 作为中间点，而是直接对第一项和第二项合并，利用 $L$ 条件写：
+> 六项按**物理归属**分为四族：(I)+(I') 属于**前序误差**（历史积累），(II)+(II') 属于**采样域偏离**（数据覆盖缺口），(III) 属于**系统拟合**（$\Phi$ 的有限容量），(IV) 属于**目标本征**（$r$ 的域外行为）。其中 (I')+(II') 构成的路由失准惩罚 $\Delta_{\sigma,j}$ 纯粹属于**系统拓扑**——它是 $\sigma$ 的离散分段结构对连续逼近链的干扰代价。
 >
-> $$d\bigl(\Phi(h_{j-1}),\, \Phi(x'_j)\bigr) \;\leq\; L_j \cdot d(h_{j-1},\, x'_j)$$
->
-> 然而 $d(h_{j-1}, x'_j)$ 等于 $e_{j-1} + \delta_j$（近似轨道到采样域最近点的距离），在 $e_{j-1}$ 已经积累较大时，这一距离可以极大，在某些定义域上甚至趋于无穷——导致上界过松以至无意义。若为了让上界有意义而强制要求 $L_j \to 0$（即极强的全局收缩），则由§5 命题 2，系统的长链会将一切状态差异——包括不同输入之间的区分——彻底压平，$\Phi$ 退化为常数映射，近似拟合能力丧失。因此，引入 $h^*_{j-1}$ 将路径拆分为**近似误差传播项**（第一项，权重 $e_{j-1}$）和**采样域偏离项**（第二项，权重 $\delta_j$）是必要的：两项分别被 $L_j$ 缩放，但乘的是各自有控制意义的距离，而非无界的 $d(h_{j-1}, x'_j)$。
+> **关于桥接方向的选择**：桥接点 $\sigma(h^*_{j-1})(h_{j-1})$ 用**理想轨道的激活链**作用于**实际状态**。这一选择使得 (I) 与 (II) 两项中的 Lipschitz 常数 $L_j$ 均来自**同一条激活链** $\sigma(h^*_{j-1})$——两者**合法共享同一条激活链的 Lipschitz 常数**，不存在跨路由区域复用的问题。路由跳变的全部代价被严格隔离到 $\Delta_{\sigma,j}$ 中，而 $L_j$ 始终保持为**单一激活链内部**的合法 Lipschitz 约束。需要强调的是，$L_j$ 被锚定于理想轨道所选定的激活链 $\sigma(h^*_{j-1})$，而非复合映射 $\Phi$ 在某一对点上的路径局部常数——后者在 $\Phi$ 的分段映射结构下，当两点跨越路由边界时将失去定义的唯一性。激活链锚定使得 $L_j$ 的含义清晰且路由跨越代价显式可观测。
 
-分别定界：
+分别定界后合并六项：
 
-$$e_j \;\leq\; \underbrace{d\bigl(\Phi(h_{j-1}),\, \Phi(h^*_{j-1})\bigr)}_{\leq\, L_j \cdot e_{j-1}} \;+\; \underbrace{d\bigl(\Phi(h^*_{j-1}),\, \Phi(x'_j)\bigr)}_{\leq\, L_j \cdot \delta_j} \;+\; \underbrace{d\bigl(\Phi(x'_j),\, r_{i_j}(x'_j)\bigr)}_{\leq\, \varepsilon_{i_j}}$$
+$$e_j \;\leq\; \underbrace{L_j \cdot e_{j-1}}_{\text{(I)}} \;+\; \underbrace{\Delta^{err}_j}_{\text{(I')}} \;+\; \underbrace{L_j \cdot \delta_j}_{\text{(II)}} \;+\; \underbrace{\Delta^{sam}_j}_{\text{(II')}} \;+\; \underbrace{\varepsilon_{i_j}}_{\text{(III)}} \;+\; \underbrace{\rho_j}_{\text{(IV)}}$$
 
-递推关系：$e_j \leq L_j e_{j-1} + L_j\delta_j + \varepsilon_{i_j}$，$e_0 = 0$。逐步展开前三步：
+合并路由惩罚 $\Delta_{\sigma,j} = \Delta^{err}_j + \Delta^{sam}_j$，递推关系为：$e_j \leq L_j\, e_{j-1} + L_j\,\delta_j + \varepsilon_{i_j} + \rho_j + \Delta_{\sigma,j}$，$e_0 = 0$。逐步展开前两步：
 
-$$e_1 \leq \varepsilon_{i_1} + L_1\delta_1$$
-$$e_2 \leq L_2 e_1 + (\varepsilon_{i_2} + L_2\delta_2) \leq (\varepsilon_{i_1} + L_1\delta_1)\cdot L_2 + (\varepsilon_{i_2} + L_2\delta_2)$$
-$$e_3 \leq L_3 e_2 + (\varepsilon_{i_3} + L_3\delta_3) \leq (\varepsilon_{i_1} + L_1\delta_1)\cdot L_3L_2 + (\varepsilon_{i_2} + L_2\delta_2)\cdot L_3 + (\varepsilon_{i_3} + L_3\delta_3)$$
+$$e_1 \leq \varepsilon_{i_1} + \rho_1 + \Delta_{\sigma,1} + L_1\delta_1$$
+$$e_2 \leq L_2 e_1 + \varepsilon_{i_2} + \rho_2 + \Delta_{\sigma,2} + L_2\delta_2 \leq (\varepsilon_{i_1} + \rho_1 + \Delta_{\sigma,1} + L_1\delta_1)\, L_2 + \varepsilon_{i_2} + \rho_2 + \Delta_{\sigma,2} + L_2\delta_2$$
 
-第 $j$ 步新增项 $(\varepsilon_{i_j} + L_j\delta_j)$ 在后续各步中被乘以 $\Theta_{j+1,l}$，归纳得：
+第 $j$ 步新增项 $(\varepsilon_{i_j} + \rho_j + \Delta_{\sigma,j} + L_j\delta_j)$ 在后续各步中被乘以 $\Theta_{j+1,l}$，归纳得：
 
-$$e_l \;\leq\; \sum_{j=1}^{l}\Bigl(\varepsilon_{i_j} + L_j\delta_j\Bigr)\cdot \Theta_{j+1,l}$$
+$$e_l \;\leq\; \sum_{j=1}^{l}\bigl(\varepsilon_{i_j} + \rho_j + \Delta_{\sigma,j} + L_j\,\delta_j\bigr)\cdot \Theta_{j+1,l}$$
 
-分离两项，利用 $L_j \cdot \Theta_{j+1,l} = \Theta_{j,l}$：
+分离四项，利用 $L_j \cdot \Theta_{j+1,l} = \Theta_{j,l}$，并将同系数的 $\varepsilon$、$\rho$、$\Delta_\sigma$ 合并：
 
-$$e_l \;\leq\; \sum_{j=1}^{l}\varepsilon_{i_j}\cdot \Theta_{j+1,l} \;+\; \sum_{j=1}^{l}\delta_j\cdot \Theta_{j,l}$$
+$$e_l \;\leq\; \sum_{j=1}^{l}(\varepsilon_{i_j} + \rho_j + \Delta_{\sigma,j})\cdot \Theta_{j+1,l} \;+\; \sum_{j=1}^{l}\delta_j\cdot \Theta_{j,l}$$
 
-> **保守简化**：精细界可退化为以下三种等价可用的简化形式：
+第一项中 $\varepsilon_{i_j} + \rho_j + \Delta_{\sigma,j}$ 为有效局部失配，以系数 $\Theta_{j+1,l}$（不含本步 $L_j$）向后累积放大；第二项中系统偏离 $\delta_j$ 以系数 $\Theta_{j,l} = L_j \Theta_{j+1,l}$（含本步 $L_j$）向后累积放大——同一步的系统偏离代价比有效局部失配代价高 $L_j$ 倍。当 $\Delta_{\sigma,j} = 0$（无路由跨越）且 $\rho_j = 0$（域内链或目标局部常值）时，退化为纯 $\varepsilon_{i_j}$。
+
+> **保守简化**：精细界可退化为以下简化形式。令 $\rho_{\max} \triangleq \max_j \rho_j$，$\Delta_{\max} \triangleq \max_j \Delta_{\sigma,j}$。
 >
 > **形式 A（均匀化各步误差）**：令 $\varepsilon_{\max} \triangleq \max_j \varepsilon_{i_j}$，$\delta_{\max} \triangleq \max_j \delta_j$：
 >
-> $$e_l \;\leq\; \varepsilon_{\max}\cdot\Lambda_l \;+\; \delta_{\max}\cdot\Gamma_l$$
+> $$e_l \;\leq\; (\varepsilon_{\max} + \rho_{\max} + \Delta_{\max})\cdot\Lambda_l \;+\; \delta_{\max}\cdot\Gamma_l$$
 >
-> **形式 B（均匀化路径放大系数）**：以全局 $L$ 替换局部 $L_j$（$\Theta_{j+1,l} \leq L^{l-j}$，$\Theta_{j,l} \leq L^{l-j+1}$），各步 $\varepsilon_{i_j}$、$\delta_j$ 保持异质：
+> 当 $\Delta_{\max} = 0$（路由稳定、无边界跨越）且 $\rho_{\max} = 0$（域内链）时退化为 $\varepsilon_{\max}\Lambda_l + \delta_{\max}\Gamma_l$。
 >
-> $$e_l \;\leq\; \sum_{j=1}^{l}\bigl(\varepsilon_{i_j} + L\delta_j\bigr)\cdot L^{l-j}$$
+> **形式 B（均匀化路径放大系数）**：以全局 $L$ 替换所有局部 $L_j$（$\Theta_{j+1,l} \leq L^{l-j}$），各步 $\varepsilon_{i_j}$、$\delta_j$、$\rho_j$、$\Delta_{\sigma,j}$ 保持异质：
 >
-> 其中 $\varepsilon_{i_j} + L\delta_j$ 为第 $j$ 步的**有效单步误差**（近似误差与放大一次的偏离代价之和），被后续 $L^{l-j}$ 放大。
+> $$e_l \;\leq\; \sum_{j=1}^{l}\bigl(\varepsilon_{i_j} + \rho_j + \Delta_{\sigma,j} + L\delta_j\bigr)\cdot L^{l-j}$$
 >
-> **形式 C（两者均均匀化）**：在形式 A 基础上再利用 $\Gamma_l \leq L\Lambda_l \leq L\cdot\dfrac{L^l-1}{L-1}$：
+> 其中 $\varepsilon_{i_j} + \rho_j + \Delta_{\sigma,j} + L\delta_j$ 为第 $j$ 步的**有效单步误差**（逼近误差 + 目标域外变分 + 路由跳变代价 + 放大一次的采样域偏离），被后续 $L^{l-j}$ 放大。
 >
-> $$e_l \;\leq\; (\varepsilon_{\max} + L\delta_{\max})\cdot\frac{L^l-1}{L-1}$$
+> **形式 C（路径均值保守界）**：利用路径几何均值 $\bar{L} = (\Theta_{1,l})^{1/l}$（见 §1.2），有 $\Gamma_l \leq \bar{L}\Lambda_l$ 及 $\Lambda_l \leq \frac{\bar{L}^l-1}{\bar{L}-1}$（当 $\bar{L} \neq 1$）。在形式 A 基础上整体放缩：
 >
-> （$L=1$ 时极限为 $(\varepsilon_{\max}+\delta_{\max})\cdot l$。）形式 C **先验可计算**（只需三个标量 $L$、$\varepsilon_{\max}$、$\delta_{\max}$），代价是最松。形式 A 与形式 B 的松紧依具体路径和误差分布而定，不作一般比较。**降低误差的三条路径**：压低 $\varepsilon_{\max}$，控制 $\delta_{\max}$，控制局部 Lipschitz（进而控制 $\Lambda_l$）。
+> $$e_l \;\leq\; \bigl(\varepsilon_{\max} + \rho_{\max} + \Delta_{\max} + \bar{L}\,\delta_{\max}\bigr)\cdot\frac{\bar{L}^l-1}{\bar{L}-1}$$
+>
+> （$\bar{L}=1$ 时极限为 $(\varepsilon_{\max}+\rho_{\max}+\Delta_{\max}+\delta_{\max})\cdot l$。）形式 C 是最常用的**宏观粗粒度界**，用平均拉伸率 $\bar{L}$ 替代了极端的全局确界 $L$，避免了高度异质路径下（$\kappa_\Phi \gg 1$）界限过松的问题。**降低误差的五条路径**：压低 $\varepsilon_{\max}$（改善拟合），控制 $\delta_{\max}$（增大采样覆盖），控制路径均值 $\bar{L}$（进而控制 $\Lambda_l$），选择目标在域外变分较小的分解路径（控制 $\rho_{\max}$），以及**改善路由稳定性**以降低 $\Delta_{\max}$——使误差不轻易触发路由跳变，可通过扩大区域宽度或增加 $\sigma$ 输出连续性实现。
 
 $\square$
 
@@ -91,13 +133,13 @@ $\square$
 
 **稳定有界（Stable Bounded，$\varepsilon^*_q < D$）**：当路径中扩张与收缩因子相互交织时，误差沿深度 $l$ 逐步积累但始终有限。记 $D \triangleq \mathrm{diam}(\Phi^l(\mathcal{X}))$ 为系统像空间固有直径。由形式 C 保守界：
 
-$$\varepsilon^*_q \;\leq\; (\varepsilon_{max} + \bar{L}\,\delta_{max}) \cdot \frac{\bar{L}^l - 1}{\bar{L} - 1} \;\leq\; D$$
+$$\varepsilon^*_q \;\leq\; (\varepsilon_{max} + \rho_{max} + \Delta_{max} + \bar{L}\,\delta_{max}) \cdot \frac{\bar{L}^l - 1}{\bar{L} - 1} \;\leq\; D$$
 
 受全局 $L$ 约束和路径合并效应的共同制衡，宏观容差 $\varepsilon^*_q$ 始终被锁定在 $D$ 以内。积累速率取决于路径 Lipschitz 序列 $\{L_j\}$ 的具体结构。该态是 IDFS 在一般混合路径下的**默认运行模式**。
 
 **收敛饱和（Saturated，$\Lambda_\infty < \infty$）**：若路径具备充分强的收缩势能，使得截断尾积级数收敛（见推论 5），宏观容差界被一个**与深度 $l$ 完全无关的有限常数**绝对封顶：
 
-$$\varepsilon^*_q \;\leq\; \varepsilon_{max} \cdot \Lambda_\infty \;+\; \delta_{max} \cdot \Gamma_\infty \;\triangleq\; B_{sat} \;<\; \infty$$
+$$\varepsilon^*_q \;\leq\; (\varepsilon_{max} + \rho_{max} + \Delta_{max}) \cdot \Lambda_\infty \;+\; \delta_{max} \cdot \Gamma_\infty \;\triangleq\; B_{sat} \;<\; \infty$$
 
 此时系统呈现出"任意深度逻辑链免疫力"，微观组件被安全地镶嵌在大尺度吸引域内。
 
@@ -113,53 +155,50 @@ $$\varepsilon^*_q \;\leq\; \varepsilon_{max} \cdot \Lambda_\infty \;+\; \delta_{
 
 CAC 定理给出了链误差的代数上界。一个自然的问题是：这个上界是否可能过于松弛？以下推论以存在性构造证明**上界中的每一项都可以被精确取等**——CAC 界在整个 IDFS 函数类上是不可改善的。
 
-**推论 3（宏观容差集的类紧性，Class-Level Tightness of the Macroscopic Tolerance Set）**：对任意给定的微观采样集 $\mathcal{S}$ 及其容差集 $\mathcal{E}$（由任意给定序列 $\varepsilon_{i_j} \geq 0$ 决定），以及任意给定的偏离序列 $\delta_j \geq 0$ 和 Lipschitz 序列 $\{L_j\}_{j=1}^l$，**一定存在**某个以 $\mathcal{E}$ 拟合了 $\mathcal{S}$ 的具体 IDFS 构造 $(F, \sigma)$，使得在由 $\mathcal{S}$ 生成的某段宏观链 $q \in \mathcal{T}_l$ 上，其端到端逼近误差精确填满了宏观容差上界 $\varepsilon^*_q \in \mathcal{E}^*$：
+**推论 3（宏观容差集的类紧性，Class-Level Tightness of the Macroscopic Tolerance Set）**：对任意给定的微观采样集 $\mathcal{S}$ 及其容差集 $\mathcal{E}$（由任意给定序列 $\varepsilon_{i_j} \geq 0$ 决定），任意给定的偏离序列 $\delta_j \geq 0$、目标域外变分序列 $\rho_j \geq 0$、路由惩罚序列 $\Delta_{\sigma,j} \geq 0$ 和 Lipschitz 序列 $\{L_j\}_{j=1}^l$，**一定存在**某个以 $\mathcal{E}$ 拟合了 $\mathcal{S}$ 的具体 IDFS 构造 $(F, \sigma)$ 及目标分解 $r_{i_l} \circ \cdots \circ r_{i_1}$，使得在生成链 $q$ 上，其端到端逼近误差精确填满了宏观容差上界 $\varepsilon^*_q \in \mathcal{E}^*$：
 
-$$e_l \;=\; \varepsilon^*_q \;=\; \sum_{j=1}^{l} \varepsilon_{i_j} \cdot \Theta_{j+1,l} \;+\; \sum_{j=1}^{l} \delta_j \cdot \Theta_{j,l}$$
+$$e_l \;=\; \varepsilon^*_q \;=\; \sum_{j=1}^{l} (\varepsilon_{i_j} + \rho_j + \Delta_{\sigma,j}) \cdot \Theta_{j+1,l} \;+\; \sum_{j=1}^{l} \delta_j \cdot \Theta_{j,l}$$
 
 即：由微观容差集 $\mathcal{E}$ 跃迁生成宏观容差集 $\mathcal{E}^*$ 的映射定理边界，在整个 IDFS 函数类意义下是**不可改善的**（不存在更紧的普适代数界）。
 
-**证明（存在性构造）**：取 $\mathcal{X} = \mathbb{R}$，配以绝对值度量 $d(x,y) = |x-y|$，设 $h_0 = h^*_0 = 0$。
+**证明（Banach 空间中的主本征子空间几何坍缩构造）**：我们在一般赋范向量空间（Banach 空间）中构造一个特定的非线性算子序列，证明在多维空间中，当且仅当所有物理误差源发生严格的三维/高维共线共振时，泛函三角不等式才会退化为标量界满载。
 
-**采样域的构造**：对第 $j$ 步，令 $r_{i_j}(y) \equiv 0$（零映射），采样域取单点 $\mathcal{X}(r_{i_j}) \triangleq \{-\delta_j\}$。理想轨道由此恒为零：$h^*_j = 0$。由定义：
+将系统状态视为高维向量 $\vec{h}_j \in \mathcal{X}$。设第 $j$ 步选定的理想激活链 $f_{\sigma(\vec{h}^*_{j-1})}$ 在 $\vec{h}^*_{j-1}$ 邻域内可微，其 Fréchet 导数（雅可比线性算子）记为 $D\Phi_j$。设其算子谱范数（即最大拉伸因子）刚好达到选定的 Lipschitz 常数限界：$\|D\Phi_j\| = L_j$。
 
-$$d\!\bigl(h^*_{j-1},\, \mathcal{X}(r_{i_j})\bigr) = |0 - (-\delta_j)| = \delta_j$$
+**1. 向量场对齐与主本征坍缩（Dimensional Collapse）**：
+根据算子范数定义，必存在一个特定的单位方向向量 $\vec{v}_{dom}$（主特征/奇异向量），使得算子在该方向上的拉伸达到极限：$D\Phi_j(\vec{v}_{dom}) = L_j \vec{v}_{dom}$（为构造简便，我们设其为特征向量且对应正特征值）。
+我们强制所有的误差演化与拓扑偏离严格**坍缩坍塌在 $\vec{v}_{dom}$ 所生成的一维子空间内**。
 
-故偏离距离精确等于任意给定的 $\delta_j \geq 0$。
+设 $\vec{h}^*_j \equiv \vec{0}$。
+- 构造前序误差向量 $\vec{e}_{j-1} = \|\vec{e}_{j-1}\| \cdot \vec{v}_{dom}$；
+- 构造采样偏离向量 $\vec{\delta}_j = \|\vec{\delta}_j\| \cdot \vec{v}_{dom}$（即最近采样点 $\vec{x}'_j = \vec{h}^*_{j-1} + \vec{\delta}_j = \|\vec{\delta}_j\|\vec{v}_{dom}$）。
 
-**近似算子的构造**：令 $\Phi$ 在第 $j$ 步的局部算子为：
+**2. 目标变分与误差输入的同向化构造**：
+- 设定目标规则 $r_{i_j}$ 使得除了保留原点不动（$r_{i_j}(\vec{0})=\vec{0}$）外，它在越过采样边界 $\vec{x}'_j$ 时，沿着 $\vec{v}_{dom}$ 发生突跳：$r_{i_j}(\vec{x}'_j) = \|\vec{\rho}_j\| \cdot \vec{v}_{dom}$ 且严格满足设定量级 $\|\vec{\rho}_j\| = \rho_j$。
+- 系统在 $\vec{x}'_j$ 处的拟合偏差同样被强制指任为向着同一致命维度的常量偏移：$\vec{\Phi}(\vec{x}'_j) = r_{i_j}(\vec{x}'_j) + \varepsilon_{i_j} \cdot \vec{v}_{dom}$。
 
-$$\Phi_j(y) \;\triangleq\; L_j(y + \delta_j) + \varepsilon_{i_j}$$
+**3. 路由断裂平移向量的同向化**：
+强制 $\sigma$ 的路由边界在空间中与 $\vec{v}_{dom}$ 正交，使得沿 $\vec{v}_{dom}$ 稍作移动就会跨域并触发不同的激活链。设定跨越边界后的激活链除了继承 $D\Phi_j$ 的线性部分外，在输出空间中相比于理想链恰好产生一个平行于 $\vec{v}_{dom}$ 的绝对平移代价：
+- 因实际轨道越界而引入的平移抛离：$\Delta^{err}_j \cdot \vec{v}_{dom}$
+- 因采样点越界而引入的平移抛离：$\Delta^{sam}_j \cdot \vec{v}_{dom}$
 
-则：$\mathrm{Lip}(\Phi_j) = L_j$（精确）；在采样点 $x'_j = -\delta_j$ 处：
+**4. 多维三角不等式的标量级联退化**：
+合并此时系统中发生的真实位移（利用一阶近似，或直接假设映射沿该方向全局保真）：
+$$ \vec{h}_j = \vec{\Phi}(\vec{h}_{j-1}) = \underbrace{D\Phi_j(\vec{e}_{j-1})}_{L_j \cdot \|\vec{e}_{j-1}\| \vec{v}_{dom}} + \underbrace{\Delta^{err}_j \vec{v}_{dom}}_{\text{路由偏轨向量}} + \underbrace{D\Phi_j(\vec{\delta}_j)}_{L_j \cdot \delta_j \vec{v}_{dom}} + \underbrace{\Delta^{sam}_j \vec{v}_{dom}}_{\text{采样失配向量}} + \underbrace{\varepsilon_{i_j} \vec{v}_{dom}}_{\text{拟合偏差向量}} + \underbrace{\rho_j \vec{v}_{dom}}_{\text{目标跳变向量}} $$
 
-$$d\bigl(\Phi_j(x'_j),\, r_{i_j}(x'_j)\bigr) = |L_j \cdot 0 + \varepsilon_{i_j} - 0| = \varepsilon_{i_j}$$
+六个高维物理分量因全部属于同一个一维特征子空间 $\mathrm{span}(\vec{v}_{dom})$，且系数全部为正。当我们对等式两边取空间范数时，多维空间的三角不等式 $\|\vec{A} + \vec{B}\| \le \|\vec{A}\| + \|\vec{B}\|$ 发生了**严格的共线退化（Collinear Equality）**：
+$$ e_j = \|\vec{h}_j\| = L_j e_{j-1} + L_j \delta_j + \Delta_j^{err} + \Delta_j^{sam} + \varepsilon_{i_j} + \rho_j $$
+（结合 $\Delta_{\sigma,j} = \Delta_j^{err} + \Delta_j^{sam}$）。
+在后续的链式迭代中，每一步我们都精心挑选坐标架使其对齐当时的主本征方向。整个多维动力学宏观误差精确等于各步一维标量上限的级联求和：
+$$e_l = \|\vec{h}_l\| = \sum_{j=1}^{l} (\varepsilon_{i_j} + \rho_j + \Delta_{\sigma,j}) \cdot \Theta_{j+1,l} \;+\; \sum_{j=1}^{l} \delta_j \cdot \Theta_{j,l}$$
+这证明了高维空间抽象下界限亦不可改善。$\square$
 
-单步近似误差精确等于给定的 $\varepsilon_{i_j} \geq 0$。
+**直观示例（$\mathbb{R}^n$ 主雅可比矩阵对齐崩溃）**：
+上述泛函抽象在实用的 $\mathbb{R}^n$ 矩阵动力学中极其常见。假设在第 $j$ 步，理想点位于原点，系统在该处的雅可比矩阵 $J$ 是一个对角阵，其主特征值为 $\lambda_1 = L_j \gg 1$ 位于第一个轴 $\vec{e}_1$，而其他维度的收缩率远小于 $1$。
 
-**误差递推**：对第 $j$ 步套用主定理的三项拆分，取 $x'_j = -\delta_j$（采样域唯一点，$d(h^*_{j-1}, x'_j) = \delta_j$）：
-
-$$e_j = d\bigl(\Phi_j(h_{j-1}),\, r_{i_j}(h^*_{j-1})\bigr) = \bigl|\Phi_j(h_{j-1}) - 0\bigr| = \Phi_j(h_{j-1})$$
-
-其中第二个等号来自 $r_{i_j} \equiv 0$，第三个等号是因为 $\Phi_j(h_{j-1}) \geq 0$——这由以下各项的非负性保证：
-- $h_0 = 0$，归纳假设 $h_{j-1} = e_{j-1} \geq 0$；
-- $\Phi_j(y) = L_j(y + \delta_j) + \varepsilon_{i_j}$，其中 $L_j > 0$，$\delta_j \geq 0$，$\varepsilon_{i_j} \geq 0$；
-- 归纳可知 $h_{j-1} + \delta_j \geq 0$（因 $h_{j-1} \geq 0$，$\delta_j \geq 0$），故 $\Phi_j(h_{j-1}) \geq 0$，即 $e_j = h_j \geq 0$。
-
-由 $h^*_j = 0$，误差 $e_j = |h_j - 0| = h_j$，展开 $\Phi_j$ 得递推：
-
-$$e_j = \Phi_j(h_{j-1}) = L_j(h_{j-1} + \delta_j) + \varepsilon_{i_j} = L_j e_{j-1} + L_j\delta_j + \varepsilon_{i_j}$$
-
-对照三项拆分的各项界限，此处**三项均精确取等**（非不等式）：
-- 第一项：$d(\Phi_j(h_{j-1}),\, \Phi_j(h^*_{j-1})) = L_j|h_{j-1} - 0| = L_j e_{j-1}$（$\Phi_j$ 的 Lipschitz 常数精确为 $L_j$）；
-- 第二项：$d(\Phi_j(h^*_{j-1}),\, \Phi_j(x'_j)) = L_j|0 - (-\delta_j)| = L_j\delta_j$（同上）；
-- 第三项：$d(\Phi_j(x'_j),\, r_{i_j}(x'_j)) = |L_j \cdot 0 + \varepsilon_{i_j} - 0| = \varepsilon_{i_j}$（精确）。
-
-三项同号（均 $\geq 0$），无任何抵消，等号逐步成立。展开递推精确得：
-
-$$e_l = \sum_{j=1}^{l} (\varepsilon_{i_j} + L_j\delta_j)\cdot \Theta_{j+1,l} = \sum_{j=1}^{l} \varepsilon_{i_j} \Theta_{j+1,l} + \sum_{j=1}^{l} \delta_j \Theta_{j,l}$$
-
-与精细界完全吻合。$\square$
+如果系统的微观不确定性（即偏差源）是各向同性（无偏）的，那么大概率只有一小部分投影会落在 $\vec{e}_1$ 轴上被放大。但**在最坏情况下**：
+前序传来的误差大头恰好倒向了 $\vec{e}_1$（ $\vec{h}_{j-1} \approx e_{j-1}\vec{e}_1$ ）；数据采样的盲区刚好分布在 $\vec{e}_1$ 方向（ $\vec{\delta}_j = \delta_j\vec{e}_1$ ）；并且在 $\vec{e}_1$ 正向上存在一个决策分类超平面（目标发生跃变的边界），在此处路由网络 $\sigma$ 为了迎合突跃而强行调用了一个包含常数跳变偏置项的专家网络（引发 $\vec{\rho}$ 与 $\vec{\Delta}_\sigma$ 的双重同向爆裂）。
+此时，所有矩阵与向量乘法退化为了标量的标位累加。系统高耸的 Lipschitz 上限在这一维上被“吃干抹净”，彻底将五股破坏力量按最大化指数累加上去。这就是**在结构特征明显的复杂非线性动力学系统中，理论上看似极低概率的灾难性上界在物理现实常被触发的拓扑宿命**。
 
 确立了 CAC 界的紧性后，接下来从中提取几个关键的操作性推论——将代数上界转化为对链深、收敛性等工程参数的显式约束。
 
@@ -167,15 +206,15 @@ $$e_l = \sum_{j=1}^{l} (\varepsilon_{i_j} + L_j\delta_j)\cdot \Theta_{j+1,l} = \
 
 记 $L_{max} \triangleq \sup_j L_j$（即 §1.2 路径 Lipschitz 常数的上确界，由系统要求 $L_j \leq L$，恒有 $L_{max} \leq L$）。利用 $\Gamma_l \leq L_{max}\,\Lambda_l$，确保 $\varepsilon^*_q \leq \tau$ 的充分条件合并为：
 
-$$(\varepsilon_{\max} + L_{max}\,\delta_{\max})\cdot\Lambda_l \;\leq\; \tau$$
+$$(\varepsilon_{\max} + \rho_{max} + \Delta_{\max} + L_{max}\,\delta_{\max})\cdot\Lambda_l \;\leq\; \tau$$
 
 再利用 $\Lambda_l \leq \dfrac{L_{max}^l - 1}{L_{max} - 1}$，对 $L_{max} > 1$ 显式求解，给出**保底可靠链深**：
 
-$$l^* \;=\; \left\lfloor \frac{\log\!\left(1 + \dfrac{\tau(L_{max}-1)}{\varepsilon_{\max} + L_{max}\,\delta_{\max}}\right)}{\log L_{max}} \right\rfloor$$
+$$l^* \;=\; \left\lfloor \frac{\log\!\left(1 + \dfrac{\tau(L_{max}-1)}{\varepsilon_{\max} + \rho_{max} + \Delta_{\max} + L_{max}\,\delta_{\max}}\right)}{\log L_{max}} \right\rfloor$$
 
 即：任意长度 $\leq l^*$ 的链均保证 $e_l \leq \tau$。
 
-$L_{max} = 1$ 时退化为线性：$l^* = \lfloor \tau/(\varepsilon_{\max}+\delta_{\max}) \rfloor$。
+$L_{max} = 1$ 时退化为线性：$l^* = \lfloor \tau/(\varepsilon_{\max} + \rho_{\max} + \Delta_{\max} + \delta_{\max}) \rfloor$。
 
 **证明**：
 
@@ -189,23 +228,23 @@ $$\varepsilon_{\max}\,\Lambda_l + \delta_{\max}\,\Gamma_l \;\leq\; \varepsilon_{
 
 **第二步（约束 $\Lambda_l$）**：上式等价于：
 
-$$\Lambda_l \;\leq\; \frac{\tau}{\varepsilon_{\max} + L_{max}\,\delta_{\max}}$$
+$$\Lambda_l \;\leq\; \frac{\tau}{\varepsilon_{\max} + \rho_{\max} + \Delta_{\max} + L_{max}\,\delta_{\max}}$$
 
 **第三步（对 $l$ 求解显式下界）**：由 $\Theta_{j+1,l} \leq L_{max}^{l-j}$，故：
 
 $$\Lambda_l = \sum_{j=1}^l \Theta_{j+1,l} \;\leq\; \sum_{j=1}^l L_{max}^{l-j} = \frac{L_{max}^l - 1}{L_{max} - 1} \qquad (L_{max} > 1)$$
 
-要使 $(L_{max}^l-1)/(L_{max}-1) \leq \tau/(\varepsilon_{\max}+L_{max}\delta_{\max})$，即 $L_{max}^l \leq 1 + \tau(L_{max}-1)/(\varepsilon_{\max}+L_{max}\delta_{\max})$，取对数解 $l$ 的最大整数：
+要使 $(L_{max}^l-1)/(L_{max}-1) \leq \tau/(\varepsilon_{\max}+\rho_{\max}+\Delta_{\max}+L_{max}\delta_{\max})$，取对数解 $l$ 的最大整数：
 
-$$l^* = \left\lfloor \frac{\log\!\left(1 + \dfrac{\tau(L_{max}-1)}{\varepsilon_{\max} + L_{max}\,\delta_{\max}}\right)}{\log L_{max}} \right\rfloor$$
+$$l^* = \left\lfloor \frac{\log\!\left(1 + \dfrac{\tau(L_{max}-1)}{\varepsilon_{\max} + \rho_{\max} + \Delta_{\max} + L_{max}\,\delta_{\max}}\right)}{\log L_{max}} \right\rfloor$$
 
-由构造，任意长度 $\leq l^*$ 的链均满足 $(\varepsilon_{\max}+L_{max}\delta_{\max})\Lambda_l \leq \tau$，进而由 CAC 定理保证 $e_l \leq \tau$。$\square$
+由构造，任意长度 $\leq l^*$ 的链均满足 $(\varepsilon_{\max}+\rho_{\max}+\Delta_{\max}+L_{max}\delta_{\max})\Lambda_l \leq \tau$，进而由 CAC 定理保证 $e_l \leq \tau$。$\square$
 
-> **注**：$l^*$ 仅依赖三个标量 $\varepsilon_{\max}$、$\delta_{\max}$、$L_{max}$，先验可计算。分母 $\varepsilon_{\max} + L_{max}\,\delta_{\max}$ 即**有效单步误差**（近似误差与放大一次的采样域偏离代价之和，呼应 CAC 主定理形式B）。$L_{max}$ 取路径局部最大而非全局 $L$，结合保守的 $\Lambda_l$ 上界，$l^*$ 通常是悲观估计。
+> **注**：$l^*$ 仅依赖单步边界值，先验可计算。分母 $\varepsilon_{\max} + \rho_{\max} + \Delta_{\max} + L_{max}\,\delta_{\max}$ 即**有效单步误差**（近似误差、目标变分、路由跳变代价与放大一次的采样域偏离代价之和，呼应 CAC 主定理形式 B）。$L_{max}$ 取路径局部最大而非全局 $L$，结合保守的 $\Lambda_l$ 上界，$l^*$ 通常是悲观估计。
 
 **推论 4a（路径感知安全深度，Path-Aware Safe Depth）**：若已知具体路径的几何均值 $\bar{L}$（§1.2），则对 $\bar{L} > 1$，安全深度可收紧为：
 
-$$l^*_{\bar{L}} \;=\; \left\lfloor \frac{\log\!\left(1 + \dfrac{\tau(\bar{L}-1)}{\varepsilon_{\max} + \bar{L}\,\delta_{\max}}\right)}{\log \bar{L}} \right\rfloor$$
+$$l^*_{\bar{L}} \;=\; \left\lfloor \frac{\log\!\left(1 + \dfrac{\tau(\bar{L}-1)}{\varepsilon_{\max} + \rho_{\max} + \Delta_{\max} + \bar{L}\,\delta_{\max}}\right)}{\log \bar{L}} \right\rfloor$$
 
 由 $\bar{L} \leq L_{max}$（均值 $\leq$ 极值），恒有 $l^*_{\bar{L}} \geq l^*$。当路径中大量收缩步将几何均值拉低到远小于 $L_{max}$ 时（即 $\kappa_\Phi \gg 1$ 的高异质路径），$l^*_{\bar{L}} \gg l^*$——系统实际可安全走的深度远超保守估计。$\bar{L} < 1$ 时安全深度不受限（对应推论 5 的饱和态）。
 
@@ -216,7 +255,7 @@ $$\Lambda_\infty \;\triangleq\; \sum_{j=1}^{\infty} \Theta_{j+1,\infty} \;<\; \i
 
 则不论微观集 $\mathcal{S}$ 生成的有效链集 $\mathcal{T}_\infty$ 有多庞大（甚至包含无限长链极限），其诱导的整个**宏观容差集 $\mathcal{E}^*$ 必然是一致有界的**（Uniformly Bounded）：对任意长链 $q \in \mathcal{T}_\infty$，
 
-$$\varepsilon^*_q \;\leq\; \varepsilon_{\max} \cdot \Lambda_\infty \;+\; \delta_{\max} \cdot \Gamma_\infty \;<\; \infty$$
+$$\varepsilon^*_q \;\leq\; (\varepsilon_{\max} + \rho_{\max} + \Delta_{\max}) \cdot \Lambda_\infty \;+\; \delta_{\max} \cdot \Gamma_\infty \;<\; \infty$$
 
 即：在强收缩下，由有限微观容差（$\mathcal{E}$）爆发出的无限组合宏观误差（$\mathcal{E}^*$）被强制封顶。系统展现出对任意长逻辑组合的"无限泛化免疫力"。
 
@@ -224,15 +263,15 @@ $$\varepsilon^*_q \;\leq\; \varepsilon_{\max} \cdot \Lambda_\infty \;+\; \delta_
 
 **证明**：由 CAC 定理精细界（形式 A）：
 
-$$e_l \;\leq\; \varepsilon_{\max}\cdot\Lambda_l \;+\; \delta_{\max}\cdot\Gamma_l$$
+$$e_l \;\leq\; (\varepsilon_{\max} + \rho_{\max} + \Delta_{\max})\cdot\Lambda_l \;+\; \delta_{\max}\cdot\Gamma_l$$
 
-由 $\Lambda_l \nearrow \Lambda_\infty$ 和 $\Gamma_l \nearrow \Gamma_\infty$（两个级数均单调递增趋向各自极限），故 $e_l \leq \varepsilon_{\max}\cdot\Lambda_\infty + \delta_{\max}\cdot\Gamma_\infty$。$\square$
+由 $\Lambda_l \nearrow \Lambda_\infty$ 和 $\Gamma_l \nearrow \Gamma_\infty$（两个级数均单调递增趋向各自极限），故 $e_l \leq (\varepsilon_{\max} + \rho_{\max} + \Delta_{\max})\cdot\Lambda_\infty + \delta_{\max}\cdot\Gamma_\infty$。$\square$
 
 > **注（允许局部扩张；$\Gamma_\infty$ 与 $\Lambda_\infty$ 同阶）**：推论 5 不要求 $L_j < 1$ 逐步成立——即使某些步存在 $L_j > 1$（局部扩张），只要后续有足够强的收缩步将尾部乘积压平，$\Lambda_\infty$ 仍然有限。此外，由 $\Gamma_\infty = \sum_j L_j \Theta_{j+1,\infty} \leq L_{max} \cdot \Lambda_\infty$，而 §1.2 系统要求保证 $L_j \leq L < \infty$ 恒成立（即 $L_{max} \leq L$ 自动有界），故 $\Lambda_\infty < \infty$ 自动蕴含 $\Gamma_\infty < \infty$，条件可合并为单一的 $\Lambda_\infty < \infty$。
 
 **路径均值特例（$\bar{L} < 1$）**：收缩饱和**不要求**全局 $L < 1$——即使系统在某些步具有 $L_j > 1$（局部扩张），只要路径的几何均值 $\bar{L} < 1$（§1.2），尾积便以指数速率衰减，保证 $\Lambda_\infty < \infty$。此时饱和界为：
 
-$$e_l \;\leq\; \frac{\varepsilon_{\max} + \bar{L}\,\delta_{\max}}{1 - \bar{L}}$$
+$$e_l \;\leq\; \frac{\varepsilon_{\max} + \rho_{\max} + \Delta_{\max} + \bar{L}\,\delta_{\max}}{1 - \bar{L}}$$
 
 这比全局 $L < 1$ 的要求宽松得多——系统允许存在局部的剧烈拉伸，只要在整条路径的统计平均意义上呈现净收缩即可。
 
@@ -242,9 +281,9 @@ $$\Lambda_\infty \leq \frac{1}{1-L}, \qquad \Gamma_\infty \leq \frac{L}{1-L}$$
 
 退化为保守界：
 
-$$e_l \;\leq\; \frac{\varepsilon_{\max} + L\,\delta_{\max}}{1-L}$$
+$$e_l \;\leq\; \frac{\varepsilon_{\max} + \rho_{\max} + \Delta_{\max} + L\,\delta_{\max}}{1-L}$$
 
-分子即**有效单步误差**（呼应形式B），分母为收缩余量 $(1-L)$。注意路径均值特例严格弱于此条件：$\bar{L} < 1$ 允许存在 $L > 1$ 的系统，只要路径平均收缩即可饱和。
+分子即**有效单步误差**（呼应形式 B），分母为收缩余量 $(1-L)$。注意路径均值特例严格弱于此条件：$\bar{L} < 1$ 允许存在 $L > 1$ 的系统，只要路径平均收缩即可饱和。
 
 ---
 
@@ -254,11 +293,11 @@ $$e_l \;\leq\; \frac{\varepsilon_{\max} + L\,\delta_{\max}}{1-L}$$
 
 因此，根据 CAC 定理，系统必定能以由 $\mathcal{E}_0$ 跃迁出的**宏观容差** $\varepsilon^*_{q_i} \in \mathcal{E}^*_0$ 覆盖拟合这个未曾见过的复杂规则 $r_i$。即 $r_i$ 的泛化误差边界被严格锚定为：
 
-$$\sup_{x \in \mathcal{X}(r_{i_1})} d\bigl(\Phi^{d_i}(x),\, r_i(x)\bigr) \;\leq\; \varepsilon^*_{q_i} \;=\; \varepsilon_0 \cdot \Lambda_{d_i}^{\mathrm{path}} \;+\; \delta_{\max}^{\mathrm{path}} \cdot \Gamma_{d_i}^{\mathrm{path}}$$
+$$\sup_{x \in \mathcal{X}(r_{i_1})} d\bigl(\Phi^{d_i}(x),\, r_i(x)\bigr) \;\leq\; \varepsilon^*_{q_i} \;=\; \bigl(\varepsilon_0 + \rho_{\max,i}^{\mathrm{path}} + \Delta_{\max,i}^{\mathrm{path}}\bigr) \cdot \Lambda_{d_i}^{\mathrm{path}} \;+\; \delta_{\max,i}^{\mathrm{path}} \cdot \Gamma_{d_i}^{\mathrm{path}}$$
 
 取所有 $r_i \in R \setminus R_0$ 的上确界：
 
-$$\varepsilon_{\max}^R \;\leq\; \max_{r_i \in R \setminus R_0} \Bigl(\varepsilon_0 \cdot \Lambda_{d_i}^{\mathrm{path}} + \delta_{\max}^{\mathrm{path}} \cdot \Gamma_{d_i}^{\mathrm{path}}\Bigr)$$
+$$\varepsilon_{\max}^R \;\leq\; \max_{r_i \in R \setminus R_0} \Bigl(\bigl(\varepsilon_0 + \rho_{\max,i}^{\mathrm{path}} + \Delta_{\max,i}^{\mathrm{path}}\bigr) \cdot \Lambda_{d_i}^{\mathrm{path}} + \delta_{\max,i}^{\mathrm{path}} \cdot \Gamma_{d_i}^{\mathrm{path}}\Bigr)$$
 
 **证明**：情形 1（$r \in R_0$）直接由假设满足。情形 2（$r_i \in R \setminus R_0$）见下方证明详展。$\square$
 
@@ -267,38 +306,39 @@ $$\varepsilon_{\max}^R \;\leq\; \max_{r_i \in R \setminus R_0} \Bigl(\varepsilon
 - **$r$-链轨道**：$h_0^* = x$，$h_j^* = r_{i_j}(h_{j-1}^*)$，$h_{d_i}^* = r_i(x)$
 - **$\Phi$-轨道**：$\hat{h}_0 = x$，$\hat{h}_j = \Phi(\hat{h}_{j-1})$
 
-$e_j = d(\hat{h}_j,\, h_j^*)$，$e_0 = 0$。对第 $j$ 步，取 $x'_j \in \mathcal{X}(r_{i_j})$ 为距 $h^*_{j-1}$ 最近的采样域点（$d(h^*_{j-1}, x'_j) = \delta_j^{\mathrm{path}}$），套用 CAC 主定理的三项拆分：
+$e_j = d(\hat{h}_j,\, h_j^*)$，$e_0 = 0$。对第 $j$ 步，取 $x'_j \in \mathcal{X}(r_{i_j})$ 为距 $h^*_{j-1}$ 最近的采样域点（$d(h^*_{j-1}, x'_j) = \delta_j^{\mathrm{path}}$），套用 CAC 主定理的五项拆分级联即可：
 
-$$e_j \;\leq\; \underbrace{d\bigl(\Phi(\hat{h}_{j-1}),\, \Phi(h^*_{j-1})\bigr)}_{\leq\, L_j e_{j-1}} + \underbrace{d\bigl(\Phi(h^*_{j-1}),\, \Phi(x'_j)\bigr)}_{\leq\, L_j \delta_j^{\mathrm{path}}} + \underbrace{d\bigl(\Phi(x'_j),\, r_{i_j}(x'_j)\bigr)}_{\leq\, \varepsilon_0}$$
+$$e_j \;\leq\; L_j e_{j-1} \;+\; L_j \delta^{\mathrm{path}}_j \;+\; \Delta_{\sigma,j}^{\mathrm{path}} \;+\; \varepsilon_0 \;+\; \rho_j^{\mathrm{path}}$$
 
-递推展开得 $e_{d_i} \leq \varepsilon_0 \cdot \Lambda_{d_i}^{\mathrm{path}} + \delta_{\max}^{\mathrm{path}} \cdot \Gamma_{d_i}^{\mathrm{path}}$。对 $x$ 取上确界即得。$\square$
+递推展开得 $e_{d_i} \leq \bigl(\varepsilon_0 + \rho_{\max,i}^{\mathrm{path}} + \Delta_{\max,i}^{\mathrm{path}}\bigr) \cdot \Lambda_{d_i}^{\mathrm{path}} + \delta_{\max,i}^{\mathrm{path}} \cdot \Gamma_{d_i}^{\mathrm{path}}$。对 $x$ 取上确界即得。$\square$
 
-**含义（剖面策略）**：分解路径同时影响两个正交方向：$\Lambda_{d_i}^{\mathrm{path}}$ 由路径 Lipschitz 结构决定（近似误差放大），$\delta_{\max,i}^{\mathrm{path}} \cdot \Gamma_{d_i}^{\mathrm{path}}$ 由路径的域覆盖质量决定（采样域偏离代价）。两者之间通常存在取舍：路径越长，中间态被更细粒度的规则覆盖，$\delta$ 可能越小，但 $\Lambda$ 和 $\Gamma$ 往往同步增大。选择分解时须在两个方向上联合优化。
+**含义（剖面策略）**：分解路径同时受到两套正交因子的约束：$\Lambda_{d_i}^{\mathrm{path}}$ 由路径 Lipschitz 结构决定（有效单步误差的级联放大）；$\delta_{\max,i}^{\mathrm{path}} \cdot \Gamma_{d_i}^{\mathrm{path}}$ 由路径的域覆盖质量决定（采样域偏离代价的独立放大）；同时，选择的路径还会切分目标自身的难度（决定 $\rho$）和系统经过该路径时的拓扑稳定性（决定 $\Delta_\sigma$）。
+这里存在极其深刻的取舍：路径切得越碎（$d_i$ 很大），单步的目标可能越平缓导致 $\rho$ 和 $\varepsilon_0$ 减小，但 $\Lambda$ 往往随深度指数爆炸，且经过碎片的路由时大 $\Delta_\sigma$ 爆发的概率剧增。选择分解时须在这多维张力下联合优化。
 
 **定义（组合覆盖代价，Compositional Coverage Cost）**：给定生成基 $R_0$，定义 $R$ 在 $R_0$ 下的 **（一般）组合覆盖代价**为：
 
-$$\mathcal{C}^{\mathrm{gen}}(R, R_0) \;\triangleq\; |R_0| \;\times\; \max_{r_i \in R \setminus R_0} \Bigl(\varepsilon_0 \cdot \Lambda_{d_i}^{\mathrm{path}} \;+\; \delta_{\max,i}^{\mathrm{path}} \cdot \Gamma_{d_i}^{\mathrm{path}}\Bigr)$$
+$$\mathcal{C}^{\mathrm{gen}}(R, R_0) \;\triangleq\; |R_0| \;\times\; \max_{r_i \in R \setminus R_0} \Bigl(\bigl(\varepsilon_0 + \rho_{\max,i}^{\mathrm{path}} + \Delta_{\max,i}^{\mathrm{path}}\bigr) \cdot \Lambda_{d_i}^{\mathrm{path}} \;+\; \delta_{\max,i}^{\mathrm{path}} \cdot \Gamma_{d_i}^{\mathrm{path}}\Bigr)$$
 
 其中两个因子各有明确含义：
 
 - $|R_0|$：**直接拟合宽度**，即 $\Phi$ 须直接近似的基规则数量，决定采样对构造的规模代价；
-- $\max_{r_i}(\cdots)$：**最坏派生误差**，即在所有非基规则中，通过分解路径传播后误差最大的那条——同时含近似误差放大项（$\varepsilon_0 \cdot \Lambda$）和采样域偏离代价项（$\delta_{\max,i} \cdot \Gamma$）。
+- $\max_{r_i}(\cdots)$：**最坏派生误差**，即在所有非基规则中，通过分解路径传播后误差最大的那条——同时含有效局部失配的放大项（$(\varepsilon_0+\rho+\Delta_\sigma) \cdot \Lambda$）和采样域偏离代价项（$\delta \cdot \Gamma$）。
 
-两者的乘积刻画了一种**覆盖效率的权衡**：$|R_0|$ 越大，直接近似的规则越多，采样对构造代价越高，但每条分解路径可以更短（$d_i$ 更小），从而 $\Lambda$、$\Gamma$ 更小、$\delta$ 更容易控制；$|R_0|$ 越小则反之，派生路径更长，误差传播放大与中间态偏离均趋于增大。$\mathcal{C}^{\mathrm{gen}}$ 的最小化即在这两者间寻找最优的生成基大小与路径质量的平衡点。
+两者的乘积刻画了一种**覆盖效率的权衡**：$|R_0|$ 越大，直接近似的规则越多，采样对构造代价越高，但每条分解路径可以更短（$d_i$ 更小），从而 $\Lambda$ 更小、$\Delta_\sigma$ 触发几率更低；$|R_0|$ 越小则反之，派生路径更长，拓扑断裂代价与偏离代价均趋于爆炸。$\mathcal{C}^{\mathrm{gen}}$ 的最小化即在这两者间寻找最优的生成基大小与路径质量的平衡点。
 
-> **理论基准（域链相容，$\delta = 0$）**：若所有分解路径满足**域链相容**（每步 $h^*_{j-1} \in \mathcal{X}(r_{i_j})$），则 $\delta_{\max,i}^{\mathrm{path}} = 0$，$\Gamma$ 项消失，代价退化为：
+> **理论基准（全纯相容，Holomorphic Compatibility）**：若所有分解路径不仅满足**域链相容**（$\delta_{\max,i}^{\mathrm{path}} = 0$），还满足**拓扑相容**（$\Delta_{\max,i}^{\mathrm{path}} = 0$）与**目标正则**（$\rho_{\max,i}^{\mathrm{path}} = 0$），则代价退化为最纯粹的代数形式：
 >
-> $$\mathcal{C}(R, R_0) \;\triangleq\; |R_0| \;\times\; \max_{r_i \in R \setminus R_0} \Lambda_{d_i}^{\mathrm{path}}$$
+> $$\mathcal{C}(R, R_0) \;\triangleq\; |R_0| \;\times\; \max_{r_i \in R \setminus R_0} \varepsilon_0 \cdot \Lambda_{d_i}^{\mathrm{path}}$$
 >
-> 此时 $\varepsilon_0$ 可提出，代价仅由误差放大系数 $\Lambda$ 决定，先验可计算。域链相容在现实中极难精确满足——训练采样域通常不覆盖链式组合的所有中间态——但作为**理论下界**（$\delta$ 可压缩至零时的最优情形），提供一个可量化的乐观基准。在域链相容下进一步取 $\Phi \in \mathrm{Lip}_L$，记 $d_{\max} = \max_i d_i$，保守界退化为：
+> 此时代价仅由系统拟合底线 $\varepsilon_0$ 和拉伸系数 $\Lambda$ 决定。全纯相容在现实中极难精确满足（零偏离、零跳跃、零断裂），但作为**理论极值下界**，提供一个可量化的乐观基准。在全纯相容下进一步取 $\Phi \in \mathrm{Lip}_L$，记 $d_{\max} = \max_i d_i$，保守界退化为：
 >
 > $$\varepsilon_{\max}^R \;\leq\; \varepsilon_0 \cdot \frac{L^{d_{\max}} - 1}{L - 1}$$
 
-**推论 6a（精度理论下界，Theoretical Precision Floor）**：设 $\Phi$ 对所有 $r_0 \in R_0$ 实现局部精度 $\varepsilon_0$，且分解路径满足域链相容（$\delta=0$，即理论基准条件）。则任意生成基 $R_0$ 对应的覆盖精度不优于：
+**推论 6a（精度理论下界，Theoretical Precision Floor）**：设 $\Phi$ 对所有 $r_0 \in R_0$ 实现局部精度 $\varepsilon_0$，且分解路径满足上述全纯相容（即理论基准条件）。则任意生成基 $R_0$ 对应的覆盖精度不优于：
 
 $$\varepsilon^* \;=\; \varepsilon_0 \cdot \min_{R_0 \;\text{生成}\; R}\; \max_{r_i \in R \setminus R_0} \Lambda_{d_i}^{\mathrm{path}}(R_0)$$
 
-即 $\varepsilon^*$ 是在域链相容理想化条件下，遍历所有生成基选择后的**最优精度下界**。在现实场景（$\delta > 0$）中，实际覆盖精度总满足 $\varepsilon_{\mathrm{actual}} \geq \varepsilon^*$，$\varepsilon^*$ 一般不可达，仅作为理论参照。
+即 $\varepsilon^*$ 是在全纯相容理想化条件下，遍历所有生成基选择后的**最优精度下界**。在现实场景（含有 $\delta, \rho, \Delta_\sigma$）中，实际覆盖精度总满足 $\varepsilon_{\mathrm{actual}} \geq \varepsilon^*$，$\varepsilon^*$ 一般不可达，仅作为理论参照。
 
 **证明**：直接由推论 6 的域链相容特例，对所有可行的 $R_0$ 取最优（最小化误差放大因子）即得。$\square$
 
@@ -318,7 +358,7 @@ $$\mathbb{E}\!\left[\left\|\sum_j v_j\right\|^p\right] \;\leq\; T_p^p \cdot \sum
 
 其中 $T_p$ 为空间的 type 常数。$p = 1$ 对应一般度量空间（无对消），$p = 2$ 对应希尔伯特空间（完全正交对消）。
 
-**定义（有效相关长度 $\tau_c$）**：设系统在第 $j$ 步的微观逼近误差（在切空间局部展开）为随机向量 $\epsilon_j$，$\mathbb{F}_{j-1}$ 为系统前 $j-1$ 步演化生成的历史完备信息（$\sigma$-代数）。定义**有效相关长度** $\tau_c \geq 1$ 为使得 $|i - j| > \tau$ 时 $\epsilon_i$ 与 $\epsilon_j$ 近似独立的最小间隔。$\tau_c = 1$ 对应完全独立（鞅差序列），$\tau_c = l$ 对应完全相关。
+**定义（有效相关长度 $\tau_c$）**：设系统在第 $j$ 步的综合局部误差（含微观逼近、采样偏离、目标变分与路由跳变，在切空间局部展开）为随机向量 $\epsilon_j$，$\mathbb{F}_{j-1}$ 为系统前 $j-1$ 步演化生成的历史完备信息（$\sigma$-代数）。定义**有效相关长度** $\tau_c \geq 1$ 为使得 $|i - j| > \tau$ 时 $\epsilon_i$ 与 $\epsilon_j$ 近似独立的最小间隔。$\tau_c = 1$ 对应完全独立（鞅差序列），$\tau_c = l$ 对应完全相关。
 
 > **注**：$\tau_c = 1$ 且 $\mathbb{E}[\epsilon_j \mid \mathbb{F}_{j-1}] = 0$ 即满足鞅差序列假设（Martingale Difference Sequence，MDS）。在一般工程现实中，有限容量的拟合系统通常无法严格满足 MDS；但在纯粹的理论极限下，满足 MDS 的系统等价于在**无偏先验（Unbiased Prior）**下的**最优贝叶斯估计器（Optimal Bayesian Estimator）**，其每次外推仅受内禀信息熵的不确定性限制。
 
@@ -346,9 +386,7 @@ $$\sqrt{\mathbb{E}[\|E_l\|^2]} \;\leq\; \sqrt{ \sum_{j=1}^l \left( \Theta_{j,l} 
 
 > **注**：SIB 是统计精化界在 $(p, \tau_c)$ 参数空间中的**极端理想点**——它同时要求空间具备最强的正交对消能力（Hilbert）和误差具备最弱的时间相关性（完全独立），因此给出了最紧的渐近阶 $\mathcal{O}(\sqrt{l})$。这是动力学系统在多步迭代下泛化误差的**绝对涨落底线**。
 
-#### 推论（漂移-扩散定律，Drift-Diffusion Law）
-
-**推论**：在一般系统中，受限于微观基函数集 $F$ 的局部结构偏置以及有效采样覆盖的有限性，系统的单步误差演化通常无法自发满足严格的 MDS 假设。单步误差向量必定包含一个系统性的方向偏置（Drift）。将真实误差 $\epsilon_j$ 进行正交分解：
+**推论（漂移-扩散定律，Drift-Diffusion Law）**：在一般系统中，受限于微观基函数集 $F$ 的局部结构偏置以及有效采样覆盖的有限性，系统的单步误差演化通常无法自发满足严格的 MDS 假设。单步误差向量必定包含一个系统性的方向偏置（Drift）。将真实误差 $\epsilon_j$ 进行正交分解：
 
 $$\epsilon_j \;=\; \mu_j \;+\; \eta_j$$
 
@@ -366,3 +404,13 @@ $$Error_{total} \;\sim\; \underbrace{\mathcal{O}(l) \cdot \|\mu_{bias}\|}_{\text
 
 > **注（漂移-扩散的不对称性）**：漂移项始终以 $\mathcal{O}(l)$ 线性增长——这是确定性相干叠加的必然结果，与空间几何和时间相关性均无关。因此，包含强系统性漂移（$\mu_{bias} \neq 0$）的系统必然坠入 CAC 灾难界。空间几何参数 $p$ 和时间相关长度 $\tau_c$ **仅能改善噪声项的涨落底线**，而无法触及漂移项——后者的消除必须依赖外部的对抗或校验机制。
 
+**推论（CAC 坍缩的几何-统计等价性，Geometric-Statistical Equivalence of CAC Collapse）**：§3.1 推论 3 证明 CAC 上界绝对紧致时所依托的**同向共线拉伸（Collinear Stretching）**构造，在物理法则上完全等价于漂移-扩散定律中**系统漂移项取得统治地位的非各向同性极值形态**。
+
+**证明**：在同向共面拉伸构造中，泛化路线被剥夺了独立自由度并强行压缩于单一主特征射线上。在此极端几何拓扑下，第 $j$ 步的一切微观偏差均沿着特征方向发生严格的平移叠加，即微观误差向量呈现确定性的完全同向偏置：$\epsilon_j = \mu_j$，而代表周围维度统计对消自由度的随机涨落彻底消失，即方差 $\eta_j \equiv 0$。
+
+代入漂移-扩散方程验证：右侧第二项（随机扩散项）因 $\|\eta\| = 0$ 被绝对归零。系统的整体误差演化百分之百由左侧第一项接管：
+$$Error_{total} \;\approx\; \left\| \sum_{j=1}^l T_{j,l}(\mu_j) \right\| \;\sim\; \mathcal{O}(l) \cdot \|\mu_{bias}\|$$
+
+当误差仅由第一项构成时，所有的相干矢量投影都在同一个一维法向量标架上，使得空间累加由原本可能具备高维折叠缓冲性质的积分运算，直接退化为一维数量序列的最坏情况线性累加（代数上界）。此时，系统不留任何统计学后路地精准撞击 CAC 灾难天花板。$\square$
+
+> **注（上界的双面同构）**：这个等价性深刻揭示了：代数的 CAC 不等式与统计的 Drift-Diffusion 并非两套平行的度量，而是对同一个系统性崩溃现象的两面描述。当系统发生局部崩溃时，在代数上叫"满足了所有三角放缩的同向性"，在统计上则叫做"系统随机扩散自由度丧失导致的纯漂移积累"。

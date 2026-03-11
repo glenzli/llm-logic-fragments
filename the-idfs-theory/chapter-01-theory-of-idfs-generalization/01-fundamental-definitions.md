@@ -72,7 +72,7 @@ $\mathcal{T}_l$ 即 $R^*$ 中所有长度有界且**定义域非空**的 $r$-链
 
 $$\Phi(x) \;\triangleq\; \sigma(x)(x)$$
 
-即 $\Phi(x) = \sigma(x)(x) = (f_{i_k} \circ f_{i_{k-1}} \circ \cdots \circ f_{i_1})(x)$。
+即 $\Phi(x) = \sigma(x)(x) = (f_{i_k} \circ f_{i_{k-1}} \circ \cdots \circ f_{i_1})(x)$。$\sigma(x) \in F^*$ 本身是一个独立的映射对象（称为 $x$ 处的**激活链，Activated Chain**），可施加于**任意输入** $y$：$\sigma(x)(y)$ 表示"用 $x$ 处的路由决策所选定的 $f$-链作用于 $y$"——其中 $x$ 锁定路由选择，$y$ 可与 $x$ 不同。
 
 > **注（组合合法性与 IDFS 复合封闭性）**：由 $F \subset \Omega$ 且 $\Omega$ 在复合下构成幺半群，可直接验证：
 > 1. **$\Phi \in \Omega$**：$\sigma(x) \in F^* \subseteq \Omega$，且 $\Phi(\bot) = \sigma(\bot)(\bot) = \bot$（因每个 $f_i(\bot) = \bot$）。

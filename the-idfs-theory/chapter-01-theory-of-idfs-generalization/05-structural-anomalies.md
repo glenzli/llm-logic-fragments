@@ -12,11 +12,11 @@ $$\sup_{y \in r(\mathcal{X}_r)} d\bigl(\Phi(y),\, r^{-1}(y)\bigr)$$
 
 可以任意大（与 $\varepsilon_r$ 无约束关系）。
 
-**证明**：由 §1.3，$\varepsilon_r$ 是 $\Phi$ 在 $\mathcal{X}_r$ 上对 $r$ 的局部误差上界——该约束的成立来源是 $(r, \mathcal{X}_r) \in \mathcal{S}$。$r^{-1}$ 的作用域为 $r(\mathcal{X}_r)$；由于 $(r^{-1}, r(\mathcal{X}_r)) \notin \mathcal{S}$，§1.3 对 $\Phi$ 在 $r(\mathcal{X}_r)$ 上的行为不施加任何约束。
+**证明**：由 §1.3，$\varepsilon_r$ 是 $\Phi$ 在 $\mathcal{X}_r$ 上对 $r$ 的局部误差上界——该约束来源于 $(r, \mathcal{X}_r) \in \mathcal{S}$。$r^{-1}$ 的作用域为 $r(\mathcal{X}_r)$；由于 $(r^{-1}, r(\mathcal{X}_r)) \notin \mathcal{S}$，§1.3 对 $\Phi$ 在 $r(\mathcal{X}_r)$ 上的行为不施加任何约束。
 
-**构造**：取 $\mathcal{X} = \mathbb{R}$，$\mathcal{X}_r = [0, 1]$，$r(x) = x + D$（$D$ 足够大使两段不重叠），则 $r^{-1}(y) = y - D$，$r(\mathcal{X}_r) = [D, D+1]$。定义
-$$\Phi(x) = \begin{cases} x + D + \eta & x \in [0, 1] \\ x + C & x \in [D, D+1] \end{cases}$$
-之间光滑插值保持全局 Lipschitz。则 $\varepsilon_r = \eta$（$\eta$ 任意小），而对 $y \in [D, D+1]$：$d(\Phi(y), r^{-1}(y)) = |y + C - (y - D)| = |C + D|$，可取任意大。$\square$
+构造在一般度量空间 $(\mathcal{X}, d)$ 上进行：设 $\mathcal{X}_r$ 与 $r(\mathcal{X}_r)$ 的间距 $D = d(\mathcal{X}_r, r(\mathcal{X}_r)) > 0$（即 $r$ 将输入域"搬走"，两者不重叠）。由于 $\mathcal{S}$ 仅约束 $\Phi$ 在 $\mathcal{X}_r$ 上的行为（逼近 $r$），$\Phi$ 在 $r(\mathcal{X}_r)$ 上的行为完全自由——只需满足全局 Lipschitz 约束 $L$。当 $D > 0$ 时，$\Phi$ 在 $r(\mathcal{X}_r)$ 上的值与 $\Phi$ 在 $\mathcal{X}_r$ 上的值仅通过 Lipschitz 连续性联系，这允许 $\Phi(y)$（$y \in r(\mathcal{X}_r)$）偏离 $r^{-1}(y)$ 任意远——只要度量空间足够大以容纳目标点。因此存在满足所有采样约束且全局 $\mathrm{Lip}_L$ 的 $\Phi$，使得 $d(\Phi(y), r^{-1}(y))$ 可任意大。$\square$
+
+**示例**：取 $\mathcal{X} = \mathbb{R}$，$\mathcal{X}_r = [0, 1]$，$r(x) = x + D$（$D$ 足够大使两段不重叠），则 $r(\mathcal{X}_r) = [D, D+1]$。定义 $\Phi(x) = x + D + \eta$（$x \in [0, 1]$），$\Phi(y) = y + C$（$y \in [D, D+1]$），之间光滑插值保持全局 Lipschitz。则 $\varepsilon_r = \eta$（$\eta$ 任意小），而 $d(\Phi(y), r^{-1}(y)) = |C + D|$，可取任意大。
 
 > **注（有向性）**：命题 1 的本质是：在不引入互逆采样对的框架下，知识拟合关系在度量空间上是**有向的**——$\Phi$ 拟合 $r$ 与拟合 $r^{-1}$ 是两个独立的约束，前者不蕴含后者。
 
@@ -26,25 +26,19 @@ $$\Phi(x) = \begin{cases} x + D + \eta & x \in [0, 1] \\ x + C & x \in [D, D+1] 
 
 记正向链各步采样域偏离为 $\delta_j^{\mathrm{fwd}} \triangleq d(h^*_{j-1},\, \mathcal{X}(r_{i_j}))$，逆向链各步采样域偏离为 $\delta_j^{\mathrm{inv}} \triangleq d(\tilde{h}^*_{j-1},\, r(\mathcal{X}(r_{i_j})))$（$\tilde{h}^*$ 为逆向链的理想轨道）。
 
-则**两个方向的 $\delta$ 代价逻辑独立**：存在满足上述条件的 IDFS $(F,\sigma)$ 和 $r$，以及**同一初始输入** $x_0$，使得
+则当 $r$ **非等距**时，两个方向的 $\delta$ 累积代价**本质不对称**。设正向 Lipschitz 常数为 $K_{fwd} = \mathrm{Lip}(r)$，逆向 Lipschitz 常数为 $K_{inv} = \mathrm{Lip}(r^{-1})$（一般地 $K_{fwd} \neq 1/K_{inv}$，除非 $r$ 为 bi-Lipschitz 且线性）。则经 $n$ 步迭代后：
 
-$$\delta_1^{\mathrm{fwd}}(x_0) \;=\; 0 \qquad \text{而} \qquad \delta_1^{\mathrm{inv}}(r(x_0))$$
+- 正向链 $\delta$ 增长率：$\delta_n^{\mathrm{fwd}} \sim K_{fwd}^n$（指数增长）
+- 逆向链 $\delta$ 增长率：$\delta_n^{\mathrm{inv}} \sim K_{inv}^{-n}$（$K_{inv} > 1$ 时指数衰减）
 
-可以任意大——即使两个方向的单步近似误差均受控，$\delta$ 层面的不对称性不可消除。
+两向的 $\delta$ 累积代价的不对称比 $\delta_n^{\mathrm{fwd}} / \delta_n^{\mathrm{inv}} \sim (K_{fwd} \cdot K_{inv})^n$，当 $K_{fwd} \cdot K_{inv} > 1$（即 $r$ 非等距）时，不对称性随链长指数放大。当且仅当 $r$ 为等距映射（$K_{fwd} = K_{inv} = 1$）时，两向 $\delta$ 行为对称。
 
-**证明（构造）**：取 $\mathcal{X} = \mathbb{R}$，$\mathcal{X}(r) = [0,1]$，$r(x) = 2x+1$（扩张平移），则 $\mathcal{X}(r^{-1}) = r([0,1]) = [1,3]$，$r^{-1}(y) = (y-1)/2$。两个采样对均加入 $\mathcal{S}$，$\varepsilon$ 约束对两向均成立。
+**示例**：取 $\mathcal{X} = \mathbb{R}$，$\mathcal{X}(r) = [0,1]$，$r(x) = 2x+1$（扩张平移，$K = 2$），则 $r(\mathcal{X}(r)) = [1,3]$，$r^{-1}(y) = (y-1)/2$。取初始输入 $x_0 = 0.5$：
 
-取初始输入 $x_0 = 0.5 \in [0,1] = \mathcal{X}(r)$。
+- 正向链第二步理想中间态 $h^*_1 = r(0.5) = 2 \notin [0,1]$，$\delta_2^{\mathrm{fwd}} = d(2, [0,1]) = 1$。
+- 逆向链第二步理想中间态 $\tilde{h}^*_1 = r^{-1}(2) = 0.5 \notin [1,3]$，$\delta_2^{\mathrm{inv}} = d(0.5, [1,3]) = 0.5$。
 
-**正向链**（以 $r$ 为目标）：$h^*_0 = x_0 = 0.5 \in [0,1]$，故 $\delta_1^{\mathrm{fwd}} = d(0.5,\,[0,1]) = 0$。
-
-**逆向链**（以 $r^{-1}$ 为目标，从 $r(x_0) = 2$ 出发）：理想轨道为 $\tilde{h}^*_0 = r(x_0) = 2 \in [1,3]$，则 $\delta_1^{\mathrm{inv}} = d(2,\,[1,3]) = 0$。
-
-此时两向均为零——但现在考察**第二步**。正向链第二步的理想中间态 $h^*_1 = r(0.5) = 2$，若第二步仍用 $r$ 则 $h^*_1 = 2 \in [0,1]$？不——$h^*_1 = 2 \notin [0,1]$，所以 $\delta_2^{\mathrm{fwd}} = d(2, [0,1]) = 1$。逆向链第二步的理想中间态 $\tilde{h}^*_1 = r^{-1}(2) = 0.5$，若第二步仍用 $r^{-1}$ 则 $\tilde{h}^*_1 = 0.5 \in [1,3]$？不——$0.5 \notin [1,3]$，所以 $\delta_2^{\mathrm{inv}} = d(0.5, [1,3]) = 0.5$。
-
-两向均有偏离，但幅度不同（$1$ vs $0.5$）。更极端的不对称来自 $r$ 的**扩张率**：$r$ 将 $[0,1]$ 拉伸为 $[1,3]$（长度加倍），而 $r^{-1}$ 将 $[1,3]$ 压缩为 $[0,1]$。因此正向链的理想轨道“逃出”采样域的速度（$\delta_j^{\mathrm{fwd}}$ 的增长率）与逆向链“逃出”采样域的速度（$\delta_j^{\mathrm{inv}}$ 的增长率）由 $r$ 的局部 Lipschitz 常数决定，而 $\mathrm{Lip}(r) \neq \mathrm{Lip}(r^{-1})$（除非 $r$ 为等距映射）。
-
-特别地，若取 $r(x) = Kx + b$（$K > 1$），则经 $n$ 步正向迭代后 $\delta_n^{\mathrm{fwd}} \sim K^n$（指数增长），而逆向迭代 $\delta_n^{\mathrm{inv}} \sim K^{-n}$（指数衰减）。两向的 $\delta$ 累积代价的比值 $\sim K^{2n} \to \infty$，不对称性随链长指数放大。$\square$
+比值 $\delta^{\mathrm{fwd}} / \delta^{\mathrm{inv}} = 2 = K$。经 $n$ 步后比值 $\to K^{2n} = 4^n \to \infty$。$\square$
 
 > **注**：命题 2 表明：命题 1 的有向性来自 $\varepsilon$ 约束的有向性（采样对存在与否），命题 2 的有向性来自 $\delta$ 结构的有向性（理想轨道与采样域的几何关系）——两者独立，互不蕴含。即使通过引入互逆采样对完全消除 $\varepsilon$ 层面的不对称，$\delta$ 层面的不对称仍然存在，其根源是 $r$ 的扩张/压缩率 $\mathrm{Lip}(r)/\mathrm{Lip}(r^{-1})$ 的不对称性——这是 CAC 精细界中 $\delta \cdot \Gamma$ 项引入的不可规避的新自由度。
 
@@ -52,90 +46,78 @@ $$\delta_1^{\mathrm{fwd}}(x_0) \;=\; 0 \qquad \text{而} \qquad \delta_1^{\mathr
 
 §5.1 揭示了单步拟合的方向不对称性。本节进一步揭示：即使每个目标规则的单步拟合误差都可以任意小，**多步组合的端到端误差仍然可以被强制放大至任意大**——且此放大不是 CAC 上界的松弛，而是存在构型类使得**所有满足采样约束的 $\Phi$ 都必然遭受**的下界。
 
-**命题 3（组合误差的强制放大，Forced Composition Error Amplification）**：存在一类采样配置 $\mathcal{S}_D$（以参数 $D > 0$ 索引），使得对**任意** $\Phi \in \mathrm{Lip}_L(\mathcal{X})$，若 $\Phi$ 同时满足 $\mathcal{S}_D$ 中所有采样约束（每条误差 $\leq \varepsilon$），则存在链 $q$ 的端到端误差满足：
+**命题 3（采样域劫持，Sampling Domain Hijacking）**：设 IDFS $\mathcal{F} = (F, \sigma)$ 以容差集 $\mathcal{E}$（$\varepsilon_{max} = \max \varepsilon_i$）拟合采样集 $\mathcal{S}$。若存在两个采样对 $(r_A, \mathcal{X}(r_A)),\; (r_B, \mathcal{X}(r_B)) \in \mathcal{S}$ 满足**像域入侵条件**：
 
-$$\varepsilon^*_q \;\geq\; 2D - 2\varepsilon$$
+$$r_A(\mathcal{X}(r_A)) \;\cap\; \mathcal{X}(r_B) \;\neq\; \emptyset$$
 
-其中 $D$ 可取任意大，$\varepsilon$ 任意小。即：**所有单步误差 $\leq \varepsilon$ 的 IDFS，其链误差的下界可以不受 $\varepsilon$ 约束地无穷增长。**
+即 $r_A$ 的输出像集与 $r_B$ 的采样域存在重叠。设某条 $f$-链 $q$ 的第一步以 $r_A$ 为目标（从 $x \in \mathcal{X}(r_A)$ 出发），第二步的目标行为为 $r_{target}$。由第一步的采样约束，中间态 $h_1 = \Phi(x)$ 满足 $d(h_1, r_A(x)) \leq \varepsilon_A$。若 $h_1 \in \mathcal{X}(r_B)$（当 $r_A(\mathcal{X}(r_A)) \subseteq \mathcal{X}(r_B)$ 且 $\varepsilon_A$ 足够小时自然成立），则 $\Phi$ 在 $h_1$ 处的行为被 $r_B$ 的采样约束锁定（即 $d(\Phi(h_1), r_B(h_1)) \leq \varepsilon_B$）。
 
-**构造**：取 $\mathcal{X} = \mathbb{R}$，$D > 1$。定义两个采样对：
+定义像域入侵处的**行为差异**为：
 
-- $(r_1,\; [0, 1]) \in \mathcal{S}_D$：$r_1(x) = x + D$（向右平移 $D$），$r_1([0,1]) = [D, D+1]$
-- $(r_2,\; [D, D+1]) \in \mathcal{S}_D$：$r_2(y) = y - D$（向左平移 $D$），$r_2([D, D+1]) = [0, 1]$
+$$\Delta(y) \;\triangleq\; d(r_B(y),\; r_{target}(y)) \qquad y \in r_A(\mathcal{X}(r_A)) \cap \mathcal{X}(r_B)$$
 
-两个采样域不重叠（$[0,1] \cap [D, D+1] = \emptyset$），采样约束互不冲突。
+则链 $q$ 在第二步的端到端误差满足下界：
 
-**证明**：
+$$d(\Phi(h_1),\; r_{target}(h_1)) \;\geq\; \Delta(h_1) - \varepsilon_B$$
 
-考察链 $q = (r_1, r_1)$（两步均以 $r_1$ 为目标）。链目标为 $r_1(r_1(x)) = x + 2D$。
+**证明**：由三角不等式直接得到：
+$$d(\Phi(h_1), r_{target}(h_1)) \;\geq\; d(r_B(h_1), r_{target}(h_1)) - d(\Phi(h_1), r_B(h_1)) \;\geq\; \Delta(h_1) - \varepsilon_B$$
+第二个不等式来自 $h_1 \in \mathcal{X}(r_B)$ 时的采样约束 $d(\Phi(h_1), r_B(h_1)) \leq \varepsilon_B$。$\square$
 
-**第 1 步**：初始输入 $x \in [0, 1] = \mathcal{X}(r_1)$。由采样约束 $(r_1, [0,1])$：
+> **注（劫持机制的一般性）**：此命题揭示了 IDFS 单映射共享架构的结构性困境：**$\Phi$ 在 $\mathcal{X}(r_B)$ 上的行为被 $r_B$ 的采样约束全局锁定，但途经该区域的链路 $q$ 需要 $\Phi$ 在此处执行完全不同的行为 $r_{target}$**。行为差异 $\Delta$ 越大，劫持越严重——且 $\Delta$ 完全由采样集 $\mathcal{S}$ 的几何构型决定，与 $\varepsilon$ 无关。这不是 CAC 上界的松弛，而是**不可消除的结构性下界**。
 
-$$|h_1 - r_1(x)| = |\Phi(x) - (x + D)| \leq \varepsilon$$
+> **注（与 CAC 上界的一致性）**：劫持下界 $\Delta - \varepsilon_B$ 并不违反 CAC 定理。在劫持构型中，链 $q$ 的第 2 步理想中间态 $h^*_1 = r_A(x)$ 通常不在 $r_{target}$ 的采样域 $\mathcal{X}(r_{target})$ 内，故 CAC 中的采样域偏离 $\delta_2 = d(h^*_1, \mathcal{X}(r_{target}))$ 可以任意大——CAC 本身就已预言此类链的误差不可控。命题 3 的贡献是**证明 CAC 的 $\delta$ 项在此构型下是紧的**：$\Phi$ 在域外的行为不是"未知"，而是被 $r_B$ **锁定为确定性的错误行为**。
 
-故 $h_1 \in [x + D - \varepsilon,\; x + D + \varepsilon] \subseteq [D - \varepsilon,\; D + 1 + \varepsilon]$。
-
-当 $\varepsilon < 1$ 时，$h_1 \in [D - \varepsilon, D + 1 + \varepsilon] \subseteq [D - 1, D + 2]$，特别地 **$h_1$ 落入 $\mathcal{X}(r_2) = [D, D+1]$ 的 $\varepsilon$-邻域内**。
-
-**第 2 步**：$h_1$ 处于 $\mathcal{X}(r_2) = [D, D+1]$ 的 $\varepsilon$-邻域。由采样约束 $(r_2, [D, D+1])$，对 $y \in [D, D+1]$：
-
-$$|\Phi(y) - (y - D)| \leq \varepsilon$$
-
-取 $y^* = \mathrm{proj}_{[D, D+1]}(h_1)$（$h_1$ 在 $[D, D+1]$ 上的投影），则 $|h_1 - y^*| \leq \varepsilon$。由 Lipschitz 条件：
-
-$$|\Phi(h_1) - \Phi(y^*)| \leq L \cdot |h_1 - y^*| \leq L\varepsilon$$
-
-由三角不等式：
-
-$$|\Phi(h_1) - (h_1 - D)| \leq |\Phi(h_1) - \Phi(y^*)| + |\Phi(y^*) - (y^* - D)| + |(y^* - D) - (h_1 - D)|$$
-$$\leq L\varepsilon + \varepsilon + \varepsilon = (L + 2)\varepsilon$$
-
-因此 $h_2 = \Phi(h_1) \approx h_1 - D \approx x$（直觉上：$\Phi$ 在 $[D, D+1]$ 附近被 $r_2$ 劫持为"向左平移 $D$"）。
-
-**链误差下界**：
-
-$$\varepsilon^*_q = |h_2 - r_1(r_1(x))| = |h_2 - (x + 2D)|$$
-
-$$\geq |(h_1 - D) - (x + 2D)| - (L+2)\varepsilon$$
-
-$$= |h_1 - x - 3D| - (L+2)\varepsilon$$
-
-由第 1 步，$h_1 \in [x + D - \varepsilon, x + D + \varepsilon]$，故 $|h_1 - x - 3D| \geq 2D - \varepsilon$。因此：
-
-$$\varepsilon^*_q \;\geq\; 2D - (L + 3)\varepsilon$$
-
-对固定 $L$ 和 $\varepsilon$，令 $D \to \infty$，链误差下界 $\to \infty$。$\square$
-
-> **注（劫持机制）**：此命题的核心是**采样域劫持**（Sampling Domain Hijacking）：$r_2$ 的采样约束在 $[D, D+1]$ 上锁死了 $\Phi$ 的行为（强制"向左平移 $D$"），而链 $q = (r_1, r_1)$ 的第 1 步恰好将中间态 $h_1$ 送入 $r_2$ 的领地。$\Phi$ 在 $[D, D+1]$ 上没有自由度去为 $r_1$ 的第 2 步服务——它被一个**与当前链完全无关的**采样约束强行绑架。这是经典逼近论中不存在的现象：在 IDFS 中，$\Phi$ 是被所有采样对**全局共享的**单一映射，一个采样对在某个区域锁定的行为，会对途经该区域的**所有链路**产生不可预见的副作用。
-
-> **注（与 CAC 上界的一致性）**：命题 3 的下界 $2D - O(\varepsilon)$ **并不违反 CAC 定理**——两者完全自洽。在本构型中，链 $q = (r_1, r_1)$ 的第 2 步理想中间态 $h^*_1 = r_1(x) = x + D$，而第 2 步目标 $r_1$ 的采样域为 $\mathcal{X}(r_1) = [0,1]$，故采样域偏离 $\delta_2 = d(h^*_1, \mathcal{X}(r_1)) = x + D - 1 \geq D - 1$。CAC 上界 $\varepsilon^*_q \leq \varepsilon_{\max} \cdot \Lambda_2 + \delta_{\max} \cdot \Gamma_2$ 中的 $\delta_{\max} \geq D - 1$，因此 CAC 本身就已预言了 $\varepsilon^*_q$ 可达 $O(D)$ 量级——CAC 从未承诺此链的误差小。命题 3 的下界 $2D$ 不超过 CAC 的上界 $O(D)$，两者一致。
+> **注（劫持的高维几何本质：共振子空间拥挤）**：结合 §3.1 中揭示的"同向共面拉伸（Collinear Stretching）"现象，我们可以对域劫持给出更深层的维度解释。在高维空间中，两个随机选择的规则域碰巧发生空间重合的概率本应是测度为零的。劫持之所以在复杂泛化系统中高频发生，正是因为系统**存在主导的正交降维走廊（特征子空间）**。
 >
-> 命题 3 的真正贡献是**证明 CAC 上界中的 $\delta$ 项在此构型下是紧的（tight）**：不是无害的理论最坏情形松弛，而是**必然被触及的灾难下界**。这源自一个 CAC 未刻画的机制——"采样域劫持"：$\Phi$ 在域外的行为不是"未知"（那仅意味着可能好可能坏），而是**被另一条不相关的采样约束锁定为确定性的错误行为**。
+> 不同的逻辑任务如果在底层被路由机制 $\sigma$ 映射到了具备强形变能力的同一个特征走廊内（例如为了追求拟合效率而共享了具备高 Lipschitz 响应的"主轴"），它们在物理上就**被迫在这个低维的共振子空间内发生了强烈的拥挤与踩踏**。这种由于共享高能维度而引发的高维投影重叠，使得本应不相干的独立任务发生剧烈的结构性碰撞（$r_A$ 的像不可避免触及 $r_B$ 的域）。这从底层几何上解释了大规模系统中"任务间干扰"或"灾难性遗忘"的发生机制：它是多任务在向少数共振子空间竞争性投影时，不可避免的物理碰撞代价。
 
-**推论 1（链序的极端不对称性，Extreme Asymmetry of Chain Ordering）**：经典函数复合中交换顺序最多导致数值和性质的变化。但在 IDFS 中，交换两步推理的顺序可以导致端到端误差从可控的 $\mathcal{O}(\varepsilon)$ **质变**为灾难性的发散（且此发散由系统结构强制保证，无法规避）。
+**示例（行为差异的无穷增长）**：在一般度量空间中，$\Delta$ 可以任意大。取 $\mathcal{X} = \mathbb{R}$、$D > 1$，定义：
 
-**构造证明**：我们在命题 3 的思路上引入三个互不冲突的采样对（$\mathcal{X} = \mathbb{R}, D > 1$）：
+- $(r_1, [0, 1])$：$r_1(x) = x + D$，$r_1([0,1]) = [D, D+1]$
+- $(r_2, [D, D+1])$：$r_2(y) = y - D$，$r_2([D, D+1]) = [0, 1]$
+
+像域入侵：$r_1([0,1]) = [D, D+1] = \mathcal{X}(r_2)$，完全重合。考察链 $q = (r_1, r_1)$（两步均以 $r_1$ 为目标），链目标 $r_{target} = r_1$。
+
+行为差异：$\Delta(y) = d(r_2(y), r_1(y)) = |(y - D) - (y + D)| = 2D$。
+
+由命题 3，链误差 $\geq 2D - \varepsilon$。令 $D \to \infty$，链误差下界 $\to \infty$——**所有单步误差 $\leq \varepsilon$ 的 IDFS，其链误差的下界可以不受 $\varepsilon$ 约束地无穷增长。**
+
+进一步验证：第 1 步后 $h_1 \approx x + D \in [D-\varepsilon, D+1+\varepsilon]$，落入 $\mathcal{X}(r_2)$ 的 $\varepsilon$-邻域。取 $y^* = \mathrm{proj}_{[D,D+1]}(h_1)$，由 Lipschitz 条件和三角不等式：$d(\Phi(h_1), (h_1 - D)) \leq (L+2)\varepsilon$。故 $h_2 \approx h_1 - D \approx x$，而目标值 $r_1(r_1(x)) = x + 2D$，链误差 $\geq 2D - (L+3)\varepsilon$。$\square$
+
+**推论 1（链序的不对称劫持，Directional Asymmetry of Hijacking）**：命题 3 的像域入侵条件是**方向依赖的**——同一组规则的不同链序可以导致一个方向安全通过、另一个方向灾难性劫持。
+
+设 $(r_A, \mathcal{X}_A),\; (r_B, \mathcal{X}_B),\; (r_C, \mathcal{X}_C) \in \mathcal{S}$，满足：
+
+1. **正序安全**：$r_A(\mathcal{X}_A) \subseteq \mathcal{X}_B$，且正序链 $(r_A, r_B)$ 的第 2 步目标 $r_{target} = r_B$——$r_A$ 的输出落入 $r_B$ 的采样域，第 2 步直接被 $r_B$ 服务，行为差异 $\Delta_{fwd} = d(r_B, r_B) = 0$，无劫持。
+2. **逆序劫持**：$r_B(\mathcal{X}_B) \cap \mathcal{X}_C \neq \emptyset$，且 $\Delta_{rev}(y) \triangleq d(r_C(y), r_A(y)) \gg 0$——$r_B$ 的输出落入第三方 $r_C$ 的领地，$r_C$ 的行为与逆序链的目标 $r_A$ 严重冲突。
+
+则由命题 3 直接推得：
+
+- 正序链 $(r_A, r_B)$：$\varepsilon^*_{q_{fwd}} \leq O(\varepsilon)$
+- 逆序链 $(r_B, r_A)$：$\varepsilon^*_{q_{rev}} \geq \Delta_{rev} - \varepsilon_C$
+
+误差的**方向不对称比** $\varepsilon^*_{q_{rev}} / \varepsilon^*_{q_{fwd}}$ 可达 $\Delta_{rev} / \varepsilon \to \infty$。$\square$
+
+**示例（链序互换导致的灾难性质变）**：取 $\mathcal{X} = \mathbb{R}$、$D > 1$，三个采样对：
 
 - $(r_1, [0, 1])$：$r_1(x) = x + D$
 - $(r_2, [D, D+1])$：$r_2(y) = y + D$
 - $(r_3, [2D, 2D+1])$：$r_3(z) = z - 2D$（劫持约束）
 
-考虑同一系统 $\Phi$ 在这三个约束下的两步复合，分别考察正序链 $q_A = (r_1, r_2)$ 和逆序链 $q_B = (r_2, r_1)$。
+正序链 $q_A = (r_1, r_2)$：$x \in [0,1] \xrightarrow{r_1} h_1 \approx x+D \in \mathcal{X}(r_2) \xrightarrow{r_2} h_2 \approx x+2D$，目标 $r_2(r_1(x)) = x+2D$，误差 $\leq O(\varepsilon)$。
 
-**正序链 $q_A = (r_1, r_2)$**：在初始输入 $x \in [0,1]$ 上运行。
-第 1 步目标为 $r_1$，由采样约束 $h_1 = \Phi(x) \approx x+D$（误差 $\leq \varepsilon$）。此中间态落入 $\mathcal{X}(r_2) = [D, D+1]$ 的 $\varepsilon$-邻域。
-第 2 步目标为 $r_2$，复用命题 3 的三角不等式论证（投影 $y^* = \mathrm{proj}_{[D,D+1]}(h_1)$，$|h_1 - y^*| \leq \varepsilon$）：$|\Phi(h_1) - (h_1 + D)| \leq (L+2)\varepsilon$。
-因此 $h_2 \approx h_1 + D \approx x + 2D$，而目标值 $r_2(r_1(x)) = x+2D$。
-**正序误差 $\varepsilon^*_{q_A} \leq (L+3)\varepsilon = \mathcal{O}(\varepsilon)$**（第 1 步误差经 Lipschitz 传播 $\leq L\varepsilon$，加第 2 步近似误差 $(L+2)\varepsilon$，总计 $(2L+2)\varepsilon$；取宽松界 $(L+3)\varepsilon$）。
+逆序链 $q_B = (r_2, r_1)$：$y \in [D,D+1] \xrightarrow{r_2} h_1 \approx y+D \in \mathcal{X}(r_3)$，**劫持发生**——$r_3$ 将 $\Phi(h_1)$ 锁定为 $h_1 - 2D \approx y-D$，而目标 $r_1(r_2(y)) = y+2D$，误差 $\approx 3D \gg \varepsilon$。$\square$
 
-**逆序链 $q_B = (r_2, r_1)$**：在初始输入 $y \in [D, D+1]$ 上运行。
-第 1 步目标为 $r_2$，$h_1 \approx y+D$。此中间态落入 $[2D, 2D+1]$ 的 $\varepsilon$-邻域。
-**劫持发生**：第 2 步目标本该是 $r_1$，但 $h_1$ 落入了 $r_3$ 的地盘！系统在 $[2D, 2D+1]$ 附近的行为被强行绑架为 $z \mapsto z - 2D$。因此 $\Phi(h_1) \approx h_1 - 2D \approx y - D$。
-而真正的目标值为 $r_1(r_2(y)) = r_1(y+D) = y+2D$。
-**逆序误差**：
-$$\varepsilon^*_{q_B} = |\Phi(h_1) - (y+2D)| \approx |(y-D) - (y+2D)| = 3D \gg \varepsilon$$
+**推论 2（变分正交对邻域劫持的缓解，Mitigation of Neighborhood Hijacking via Variational Orthogonality）**：
 
-**结论**：在同一个系统中，即使各单步规则完全掌握，仅因调用顺序互换，中间态流形被送入了不相关的"第三方领地"，导致原本完美的推理链彻底崩溃。$\square$
+命题 3 中劫持灾难的硬核条件是：中间态 $h_1$ **落入** $r_B$ 的采样域 $\mathcal{X}(r_B)$ 内——此时 $\Phi(h_1)$ 被采样约束硬性锁定，与 $\sigma$ 的路由选择无关（因为无论 $\sigma$ 选择哪条 $f$-链来计算 $\Phi(h_1)$，最终输出都是唯一的，且必须满足 $d(\Phi(h_1), r_B(h_1)) \leq \varepsilon_B$）。**在采样域绝对重合的情形下，变分正交无法提供任何拯救。**
+
+但在实际系统中，命题 3 示例构造的精确重合是一个**零测度事件**。更常见的情形是：$h_1$ 落在 $\mathcal{X}(r_B)$ 的 $\varepsilon$-**邻域**中，但 $h_1 \notin \mathcal{X}(r_B)$。此时 $\Phi(h_1)$ 不直接受 $r_B$ 的采样约束控制——$\sigma$ 在 $h_1$ 处拥有**路由自由度**。劫持此时退化为**间接劫持**：由 Lipschitz 连续性，$\Phi(h_1)$ 被 $\Phi$ 在 $\mathcal{X}(r_B)$ 上的行为拉偏，拉偏幅度受限于 $L \cdot d(h_1, \mathcal{X}(r_B))$。
+
+在此间隙中，$f$-链正交性（§2.4）提供了**结构性的侧向逃逸**：若 $\sigma$ 在 $h_1$ 处选择的 $f$-链 $q_{transit}$ 与 $r_B$ 在 $\mathcal{X}(r_B)$ 上所激活的 $f$-链 $q_{local}$ **变分正交**（$\mathrm{Cov}_{var}(q_{transit}, q_{local}) = 0$），则 $q_{local}$ 为拟合 $r_B$ 而产生的局部形变，在 $q_{transit}$ 的输出方向上**不产生系统性偏移**。途经链的误差从命题 3 的 $O(\Delta)$（绝对劫持）降至 $O(L\varepsilon)$（Lipschitz 自然传播），劫持被**从灾难性降级为常规误差积累**。
+
+> **注（逃逸的条件与代价）**：侧向逃逸依赖两个前提：(i) $h_1$ 与 $\mathcal{X}(r_B)$ 之间存在非零间距（$\delta > 0$），为 $\sigma$ 的路由切分提供物理空间；(ii) $Im(\sigma)$ 中存在足够多的变分正交 $f$-链可供分配。前者由系统的单步近似精度 $\varepsilon$ 和链路的几何构型决定；后者由 $|F| = M$ 的函数集规模和路径 Lipschitz 跨度 $\kappa_\Phi$（§1.2）共同决定——$M$ 越大、$\kappa_\Phi$ 越高，$F^*$ 中可供动员的变分正交方向越多，系统在邻域间隙中实施"错峰路由"的能力越强。但当 $h_1$ 精确落入采样域（$\delta = 0$）时，逃逸空间归零，命题 3 的绝对劫持不可避免。
 
 ### 5.3 采样集扩增的非单调性
 
@@ -161,13 +143,13 @@ $$\inf_{\Phi \in \mathcal{F}(\mathcal{S}_1)} \mathrm{cost}(\Phi, T) \;\leq\; \in
 
 **模式 B：采样对追加**（$\mathcal{S} \to \mathcal{S} \cup \{(r_{new}, \mathcal{X}_{new})\}$，全新规则）——引入新的拟合目标。
 
-- $\varepsilon$ 效应（负面）：可行集收缩，与已有规则冲突不可避免（见下推论 2）。
+- $\varepsilon$ 效应（负面）：可行集收缩，与已有规则冲突不可避免（见下推论 3）。
 - $\delta$ 效应（负面）：新约束可劫持已有链路（命题 3 机制），使域外链误差从"可能差"变为"必然差"。
 - **净效果单调非递增，可严格退化**：新采样对不为任何已有规则填补 $\delta$ 间隙（它只服务 $r_{new}$），却在其采样域上锁死 $\Phi$ 的行为，两个效应同向为负。
 
-**推论 2（训练追加的强制退化，Forced Degradation under Training Augmentation）**：模式 B 的退化不仅是可行集论证的抽象后果，而是存在确定性构型使退化**被强制保证**。此退化有两条结构独立的通道：
+**推论 3（训练追加的强制退化，Forced Degradation under Training Augmentation）**：模式 B 的退化不仅是可行集论证的抽象后果，而是存在确定性构型使退化**被强制保证**。此退化有两条结构独立的通道：
 
-(a) **域内直接冲突**：若 $\mathcal{X}_{new} \cap \mathcal{X}(r) \neq \emptyset$ 且 $\Delta(x) = |r(x) - r_{new}(x)| > 0$ 对某些 $x$ 成立，则由三角不等式：
+(a) **域内直接冲突**：若 $\mathcal{X}_{new} \cap \mathcal{X}(r) \neq \emptyset$ 且 $\Delta(x) = d(r(x), r_{new}(x)) > 0$ 对某些 $x$ 成立，则由三角不等式：
 
 $$\varepsilon_r(x) + \varepsilon_{r_{new}}(x) \;\geq\; \Delta(x) \qquad \forall x \in \mathcal{X}(r) \cap \mathcal{X}_{new}$$
 
