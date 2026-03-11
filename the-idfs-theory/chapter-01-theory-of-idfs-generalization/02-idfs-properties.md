@@ -49,6 +49,7 @@ $$\mathcal{N}\bigl(\epsilon, \Phi(\mathcal{X}_{sub})\bigr) \;\le\; \sum_{q \in \
 $$e^{I_\epsilon(\mathcal{S})} \;\le\; |\text{Im}(\sigma)| \cdot e^{C_\epsilon} \quad \Longrightarrow \quad |\text{Im}(\sigma)| \;\ge\; e^{I_\epsilon(\mathcal{S}) - C_\epsilon}$$
 当 $I_\epsilon(\mathcal{S}) \to \mathcal{D} \log M + C_\epsilon$ 时，$|\text{Im}(\sigma)| \to M^\mathcal{D} = |F^{\le \mathcal{D}}|$，路由映射被迫耗尽所有可能的离散路径组合，构成满射。$\square$
 
+> **注（路由分支的几何功能）**：从纯组合视角看，$|\mathrm{Im}(\sigma)|$ 的量纲仅仅是"基函数索引的种类数"。但从 IDFS 的微分几何结构看，每一次路由切换 $\sigma(x) = f_i \to f_j$，实质上意味着系统在该局部部署了一组全新的微分特征基底——切换前后的雅可比矩阵一般不共特征空间。因此 $\mathrm{Im}(\sigma)$ 不仅是组合意义上的"标签多样性"，更是几何意义上的**局部基底集合库的容量**。该几何角色的理论后果将在 §4.2（CPI 定理）中被严格量化。
 
 
 **定义（路由混叠，Routing Aliasing）**：设单步系统 $\mathcal{F}$ 在子集 $\mathcal{X}_{sub} \subseteq \mathcal{X}$ 上运作。称在 $\mathcal{X}_{sub}$ 上存在第 $l$ 阶**路由混叠**，若存在 $x_1, x_2 \in \mathcal{X}_{sub}$ 使得模型在 $x_2$ 处的**单步微观路由决策**与从 $x_1$ 出发的 **$l$ 步宏观计算程序**完全等同：
