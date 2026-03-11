@@ -20,11 +20,11 @@
 |--------|------|------|------|
 | $\varepsilon^*_q \le \varepsilon_{max} \cdot \Lambda_l + \delta_{max} \cdot \Gamma_l$ | CAC 上界 | §3 定理 | 端到端误差被 Lipschitz 乘积逐步放大 |
 | $\varepsilon^*_y \ge |\Delta - \varepsilon_x| - \bar{L}^l \cdot \delta$ | CAB 下界 | §4 定理 | 目标变分强制系统承受不可压缩残差 |
-| $\mu(U_\tau) \ge \mu(\mathcal{X}_r)(1 - |{\rm Im}(\sigma)| \cdot e^{C_\varepsilon} / e^{I_\varepsilon})^{1/\beta}$ | DFG 正测度下界 | §4.2 定理 | 不完美拟合集不可消除 |
+| $\mu(U_\tau) \ge \mu(\mathcal{X}_r)\bigl(1 - \lvert\mathrm{Im}(\sigma)\rvert \cdot e^{C_\varepsilon} / e^{I_\varepsilon}\bigr)^{1/\beta}$ | DFG 正测度下界 | §4.2 定理 | 不完美拟合集不可消除 |
 | $\rho^{-1/l} \le \bar{L} \le \frac{\bar{L}}{L_{max}}(1 - 1/l^*_0)$ | 收缩走廊 | §6.1 推论 2 | 长链 $\bar{L}$ 被双向夹击 |
 | $l_{max} = \ln\rho / (\ln(L_{max}/\bar{L}) + 1/l^*_0)$ | 最大可行链深 | §6.1 推论 3 | 泛化性碾压安全链深 |
 | $M \ge \exp((I_\varepsilon - C_\varepsilon)/l^*_0)$ | 代偿定律 | §6.2.2 推论 | 短链以 $M$ 指数膨胀换深度 |
-| $\tau < \Delta_\mathcal{C}/2$ | 误差隔绝条件 | §7.2 定理 1 | 段间误差精确归零 |
+| $\tau \lt \Delta_\mathcal{C}/2$ | 误差隔绝条件 | §7.2 定理 1 | 段间误差精确归零 |
 | $\varepsilon_k \le L^{l_0} \cdot \varepsilon_{k-1} + \delta_\pi + \tau$ | 段间递推 | §7.2 定理 2 | 一般段间误差传播 |
 
 ---
@@ -36,9 +36,9 @@
 | **放弃** | 泛化性（$\gamma_R \approx 1$） | 链深（$l \le l^*_0$） | 全路径控制 |
 | **走廊** | 极宽（跌落不动点） | **不适用**（前提不触发） | 极窄（甚至为空） |
 | **路由** | 宏观完全简并 | 极度细化与差异化 | 安全域内差异化 |
-| **采样** | $(D|\lambda_r-\bar{L}^l|/\varepsilon)^d$ 全域穷举 | 自适应异质网格 | 边界易碎覆盖 |
+| **采样** | $(D\lvert\lambda_r-\bar{L}^l\rvert/\varepsilon)^d$ 全域穷举 | 自适应异质网格 | 边界易碎覆盖 |
 | **长链策略** | 内部迭代（受走廊保护） | **分段复合 + 离散重置** | 内部迭代（受走廊挤压） |
-| **误差隔绝** | 不需要（走廊内自稳） | **$\tau < \Delta_\mathcal{C}/2$ 归零** | 不适用（失控域发散） |
+| **误差隔绝** | 不需要（走廊内自稳） | **$\tau \lt \Delta_\mathcal{C}/2$ 归零** | 不适用（失控域发散） |
 | **抗劫持** | 自毒化（§5 命题 4） | 短链截断 + 码本锚点 | 劫持驱动灾难跳变 |
 | **最糟失败** | 维度诅咒级过拟合 | 单次映射计算深度瓶颈 | $\delta_{adv}$ 极小致幻崩溃 |
 | **可行性** | ❌ 采样指数爆炸 | ✅ 唯一可行构型 | ❌ 正测度失控域 |
