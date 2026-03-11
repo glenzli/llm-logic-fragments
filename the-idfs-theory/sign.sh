@@ -140,11 +140,11 @@ else
   printf "${BOLD}发现以下目录:${NC}\n"
   echo ""
   i=1
-  echo "$DIRS" | while IFS= read -r d; do
+  while IFS= read -r d; do
     count=$(find "$d" -maxdepth 1 -name '*.md' -type f ! -name 'MANIFEST.*' 2>/dev/null | wc -l | tr -d ' ')
     printf "  ${CYAN}%d.${NC} %-50s ${GREEN}%s 个 .md 文件${NC}\n" "$i" "$d" "$count"
     i=$((i + 1))
-  done
+  done < <(echo "$DIRS")
   echo ""
 
   printf "${BOLD}生成哈希清单？${NC} [Y/n] "
@@ -154,9 +154,9 @@ else
   esac
 
   echo ""
-  echo "$DIRS" | while IFS= read -r d; do
+  while IFS= read -r d; do
     sign_dir "$d"
-  done
+  done < <(echo "$DIRS")
 
   sign_root
 fi
