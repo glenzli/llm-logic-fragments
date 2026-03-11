@@ -28,7 +28,7 @@
 
 三重描述子 $(\mu_i, L_i, \chi_i)$ 看似包含三个独立维度。本节的核心命题将证明：**$L_i$ 是唯一的根本判据**——域宽 $\mu_i$ 是 $L_i$ 的后验推论，可复合性 $\chi_i$ 是 $L_i$ 与 $L$ 的比较结果。
 
-**命题 1（Lipschitz 一致性是 $R^*$ 可复合的必要条件）**：设 $(r_i, \mathcal{X}(r_i)) \in \mathcal{S}$，系统在 $\mathcal{X}(r_i)$ 上逼近 $r_i$ 时的路径 Lipschitz 常数为 $L_i$。若 $r_i$ 对应的拟合路径被插入一条长度为 $l$ 的 $r$-链 $q \in R^*$，则 CAC 误差上界（§3 定理）变为：
+**命题 1（Lipschitz 一致性是 $R^*$ 可复合的必要条件）**：设 $(r_i, \mathcal{X}(r_i)) \in \mathcal{S}$，系统在 $\mathcal{X}(r_i)$ 上逼近 $r_i$ 时的路径 Lipschitz 常数为 $L_i$。考虑 $r_i$ 的 $l$ 步自复合链 $q = r_i^l \in R^*$（即链中每一步均由 $r_i$ 的拟合映射主导），则 CAC 误差上界（§3 定理）变为：
 
 $$\varepsilon^*_q \;\leq\; \varepsilon_{max} \cdot \frac{L_i^l - 1}{L_i - 1}$$
 
@@ -44,7 +44,7 @@ $$e_l \;\leq\; \varepsilon_{max} \sum_{k=0}^{l-1} L_i^k \;=\; \varepsilon_{max} 
 
 当 $L_i > L$ 时，此界严格大于标准 CAC 界 $\varepsilon_{max} \cdot \Lambda_l$（后者中 $\Theta_{j+1,l} \leq L^{l-j}$），且以 $L_i^l$ 速率指数膨胀。对任意容差 $\tau$，$l > \log((\tau/\varepsilon_{max})(L_i-1)+1)/\log L_i$ 即违约。$\square$
 
-> **注（$L_i > L$ 在系统层面的含义）**：此处的 $L_i > L$ 并非指微观基函数 $f \in F$ 的局部 Lipschitz 常数超标——§1.2 已指出，微观基函数可以局部无界，只要 $\sigma$ 将其限制在有界区域内激活。$L_i > L$ 的真正含义是：系统在逼近 $r_i$ 时展现出的**宏观路径行为**超出了 $\Phi$ 的全局 Lipschitz 常数所允许的形变率。这意味着该路径必然涉及 $\sigma$ 在极陡决策边界处的硬切换，导致局部路径 Lipschitz 常数被推至系统极限附近（§2 命题 5 的分辨率死锁）。
+> **注（$L_i > L$ 在系统层面的含义）**：此处的 $L_i > L$ 并非指微观基函数 $f \in F$ 的局部 Lipschitz 常数超标——§1.2 已指出，微观基函数可以局部无界，只要 $\sigma$ 将其限制在有界区域内激活。$L_i > L$ 的真正含义是：系统在逼近 $r_i$ 时展现出的**宏观路径行为**超出了 $\Phi$ 的全局 Lipschitz 常数所允许的形变率。这意味着该路径必然涉及 $\sigma$ 在极陡决策边界处的硬切换，导致局部路径 Lipschitz 常数被推至系统极限附近（第一章 §2 命题 5 的分辨率死锁）。
 
 **推论 1（三态是 Lipschitz 约束的三个结构等价类）**：由命题 1，$L_i$ 与全局 Lipschitz 约束 $L$ 的关系将所有规则 $r_i \in R$ 的拟合行为自然地分裂为三个离散等价类：
 
@@ -118,43 +118,55 @@ $$L_i \;\gg\; L, \qquad \mu(\mathcal{X}(r_i)) \;\text{极小}, \qquad \chi_i = 0
 
 本节的两个命题建立三态分类的核心因果关系：**域宽差异是 $L_i$ 差异的结构推论，而非独立的分类轴**。
 
-**命题 2（极高 Lipschitz 常数蕴含极窄定义域）**：设 $(r_i, \mathcal{X}(r_i)) \in \mathcal{S}$，系统在 $\mathcal{X}(r_i)$ 上对 $r_i$ 的拟合路径 Lipschitz 常数为 $L_i$。若 $L_i \gg L$，则 $r_i$ 的有效采样域 $\mathcal{X}(r_i)$（即 $\tau$-拟合集 $P_\tau(r_i)$ 的支撑）被约束在一个直径极小的球内：
+**命题 2（极高 Lipschitz 常数蕴含极窄定义域）**：设 $(r_i, \mathcal{X}(r_i)) \in \mathcal{S}$，系统在 $\mathcal{X}(r_i)$ 上对 $r_i$ 的拟合路径 Lipschitz 常数为 $L_i$。设 $r_i$ 在 $\mathcal{X}(r_i)$ 上具有 co-Lipschitz 下界 $k_i$（即 $d(r_i(x), r_i(y)) \geq k_i \cdot d(x,y)$）。若 $k_i > L$，则 $r_i$ 的有效采样域 $P_\tau(r_i)$ 的直径满足：
 
-$$\mathrm{diam}(P_\tau(r_i)) \;\leq\; O\!\left(\frac{\tau}{L_i}\right)$$
+$$\mathrm{diam}(P_\tau(r_i)) \;\leq\; \frac{2\tau}{k_i - L}$$
 
-特别地，当 $L_i \to \infty$ 时，$\mathrm{diam}(P_\tau(r_i)) \to 0$——有效拟合域萎缩为孤立点。
+特别地，当 $k_i \gg L$ 时，$\mathrm{diam}(P_\tau(r_i)) \approx 2\tau/k_i \to 0$——有效拟合域萎缩为孤立点。
 
-**证明**：取 $P_\tau(r_i)$ 中任意两点 $x, y$。由 $P_\tau$ 的定义，$d(\Phi(x), r_i(x)) < \tau$ 且 $d(\Phi(y), r_i(y)) < \tau$。由三角不等式：
+**证明**：取 $P_\tau(r_i)$ 中任意两点 $x, y$。由 $P_\tau$ 的定义，$d(\Phi(x), r_i(x)) < \tau$ 且 $d(\Phi(y), r_i(y)) < \tau$。
+
+**上界**：由三角不等式和 $\Phi$ 的全局 $L$-Lipschitz 性质：
 
 $$d(r_i(x), r_i(y)) \;\leq\; d(r_i(x), \Phi(x)) + d(\Phi(x), \Phi(y)) + d(\Phi(y), r_i(y)) \;<\; 2\tau + L \cdot d(x, y)$$
 
-同时，若 $r_i$ 在 $\mathcal{X}(r_i)$ 上的有效变分率（即 $r_i$ 作为目标映射的局部 Lipschitz 下界）为 $k_i$，则：
+**下界**：由 $r_i$ 的 co-Lipschitz 性质：
 
 $$d(r_i(x), r_i(y)) \;\geq\; k_i \cdot d(x, y)$$
 
-但 $L_i$ 的极高性意味着系统在 $\mathcal{X}(r_i)$ 上的拟合行为必须追踪 $r_i$ 的高变分结构。由 §4 推论 2 的变分约束 $2\varepsilon_r + L_{local} \cdot \rho \geq \Delta$，当 $r_i$ 在 $\rho$-邻域内具有 $\Delta$-变分时，若 $L_{local}$（此处对应 $L_i$）极大，则系统能以有限 $\varepsilon_r < \tau$ 拟合的域宽受限于：
-
-$$\rho \;\leq\; \frac{\Delta - 2\tau}{L_i}$$
-
-由于 $\Phi$ 的全局 Lipschitz 约束为 $L$，而非 $L_i$，系统在 $\mathcal{X}(r_i)$ 外的行为以 $L$ 为尺度变化。在 $\mathcal{X}(r_i)$ 的边界处，相邻的采样域 $\mathcal{X}(r_j)$ 的拟合行为已将 $\Phi$ 的局部响应锁定为服务于 $r_j$——$\Phi$ 在 $\mathcal{X}(r_i)$ 外无法继续追踪 $r_i$ 的高变分结构。因此，$P_\tau(r_i)$ 的直径不超过 $O(\tau/L_i)$。$\square$
+联立得 $k_i \cdot d(x,y) < 2\tau + L \cdot d(x,y)$，即 $(k_i - L) \cdot d(x,y) < 2\tau$，因此 $d(x,y) < 2\tau/(k_i - L)$。由 $x, y$ 的任意性，$\mathrm{diam}(P_\tau(r_i)) \leq 2\tau/(k_i - L)$。$\square$
 
 > **注（因果方向）**：命题 2 确立了三态分类的因果箭头：$L_i \gg L$ $\Longrightarrow$ $\mu_i$ 极小。反方向不成立——域宽小不蕴含 $L_i$ 大（例如，$R$ 中的某条规则可能仅在 $\mathcal{X}$ 的小区域有定义，但在该区域内 $L_i \leq L$，这属于"事实式拟合的极端情形"而非"逐字式拟合"）。因此，**域宽是可观测的表面现象，$L_i$ 是与 CAC 定理直接挂钩的结构条件**。
 
-**命题 3（逐字式拟合路径是 $F$-空间的孤立极值点）**：设 $(r_s, \mathcal{X}(r_s)) \in \mathcal{S}$ 为逐字式拟合形态（$L_s \gg L$）。则 $r_s$ 对应的拟合路径在 $F$-空间中满足：
+**命题 3（逐字式拟合路径是 $F$-空间的近孤立极值点）**：设 $(r_s, \mathcal{X}(r_s)) \in \mathcal{S}$ 为逐字式拟合形态（$L_s \gg L$），$r_s$ 在 $\mathcal{X}(r_s)$ 上具有 co-Lipschitz 下界 $k_s$（§2.1 定义）。设 $(r_j, \mathcal{X}(r_j)) \in \mathcal{S}$ 为任意其他规则（$L_j \leq L$）。则两者的 $\tau$-拟合集的交集被限制在一个极薄壳内：
 
-$$\mathcal{X}(r_s) \;\cap\; \bigcup_{r_j \in R,\, r_j \neq r_s} \mathcal{X}(r_j) \;=\; \emptyset$$
+$$P_\tau(r_s) \;\cap\; P_\tau(r_j) \;\subseteq\; \{x \in \mathcal{X} : d(r_s(x),\, r_j(x)) < 2\tau\}$$
 
-即**逐字式拟合的采样域与所有其他规则的采样域不相交**。
+且该薄壳的直径不超过：
 
-**证明**：假设存在 $x_0 \in \mathcal{X}(r_s) \cap \mathcal{X}(r_j)$（$r_j \neq r_s$）。在 $x_0$ 处，系统 $\Phi$ 同时被要求以精度 $\tau$ 逼近 $r_s(x_0)$ 和 $r_j(x_0)$。由三角不等式：
+$$\mathrm{diam}\bigl(P_\tau(r_s) \cap P_\tau(r_j)\bigr) \;\leq\; \frac{2\tau}{k_s - L_j}$$
 
-$$d(r_s(x_0), r_j(x_0)) \;\leq\; d(r_s(x_0), \Phi(x_0)) + d(\Phi(x_0), r_j(x_0)) \;<\; 2\tau$$
+当 $k_s \gg L$（逐字式拟合的典型特征），薄壳厚度 $\to 0$——逐字式拟合在**测度意义上几乎与所有其他规则孤立**。
 
-因此两个目标在 $x_0$ 处的输出必须 $2\tau$-接近。但由命题 2，$\mathcal{X}(r_s)$ 的直径为 $O(\tau/L_s)$，极小。在 $x_0$ 的 $O(\tau/L_s)$-邻域内，$r_s$ 的有效变分率 $k_s$ 使得 $r_s$ 的输出在极小范围内剧烈变化，而 $r_j$（作为逻辑式或事实式拟合，$L_j \leq L$）的输出变化由 $L$ 控制，远低于 $L_s$。因此在 $x_0$ 的邻域内，$r_s$ 和 $r_j$ 的输出轨迹**迅速分叉**——$\Phi$ 不可能在该邻域内同时追踪两者。
+**证明**：设 $x \in P_\tau(r_s) \cap P_\tau(r_j)$。由 $\tau$-拟合集的定义，$d(\Phi(x), r_s(x)) < \tau$ 且 $d(\Phi(x), r_j(x)) < \tau$。由三角不等式：
 
-更根本地，$\sigma$ 在 $x_0$ 处只能选择一条路径。若 $\sigma(x_0)$ 被锁定为服务 $r_s$——即在 $x_0$ 处展现 $L_s \gg L$ 的极高曲率——则 $\Phi(x_0)$ 无法同时满足 $r_j$ 的拟合约束，因为 $r_j$ 的拟合要求 $L_j \leq L$。这是 IDFS 单映射共享架构的直接后果：$\Phi$ 是一个**单一映射**，在同一点 $x_0$ 只能展现一种 Lipschitz 行为。$\square$
+$$d(r_s(x), r_j(x)) \;\leq\; d(r_s(x), \Phi(x)) + d(\Phi(x), r_j(x)) \;<\; 2\tau$$
 
-> **注（与 §5 命题 3 的对接）**：命题 3 的孤立性本质上是 §5 命题 3（采样域劫持）的逆向表述。§5 证明了不同采样约束通过 $\Phi$ 的全局性质在中间态域相互锁定行为；此处从另一个方向表明，极高 $L_s$ 的拟合路径由于其极端的曲率需求，不可能与任何常规路径共享输入域——它在 $F$-空间中是一个**游离的孤立极值点**。
+因此交集被包含在 $\{x : d(r_s(x), r_j(x)) < 2\tau\}$ 内。
+
+现设 $x_0, x_1$ 是交集中两点。由 $r_s$ 的 co-Lipschitz 性质：$d(r_s(x_0), r_s(x_1)) \geq k_s \cdot d(x_0, x_1)$。由 $r_j$ 的 Lipschitz 性质：$d(r_j(x_0), r_j(x_1)) \leq L_j \cdot d(x_0, x_1)$。两者在各自对应点处均 $2\tau$-接近，故：
+
+$$k_s \cdot d(x_0, x_1) - L_j \cdot d(x_0, x_1) \;\leq\; d(r_s(x_0), r_s(x_1)) - d(r_j(x_0), r_j(x_1))$$
+
+由 $d(r_s(x_i), r_j(x_i)) < 2\tau$（$i = 0, 1$），反向三角不等式给出 $|d(r_s(x_0), r_s(x_1)) - d(r_j(x_0), r_j(x_1))| \leq 4\tau$（最坏情形两端各偏 $2\tau$），因此：
+
+$$(k_s - L_j) \cdot d(x_0, x_1) \;\leq\; 4\tau$$
+
+即 $d(x_0, x_1) \leq 4\tau/(k_s - L_j)$。当 $k_s \gg L_j$ 时，此上界趋于 0。$\square$
+
+> **注（精确不相交 vs 测度孤立）**：命题 3 不声称 $P_\tau(r_s) \cap P_\tau(r_j) = \emptyset$——在两条规则的输出偶然一致的个别点（如逻辑推理恰好产出逐字序列的下一个 token 时），交集可以非空。但由 co-Lipschitz vs Lipschitz 的变分率差异，$r_s$ 和 $r_j$ 的输出在离开这些巧合点后**以 $(k_s - L_j)$ 的速率分叉**——$\Phi$ 作为单一映射不可能在分叉后同时追踪两者。因此交集在度量意义上被压缩为直径 $O(\tau/k_s)$ 的极薄壳，相对于 $\mathcal{X}(r_j)$ 的域宽可忽略。这一"近孤立性"对下游结论（死库效应、不可复合性）的影响与精确孤立性等价——$O(\tau/k_s)$ 量级的交集不足以支撑任何有效的复合链路。
+
+> **注（与 §5 命题 3 的对接）**：命题 3 的近孤立性本质上是 §5 命题 3（采样域劫持）的逆向表述。§5 证明了不同采样约束通过 $\Phi$ 的全局性质在中间态域相互锁定行为；此处从另一个方向表明，极高 $k_s$ 的拟合路径由于其极端的变分率需求，其 $\tau$-拟合集与任何常规路径的 $\tau$-拟合集在度量意义上几乎不交——它在 $F$-空间中是一个**近孤立的极值点**。
 
 ---
 
@@ -174,7 +186,7 @@ $$d(r_s(x_0), r_j(x_0)) \;\leq\; d(r_s(x_0), \Phi(x_0)) + d(\Phi(x_0), r_j(x_0))
 
 2. **离散相变**（推论 1 注）：三态之间由 $L_i = L$ 的临界线分隔。CAC 误差界在穿越此线时经历从多项式到指数的相变，过渡不是平滑的。
 
-3. **孤立性**（命题 3）：逐字式拟合的采样域与所有其他规则的采样域不相交——它是 $F$-空间中游离于 $R^*$ 复合结构之外的孤立极值点。
+3. **近孤立性**（命题 3）：逐字式拟合的 $\tau$-拟合集与其他规则的 $\tau$-拟合集的交集被压缩在直径 $O(\tau/k_s)$ 的极薄壳内——它在 $F$-空间中是测度意义上几乎游离于 $R^*$ 复合结构之外的近孤立极值点。
 
 > **注（死记硬背 $\neq$ 过拟合）**：三态分类揭示了一个在工程语境中常被混淆的区分。在 IDFS 框架下，两者是 $F$-空间中**完全不同的失效模式**：
 >

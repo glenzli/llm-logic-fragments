@@ -22,43 +22,55 @@ $$S(x_0) \;\triangleq\; \limsup_{\delta \to 0} \frac{d(\Phi(x_0 + \delta),\, \Ph
 
 $$\mathrm{diam}_v(A) \;\triangleq\; \sup \bigl\{ d(x, y) \;\big|\; x, y \in A,\; (x, y) \text{ 沿 } v \text{ 方向} \bigr\}$$
 
-**命题 1（窄槽的各向异性，Anisotropy of the Narrow Groove）**：设 $(r_s, \mathcal{X}(r_s)) \in \mathcal{S}$ 为逐字式拟合形态（$L_s \gg L$）。设 $r_s$ 在 $\mathcal{X}(r_s)$ 上具有 $(\rho, \Delta_s)$-变分（§4.1 定义），变分方向为 $v_s$（即 $r_s$ 的值域在 $v_s$ 方向上跳变最剧烈）。则 $P_\tau(r_s)$ 的几何形态满足：
+**定义（目标变分下界，Target Variation Lower Bound）**：设目标映射 $r_s$ 在 $P_\tau(r_s)$ 上沿方向 $v_s$ 具有**变分下界** $k_s > 0$，即对 $P_\tau(r_s)$ 中沿 $v_s$ 方向分离的任意两点 $x, y$：
 
-(i) **横向压缩**：在垂直于 $v_s$ 的方向上，$P_\tau(r_s)$ 的直径受 $\Phi$ 的全局 Lipschitz 常数控制：
+$$d(r_s(x), r_s(y)) \;\geq\; k_s \cdot d(x, y)$$
 
-$$\mathrm{diam}_{\perp v_s}(P_\tau(r_s)) \;\leq\; \frac{2\tau}{L_s - L}$$
+$k_s$ 量化了 $r_s$ 作为目标映射沿主变分方向的**最低变化率**。
 
-(ii) **纵向伸展受限**：沿 $v_s$ 方向，$P_\tau(r_s)$ 的直径受 $\Phi$ 对 $r_s$ 的变分追踪能力控制：
+> **注（$k_s > 0$ 是逐字式拟合的内禀性质）**：$L_s \gg L$ 的定义前提意味着 $\Phi$ 在 $P_\tau(r_s)$ 上必须追踪一个高变分的目标——$r_s$ 的输出在极小的输入邻域内剧烈跳变。这种高变分恰恰要求 $r_s$ 在 $v_s$ 方向上是**局部单射**的（不同前缀位置映射到不同延续输出），从而保证 $k_s > 0$。一般地，$k_s$ 与 $L_s$ 同阶——两者量化的是同一现象（目标的高变分率）的两个方向。
 
-$$\mathrm{diam}_{v_s}(P_\tau(r_s)) \;\leq\; \frac{\Delta_s + 2\tau}{L_s}$$
+**命题 1（窄槽的各向异性，Anisotropy of the Narrow Groove）**：设 $(r_s, \mathcal{X}(r_s)) \in \mathcal{S}$ 为逐字式拟合形态（$L_s \gg L$）。设 $r_s$ 在 $\mathcal{X}(r_s)$ 上具有 $(\rho, \Delta_s)$-变分（§4.1 定义），变分方向为 $v_s$，沿 $v_s$ 的变分下界为 $k_s > 0$。则 $P_\tau(r_s)$ 的几何形态满足：
 
-(iii) **各向异性比**：横向直径与纵向直径之比为：
+(i) **横向压缩**：在垂直于 $v_s$ 的方向上，$P_\tau(r_s)$ 的直径受 §1 命题 2 的整体直径约束控制：
 
-$$\frac{\mathrm{diam}_{\perp v_s}}{\mathrm{diam}_{v_s}} \;\leq\; \frac{2\tau \cdot L_s}{(\Delta_s + 2\tau)(L_s - L)} \;\approx\; \frac{2\tau}{\Delta_s} \quad (L_s \gg L)$$
+$$\mathrm{diam}_{\perp v_s}(P_\tau(r_s)) \;\leq\; \mathrm{diam}(P_\tau(r_s)) \;\leq\; O\!\left(\frac{\tau}{L_s}\right)$$
+
+(ii) **纵向伸展受限**：沿 $v_s$ 方向，$P_\tau(r_s)$ 的直径受 $r_s$ 的总变分 $\Delta_s$ 与变分下界 $k_s$ 的比值控制：
+
+$$\mathrm{diam}_{v_s}(P_\tau(r_s)) \;\leq\; \frac{\Delta_s + 4\tau}{k_s}$$
+
+(iii) **各向异性比**：当 $k_s \sim L_s$（逐字式拟合的典型情形）时，横向直径与纵向直径之比为：
+
+$$\frac{\mathrm{diam}_{\perp v_s}}{\mathrm{diam}_{v_s}} \;\leq\; \frac{O(\tau/L_s)}{(\Delta_s + 4\tau)/k_s} \;\approx\; \frac{\tau}{\Delta_s} \quad (k_s \sim L_s,\; \tau \ll \Delta_s)$$
 
 当 $\tau \ll \Delta_s$（拟合精度远小于目标变分幅度）时，各向异性比 $\ll 1$——$P_\tau(r_s)$ 为一条沿 $v_s$ 方向极度拉伸、垂直方向极度压扁的**窄槽（Narrow Groove）**。
 
 **证明**：
 
-(i) 取 $P_\tau(r_s)$ 中两点 $x, y$，沿垂直于 $v_s$ 的方向分离。在该方向上，$r_s$ 的变分近似为零（$d(r_s(x), r_s(y)) \approx 0$，因 $r_s$ 的剧烈变化集中在 $v_s$ 方向）。由 $x, y \in P_\tau$：
+(i) $P_\tau(r_s) \subseteq \mathcal{X}(r_s)$，故 $\mathrm{diam}_{\perp v_s}(P_\tau(r_s)) \leq \mathrm{diam}(P_\tau(r_s))$。后者由 §1 命题 2 给出上界 $O(\tau/L_s)$。
 
-$$d(\Phi(x), \Phi(y)) \;\leq\; d(\Phi(x), r_s(x)) + d(r_s(x), r_s(y)) + d(r_s(y), \Phi(y)) \;<\; 2\tau + 0 = 2\tau$$
+(ii) 取 $P_\tau(r_s)$ 中两点 $x, y$，沿 $v_s$ 方向分离。由追踪条件（$x, y \in P_\tau$）与反向三角不等式，$\Phi$ 在这两点的输出偏差满足下界：
 
-同时，$\Phi$ 在 $\mathcal{X}(r_s)$ 上的局部 Lipschitz 常数为 $L_s$（§1 定义），故：
+$$d(\Phi(x), \Phi(y)) \;\geq\; d(r_s(x), r_s(y)) - d(\Phi(x), r_s(x)) - d(\Phi(y), r_s(y)) \;>\; d(r_s(x), r_s(y)) - 2\tau$$
 
-$$d(\Phi(x), \Phi(y)) \;\geq\; L_s \cdot d(x, y) - 2\tau$$
+由 $r_s$ 沿 $v_s$ 方向的变分下界 $k_s$：$d(r_s(x), r_s(y)) \geq k_s \cdot d(x, y)$。因此：
 
-（此处利用了反向三角不等式：$L_s \cdot d(x,y) \leq d(\Phi(x), \Phi(y)) + 2\tau$。更精确地，$\Phi$ 在逼近 $r_s$ 时必须在 $v_s$ 垂直方向上展现近乎平坦的行为，因为 $r_s$ 在该方向无变分但 $\Phi$ 的全局 Lipschitz 为 $L$，所以 $\Phi$ 的横向拉伸不超过 $L \cdot d(x,y)$。）联合两个约束：$L_s \cdot d(x,y) - 2\tau \leq L \cdot d(x,y)$，解得 $d(x,y) \leq 2\tau/(L_s - L)$。
+$$d(\Phi(x), \Phi(y)) \;>\; k_s \cdot d(x, y) - 2\tau \quad \text{…(下界)}$$
 
-(ii) 取 $P_\tau(r_s)$ 中两点 $x, y$，沿 $v_s$ 方向分离。由 $r_s$ 的 $(\rho, \Delta_s)$-变分，$d(r_s(x), r_s(y)) \leq \Delta_s$（变分上界）。由 $x, y \in P_\tau$：
+同时，由追踪条件与 $r_s$ 的总变分上界 $\Delta_s$：
 
-$$L_s \cdot d(x, y) \;\leq\; d(r_s(x), r_s(y)) + 2\tau \;\leq\; \Delta_s + 2\tau$$
+$$d(\Phi(x), \Phi(y)) \;\leq\; d(\Phi(x), r_s(x)) + d(r_s(x), r_s(y)) + d(r_s(y), \Phi(y)) \;<\; \Delta_s + 2\tau \quad \text{…(上界)}$$
 
-解得 $d(x,y) \leq (\Delta_s + 2\tau)/L_s$。
+联合上下界：$k_s \cdot d(x, y) - 2\tau < \Delta_s + 2\tau$，解得：
+
+$$d(x, y) \;<\; \frac{\Delta_s + 4\tau}{k_s}$$
+
+> **注（co-Lipschitz 的来源）**：此处 $\Phi$ 的膨胀下界 $d(\Phi(x), \Phi(y)) > k_s \cdot d(x,y) - 2\tau$ **不是**从 $\Phi$ 的 Lipschitz 上界 $L_s$ 推导的（Lipschitz 上界仅给出 $d(\Phi(x), \Phi(y)) \leq L_s \cdot d(x,y)$，方向相反）。它来自一条完全不同的因果链：**目标 $r_s$ 自身的变分下界 $k_s$**，经追踪条件（反向三角不等式），传导为系统 $\Phi$ 的近似膨胀下界。这是逐字式拟合特有的结构——正是因为 $r_s$ 的高变分迫使 $\Phi$ 剧烈变化，$\Phi$ 才"继承"了 $r_s$ 的 co-Lipschitz 性质。
 
 (iii) 直接取商。$\square$
 
-> **注（窄槽的物理含义）**：窄槽几何揭示了逐字式拟合在 $F$-空间中的精确拓扑形态——它不是一个"小球"（各向同性的微小域），而是一条沿目标序列方向极度拉伸的**拓扑细丝**。系统在这条细丝上精确地追踪 $r_s$ 的逐步输出，但任何偏离细丝方向的微小扰动都会因 $L_s \gg L$ 的极高曲率而被急剧放大——横向直径 $2\tau/(L_s - L)$ 的极小性正是这一放大效应的几何反映。与 §1 命题 2 给出的"域宽极小"的标量结论相比，窄槽定理揭示了域宽极小在不同方向上的**定量非均匀分布**。
+> **注（窄槽的物理含义）**：窄槽几何揭示了逐字式拟合在 $F$-空间中的精确拓扑形态——它不是一个"小球"（各向同性的微小域），而是一条沿目标序列方向极度拉伸的**拓扑细丝**。系统在这条细丝上精确地追踪 $r_s$ 的逐步输出，但任何偏离细丝方向的微小扰动都会因极高曲率而被急剧放大。横向直径 $O(\tau/L_s)$ 的极小性是 §1 命题 2 的直接后果（整体域宽极小），而纵向直径 $(\Delta_s + 4\tau)/k_s$ 的相对"伸展"则是 $r_s$ 的高变分结构在窄槽内部的反映——$r_s$ 需要足够的空间来展开其 $\Delta_s$-变分，但 co-Lipschitz 约束 $k_s$ 限制了这一展开所能占据的最大空间范围。
 
 ---
 
@@ -80,13 +92,13 @@ $$d(x_{t+1}, r_s(x_t)) \;\leq\; \tau, \quad x_{t+1} \in P_\tau(r_s) \quad \foral
 
 **证明**：由 $x_t \in P_\tau(r_s)$，$d(\Phi(x_t), r_s(x_t)) < \tau$，故 $x_{t+1} = \Phi(x_t)$ 与 $r_s(x_t)$ 的距离 $< \tau$。由自回归不变性，$r_s(x_t) \in P_\tau(r_s)$。由三角不等式，$d(x_{t+1}, r_s(x_t)) < \tau$，若 $\tau < \mathrm{diam}_{v_s}(P_\tau(r_s))/2$（窄槽足够长以容纳 $\tau$-偏差），则 $x_{t+1} \in P_\tau(r_s)$。以 $T$ 步归纳即得。$\square$
 
-> **注（自回归不变性的含义）**：条件 $r_s(x) \in P_\tau(r_s)$ 要求 $r_s$ 的理想输出序列**始终留在自身的窄槽内**。这在精确序列复现的场景中自然成立：若 $r_s$ 的目标是逐步输出序列 $(w_1, w_2, \ldots, w_T)$，则每步的理想输出（下一个 token 的嵌入拼接到前缀后）仍是精确前缀邻域的元素——窄槽沿序列方向延伸的拓扑正是 §2.1 纵向伸展的物理内容。
+> **注（自回归不变性的含义）**：条件 $r_s(x) \in P_\tau(r_s)$ 是 $r_s$ 与 $\Phi$ 的**联合条件**，而非仅 $r_s$ 的属性——$P_\tau(r_s) = \{x : d(\Phi(x), r_s(x)) < \tau\}$ 本身由 $\Phi$ 参与定义。该条件等价于要求 $\Phi$ 在整条窄槽上的像集仍落在窄槽内：$\Phi(P_\tau(r_s)) \subseteq B_\tau(r_s(P_\tau(r_s))) \subseteq P_\tau(r_s)$。这在精确序列复现的场景中自然成立：若 $r_s$ 的目标是逐步输出序列 $(w_1, w_2, \ldots, w_T)$，则每步的理想输出（下一个 token 的嵌入拼接到前缀后）仍是精确前缀邻域的元素，而 $\Phi$ 在窄槽内足够精确地追踪 $r_s$（$< \tau$）保证像点不跌出窄槽。窄槽沿序列方向延伸的拓扑正是 §2.1 纵向伸展的物理内容。
 
 **命题 3（脱槽的不可逆性，Irreversibility of Groove Departure）**：设在自锚定链的第 $t^*$ 步，误差使 $x_{t^*+1}$ 偏出 $P_\tau(r_s)$：$x_{t^*+1} \notin P_\tau(r_s)$。则对所有后续步 $t > t^*$，系统不可能自发回到窄槽——即不存在 $t' > t^*$ 使得 $x_{t'} \in P_\tau(r_s)$——除非外部干预将 $x_t$ 重置为 $P_\tau(r_s)$ 中的元素。
 
-**证明**：由 §1 命题 3（采样域孤立），$P_\tau(r_s)$ 与所有其他规则的采样域不相交。一旦 $x_{t^*+1} \notin P_\tau(r_s)$，$x_{t^*+1}$ 落入某个 $\mathcal{X}(r_j)$（$r_j \neq r_s$）的领域——$\Phi$ 在该区域的行为由 $r_j$ 的拟合约束主导，其 Lipschitz 常数为 $L_j \leq L \ll L_s$。后续轨道 $x_{t^*+2}, x_{t^*+3}, \ldots$ 沿 $r_j$ 的拟合轨迹演化，以 $L_j$ 级的温和形变率运动——完全偏离 $r_s$ 的窄槽。
+**证明**：由 §1 命题 3（采样域近孤立性），$P_\tau(r_s)$ 与其他规则的 $\tau$-拟合集的交集直径不超过 $O(\tau/k_s)$，在 $k_s \gg L$ 时可忽略。一旦 $x_{t^*+1} \notin P_\tau(r_s)$，$x_{t^*+1}$ 落入某个 $\mathcal{X}(r_j)$（$r_j \neq r_s$）的领域——$\Phi$ 在该区域的行为由 $r_j$ 的拟合约束主导，其 Lipschitz 常数为 $L_j \leq L \ll L_s$。后续轨道 $x_{t^*+2}, x_{t^*+3}, \ldots$ 沿 $r_j$ 的拟合轨迹演化，以 $L_j$ 级的温和形变率运动——完全偏离 $r_s$ 的窄槽。
 
-回归窄槽需要 $x_t$ 从 $\mathcal{X}(r_j)$ 穿越到 $P_\tau(r_s)$。但由 §2 命题 5（路由分辨率极限），跨越 $\sigma$-决策边界需要 $d(x_t, P_\tau(r_s)) \leq \Delta/L$，而 $P_\tau(r_s)$ 的直径为 $O(\tau/L_s) \ll \Delta/L$——窄槽作为回归目标太小，$\Phi$ 的 Lipschitz 连续性无法将轨道精确引导回该极小域。
+回归窄槽需要 $x_t$ 从 $\mathcal{X}(r_j)$ 穿越到 $P_\tau(r_s)$。但由 第一章 §2 命题 5（路由分辨率极限），跨越 $\sigma$-决策边界需要 $d(x_t, P_\tau(r_s)) \leq \Delta/L$，而 $P_\tau(r_s)$ 的直径为 $O(\tau/L_s) \ll \Delta/L$——窄槽作为回归目标太小，$\Phi$ 的 Lipschitz 连续性无法将轨道精确引导回该极小域。
 
 因此，脱槽是**不可逆的拓扑事件**——与 §7.2 覆盖缺口注记的离散跳崖在机制上同构。$\square$
 
@@ -122,7 +134,7 @@ $$d(x_{t+1}, r_s(x_t)) \;\leq\; \tau, \quad x_{t+1} \in P_\tau(r_s) \quad \foral
 > | **事实式** | $\lesssim L$ | 局部稳定（边界区可能敏感） | ✅（条件性） |
 > | **逐字式** | $\gg L$ | **极不稳定**（微小扰动引发脱槽） | ❌ |
 >
-> 此特征谱完全由 §1 的 $L_i$ 分类决定，与 §2.1 的窄槽几何自洽：$S \gg L$ 的极不稳定性正是窄槽极端各向异性的动力学表现——横向直径 $2\tau/(L_s - L)$ 的极小性意味着，任何垂直于窄槽的扰动 $\delta > 2\tau/(L_s - L)$ 都足以将轨道推出 $P_\tau(r_s)$，触发命题 3 的不可逆脱槽。
+> 此特征谱完全由 §1 的 $L_i$ 分类决定，与 §2.1 的窄槽几何自洽：$S \gg L$ 的极不稳定性正是窄槽极端各向异性的动力学表现——横向直径 $O(\tau/L_s)$ 的极小性意味着，任何垂直于窄槽的扰动 $\delta > O(\tau/L_s)$ 都足以将轨道推出 $P_\tau(r_s)$，触发命题 3 的不可逆脱槽。
 
 ---
 
@@ -152,7 +164,7 @@ $$\varepsilon_{max} \cdot \Lambda_l + L^l \cdot \rho \;\leq\; \tau$$
 
 $$w_{ij} \;\leq\; \frac{d(r_i(x_0), r_j(x_0))}{L} \quad \text{对 } x_0 \in \partial_{ij}$$
 
-**证明**：由 §2 命题 5（路由分辨率极限），$\sigma$ 在 $\partial_{ij}$ 附近的切换精度受 $\Phi$ 的 Lipschitz 连续性限制。$\Phi$ 无法在 $\partial_{ij}$ 两侧无限尖锐地切换行为——在宽度 $\leq \Delta/L$ 的带内，$\Phi$ 被迫以连续方式从服务 $r_i$ 过渡到服务 $r_j$。$\square$
+**证明**：由 第一章 §2 命题 5（路由分辨率极限），$\sigma$ 在 $\partial_{ij}$ 附近的切换精度受 $\Phi$ 的 Lipschitz 连续性限制。$\Phi$ 无法在 $\partial_{ij}$ 两侧无限尖锐地切换行为——在宽度 $\leq \Delta/L$ 的带内，$\Phi$ 被迫以连续方式从服务 $r_i$ 过渡到服务 $r_j$。$\square$
 
 > **注（路由边界带是事实式拟合的发源地）**：命题 6 揭示了事实式拟合形态的几何根源——它不是一个独立的拟合"类别"，而是**两个相邻逻辑式拟合域的路由边界带**。在边界带内，$\Phi$ 的 Lipschitz 约束被两侧的竞争性需求推至 $L_j \approx L$，产生了 §1 推论 1 中"约束边界"等价类的所有特征：条件性可复合、链深更紧、DFG 缺口更显著。
 
@@ -162,17 +174,29 @@ $$w_{ij} \;\leq\; \frac{d(r_i(x_0), r_j(x_0))}{L} \quad \text{对 } x_0 \in \par
 
 命题 6 将事实式拟合定位为路由边界带。本节推导在边界带内的具体后果。
 
-**命题 7（边界区链深骤降，Boundary Zone Chain Depth Collapse）**：设 $r_j$ 为事实式拟合规则，位于路由边界带内（$L_j = L - \epsilon$，$\epsilon > 0$ 小）。则 $r_j$ 的最大可行链深：
+**命题 7（边界区链深骤降，Boundary Zone Chain Depth Collapse）**：设 $r_j$ 为事实式拟合规则，位于路由边界带内（$L_j = L - \epsilon$，$\epsilon > 0$ 小）。设 $L > 1$（Type B 系统的典型情形，§6.2.2）。则 $r_j$ 的最大可行链深为：
 
-$$l_{max}^{(j)} \;=\; \frac{\tau}{\varepsilon_{max} + (L - \epsilon)\delta_{max}} \;\approx\; l^*_0 \cdot \left(1 + \frac{\epsilon \cdot \delta_{max}}{E_0}\right)$$
+$$l_{max}^{(j)} \;=\; \frac{\log\!\bigl(1 + \tau(L_j - 1)/\varepsilon_{max}\bigr)}{\log L_j}$$
 
-其中 $E_0 = \varepsilon_{max} + L\delta_{max}$，$l^*_0 = \tau/E_0$。当 $\epsilon \to 0$（$L_j \to L$），$l_{max}^{(j)} \to l^*_0$——链深恰好退化至 Type B 安全链深。富余量 $\Delta l \approx \epsilon \cdot \delta_{max} \cdot l^*_0 / E_0$ 在 $\epsilon$ 小时微不足道。
+当 $\epsilon \to 0$（$L_j \to L$）时，$l_{max}^{(j)}$ 趋近逻辑式拟合的链深 $l_{max}^{(L)} = \log(1 + \tau(L-1)/\varepsilon_{max})/\log L$。富余量：
 
-然而，将 $r_j$ 插入包含逻辑式拟合步骤的混合链后，整条链的有效 Lipschitz 常数由最坏步主导——链深退回 $l^*_0$，富余量被抵消。
+$$\Delta l \;\approx\; \frac{\epsilon}{L \ln L} \cdot \frac{\tau(L-1)/\varepsilon_{max}}{1 + \tau(L-1)/\varepsilon_{max}}$$
 
-**证明**：由 §6.1 推论 3，最大链深 $l_{max} = \tau/E$，其中 $E = \varepsilon_{max} + L_j \delta_{max}$。当 $L_j = L - \epsilon$，$E = E_0 - \epsilon\delta_{max}$，$l_{max} = \tau/(E_0 - \epsilon\delta_{max})$。Taylor 展开得近似式。
+在 $\epsilon$ 小时微不足道——事实式拟合的链深与逻辑式拟合几乎无区别。
+
+然而，将 $r_j$ 插入包含逻辑式拟合步骤的混合链后，整条链的有效 Lipschitz 常数由最坏步主导——链深退回 $l_{max}^{(L)}$，富余量被抵消。
+
+**证明**：由 CAC 定理（§3.1），链深 $l$ 的误差上界为 $\varepsilon_{max} \cdot \Lambda_l$，其中 $\Lambda_l = \sum_{k=0}^{l-1} L_j^k = (L_j^l - 1)/(L_j - 1)$（均匀 Lipschitz 常数情形）。要求 $\varepsilon_{max} \cdot \Lambda_l \leq \tau$：
+
+$$\frac{L_j^l - 1}{L_j - 1} \;\leq\; \frac{\tau}{\varepsilon_{max}}$$
+
+解得 $L_j^l \leq 1 + \tau(L_j - 1)/\varepsilon_{max}$，取对数即得 $l_{max}^{(j)}$。
+
+富余量 $\Delta l = l_{max}^{(j)} - l_{max}^{(L)}$ 通过对 $l_{max}$ 关于 $L_j$ 在 $L$ 处 Taylor 展开得到——$\partial l_{max}/\partial L_j < 0$（$L_j$ 越小链深越长），但变化率在 $L_j \approx L$ 附近由 $1/(L \ln L)$ 控制，当 $\epsilon$ 小时 $\Delta l$ 微不足道。
 
 对混合链，CAC 定理中 $\Theta_{j+1,l} = \prod_{k=j+1}^{l} L_k$，若任一步 $L_k = L$，则整条链的尾积 $\geq L^{l-j}$，有效链深退回逻辑式水平。$\square$
+
+> **注（$L_j = 1$ 的相变）**：当 $\epsilon = L - 1$（即 $L_j = 1$）时，几何级数退化为 $\Lambda_l = l$，链深恢复线性形式 $l_{max} = \tau/\varepsilon_{max}$。当 $\epsilon > L - 1$（即 $L_j < 1$）时，$\Lambda_l$ 收敛至 $1/(1 - L_j) < \infty$——**误差饱和，链深没有有限上界**。因此，$L_j = 1$ 构成事实式拟合的**链深相变线**：在其上方（$L_j > 1$），事实式拟合的链深有限且接近逻辑式；在其下方（$L_j < 1$），链深约束自动解除，"骤降"不再发生。§1 推论 1 的三态分类中事实式拟合的"条件性可复合"正是这一相变的宏观表现。
 
 > **注（三态几何的统一画像）**：§2.0–§2.5 完整地描绘了三态在 $F$-空间中的几何画像：
 >
@@ -180,5 +204,5 @@ $$l_{max}^{(j)} \;=\; \frac{\tau}{\varepsilon_{max} + (L - \epsilon)\delta_{max}
 > |---|---|---|---|---|
 > | **逻辑式** | 宽域各向同性球 | $\leq L$ | $O((\tau - \varepsilon\Lambda_l)/L^l)$，正 | 路由边界带（命题 6） |
 > | **事实式** | 路由边界带 | $\lesssim L$ | 略大于逻辑式 | 链深骤降（命题 7） |
-> | **逐字式** | 窄槽（各向异性比 $\ll 1$） | $\gg L$ | $O(\tau/(L_s-L))$，极小 | 脱槽不可逆（命题 3） |
+> | **逐字式** | 窄槽（各向异性比 $\ll 1$） | $\gg L$ | $O(\tau/L_s)$，极小 | 脱槽不可逆（命题 3） |
 

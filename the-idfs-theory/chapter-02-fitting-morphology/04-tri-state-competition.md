@@ -14,9 +14,9 @@ $$\mathcal{C}_{route} \;\leq\; \mathcal{D}\log M + C_\varepsilon$$
 
 $$N_L + N_K + N_V \;\leq\; |\mathrm{Im}(\sigma)| \;\leq\; M^{\mathcal{D}}$$
 
-**推论（死库效应，Dead Capacity Effect）**：逐字式拟合占据的路由分支 $N_V$ 对系统的 $R^*$ 复合能力**无贡献**——这些路径服务于不可组合的孤立极值点（§1 命题 3），在复合链中完全不可用。因此，系统的**有效复合路由容量**为：
+**推论（死库效应，Dead Capacity Effect）**：逐字式拟合占据的路由分支 $N_V$ 对系统的 $R^*$ 复合能力**无贡献**——这些路径服务于不可组合的近孤立极值点（§1 命题 3），在复合链中完全不可用。因此，系统的**有效复合路由分支数**为：
 
-$$\mathcal{C}_{route}^{eff} \;\leq\; \mathcal{D}\log M + C_\varepsilon - \log N_V$$
+$$|\mathrm{Im}(\sigma)|^{eff} \;=\; |\mathrm{Im}(\sigma)| - N_V \;\leq\; M^{\mathcal{D}} - N_V$$
 
 $N_V / |\mathrm{Im}(\sigma)|$ 的比值量化了系统容量中被逐字式拟合"冻结"的比例——**死库率（Dead Capacity Ratio）**。
 
