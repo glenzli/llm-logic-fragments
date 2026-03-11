@@ -19,7 +19,7 @@
 | 不等式 | 名称 | 来源 | 含义 |
 |--------|------|------|------|
 | $\varepsilon^*_q \le \varepsilon_{max} \cdot \Lambda_l + \delta_{max} \cdot \Gamma_l$ | CAC 上界 | §3 定理 | 端到端误差被 Lipschitz 乘积逐步放大 |
-| $\varepsilon^*_y \ge |\Delta - \varepsilon_x| - \bar{L}^l \cdot \delta$ | CAB 下界 | §4 定理 | 目标变分强制系统承受不可压缩残差 |
+| $\varepsilon^*_y \ge \lvert\Delta - \varepsilon_x\rvert - \bar{L}^l \cdot \delta$ | CAB 下界 | §4 定理 | 目标变分强制系统承受不可压缩残差 |
 | $\mu(U_\tau) \ge \mu(\mathcal{X}_r)\bigl(1 - \lvert\mathrm{Im}(\sigma)\rvert \cdot e^{C_\varepsilon} / e^{I_\varepsilon}\bigr)^{1/\beta}$ | DFG 正测度下界 | §4.2 定理 | 不完美拟合集不可消除 |
 | $\rho^{-1/l} \le \bar{L} \le \frac{\bar{L}}{L_{max}}(1 - 1/l^*_0)$ | 收缩走廊 | §6.1 推论 2 | 长链 $\bar{L}$ 被双向夹击 |
 | $l_{max} = \ln\rho / (\ln(L_{max}/\bar{L}) + 1/l^*_0)$ | 最大可行链深 | §6.1 推论 3 | 泛化性碾压安全链深 |
