@@ -15,6 +15,16 @@
 # ──────────────────────────────────────────────────────────────
 set -euo pipefail
 
+NO_COMMIT=false
+ARGS=()
+for arg in "$@"; do
+  case "$arg" in
+    --no-commit) NO_COMMIT=true ;;
+    *) ARGS+=("$arg") ;;
+  esac
+done
+set -- "${ARGS[@]+${ARGS[@]}}"
+
 RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[1;33m'; CYAN='\033[0;36m'; BOLD='\033[1m'; NC='\033[0m'
 
 info()  { printf "${CYAN}[INFO]${NC}  %s\n" "$*"; }
@@ -157,3 +167,13 @@ if ! $HAS_COSIGN; then
   info "安装: brew install cosign"
 fi
 ok "完成 ✓"
+
+# ── 自动提交 ──
+if ! $NO_COMMIT && git rev-parse --is-inside-work-tree &>/dev/null; then
+  echo ""
+  git add -A '*.txt' '*.bundle' -- '**/MANIFEST.txt' '**/MANIFEST.bundle' 'MANIFEST.txt' 'MANIFEST.bundle' 2>/dev/null
+  git add MANIFEST.txt MANIFEST.bundle */MANIFEST.txt */MANIFEST.bundle 2>/dev/null || true
+  TIMESTAMP=$(date -u '+%Y-%m-%dT%H:%M:%SZ')
+  git commit -m "sign: $TIMESTAMP" --allow-empty
+  ok "已提交: sign: $TIMESTAMP"
+fi
