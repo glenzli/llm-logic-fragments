@@ -23,7 +23,7 @@ Type B 的定义性约束为 $l \le l^*_0 = \tau / E$（其中 $E = \varepsilon_
 > | §6.1 推论 8（Pareto 前沿） | **前提不满足** | 需走廊约束 |
 > | §6.1 完美即平庸定理 | **前提不满足** | 综合以上，四重缺陷全部消解 |
 
-**命题（Type B 完备性，Type B Completeness）**：设 IDFS $\mathcal{F} = (F, \sigma)$ 在 $l \le l^*_0$ 条件下运行。则 §6.1 完美即平庸定理的四重结构性缺陷**全部消解**：
+**命题（Type B 平庸消解，Mediocrity Dissolution under Type B）**：设 IDFS $\mathcal{F} = (F, \sigma)$ 在 $l \le l^*_0$ 条件下运行。则 §6.1 完美即平庸定理的四重结构性缺陷**全部消解**：
 
 (i) **误差可控但非瓶颈**：CAC 上界 $\varepsilon^*_q \le E \cdot \Lambda_l \le \tau$ 仍成立，但 $\tau$ 可通过调节 $l^*_0 = \tau/E$（即改变容差预算或单步精度）任意收紧，不受走廊的结构性锁定。
 
@@ -36,6 +36,32 @@ Type B 的定义性约束为 $l \le l^*_0 = \tau / E$（其中 $E = \varepsilon_
 **证明**：四条均为 §6.1 相应推论的前提验证。§6.1 推论 1 要求 $l > l^*_0$，在 Type B 下为假，故推论 1 的结论（$\bar{L} < 1$ 必然）不成立；推论 5–8 以推论 1 为先决条件，链式失效。完美即平庸定理的四重缺陷恰好是推论 5–8 的聚合，故全部消解。$\square$
 
 > **注（Type B 的"自由度回归"）**：在 §6.1 的长链分析中，系统的核心参数 $\bar{L}$ 被双向夹击至走廊内的一个狭窄区间——这是所有平庸性的数学根源。Type B 通过将链深限制在 $l^*_0$ 以内，从根本上取消了夹击的上半部分（不需要收缩来抑制 CAC 爆炸），使得 $\bar{L}$ 从被囚禁的走廊参数回归为自由设计变量。系统设计者在单段内拥有完整的参数空间来优化性能，代价是单段的逻辑深度被截断。
+
+**命题（$M$-精度走廊，$M$-Precision Corridor）**：在 Type B 约束下，基函数库规模 $M = |F|$ 同时控制 CAC 上界与 CAB 下界，将系统的段内端到端误差 $\varepsilon^*_q$ 双向约束于一个 $M$-依赖的走廊之中：
+
+$$\varepsilon_{y,out}(M) \;\le\; \varepsilon^*_q \;\le\; \varepsilon_{max}(M) \cdot \Lambda_l + \delta_{max} \cdot \Gamma_l$$
+
+其中上界和下界均为 $M$ 的递减函数：
+
+**(i) 上界侧（$M$ 压低 $\varepsilon_{max}$）**：系统路由 $\sigma$ 将输入空间分割为至多 $|\text{Im}(\sigma)| \le M^{\mathcal{D}}$ 个分区，每个分区内由固定的 $L$-Lipschitz 链服务。分区越多，每个分区的直径越小，段内拟合误差越低。由 §4.2 CPI 定理，在具有 $k$-判别性的目标上实现全局误差 $\varepsilon_{max}$ 所需的最小路由分支数为 $\mathcal{N}(A, 2\varepsilon_{max}/k) / \mathcal{N}(A, \varepsilon_{max}/L)$。反向求解：给定 $M^{\mathcal{D}}$ 条可用路径，可达到的最优拟合精度 $\varepsilon_{max}$ 由以下隐式方程限定——
+
+$$M^{\mathcal{D}} \;\ge\; \frac{\mathcal{N}(A,\; 2\varepsilon_{max}/k)}{\mathcal{N}(A,\; \varepsilon_{max}/L)}$$
+
+$M$ 增大时，左端增长，允许 $\varepsilon_{max}$ 更小（右端覆盖数比对 $\varepsilon_{max}$ 单调递减）。
+
+**(ii) 下界侧（$M$ 压低 $\varepsilon_{y,out}$）**：CAB 定理中的末端结构瓶颈（§4.1）为：
+
+$$\varepsilon_{y,out} \;=\; \min_{f \in F}\; \inf_{h \in \mathcal{X}} d(f(h),\, q(y))$$
+
+由 §1.2 的像集全有界性，$\bigcup_{f \in F} f(\mathcal{X})$ 的 $\epsilon$-覆盖数不超过 $M \cdot e^{C_\epsilon}$（引理 1 证明中的次可加性）。因此：
+
+$$\varepsilon_{y,out} \;\le\; d\!\left(q(y),\; \bigcup_{f \in F} f(\mathcal{X})\right) \;\le\; \mathcal{N}^{-1}\!\left(M \cdot e^{C_\epsilon},\; \mathcal{X}\right)$$
+
+其中 $\mathcal{N}^{-1}(N, \mathcal{X})$ 为使 $N$ 个球覆盖 $\mathcal{X}$ 所需的最小球半径。$M$ 增大时，覆盖更密，$\varepsilon_{y,out} \to 0$。
+
+**证明**：上界为 §3 CAC 定理的直接应用。下界为 §4.1 CAB 定理中末端结构瓶颈的直接应用。$M$ 的单调性分别由 CPI 的 $\varepsilon_{max}$ 隐式方程和覆盖数的单调性给出。$\square$
+
+> **注（与 §6.1 $\Theta$-走廊的对偶）**：§6.1 的走廊是 $\bar{L}$ 被 CAC+CAB 双向夹击。此处的 $M$-精度走廊是 $\varepsilon$ 被 CAC+CAB 双向夹击——但夹击的松紧度由 $M$ 调控。$M$ 越大，上界越低（拟合越精），下界也越低（结构瓶颈越小），走廊整体向零收缩。这是 §6.2.2 代偿定律（$M$ 以指数级膨胀换取短链精度）在误差空间中的精确投影——**$M$ 不仅在信息论层面补偿了深度杠杆的丧失，更在度量空间层面同时挤压了 CAC 和 CAB 的边界**。
 
 ---
 
