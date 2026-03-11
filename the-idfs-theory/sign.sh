@@ -8,9 +8,10 @@
 #
 # 生成 (每个目录内):
 #   MANIFEST.txt            SHA-256 / SHA-512 / BLAKE2b 三重哈希清单
+#   MANIFEST.bundle         Sigstore 签名 (需 cosign)
 # 生成 (工作目录):
 #   MANIFEST.txt            各子目录 MANIFEST.txt 的二次哈希
-#   MANIFEST.bundle         Sigstore 签名 + 时间戳包 (需 cosign)
+#   MANIFEST.bundle         Sigstore 签名 (需 cosign)
 # ──────────────────────────────────────────────────────────────
 set -euo pipefail
 
@@ -20,6 +21,9 @@ info()  { printf "${CYAN}[INFO]${NC}  %s\n" "$*"; }
 ok()    { printf "${GREEN}[OK]${NC}    %s\n" "$*"; }
 warn()  { printf "${YELLOW}[WARN]${NC}  %s\n" "$*"; }
 fail()  { printf "${RED}[FAIL]${NC}  %s\n" "$*"; exit 1; }
+
+HAS_COSIGN=false
+command -v cosign &>/dev/null && HAS_COSIGN=true
 
 # ── 检查 Python ──
 PYTHON=""
@@ -44,7 +48,16 @@ print(f'BLAKE2b:  {hashlib.blake2b(data).hexdigest()}')
 " "$1"
 }
 
-# ── 对单个目录生成 MANIFEST.txt ──
+# ── cosign 签名 ──
+cosign_sign() {
+  local target="$1"
+  if $HAS_COSIGN; then
+    cosign sign-blob "$target" --bundle "${target%.txt}.bundle" 2>/dev/null
+    ok "$(dirname "$target")/MANIFEST.bundle"
+  fi
+}
+
+# ── 对单个目录生成 MANIFEST.txt + bundle ──
 sign_dir() {
   local dir="$1"
   local manifest="$dir/MANIFEST.txt"
@@ -71,13 +84,14 @@ EOF
   done
 
   ok "$(basename "$dir")/MANIFEST.txt"
+  cosign_sign "$manifest"
 }
 
 # ── 生成根级合并 MANIFEST ──
 sign_root() {
   local root_manifest="MANIFEST.txt"
   local manifests
-  manifests=$(find . -mindepth 2 -maxdepth 2 -name 'MANIFEST.txt' -type f ! -path './old-fragments/*' | sort)
+  manifests=$(find . -mindepth 2 -maxdepth 2 -name 'MANIFEST.txt' -type f | sort)
 
   [[ -z "$manifests" ]] && { warn "未找到子目录 MANIFEST.txt，跳过合并"; return; }
 
@@ -98,16 +112,7 @@ EOF
   done
 
   ok "MANIFEST.txt (根级合并)"
-
-  # Sigstore 签名 — 对根 MANIFEST 签名
-  if command -v cosign &>/dev/null; then
-    info "cosign 签名..."
-    cosign sign-blob "$root_manifest" --bundle "MANIFEST.bundle"
-    ok "MANIFEST.bundle"
-  else
-    warn "未安装 cosign — 跳过 Sigstore 签名"
-    info "安装: brew install cosign"
-  fi
+  cosign_sign "$root_manifest"
 }
 
 # ── 主逻辑 ──
@@ -118,7 +123,7 @@ if [[ $# -ge 1 ]]; then
   done
   sign_root
 else
-  DIRS=$(find . -mindepth 1 -maxdepth 1 -type d ! -name '.*' ! -name 'old-fragments' | sort)
+  DIRS=$(find . -mindepth 1 -maxdepth 1 -type d ! -name '.*' | sort)
   [[ -z "$DIRS" ]] && fail "未找到子目录"
 
   echo ""
@@ -147,4 +152,8 @@ else
 fi
 
 echo ""
+if ! $HAS_COSIGN; then
+  warn "未安装 cosign — 已跳过 Sigstore 签名"
+  info "安装: brew install cosign"
+fi
 ok "完成 ✓"
