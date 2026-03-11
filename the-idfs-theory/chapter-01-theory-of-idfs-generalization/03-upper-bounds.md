@@ -41,7 +41,7 @@ $$e_j \;\leq\; d\bigl(\Phi(h_{j-1}),\, \Phi(h^*_{j-1})\bigr) + d\bigl(\Phi(h^*_{
 >
 > $$d\bigl(\Phi(h_{j-1}),\, \Phi(x'_j)\bigr) \;\leq\; L_j \cdot d(h_{j-1},\, x'_j)$$
 >
-> 然而 $d(h_{j-1}, x'_j)$ 等于 $e_{j-1} + \delta_j$（近似轨道到采样域最近点的距离），在 $e_{j-1}$ 已经积累较大时，这一距离可以极大，在某些定义域上甚至趋于无穷——导致上界过松以至无意义。若为了让上界有意义而强制要求 $L_j \to 0$（即极强的全局收缩），则由§6 命题 2，系统的长链会将一切状态差异——包括不同输入之间的区分——彻底压平，$\Phi$ 退化为常数映射，近似拟合能力丧失。因此，引入 $h^*_{j-1}$ 将路径拆分为**近似误差传播项**（第一项，权重 $e_{j-1}$）和**采样域偏离项**（第二项，权重 $\delta_j$）是必要的：两项分别被 $L_j$ 缩放，但乘的是各自有控制意义的距离，而非无界的 $d(h_{j-1}, x'_j)$。
+> 然而 $d(h_{j-1}, x'_j)$ 等于 $e_{j-1} + \delta_j$（近似轨道到采样域最近点的距离），在 $e_{j-1}$ 已经积累较大时，这一距离可以极大，在某些定义域上甚至趋于无穷——导致上界过松以至无意义。若为了让上界有意义而强制要求 $L_j \to 0$（即极强的全局收缩），则由§5 命题 2，系统的长链会将一切状态差异——包括不同输入之间的区分——彻底压平，$\Phi$ 退化为常数映射，近似拟合能力丧失。因此，引入 $h^*_{j-1}$ 将路径拆分为**近似误差传播项**（第一项，权重 $e_{j-1}$）和**采样域偏离项**（第二项，权重 $\delta_j$）是必要的：两项分别被 $L_j$ 缩放，但乘的是各自有控制意义的距离，而非无界的 $d(h_{j-1}, x'_j)$。
 
 分别定界：
 
@@ -85,15 +85,29 @@ $\square$
 **推论 1（计算折叠等效，Computational Folding Equivalence）**：设在 $\mathcal{X}_{sub}$ 上存在第 $l$ 阶路由混叠，即存在 $x_1, x_2 \in \mathcal{X}_{sub}$ 使得 $\sigma(x_2) = \sigma_l(x_1)$。则单步系统 $\mathcal{F}$ 在 $x_2$ 处**执行与 $l$ 步宏观系统相同的计算程序**，而该程序的宏观容差由 CAC 定理的 $\mathcal{E}^*$ 控制。由§2 命题 1 推论，组合耗尽保证了路由混叠的必然存在。
 > **注（路由混叠与计算时空重叠）**：这是路由混叠的反直觉结构后果。路由映射 $\sigma$ 将空间的不同位置（$x_2$ vs $x_1$）和不同演化深度（单步 vs $l$ 步）映射到**同一条微观计算链**，赋予了 $\Phi$ 一种**计算时空折叠**特征：单步映射在某些输入上的行为，与系统经 $l$ 步迭代后的行为，在计算程序层面完全重合。两者因共享同一条链而共享同一套 CAC 容差界。
 
-**推论 2（宏观容差界 $\mathcal{E}^*$ 的三态行为，Three-Regime Behavior of the Macroscopic Tolerance Bound）**：宏观容差界 $\varepsilon^*_q$ 的两项共享 $\Theta_{j,l}$ 结构，但步骤 $j$ 的权重有差异：$\varepsilon$-项权重为 $\Theta_{j+1,l}$（不含本步 $L_j$），$\delta$-项权重为 $\Theta_{j,l} = L_j \cdot \Theta_{j+1,l}$（含本步 $L_j$）。因此**同一步 $j$ 的微观采样域偏离代价比拟合误差代价高 $L_j$ 倍**：$L_j > 1$（扩张步）时 $\delta$ 惩罚尤为严苛，$L_j < 1$（收缩步）时 $\delta$ 惩罚被折减。两项的主导步 $j^*$ 均不是微观误差绝对值最大者——准确的主导步是使放大后贡献（$\varepsilon_{i_j} \cdot \Theta_{j+1,l}$ 或 $\delta_j \cdot \Theta_{j,l}$）最大的步骤，早期步骤往往占优。
+**推论 2（宏观容差界 $\mathcal{E}^*$ 的两态行为，Two-Regime Behavior of the Macroscopic Tolerance Bound）**：宏观容差界 $\varepsilon^*_q$ 的两项共享 $\Theta_{j,l}$ 结构，但步骤 $j$ 的权重有差异：$\varepsilon$-项权重为 $\Theta_{j+1,l}$（不含本步 $L_j$），$\delta$-项权重为 $\Theta_{j,l} = L_j \cdot \Theta_{j+1,l}$（含本步 $L_j$）。因此**同一步 $j$ 的微观采样域偏离代价比拟合误差代价高 $L_j$ 倍**：$L_j > 1$（扩张步）时 $\delta$ 惩罚尤为严苛，$L_j < 1$（收缩步）时 $\delta$ 惩罚被折减。两项的主导步 $j^*$ 均不是微观误差绝对值最大者——准确的主导步是使放大后贡献（$\varepsilon_{i_j} \cdot \Theta_{j+1,l}$ 或 $\delta_j \cdot \Theta_{j,l}$）最大的步骤，早期步骤往往占优。
 
-按 $\Theta_{j,l}$ 的渐近行为，从微观容差 $\mathcal{E}$ 跃迁至宏观容差 $\mathcal{E}^*$ 呈现三种数学情形：
+由于 IDFS 是有限系统（有限步长 $l$、有限全局常数 $L$、有限单步误差 $\varepsilon_{max}$、有限偏离 $\delta_{max}$），且 $\Phi^l$ 自身仍然是满足 $L^l$ 约束的 IDFS（§1.2 代数自相似性），宏观容差上界 $\varepsilon^*_q$ **恒为有限数**。更重要的是，由于 §2 命题 5（路由分辨率极限）的绝对物理约束，当误差积累使轨线间距被压缩到 $\sigma$ 的分辨率死锁以下时，系统必然发生**路径合并**——无论 $\bar{L}$ 多大，持续扩张的链路在物理上无法维持，误差增长被系统的有限容量自动截断。因此，从微观容差 $\mathcal{E}$ 跃迁至宏观容差 $\mathcal{E}^*$ 呈现两种物理情形：
 
-**扩张（$\Theta_{1,l} \to \infty$）**：$\varepsilon$-项上界 $\sum_j \varepsilon_{i_j} \Theta_{j+1,l} \to \infty$，$\delta$-项上界 $\sum_j \delta_j \Theta_{j,l} \to \infty$（只要存在非零项）；权重不等式 $\Theta_{j,l} \geq \Theta_{j+1,l}$ 保证 $\delta$ 上界爆炸速度不慢于 $\varepsilon$ 上界。此时 **CAC 上界失效**，宏观容差 $\varepsilon^*_q$ 对实际系统误差不再提供有效约束。注意：理论上界趋于无穷**不能**直接推断系统具体轨道的误差 $e_l$ 也必然发散——具体系统的 $e_l$ 视其自身结构可能仍有界，只是组合泛化定理无法在此框架下给出保证。但援引推论 3（紧性）：存在使等号精确成立的 IDFS，即必定存在端到端实际崩溃的系统，这说明此处定理“上界失效”的程度是紧确的。
+**稳定有界（Stable Bounded，$\varepsilon^*_q < D$）**：当路径中扩张与收缩因子相互交织时，误差沿深度 $l$ 逐步积累但始终有限。记 $D \triangleq \mathrm{diam}(\Phi^l(\mathcal{X}))$ 为系统像空间固有直径。由形式 C 保守界：
 
-**稳定（$\sup_{j,l} \Theta_{j+1,l} \leq \kappa < \infty$）**：$\mathcal{E}^*$ 中的元素 $\varepsilon^*_q$ 存在可量化的有效上界。$\varepsilon$-项上限被 $\kappa \sum_j \varepsilon_{i_j}$ 控制，有界当且仅当 $\sum_j \varepsilon_{i_j} < \infty$，单步对宏观总误差的贡献上限被截断为 $\kappa \varepsilon_{i_j}$。$\delta$-项上限为 $(\sup_j L_j) \cdot \kappa \sum_j \delta_j$。
+$$\varepsilon^*_q \;\leq\; (\varepsilon_{max} + \bar{L}\,\delta_{max}) \cdot \frac{\bar{L}^l - 1}{\bar{L} - 1} \;\leq\; D$$
 
-**饱和（$\Lambda_\infty = \sum_{j \geq 1} \Theta_{j+1,\infty} < C$）**：见推论 5。宏观容差界全局有限，不再随微观长链的堆叠而增长。$\varepsilon$-项上限为 $\sup_j(\varepsilon_{i_j}) \cdot \Lambda_\infty$；$\delta$-项上限为 $\sup_j(\delta_j) \cdot \Gamma_\infty$。无论生成的宏观有效链 $q \in \mathcal{T}_l$ 多深，其对应的容差 $\varepsilon^*_q \in \mathcal{E}^*$ 均被有限常数绝对控制。
+受全局 $L$ 约束和路径合并效应的共同制衡，宏观容差 $\varepsilon^*_q$ 始终被锁定在 $D$ 以内。积累速率取决于路径 Lipschitz 序列 $\{L_j\}$ 的具体结构。该态是 IDFS 在一般混合路径下的**默认运行模式**。
+
+**收敛饱和（Saturated，$\Lambda_\infty < \infty$）**：若路径具备充分强的收缩势能，使得截断尾积级数收敛（见推论 5），宏观容差界被一个**与深度 $l$ 完全无关的有限常数**绝对封顶：
+
+$$\varepsilon^*_q \;\leq\; \varepsilon_{max} \cdot \Lambda_\infty \;+\; \delta_{max} \cdot \Gamma_\infty \;\triangleq\; B_{sat} \;<\; \infty$$
+
+此时系统呈现出"任意深度逻辑链免疫力"，微观组件被安全地镶嵌在大尺度吸引域内。
+
+> **注（上界有限 $\neq$ 拟合质量好）**：$\varepsilon^*_q \leq B_{sat}$ 是关于误差**不发散**的保证，而非关于拟合精度的承诺。$B_{sat}$ 刻画的是系统的**最差情形天花板**——对于任何在此范围内的目标，系统都不会崩溃。但这并不排除误差在 $B_{sat}$ 附近甚至恰好等于 $B_{sat}$ 的情形大面积出现。换言之，饱和是一种**稳定性声明**（系统不爆炸），而非**拟合性声明**（系统拟合得好）。事实上，§4 的 CAB 下界将证明：在收缩主导的饱和体制下，系统对**高变分目标**的拟合误差存在不可消去的正下界，且 §6 将进一步揭示，饱和所必需的收缩步恰恰是拟合代价最高的步骤。饱和态系统的精确图景是**稳定但平庸**——以主动放弃高频变分追踪为代价换取端到端有界性。
+
+> **注（物理直径封顶，Diameter Capping）**：CAC 定理给出的 $\varepsilon^*_q$ 是代数上界，而 IDFS 像集的全有界性（§1.2）提供了一个独立于 CAC 的**绝对物理天花板**：端到端误差不可能超越系统像空间的固有直径 $D = \mathrm{diam}(\Phi^l(\mathcal{X}))$。两个独立上界取交，给出系统的**有效误差界**：
+> $$e_l \;\leq\; \min\!\bigl(\varepsilon^*_q,\; D\bigr)$$
+> 当 CAC 代数上界超过 $D$ 时（扩张路径），物理直径接管约束权；当 CAC 代数上界远低于 $D$ 时（收缩路径），CAC 界提供实质更紧的保证。
+
+> **注（路径跨度 $\kappa_\Phi$ 与 CAC 界松紧度）**：CAC 的保守简化形式（形式 C）以全局 $L$ 替换所有局部 $L_j$，其松弛程度直接受 §1.2 定义的路径 Lipschitz 跨度 $\kappa_\Phi = \sup L_j / \inf L_j$ 调控。当 $\kappa_\Phi \to 1$（均匀路径），形式 C 与精细界几乎吻合——保守简化几乎无损。当 $\kappa_\Phi \gg 1$（高度异质路径，典型的大规模 IDFS 如大语言模型），$L_{max}$ 远超大多数步的实际 $L_j$，保守界严重高估误差。此时系统的**实际泛化能力远优于理论悲观预测**，精细界（形式 A）或几何均值 $\bar{L}$ 估计（见推论 4a）方能揭示真实表现。
 
 ---
 
@@ -147,47 +161,49 @@ $$e_l = \sum_{j=1}^{l} (\varepsilon_{i_j} + L_j\delta_j)\cdot \Theta_{j+1,l} = \
 
 **推论 4（保底可靠链深，Guaranteed Safe Chain Depth）**：若要求系统在生成的宏观链上不发生泛化崩溃，即要求宏观容差集 $\mathcal{E}^*$ 中的元素被严格界定在安全阈值 $\tau > 0$ 内（$\varepsilon^*_q \leq \tau$），则相应的宏观有效链集 $\mathcal{T}_l$ 必须在逻辑深度上实施截断（即限制最大推导步数 $l$）。
 
-设 $\bar{L} \triangleq \max_j L_j$ 为路径局部 Lipschitz 最大值。利用 $\Gamma_l \leq \bar{L}\,\Lambda_l$，确保 $\varepsilon^*_q \leq \tau$ 的充分条件合并为：
+记 $L_{max} \triangleq \sup_j L_j$（即 §1.2 路径 Lipschitz 常数的上确界，由系统要求 $L_j \leq L$，恒有 $L_{max} \leq L$）。利用 $\Gamma_l \leq L_{max}\,\Lambda_l$，确保 $\varepsilon^*_q \leq \tau$ 的充分条件合并为：
 
-$$(\varepsilon_{\max} + \bar{L}\,\delta_{\max})\cdot\Lambda_l \;\leq\; \tau$$
+$$(\varepsilon_{\max} + L_{max}\,\delta_{\max})\cdot\Lambda_l \;\leq\; \tau$$
 
-再利用 $\Lambda_l \leq \dfrac{\bar{L}^l - 1}{\bar{L} - 1}$，对 $\bar{L} > 1$ 显式求解，给出**保底可靠链深**：
+再利用 $\Lambda_l \leq \dfrac{L_{max}^l - 1}{L_{max} - 1}$，对 $L_{max} > 1$ 显式求解，给出**保底可靠链深**：
 
-$$l^* \;=\; \left\lfloor \frac{\log\!\left(1 + \dfrac{\tau(\bar{L}-1)}{\varepsilon_{\max} + \bar{L}\,\delta_{\max}}\right)}{\log \bar{L}} \right\rfloor$$
+$$l^* \;=\; \left\lfloor \frac{\log\!\left(1 + \dfrac{\tau(L_{max}-1)}{\varepsilon_{\max} + L_{max}\,\delta_{\max}}\right)}{\log L_{max}} \right\rfloor$$
 
 即：任意长度 $\leq l^*$ 的链均保证 $e_l \leq \tau$。
 
-$\bar{L} = 1$ 时退化为线性：$l^* = \lfloor \tau/(\varepsilon_{\max}+\delta_{\max}) \rfloor$。
+$L_{max} = 1$ 时退化为线性：$l^* = \lfloor \tau/(\varepsilon_{\max}+\delta_{\max}) \rfloor$。
 
 **证明**：
 
-**第一步（合并两项）**：由 $\bar{L} = \max_j L_j$，对每项有 $L_j \Theta_{j+1,l} \leq \bar{L}\,\Theta_{j+1,l}$，故：
+**第一步（合并两项）**：由 $L_{max} = \sup_j L_j$，对每项有 $L_j \Theta_{j+1,l} \leq L_{max}\,\Theta_{j+1,l}$，故：
 
-$$\Gamma_l = \sum_{j=1}^l L_j \Theta_{j+1,l} \;\leq\; \bar{L} \sum_{j=1}^l \Theta_{j+1,l} = \bar{L}\,\Lambda_l$$
+$$\Gamma_l = \sum_{j=1}^l L_j \Theta_{j+1,l} \;\leq\; L_{max} \sum_{j=1}^l \Theta_{j+1,l} = L_{max}\,\Lambda_l$$
 
 代入充分条件：
 
-$$\varepsilon_{\max}\,\Lambda_l + \delta_{\max}\,\Gamma_l \;\leq\; \varepsilon_{\max}\,\Lambda_l + \delta_{\max}\cdot\bar{L}\,\Lambda_l = (\varepsilon_{\max} + \bar{L}\,\delta_{\max})\,\Lambda_l \;\leq\; \tau$$
+$$\varepsilon_{\max}\,\Lambda_l + \delta_{\max}\,\Gamma_l \;\leq\; \varepsilon_{\max}\,\Lambda_l + \delta_{\max}\cdot L_{max}\,\Lambda_l = (\varepsilon_{\max} + L_{max}\,\delta_{\max})\,\Lambda_l \;\leq\; \tau$$
 
 **第二步（约束 $\Lambda_l$）**：上式等价于：
 
-$$\Lambda_l \;\leq\; \frac{\tau}{\varepsilon_{\max} + \bar{L}\,\delta_{\max}}$$
+$$\Lambda_l \;\leq\; \frac{\tau}{\varepsilon_{\max} + L_{max}\,\delta_{\max}}$$
 
-**第三步（对 $l$ 求解显式下界）**：由 $\Theta_{j+1,l} \leq \bar{L}^{l-j}$，故：
+**第三步（对 $l$ 求解显式下界）**：由 $\Theta_{j+1,l} \leq L_{max}^{l-j}$，故：
 
-$$\Lambda_l = \sum_{j=1}^l \Theta_{j+1,l} \;\leq\; \sum_{j=1}^l \bar{L}^{l-j} = \frac{\bar{L}^l - 1}{\bar{L} - 1} \qquad (\bar{L} > 1)$$
+$$\Lambda_l = \sum_{j=1}^l \Theta_{j+1,l} \;\leq\; \sum_{j=1}^l L_{max}^{l-j} = \frac{L_{max}^l - 1}{L_{max} - 1} \qquad (L_{max} > 1)$$
 
-要使 $(\bar{L}^l-1)/(\bar{L}-1) \leq \tau/(\varepsilon_{\max}+\bar{L}\delta_{\max})$，即 $\bar{L}^l \leq 1 + \tau(\bar{L}-1)/(\varepsilon_{\max}+\bar{L}\delta_{\max})$，取对数解 $l$ 的最大整数：
+要使 $(L_{max}^l-1)/(L_{max}-1) \leq \tau/(\varepsilon_{\max}+L_{max}\delta_{\max})$，即 $L_{max}^l \leq 1 + \tau(L_{max}-1)/(\varepsilon_{\max}+L_{max}\delta_{\max})$，取对数解 $l$ 的最大整数：
 
-$$l^* = \left\lfloor \frac{\log\!\left(1 + \dfrac{\tau(\bar{L}-1)}{\varepsilon_{\max} + \bar{L}\,\delta_{\max}}\right)}{\log \bar{L}} \right\rfloor$$
+$$l^* = \left\lfloor \frac{\log\!\left(1 + \dfrac{\tau(L_{max}-1)}{\varepsilon_{\max} + L_{max}\,\delta_{\max}}\right)}{\log L_{max}} \right\rfloor$$
 
-由构造，任意长度 $\leq l^*$ 的链均满足 $(\varepsilon_{\max}+\bar{L}\delta_{\max})\Lambda_l \leq \tau$，进而由 CAC 定理保证 $e_l \leq \tau$。$\square$
+由构造，任意长度 $\leq l^*$ 的链均满足 $(\varepsilon_{\max}+L_{max}\delta_{\max})\Lambda_l \leq \tau$，进而由 CAC 定理保证 $e_l \leq \tau$。$\square$
 
-> **注**：$l^*$ 仅依赖三个标量 $\varepsilon_{\max}$、$\delta_{\max}$、$\bar{L}$，先验可计算。分母 $\varepsilon_{\max} + \bar{L}\,\delta_{\max}$ 即**有效单步误差**（近似误差与放大一次的采样域偏离代价之和，呼应 CAC 主定理形式B）。$\bar{L}$ 取路径局部最大而非全局 $L$，结合保守的 $\Lambda_l$ 上界，$l^*$ 通常是悲观估计——若路径中大多数步的 $L_j \ll \bar{L}$，实际可安全走的深度往往远大于 $l^*$。
+> **注**：$l^*$ 仅依赖三个标量 $\varepsilon_{\max}$、$\delta_{\max}$、$L_{max}$，先验可计算。分母 $\varepsilon_{\max} + L_{max}\,\delta_{\max}$ 即**有效单步误差**（近似误差与放大一次的采样域偏离代价之和，呼应 CAC 主定理形式B）。$L_{max}$ 取路径局部最大而非全局 $L$，结合保守的 $\Lambda_l$ 上界，$l^*$ 通常是悲观估计。
 
+**推论 4a（路径感知安全深度，Path-Aware Safe Depth）**：若已知具体路径的几何均值 $\bar{L}$（§1.2），则对 $\bar{L} > 1$，安全深度可收紧为：
 
+$$l^*_{\bar{L}} \;=\; \left\lfloor \frac{\log\!\left(1 + \dfrac{\tau(\bar{L}-1)}{\varepsilon_{\max} + \bar{L}\,\delta_{\max}}\right)}{\log \bar{L}} \right\rfloor$$
 
-
+由 $\bar{L} \leq L_{max}$（均值 $\leq$ 极值），恒有 $l^*_{\bar{L}} \geq l^*$。当路径中大量收缩步将几何均值拉低到远小于 $L_{max}$ 时（即 $\kappa_\Phi \gg 1$ 的高异质路径），$l^*_{\bar{L}} \gg l^*$——系统实际可安全走的深度远超保守估计。$\bar{L} < 1$ 时安全深度不受限（对应推论 5 的饱和态）。
 
 
 **推论 5（宏观容差集的收缩有界性，Boundedness of $\mathcal{E}^*$ under Contraction）**：记 $\Theta_{j,\infty} \triangleq \lim_{l\to\infty} \Theta_{j,l} = \prod_{k=j}^{\infty} L_k$（当极限存在时）。若局部收缩足够强导致累积系数收敛：
@@ -198,7 +214,9 @@ $$\Lambda_\infty \;\triangleq\; \sum_{j=1}^{\infty} \Theta_{j+1,\infty} \;<\; \i
 
 $$\varepsilon^*_q \;\leq\; \varepsilon_{\max} \cdot \Lambda_\infty \;+\; \delta_{\max} \cdot \Gamma_\infty \;<\; \infty$$
 
-即：在强收缩下，由有限微观容差（$\mathcal{E}$）爆发出的无限组合宏观误差（$\mathcal{E}^*$）被强制封顶。系统展现出对任意长逻辑组合的“无限泛化免疫力”。
+即：在强收缩下，由有限微观容差（$\mathcal{E}$）爆发出的无限组合宏观误差（$\mathcal{E}^*$）被强制封顶。系统展现出对任意长逻辑组合的"无限泛化免疫力"。
+
+> **注（$l \to \infty$ 极限的合法性）**：虽然 IDFS 是有限系统，但此处取 $l \to \infty$ 在物理上是合法的。推论 5 的前提条件要求收缩步主导（$\Theta_{j,l} \to 0$），而收缩路径不触发任何物理截断机制——系统只是将轨线越拉越近，不涉及 §2 命题 5 的分辨率死锁或路径合并（后者仅约束扩张行为）。因此，无限长收缩链的极限分析在 IDFS 框架内是完全自洽的。
 
 **证明**：由 CAC 定理精细界（形式 A）：
 
@@ -206,9 +224,15 @@ $$e_l \;\leq\; \varepsilon_{\max}\cdot\Lambda_l \;+\; \delta_{\max}\cdot\Gamma_l
 
 由 $\Lambda_l \nearrow \Lambda_\infty$ 和 $\Gamma_l \nearrow \Gamma_\infty$（两个级数均单调递增趋向各自极限），故 $e_l \leq \varepsilon_{\max}\cdot\Lambda_\infty + \delta_{\max}\cdot\Gamma_\infty$。$\square$
 
-> **注（允许局部扩张；$\Gamma_\infty$ 与 $\Lambda_\infty$ 同阶）**：推论 5 不要求 $L_j < 1$ 逐步成立——即使某些步存在 $L_j > 1$（局部扩张），只要后续有足够强的收缩步将尾部乘积压平，$\Lambda_\infty$ 仍然有限。此外，由 $\Gamma_\infty = \sum_j L_j \Theta_{j+1,\infty} \leq (\sup_j L_j)\cdot\Lambda_\infty$，若路径局部 Lipschitz 有界（$\sup_j L_j < \infty$），则 $\Lambda_\infty < \infty$ 自动蒴含 $\Gamma_\infty < \infty$，条件可合并为单一的 $\Lambda_\infty < \infty$（加局部 Lipschitz 有界）。
+> **注（允许局部扩张；$\Gamma_\infty$ 与 $\Lambda_\infty$ 同阶）**：推论 5 不要求 $L_j < 1$ 逐步成立——即使某些步存在 $L_j > 1$（局部扩张），只要后续有足够强的收缩步将尾部乘积压平，$\Lambda_\infty$ 仍然有限。此外，由 $\Gamma_\infty = \sum_j L_j \Theta_{j+1,\infty} \leq L_{max} \cdot \Lambda_\infty$，而 §1.2 系统要求保证 $L_j \leq L < \infty$ 恒成立（即 $L_{max} \leq L$ 自动有界），故 $\Lambda_\infty < \infty$ 自动蕴含 $\Gamma_\infty < \infty$，条件可合并为单一的 $\Lambda_\infty < \infty$。
 
-**保守特例（全局 $L < 1$）**：若 $\Phi \in \mathrm{Lip}_L$ 且 $L < 1$，则 $L_j \leq L$，故：
+**路径均值特例（$\bar{L} < 1$）**：收缩饱和**不要求**全局 $L < 1$——即使系统在某些步具有 $L_j > 1$（局部扩张），只要路径的几何均值 $\bar{L} < 1$（§1.2），尾积便以指数速率衰减，保证 $\Lambda_\infty < \infty$。此时饱和界为：
+
+$$e_l \;\leq\; \frac{\varepsilon_{\max} + \bar{L}\,\delta_{\max}}{1 - \bar{L}}$$
+
+这比全局 $L < 1$ 的要求宽松得多——系统允许存在局部的剧烈拉伸，只要在整条路径的统计平均意义上呈现净收缩即可。
+
+**保守特例（全局 $L < 1$）**：若 $\Phi \in \mathrm{Lip}_L$ 且 $L < 1$，则 $L_j \leq L$，$\bar{L} \leq L$，故：
 
 $$\Lambda_\infty \leq \frac{1}{1-L}, \qquad \Gamma_\infty \leq \frac{L}{1-L}$$
 
@@ -216,7 +240,7 @@ $$\Lambda_\infty \leq \frac{1}{1-L}, \qquad \Gamma_\infty \leq \frac{L}{1-L}$$
 
 $$e_l \;\leq\; \frac{\varepsilon_{\max} + L\,\delta_{\max}}{1-L}$$
 
-分子即**有效单步误差**（呼应形式B），分母为收缩余量 $(1-L)$，对应上表「饱和」行的均匀情形。
+分子即**有效单步误差**（呼应形式B），分母为收缩余量 $(1-L)$。注意路径均值特例严格弱于此条件：$\bar{L} < 1$ 允许存在 $L > 1$ 的系统，只要路径平均收缩即可饱和。
 
 ---
 
@@ -277,7 +301,7 @@ $$\varepsilon^* \;=\; \varepsilon_0 \cdot \min_{R_0 \;\text{生成}\; R}\; \max_
 
 ### 3.2 统计精化界与漂移-扩散定律
 
-在 3.1 节的组合近似封闭定理（CAC）中，我们得出了宏观误差随链长的级联增长，一般将其视为 $\mathcal{O}(l)$ 线性级联。严格而言，CAC 的渐近行为取决于 $\Theta_{j,l}$ 的结构，在不同 Lipschitz 态下呈现不同阶增长，将在后续章节中给出详细论证。
+在 3.1 节的组合近似封闭定理（CAC）中，我们得出了宏观误差随链长的级联增长上界。由推论 2（两态行为），该上界在 IDFS 的有限系统约束下始终有限，呈现**稳定有界**或**收敛饱和**两种物理情形——前者误差沿深度积累但被系统直径封顶，后者误差收敛至与深度无关的常数。
 
 > **注（$\mathcal{O}$ 记号）**：本文中 $\mathcal{O}$ 采用分析学标准定义：$f = \mathcal{O}(g)$ 表示存在常数 $C > 0$ 使得 $|f| \leq C|g|$，用以描述函数的渐近增长阶或衰减阶。
 CAC 界是纯确定性的——它对 $\mathcal{X}$ 的几何结构和误差序列的统计性质不做任何假设，因此代价是最保守的。本节将逐步引入空间几何与时间相关性两个维度的假设，**层层收紧** CAC 界，最终抵达理论极限。

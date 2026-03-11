@@ -8,48 +8,48 @@
 设某输入对 $x, y \in \mathrm{dom}(q)$ 满足以下空间相态（$x, y \in \mathrm{dom}(q)$ 保证理想链 $q$ 在两点处可执行，即 $q(x), q(y) \neq \bot$；近似轨道 $\Phi_q(x), \Phi_q(y)$ 由 IDFS 闭合性保证为 $\mathcal{X}$ 中的良定义元素）：
 1. **输入分离与目标跃迁**：起点的初始距离为 $d(x, y) = \delta > 0$，但在理想长链 $q$ 下的映射距离跃迁为 $d(q(x), q(y)) = \Delta > 0$。
 2. **拟合参数**：系统在参考点 $x$ 处的端到端逼近误差（拟合残差）记为 $\varepsilon_x \triangleq d(\Phi_q(x), q(x)) \geq 0$。
-3. **系统扩张极限**：系统宏观映射下的最大拉伸距离受到 $l$-链累积扩张律的限制，即 $d(\Phi_q(x), \Phi_q(y)) \leq \Theta_{1,l} \cdot \delta$（其中 $\Theta_{1,l}$ 为宏观全链 $l$ 步的路径局部 Lipschitz 乘积上界；若不知具体路径，可保守地取先验可计算的全局界 $L^l$）。
+3. **系统扩张极限**：系统宏观映射下的最大拉伸距离受到 $l$-链累积扩张律的限制，即 $d(\Phi_q(x), \Phi_q(y)) \leq \Theta_{1,l} \cdot \delta$（其中 $\Theta_{1,l}$ 为宏观全链 $l$ 步的路径局部 Lipschitz 乘积上界）。在此利用 §1.2 的路径等效几何均值 $\bar{L} = (\Theta_{1,l})^{1/l}$，系统在此路径上的最大拉伸被紧致地界定为 $\bar{L}^l \cdot \delta$。
 
 定义**末端结构瓶颈（Intrinsic Structural Bottleneck）**为：
 $$\varepsilon_{y,\text{out}} = \min_{f \in F}\; \inf_{h \in \mathcal{X}} d(f(h),\, q(y))$$
 即遍历所有可能的末端算子 $f \in F$ 和所有可能的中间态 $h$，系统能够达到的与目标像点 $q(y)$ 的最小距离。无论 $\sigma$ 在最后一步如何选择算子，该下界均成立。
 
 **定理结论**：系统在点 $y$ 处的端到端宏观泛化误差 $\varepsilon^*_y \triangleq d(\Phi_q(y), q(y))$（作为容差集 $\mathcal{E}^*$ 的具体表现），存在不可压缩的绝对数学下界：
-$$\varepsilon^*_y \;\geq\; \max \Big( |\Delta - \varepsilon_x| - \Theta_{1,l} \cdot \delta, \;\; \varepsilon_{y,\text{out}} \Big)$$
+$$\varepsilon^*_y \;\geq\; \max \Big( |\Delta - \varepsilon_x| - \bar{L}^l \cdot \delta, \;\; \varepsilon_{y,\text{out}} \Big)$$
 
 **证明**：
 先推导**拓扑死锁（Topological Deadlock）**：
 考察系统在点 $y$ 处的逼近误差：$\varepsilon^*_y = d(\Phi_q(y), q(y))$。
 步骤 1（正向三角不等式）：以目标变分 $\Delta$ 为基准展开四边形度量链：
 $$d(q(x), q(y)) \;\leq\; d(q(x), \Phi_q(x)) \;+\; d(\Phi_q(x), \Phi_q(y)) \;+\; d(\Phi_q(y), q(y))$$
-代入已知条件与参量：
-$$\Delta \;\leq\; \varepsilon_x \;+\; \Theta_{1,l} \cdot \delta \;+\; \varepsilon^*_y$$
+代入已知条件与参量（利用路径等效几何均值 $\Theta_{1,l} = \bar{L}^l$，§1.2）：
+$$\Delta \;\leq\; \varepsilon_x \;+\; \bar{L}^l \cdot \delta \;+\; \varepsilon^*_y$$
 移项得出 $\varepsilon^*_y$ 的第一重下界 (I)：
-$$\varepsilon^*_y \;\geq\; \Delta - \varepsilon_x - \Theta_{1,l} \cdot \delta$$
+$$\varepsilon^*_y \;\geq\; \Delta - \varepsilon_x - \bar{L}^l \cdot \delta$$
 步骤 2（反向三角不等式）：以参考点残差 $\varepsilon_x$ 为基准逆向展开：
 $$d(q(x), \Phi_q(x)) \;\leq\; d(q(x), q(y)) \;+\; d(q(y), \Phi_q(y)) \;+\; d(\Phi_q(y), \Phi_q(x))$$
 代入已知条件与参量：
-$$\varepsilon_x \;\leq\; \Delta \;+\; \varepsilon^*_y \;+\; \Theta_{1,l} \cdot \delta$$
+$$\varepsilon_x \;\leq\; \Delta \;+\; \varepsilon^*_y \;+\; \bar{L}^l \cdot \delta$$
 移项得出 $\varepsilon^*_y$ 的第二重下界 (II)：
-$$\varepsilon^*_y \;\geq\; \varepsilon_x - \Delta - \Theta_{1,l} \cdot \delta$$
+$$\varepsilon^*_y \;\geq\; \varepsilon_x - \Delta - \bar{L}^l \cdot \delta$$
 由于 $\varepsilon^*_y$ 必须同时满足 (I) 与 (II)，得出绝对值下界：
-$$\varepsilon^*_y \;\geq\; |\Delta - \varepsilon_x| - \Theta_{1,l} \cdot \delta$$
+$$\varepsilon^*_y \;\geq\; |\Delta - \varepsilon_x| - \bar{L}^l \cdot \delta$$
 
 再推导**末端拓扑结构瓶颈（Terminal Topological Bottleneck）**：
 设系统在最后一步对 $y$ 实际选择的末端算子为 $f^{(y)} \in F$（由 $\sigma$ 在近似轨道的最后一步决定，不需先验知道）。设前置映射产生中间态 $h_y$，则：
 $$\varepsilon^*_y = d(f^{(y)}(h_y),\, q(y)) \;\geq\; \inf_{h \in \mathcal{X}} d(f^{(y)}(h),\, q(y)) \;\geq\; \min_{f \in F}\; \inf_{h \in \mathcal{X}} d(f(h),\, q(y)) \;=\; \varepsilon_{y,\text{out}}$$
 
 综上所述，逼近误差 $\varepsilon^*_y$ 必须同时满足上述两大独立限制：
-$$\varepsilon^*_y \;\geq\; \max \Big( |\Delta - \varepsilon_x| - \Theta_{1,l} \cdot \delta, \;\; \varepsilon_{y,\text{out}} \Big)$$
+$$\varepsilon^*_y \;\geq\; \max \Big( |\Delta - \varepsilon_x| - \bar{L}^l \cdot \delta, \;\; \varepsilon_{y,\text{out}} \Big)$$
 $\square$
 
-> **注（拟合跷跷板效应，The Fitting Seesaw Effect）**：项 $|\Delta - \varepsilon_x| - \Theta_{1,l} \cdot \delta$ 揭示了一个非对称的“跷跷板效应”。当系统的全局扩张率受限（$\Theta_{1,l}$ 较小）而目标链 $q$ 在 $(x, y)$ 间呈现剧烈变分（$\Delta$ 极大）时：若在参考点 $x$ 处达到完美拟合（$\varepsilon_x \to 0$），则 $y$ 处的宏观容差被刚性托底至 $\varepsilon^*_y \geq \Delta - \Theta_{1,l}\delta$。即系统**不可能同时在相邻两点上实现任意低误差**——局部的极高精度必然引爆邻近的泛化误差。
+> **注（拟合跷跷板效应与 $\bar{L}$ 收紧）**：项 $|\Delta - \varepsilon_x| - \bar{L}^l \cdot \delta$ 揭示了一个非对称的“跷跷板效应”。使用路径几何均值 $\bar{L}$ 替代保守的全局 $L$，不仅使公式更严谨，更**大幅抬高了不可压缩下界**：因为 $\bar{L} \leq \sup_j L_j \leq L$，减去更小的 $\bar{L}^l \cdot \delta$ 意味着残余误差下限更高。当目标链 $q$ 在 $(x, y)$ 间呈现剧烈变分（$\Delta$ 极大），而局部系统路径的等效收缩率压制了扩张（$\bar{L} \ll \Delta/\delta$）时：若在参考点 $x$ 处强行拟合完美（$\varepsilon_x \to 0$），$y$ 处的误差立刻被刚性托底至至少 $\Delta - \bar{L}^l\delta$。即**系统不可能同时在相邻两点上实现任意低误差**——局部的极高精度必然引爆邻近的泛化灾难，且真实灾难远比全局保守估计更严重。
 
 > **注（末端结构瓶颈 $\varepsilon_{y,\text{out}}$ 的含义）**：项 $\varepsilon_{y,\text{out}}$ 剖离出了 IDFS 末端算子层的结构刚性。无论前置映射 $\Phi'_q$ 将中间态流形扭曲得多么复杂，IDFS 的端到端最终输出必须经过某个底层算子 $f \in F$ 映射回输出空间。若目标像点 $q(y)$ 不在任何 $f \in F$ 的可达集 $\bigcup_{f \in F} f(\mathcal{X})$ 中，则 $\varepsilon_{y,\text{out}} > 0$ 成为不可消除的常数瓶颈：此时前置计算中的一切精妙运算皆无用武之地，端到端误差被末端算子的结构底盖死死卡定。
 
-**推论 1（CAB 界的类紧性，Class-Level Tightness of the CAB Bound）**：对任意给定的标量 $\varepsilon_x \geq 0$、$\Delta > 0$、$\delta > 0$、$L > 0$ 和正整数 $l$，只要 $\Delta > \varepsilon_x + L^l\delta$（即拓扑死锁界为正），**一定存在**具体的 IDFS 构造 $(F, \sigma)$ 使得 CAB 拓扑死锁界精确取等：
+**推论 1（CAB 界的类紧性，Class-Level Tightness of the CAB Bound）**：对任意给定的标量 $\varepsilon_x \geq 0$、$\Delta > 0$、$\delta > 0$、几何均值 $\bar{L} > 0$ 和正整数 $l$，只要 $\Delta > \varepsilon_x + \bar{L}^l\delta$（即拓扑死锁界为正），**一定存在**具体的 IDFS 构造 $(F, \sigma)$ 使得 CAB 拓扑死锁界精确取等：
 
-$$\varepsilon^*_y \;=\; \Delta \;-\; \varepsilon_x \;-\; \Theta_{1,l} \cdot \delta$$
+$$\varepsilon^*_y \;=\; \Delta \;-\; \varepsilon_x \;-\; \bar{L}^l \cdot \delta$$
 
 即：CAB 的拓扑死锁下界在 IDFS 函数类意义下是**不可改善的**。
 
@@ -57,17 +57,17 @@ $$\varepsilon^*_y \;=\; \Delta \;-\; \varepsilon_x \;-\; \Theta_{1,l} \cdot \del
 
 **目标链的构造**：令 $q(z) = \alpha z$（$\alpha = \Delta/\delta$），则 $q(0) = 0$，$q(\delta) = \Delta$，目标变分精确等于 $\Delta$。
 
-**系统的构造**：令 $\Phi(z) = Lz + a$（线性映射，$\mathrm{Lip}(\Phi) = L$ 精确），其中 $a = \varepsilon_x \cdot \frac{L-1}{L^l - 1}$（$L \neq 1$ 时；$L = 1$ 时取 $a = \varepsilon_x / l$）。则 $l$ 步复合：
+**系统的构造**：令 $\Phi(z) = \bar{L}z + a$（线性映射，局部 Lipschitz 对所有步常定 $L_j = \bar{L}$），其中 $a = \varepsilon_x \cdot \frac{\bar{L}-1}{\bar{L}^l - 1}$（$\bar{L} \neq 1$ 时；$\bar{L} = 1$ 时取 $a = \varepsilon_x / l$）。则 $l$ 步复合：
 
-$$\Phi^l(z) \;=\; L^l z \;+\; a \cdot \frac{L^l - 1}{L - 1} \;=\; L^l z \;+\; \varepsilon_x$$
+$$\Phi^l(z) \;=\; \bar{L}^l z \;+\; a \cdot \frac{\bar{L}^l - 1}{\bar{L} - 1} \;=\; \bar{L}^l z \;+\; \varepsilon_x$$
 
 **验证各量**：
-- 路径乘积：$\Theta_{1,l} = L^l$（每步 $L_j = L$，精确）。
+- 路径等效扩张：$\Theta_{1,l} = \prod_j L_j = \bar{L}^l$（精确）。
 - 参考点残差：$\varepsilon_x = d(\Phi^l(0), q(0)) = |\varepsilon_x - 0| = \varepsilon_x$（精确）。
-- 系统输出距离：$d(\Phi^l(0), \Phi^l(\delta)) = L^l\delta = \Theta_{1,l}\delta$（**线性映射精确取等 Lipschitz 界**）。
-- 目标点误差：$\varepsilon^*_y = d(\Phi^l(\delta), q(\delta)) = |L^l\delta + \varepsilon_x - \Delta|$。由假设 $\Delta > \varepsilon_x + L^l\delta$，故 $\varepsilon^*_y = \Delta - \varepsilon_x - L^l\delta$。
+- 系统输出距离：$d(\Phi^l(0), \Phi^l(\delta)) = \bar{L}^l\delta$（**线性映射精确取等几何均值扩张界**）。
+- 目标点误差：$\varepsilon^*_y = d(\Phi^l(\delta), q(\delta)) = |\bar{L}^l\delta + \varepsilon_x - \Delta|$。由假设 $\Delta > \varepsilon_x + \bar{L}^l\delta$，故 $\varepsilon^*_y = \Delta - \varepsilon_x - \bar{L}^l\delta$。
 
-**等号成立的机制**：在 $\mathbb{R}$ 上，四点 $q(x) = 0$, $\Phi^l(x) = \varepsilon_x$, $\Phi^l(y) = \varepsilon_x + L^l\delta$, $q(y) = \Delta$ 沿实数轴**同向有序排列**，三角不等式精确退化为等式——中间两点完全"夹在"两个目标点之间，无任何几何抵消。$\square$
+**等号成立的机制**：在 $\mathbb{R}$ 上，四点 $q(x) = 0$, $\Phi^l(x) = \varepsilon_x$, $\Phi^l(y) = \varepsilon_x + \bar{L}^l\delta$, $q(y) = \Delta$ 沿实数轴**同向有序排列**，三角不等式精确退化为等式——中间两点完全"夹在"两个目标点之间，无任何几何抵消。$\square$
 
 > **注（末端瓶颈界的紧性）**：$\varepsilon_{y,\text{out}} = \inf_h d(f_\text{out}(h), q(y))$ 的取等同样可构造实现：令前置映射 $\Phi'_q$ 恰好将 $y$ 映射到最优中间态 $h^* = \arg\min_h d(f_\text{out}(h), q(y))$，则 $\varepsilon^*_y = d(f_\text{out}(h^*), q(y)) = \varepsilon_{y,\text{out}}$。因此 CAB 界的两项均可独立取等，整个 $\max$ 在函数类意义下紧确。
 
@@ -77,27 +77,27 @@ $$d(x, y) \;\leq\; \rho \quad \text{且} \quad d\bigl(r(x), r(y)\bigr) \;\geq\; 
 
 即 $r$ 在 $\rho$-邻域内存在幅度不小于 $\Delta$ 的剧烈跳变。（注：此处 $\rho$ 为变分尺度，与 CAC 定理中的采样域偏离 $\delta_j$ 含义不同。）
 
-**推论 2（近似误差的变分下界，Variation Bound on Approximation Error）**：设 $\Phi \in \mathrm{Lip}_L(\mathcal{X})$。设 $(r, \mathcal{X}_r) \in \mathcal{S}$，$r$ 在 $\mathcal{X}_r$ 上具有 $(\rho, \Delta)$-变分，记 $\varepsilon_r = \sup_{z \in \mathcal{X}_r} d(\Phi(z), r(z))$。则必然成立：
+**推论 2（近似误差的变分下界，Variation Bound on Approximation Error）**：设系统的路径等效单步 Lipschitz 为 $L_{local}$（具体在 $\mathcal{X}_r$ 覆盖路径上）。设 $(r, \mathcal{X}_r) \in \mathcal{S}$，$r$ 在 $\mathcal{X}_r$ 上具有 $(\rho, \Delta)$-变分，记 $\varepsilon_r = \sup_{z \in \mathcal{X}_r} d(\Phi(z), r(z))$。则必然成立：
 
-$$2\varepsilon_r \;+\; L \cdot \rho \;\geq\; \Delta$$
+$$2\varepsilon_r \;+\; L_{local} \cdot \rho \;\geq\; \Delta$$
 
-**证明（由 CAB 特化）**：取满足 $(\rho, \Delta)$-变分条件的点对 $x, y \in \mathcal{X}_r$。将 CAB 拓扑死锁界特化至 $l = 1$（单步，$\Theta_{1,1} = L$），以 $q = r$、$\delta = d(x,y) \leq \rho$、$\Delta_{q} = d(r(x), r(y)) \geq \Delta$：
+**证明（由 CAB 特化）**：取满足 $(\rho, \Delta)$-变分条件的点对 $x, y \in \mathcal{X}_r$。将 CAB 拓扑死锁界特化至 $l = 1$（单步，使用局部度量 $L_{local}$ 代替全局 $L$），以 $q = r$、$\delta = d(x,y) \leq \rho$、$\Delta_{q} = d(r(x), r(y)) \geq \Delta$：
 
-$$\varepsilon^*_y \;\geq\; \Delta_q - \varepsilon_x - L\delta \;\geq\; \Delta - \varepsilon_x - L\rho$$
+$$\varepsilon^*_y \;\geq\; \Delta_q - \varepsilon_x - L_{local}\delta \;\geq\; \Delta - \varepsilon_x - L_{local}\rho$$
 
-由 $x, y \in \mathcal{X}_r$，两点的误差均受同一 sup 约束：$\varepsilon_x \leq \varepsilon_r$，$\varepsilon^*_y \leq \varepsilon_r$。代入上式：$\varepsilon_r \geq \Delta - \varepsilon_r - L\rho$，即 $2\varepsilon_r + L\rho \geq \Delta$。$\square$
+由 $x, y \in \mathcal{X}_r$，两点的误差均受同一 sup 约束：$\varepsilon_x \leq \varepsilon_r$，$\varepsilon^*_y \leq \varepsilon_r$。代入上式：$\varepsilon_r \geq \Delta - \varepsilon_r - L_{local}\rho$，即 $2\varepsilon_r + L_{local}\rho \geq \Delta$。$\square$
 
-> **注（三方互斥律）**：式 $2\varepsilon_r + L\rho \geq \Delta$ 刻画了三个量的内在紧张：局部变分幅度 $\Delta/\rho$、全局光滑度 $L$、单步近似误差 $\varepsilon_r$ 三者不能同时任意小。若要近似具有高局部变分（$\Delta/\rho \gg L$）的 $r$，则**近似误差必然不小于** $\varepsilon_r \geq (\Delta - L\rho)/2$。
+> **注（变分三方互斥律与紧凑下界）**：式 $2\varepsilon_r + L_{local}\rho \geq \Delta$ 刻画了三个量的内在紧绷：局部变分幅度 $\Delta/\rho$、路径局部光滑度 $L_{local}$、单步近似误差 $\varepsilon_r$ 不能同时极小。特别注意，此处以 $L_{local}$ 替换全局最坏情况的 $L$，**大幅提高了误差下界的门槛** $\varepsilon_r \geq (\Delta - L_{local}\rho)/2$。对于真实系统，大多数路径步的 $L_{local} \ll L$——这证明了要拟合高变分目标，系统在大部分平凡步上必须付出比保守估计昂贵得多的**实质性高额拟合代价**。
 
-> **注（与 CAC 的联系）**：推论 2 中的 $\varepsilon_r$ 即 CAC 主定理中第 $j$ 步的单步近似误差 $\varepsilon_{i_j} = \sup_{x \in \mathcal{X}(r_{i_j})} d(\Phi(x), r_{i_j}(x))$（§1.3）。推论 2 给出 $\varepsilon_{i_j}$ 的**结构性下界**：只要 $r_{i_j}$ 在采样域内具有 $(\rho, \Delta)$-变分，就有 $\varepsilon_{i_j} \geq (\Delta - L\rho)/2$。将此下界代入 CAC 精细界，第 $j$ 步的近似误差贡献至少为 $\frac{\Delta - L\rho}{2} \cdot \Theta_{j+1,l}$——这是 $r_{i_j}$ 的局部变分结构对链式误差传播的**不可规避的底部贡献**。
+> **注（与 CAC 的底层逻辑对接）**：推论 2 给出 CAC 精细界单步误差 $\varepsilon_{i_j}$ 的**不可规避底部贡献**：$\varepsilon_{i_j} \geq (\Delta - L_j\rho)/2$。结合 §3，第 $j$ 步的高变分区域会在宏观链上注入至少 $\frac{\Delta - L_j\rho}{2} \cdot \Theta_{j+1,l}$ 的强制误差涟漪。这明确揭示了 OOD（Out-of-Distribution）泛化崩溃的微观始作俑者：**微小采样域内的急剧跳变，即使在局部被强行抹平（$\varepsilon_{i_j}$ 变大），也会被尾部扩张算链无情放大到宏观层面。**
 
-> **注（扩展到 $\mathrm{dom}(r)$ 时的三元纠缠）**：推论 2 的分析严格限于采样域 $\mathcal{X}(r)$，其中 $\sigma$ 隐含于 $\Phi$ 的构造而不显式出现，两元张力 $(\varepsilon_r, L)$ 足以刻画。若将分析扩展至整个 $\mathrm{dom}(r) \supseteq \mathcal{X}(r)$，则在 $\mathrm{dom}(r) \setminus \mathcal{X}(r)$ 的区域内，$\Phi(z) = \sigma(z)(z)$ 不受采样约束，$\sigma$ 的决策边界可能在 $\partial\mathcal{X}(r)$ 处被激活：由§6 命题 4，跨越边界时路径局部 Lipschitz $L_j \to \infty$，全局常数 $L$ 不再能刻画 $\Phi$ 在 $\mathcal{X}(r)$ 外的光滑度。此时变分约束涉及**三元纠缠** $(\varepsilon_r,\, L,\, \sigma)$——三者无法分别独立优化，对 $\mathrm{dom}(r)$ 的分析须同时约束 $\sigma$ 在 $\partial\mathcal{X}(r)$ 处的边界曲率。因此推论 2 的主体保持在 $\mathcal{X}(r)$ 上以确保形式严格性；三元纠缠的正式处理见§6 命题 4。
+> **注（扩展到 $\mathrm{dom}(r)$ 时的三元纠缠）**：推论 2 的分析严格限于采样域 $\mathcal{X}(r)$，其中 $\sigma$ 隐含于 $\Phi$ 的构造而不显式出现，两元张力 $(\varepsilon_r, L_{local})$ 足以刻画。若将分析扩展至整个 $\mathrm{dom}(r) \supseteq \mathcal{X}(r)$，则在 $\mathrm{dom}(r) \setminus \mathcal{X}(r)$ 的区域内，$\Phi(z) = \sigma(z)(z)$ 不受采样约束，$\sigma$ 的决策边界可能在 $\partial\mathcal{X}(r)$ 处被激活：由 §2 命题 5（路由分辨率极限），跨越边界时路径局部 Lipschitz $L_j$ 逼近系统全局极限 $L$，使分辨率死锁在边界处达到最极端形态。此时变分约束涉及**三元纠缠** $(\varepsilon_r,\, L,\, \sigma)$——三者无法分别独立优化，对 $\mathrm{dom}(r)$ 的分析须同时约束 $\sigma$ 在 $\partial\mathcal{X}(r)$ 处的边界曲率。因此推论 2 的主体保持在 $\mathcal{X}(r)$ 上以确保形式严格性；三元纠缠的正式处理见 §5 命题 4。
 
 **命题 1（逼近可行性条件，Approximation Feasibility Condition）**：由 CAC 定理（§3，上界）与 CAB 定理（下界）联合推得。设 IDFS $\mathcal{F} = (F, \sigma)$ 以微观容差 $\varepsilon_{max}$ 和微观偏离 $\delta_{max}$ 拟合了采样集 $\mathcal{S}$。对任意有效链 $q \in \mathcal{T}_l$ 和任意 $x, y \in \mathrm{dom}(q)$（$d(x,y) = \delta$），记目标变分 $\Delta = d(q(x), q(y))$。
 
 定义**逼近阈值（Approximation Threshold）**：
 
-$$\mathcal{A}_l(\delta) \;\triangleq\; \underbrace{\Theta_{1,l} \cdot \delta}_{\text{拉伸预算}} \;+\; \underbrace{\varepsilon_{max} \cdot \Lambda_l}_{\text{拟合预算}} \;+\; \underbrace{\delta_{max} \cdot \Gamma_l}_{\text{偏离预算}}$$
+$$\mathcal{A}_l(\delta) \;\triangleq\; \underbrace{\bar{L}^l \cdot \delta}_{\text{拉伸预算}} \;+\; \underbrace{\varepsilon_{max} \cdot \Lambda_l}_{\text{拟合预算}} \;+\; \underbrace{\delta_{max} \cdot \Gamma_l}_{\text{偏离预算}}$$
 
 则系统在点 $y$ 处的宏观逼近误差满足：
 
@@ -105,11 +105,11 @@ $$\varepsilon^*_y \;\geq\; \Delta \;-\; \mathcal{A}_l(\delta)$$
 
 **含义**：若目标变分 $\Delta > \mathcal{A}_l(\delta)$，则即使系统对参考点 $x$ 的拟合达到 CAC 所允许的最优水平，$y$ 处的误差仍存在不可压缩的正下界 $\varepsilon^*_y \geq \Delta - \mathcal{A}_l(\delta) > 0$，对任何 IDFS 的设计方式均成立。
 
-**证明**：由 CAB 拓扑死锁界：$\varepsilon^*_y \geq \Delta - \varepsilon_x - \Theta_{1,l}\delta$。由 CAC 定理（形式 A 均匀化）：$\varepsilon_x \leq \varepsilon_{max}\Lambda_l + \delta_{max}\Gamma_l$。代入消去 $\varepsilon_x$ 即得。$\square$
+**证明**：由 CAB 拓扑死锁界：$\varepsilon^*_y \geq \Delta - \varepsilon_x - \bar{L}^l\delta$。由 CAC 定理（形式 A 均匀化）：$\varepsilon_x \leq \varepsilon_{max}\Lambda_l + \delta_{max}\Gamma_l$。代入消去 $\varepsilon_x$ 即得。$\square$
 
 > **注（三项预算的正交含义）**：逼近阈值 $\mathcal{A}_l(\delta)$ 分解为三个彼此独立、可分别归因的预算项，分别界定了系统在三个正交方向上的逼近资源：
-> - **拉伸预算** $\Theta_{1,l}\delta$：系统的动力学扩张能力——由 Lipschitz 尾部乘积 $\Theta_{1,l}$ 和输入距离 $\delta$ 共同决定，衡量系统能从给定的输入间距中"放大"出多少输出间距；
-> - **拟合预算** $\varepsilon_{max}\Lambda_l$：微观近似误差的累积放大——每步的最坏拟合误差 $\varepsilon_{max}$ 经尾部扩张系数 $\Lambda_l$ 累积传播后的总容差空间；
+> - **拉伸预算** $\bar{L}^l\delta$：系统的动力学扩张能力——由等效收缩率下探压制的几何均值 $\bar{L}$ 和输入距离 $\delta$ 共同决定。这是系统唯一能用来追踪正常目标变化的"健康资源"；
+> - **拟合预算** $\varepsilon_{max}\Lambda_l$：微观近似误差的累积放大——每步的最坏拟合误差 $\varepsilon_{max}$ 经尾部扩张系数 $\Lambda_l$ 累积传播后的总容差空间。强行压低参考点误差往往在此耗尽预算；
 > - **偏离预算** $\delta_{max}\Gamma_l$：采样域偏离的累积放大代价——理想轨道偏离采样域引入的额外误差，经 $\Gamma_l$ 累积传播。
 >
 > 三项之和即为系统所能承受的**目标变分天花板**：低于此天花板，系统有足够的资源逼近目标变分；高于此天花板，逼近必然失败。
@@ -145,7 +145,7 @@ $$\mathcal{N}(r(A),\, 2\epsilon) \;\geq\; \mathcal{N}(A,\, 2\epsilon/k)$$
 
 > **注（覆盖数比的物理含义）**：当 $k > 2L$（即目标的判别强度至少是系统光滑度的两倍）时，分子的覆盖尺度 $2\epsilon/k < \epsilon/L$ 严格小于分母的覆盖尺度，故分子对应**更精细**的覆盖——覆盖数比 $> 1$，路由容量受到非平凡约束。比值的大小取决于 $A$ 的度量熵随尺度的增长速率：对 $D$-维空间（$\mathcal{N}(A, \delta) \asymp \delta^{-D}$），比值为 $(2L/k)^D$，呈指数级增长。
 
-> **注（与§2 命题 1 的联系）**：CPI 定理的容量下界与 §2.1 命题 1（组合耗尽与路由满射）在结构上深度对偶。命题 1 从信息论角度建立 $|\mathrm{Im}(\sigma)| \geq e^{I_\epsilon(\mathcal{S}) - C_\epsilon}$（目标度量熵超出基算子变形熵的指数倍）；CPI 从覆盖数角度建立 $|\mathrm{Im}(\sigma)| \geq \mathcal{N}(A, 2\epsilon/k) / \mathcal{N}(A, \epsilon/L)$（目标辨识需求超出系统解析力的覆盖数比）。两者独立成立，在不同的数学框架下各自刻画了同一物理事实：**判别性目标对路由多样性的刚性需求**。
+> **注（与§2 命题 1 的联系）**：CPI 定理的容量下界与 §2.3 命题 1（组合耗尽与路由满射）在结构上深度对偶。命题 1 从信息论角度建立 $|\mathrm{Im}(\sigma)| \geq e^{I_\epsilon(\mathcal{S}) - C_\epsilon}$（目标度量熵超出基算子变形熵的指数倍）；CPI 从覆盖数角度建立 $|\mathrm{Im}(\sigma)| \geq \mathcal{N}(A, 2\epsilon/k) / \mathcal{N}(A, \epsilon/L)$（目标辨识需求超出系统解析力的覆盖数比）。两者独立成立，在不同的数学框架下各自刻画了同一物理事实：**判别性目标对路由多样性的刚性需求**。
 
 ### 4.3 判别性拟合缺口定理（DFG）
 
