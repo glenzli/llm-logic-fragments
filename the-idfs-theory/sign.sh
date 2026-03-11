@@ -3,11 +3,13 @@
 # sign.sh — 多重哈希清单生成 + Sigstore 时间戳签名
 #
 # 用法:
-#   ./sign.sh              自动发现当前目录下的子目录
-#   ./sign.sh <目录>       对指定目录签名
+#   ./sign.sh              自动发现子目录，逐目录签名，最后合并校验
+#   ./sign.sh <目录>...    对指定目录签名
 #
 # 生成 (每个目录内):
 #   MANIFEST.txt            SHA-256 / SHA-512 / BLAKE2b 三重哈希清单
+# 生成 (工作目录):
+#   MANIFEST.txt            各子目录 MANIFEST.txt 的二次哈希
 #   MANIFEST.bundle         Sigstore 签名 + 时间戳包 (需 cosign)
 # ──────────────────────────────────────────────────────────────
 set -euo pipefail
@@ -31,14 +33,25 @@ done
 $PYTHON -c "import hashlib; hashlib.sha256(); hashlib.sha512(); hashlib.blake2b()" 2>/dev/null \
   || fail "Python hashlib 缺少必要的哈希算法支持"
 
-# ── 对单个目录生成三重哈希清单 ──
+# ── 计算三重哈希 (输出到 stdout) ──
+triple_hash() {
+  $PYTHON -c "
+import hashlib, sys
+data = open(sys.argv[1], 'rb').read()
+print(f'SHA-256:  {hashlib.sha256(data).hexdigest()}')
+print(f'SHA-512:  {hashlib.sha512(data).hexdigest()}')
+print(f'BLAKE2b:  {hashlib.blake2b(data).hexdigest()}')
+" "$1"
+}
+
+# ── 对单个目录生成 MANIFEST.txt ──
 sign_dir() {
   local dir="$1"
   local manifest="$dir/MANIFEST.txt"
 
   local files
   files=$(find "$dir" -maxdepth 1 -name '*.md' -type f ! -name 'MANIFEST.*' | sort)
-  [[ -z "$files" ]] && { warn "跳过 $dir (无 .md 文件)"; return; }
+  [[ -z "$files" ]] && { warn "跳过 $dir (无 .md 文件)"; return 1; }
 
   local count
   count=$(echo "$files" | wc -l | tr -d ' ')
@@ -47,48 +60,66 @@ sign_dir() {
   cat > "$manifest" <<EOF
 # MANIFEST
 # Generated: $(date -u '+%Y-%m-%dT%H:%M:%SZ')
-# Directory: $(cd "$dir" && pwd)
-#
-# 三种哈希，来自三个独立设计谱系:
-#   SHA-256   — NIST/NSA，当前工业标准，256-bit
-#   SHA-512   — 同族更长位宽，量子 Grover 攻击下仍保持 256-bit 安全等级
-#   BLAKE2b   — Bernstein 谱系，与 ChaCha 共享 ARX 核心原语，独立于 NSA 体系
-# ──────────────────────────────────────────────────────────────
+# Directory: $dir
 
 EOF
 
   echo "$files" | while IFS= read -r f; do
     echo "## $(basename "$f")" >> "$manifest"
-    $PYTHON -c "
-import hashlib, sys
-data = open(sys.argv[1], 'rb').read()
-print(f'SHA-256:  {hashlib.sha256(data).hexdigest()}')
-print(f'SHA-512:  {hashlib.sha512(data).hexdigest()}')
-print(f'BLAKE2b:  {hashlib.blake2b(data).hexdigest()}')
-" "$f" >> "$manifest"
+    triple_hash "$f" >> "$manifest"
     echo "" >> "$manifest"
   done
 
   ok "$(basename "$dir")/MANIFEST.txt"
+}
 
-  # Sigstore 签名
+# ── 生成根级合并 MANIFEST ──
+sign_root() {
+  local root_manifest="MANIFEST.txt"
+  local manifests
+  manifests=$(find . -mindepth 2 -maxdepth 2 -name 'MANIFEST.txt' -type f ! -path './old-fragments/*' | sort)
+
+  [[ -z "$manifests" ]] && { warn "未找到子目录 MANIFEST.txt，跳过合并"; return; }
+
+  echo ""
+  info "生成根级合并校验..."
+
+  cat > "$root_manifest" <<EOF
+# ROOT MANIFEST
+# Generated: $(date -u '+%Y-%m-%dT%H:%M:%SZ')
+# 以下为各子目录 MANIFEST.txt 的二次哈希校验
+
+EOF
+
+  echo "$manifests" | while IFS= read -r m; do
+    echo "## $m" >> "$root_manifest"
+    triple_hash "$m" >> "$root_manifest"
+    echo "" >> "$root_manifest"
+  done
+
+  ok "MANIFEST.txt (根级合并)"
+
+  # Sigstore 签名 — 对根 MANIFEST 签名
   if command -v cosign &>/dev/null; then
-    cosign sign-blob "$manifest" --bundle "$dir/MANIFEST.bundle" 2>/dev/null
-    ok "$(basename "$dir")/MANIFEST.bundle"
+    info "cosign 签名..."
+    cosign sign-blob "$root_manifest" --bundle "MANIFEST.bundle"
+    ok "MANIFEST.bundle"
+  else
+    warn "未安装 cosign — 跳过 Sigstore 签名"
+    info "安装: brew install cosign"
   fi
 }
 
 # ── 主逻辑 ──
 if [[ $# -ge 1 ]]; then
-  # 指定目录模式
   for dir in "$@"; do
     [[ -d "$dir" ]] || fail "目录不存在: $dir"
     sign_dir "$dir"
   done
+  sign_root
 else
-  # 自动发现模式
   DIRS=$(find . -mindepth 1 -maxdepth 1 -type d ! -name '.*' ! -name 'old-fragments' | sort)
-  [[ -z "$DIRS" ]] && fail "当前目录下未找到子目录"
+  [[ -z "$DIRS" ]] && fail "未找到子目录"
 
   echo ""
   printf "${BOLD}发现以下目录:${NC}\n"
@@ -96,12 +127,12 @@ else
   i=1
   echo "$DIRS" | while IFS= read -r d; do
     count=$(find "$d" -maxdepth 1 -name '*.md' -type f ! -name 'MANIFEST.*' 2>/dev/null | wc -l | tr -d ' ')
-    printf "  ${CYAN}%d.${NC} %-50s ${GREEN}%s 个 .md 文件${NC}\n" "$i" "$(basename "$d")" "$count"
+    printf "  ${CYAN}%d.${NC} %-50s ${GREEN}%s 个 .md 文件${NC}\n" "$i" "$d" "$count"
     i=$((i + 1))
   done
   echo ""
 
-  printf "${BOLD}对以上目录生成哈希清单？${NC} [Y/n] "
+  printf "${BOLD}生成哈希清单？${NC} [Y/n] "
   read -r confirm
   case "$confirm" in
     [nN]*) echo "已取消。"; exit 0 ;;
@@ -111,12 +142,9 @@ else
   echo "$DIRS" | while IFS= read -r d; do
     sign_dir "$d"
   done
+
+  sign_root
 fi
 
-# ── 结尾 ──
 echo ""
-if ! command -v cosign &>/dev/null; then
-  warn "未安装 cosign — 已跳过 Sigstore 签名"
-  info "安装: brew install cosign"
-fi
 ok "完成 ✓"
