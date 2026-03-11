@@ -51,14 +51,14 @@ $\square$
 
 > **注（末端结构瓶颈 $\varepsilon_{y,\text{out}}$ 的含义）**：项 $\varepsilon_{y,\text{out}}$ 剖离出了 IDFS 末端算子层的结构刚性。无论前置映射 $\Phi'_q$ 将中间态流形通过应变力撕裂得多么复杂，IDFS 的端到端最终输出必须经过某个底层算子 $f \in F$ 映射回输出空间。若目标像点 $q(y)$ 不在任何 $f \in F$ 的可达集 $\bigcup_{f \in F} f(\mathcal{X})$ 中，则 $\varepsilon_{y,\text{out}} > 0$ 成为不可消除的常数瓶颈：此时前置计算中的一切精妙运算与路由碎裂皆无用武之地，端到端误差被末端算子的结构底盖死死卡定。
 
-**推论 1（CAB 界的极值可达性与空间同构构筑，Extremal Reachability of the CAB Bound）**：对任意给定的单步拉伸常数序列 $L_j \geq 1$、拓扑路由跃迁代价序列 $\Delta_{\sigma,j} \geq 0$、输入截距 $\delta > 0$、参考点拟合精度 $\varepsilon_x \geq 0$ 及目标突跳变分 $\Delta > 0$，只要 $\Delta > \varepsilon_x + \Omega_l(\delta)$（即拓扑死锁下迫界严格为正），在维度不小于 1 的任意 Banach 空间（或 $\mathbb{R}^n$）中，**必然存在**一对相应的 IDFS 构型 $(F, \sigma)$ 与物理演化目标链 $q$，使得 CAB 被精密重构并触发极值死锁：
+**推论 4.1（CAB 界的极值可达性与空间同构构筑，Extremal Reachability of the CAB Bound）**：对任意给定的单步拉伸常数序列 $L_j \geq 1$、拓扑路由跃迁代价序列 $\Delta_{\sigma,j} \geq 0$、输入截距 $\delta > 0$、参考点拟合精度 $\varepsilon_x \geq 0$ 及目标突跳变分 $\Delta > 0$，只要 $\Delta > \varepsilon_x + \Omega_l(\delta)$（即拓扑死锁下迫界严格为正），在维度不小于 1 的任意 Banach 空间（或 $\mathbb{R}^n$）中，**必然存在**一对相应的 IDFS 构型 $(F, \sigma)$ 与物理演化目标链 $q$，使得 CAB 被精密重构并触发极值死锁：
 
 $$\varepsilon^*_y \;=\; \Delta \;-\; \varepsilon_x \;-\; \Omega_l(\delta)$$
 
 即：即使系统投入了错综复杂的断裂路由（$\Delta_\sigma > 0$），理论计算给出的该死锁下界在广泛的泛函空间中也是**无可改善的（存在紧致实例全额变现该灾难下界）**。
 
 **证明（同向极化构筑，Collinear Polarization Construction）**：
-为证明涵盖 $\Delta_{\sigma,j} > 0$ 时的界限绝对紧致性，我们构造一个让系统极值拓扑应变力被“单向榨干”的张量流形特例。此构造机制与前述上界 §3 推论 3 （关于 CAC 上界的严格坍缩证明）的底层几何公理完全同构：即利用系统动力学流形的**主特征向量映射坍缩**。
+为证明涵盖 $\Delta_{\sigma,j} > 0$ 时的界限绝对紧致性，我们构造一个让系统极值拓扑应变力被“单向榨干”的张量流形特例。此构造机制与前述上界 推论 3.3 （关于 CAC 上界的严格坍缩证明）的底层几何公理完全同构：即利用系统动力学流形的**主特征向量映射坍缩**。
 
 设系统嵌入于 Banach 切空间 $\mathcal{X}$ 中。任选取稳定雅可比矩阵的一个主特征单位向量 $v \in \mathcal{X}$（$\|v\| = 1$）。
 
@@ -93,7 +93,7 @@ $$d(x, y) \;\leq\; \rho \quad \text{且} \quad d\bigl(r(x), r(y)\bigr) \;\geq\; 
 
 即 $r$ 在 $\rho$-邻域内存在幅度不小于 $\Delta$ 的剧烈跳变。（注：此处 $\rho$ 为输入空间中的距离尺度，与 CAC 定理中的采样域偏离 $\delta_j$ 含义不同，亦与 CAC 的目标域外变分 $\rho_j = d(r_{i_j}(x'_j), r_{i_j}(h^*_{j-1}))$ 不同——后者是输出空间中的度量距离。）
 
-**推论 2（近似误差的综合变分下界，Comprehensive Variation Bound on Approx Error）**：设系统由近端区域的点间单步演化中可能伴随路径门控切换，将其局部单步拓展拉伸限记为 $\Omega_1(\rho) = L_{local}\cdot \rho + \Delta_{\sigma, \text{max}}$。设 $(r, \mathcal{X}_r) \in \mathcal{S}$，$r$ 在 $\mathcal{X}_r$ 上具有 $(\rho, \Delta)$-变分，记 $\varepsilon_r = \sup_{z \in \mathcal{X}_r} d(\Phi(z), r(z))$。则必然成立：
+**推论 4.2（近似误差的综合变分下界，Comprehensive Variation Bound on Approx Error）**：设系统由近端区域的点间单步演化中可能伴随路径门控切换，将其局部单步拓展拉伸限记为 $\Omega_1(\rho) = L_{local}\cdot \rho + \Delta_{\sigma, \text{max}}$。设 $(r, \mathcal{X}_r) \in \mathcal{S}$，$r$ 在 $\mathcal{X}_r$ 上具有 $(\rho, \Delta)$-变分，记 $\varepsilon_r = \sup_{z \in \mathcal{X}_r} d(\Phi(z), r(z))$。则必然成立：
 
 $$2\varepsilon_r \;+\; \Omega_1(\rho) \;\geq\; \Delta$$
 即：
@@ -107,13 +107,13 @@ $$\varepsilon^*_y \;\geq\; \Delta_q - \varepsilon_x - \Omega_1(\delta) \;\geq\; 
 
 > **注（变分四元张力律）**：不等式 $2\varepsilon_r + L_{local}\rho + \Delta_{\sigma, \text{max}} \geq \Delta$ 刻画了四个极值参数间的根本性互斥张力：局部变分强度（宏观上表现为 $\Delta/\rho$）、路径局部平滑度（$L_{local}$）、离散路由跳跃界（$\Delta_{\sigma, \text{max}}$）与单步拟合残差（$\varepsilon_r$）无法同时被极小化。对于主要依赖连续映射的平滑网络（$L_{local} \ll L$ 且 $\Delta_\sigma \approx 0$），若强制逼近高频变分目标，系统在常规演化步上将面临刚性的下界限制，必须承担**实质性的基础拟合误差 $\varepsilon_r \geq (\Delta - L_{local}\rho)/2$**。这再次印证了为何现代架构（如 MoE）需要引入非连续门控以提升 $\Delta_{\sigma}$ 上限，其本质正是为了化解此处的极小化冲突。
 
-> **注（与 5-Term CAC 的底层对接）**：推论 2 为五项精细化上界机制提供了下界的对偶解释。它揭示了单步泛化误差 $\varepsilon_{i_j}$ 不可规避的物理来源：输入空间的高变异度必然需要在演化中得以释放——要么通过剧烈的连续扭曲（增大 $L$），要么通过离散的拓扑断崖（积聚 $\Delta_\sigma$），否则就必须承受静态的底线错位（导致大 $\varepsilon_r$）。CAB 下界定出了这种局部妥协的最小代价；而一旦进入 CAC 上界的传导阶段，这些微观层面无法消除的单步误差，将立刻与宏观尾部扩张系数 $\Theta_{j+1,l}$ 发生乘性耦合，最终在端到端尺度上引发指数级扩散。这种从微观代价必然性到宏观误差爆炸性生长的完整链条，正是 OOD 坍塌定律的物理本质。
+> **注（与 5-Term CAC 的底层对接）**：推论 4.2 为五项精细化上界机制提供了下界的对偶解释。它揭示了单步泛化误差 $\varepsilon_{i_j}$ 不可规避的物理来源：输入空间的高变异度必然需要在演化中得以释放——要么通过剧烈的连续扭曲（增大 $L$），要么通过离散的拓扑断崖（积聚 $\Delta_\sigma$），否则就必须承受静态的底线错位（导致大 $\varepsilon_r$）。CAB 下界定出了这种局部妥协的最小代价；而一旦进入 CAC 上界的传导阶段，这些微观层面无法消除的单步误差，将立刻与宏观尾部扩张系数 $\Theta_{j+1,l}$ 发生乘性耦合，最终在端到端尺度上引发指数级扩散。这种从微观代价必然性到宏观误差爆炸性生长的完整链条，正是 OOD 坍塌定律的物理本质。
 
 > **注（从几何基点向高维分布的延展）**：以上推论确立了最纯粹的度量几何底线，证明了即使在两点间也必然存在无法弥合的误差张力。然而，实际的物理系统与训练集绝非孤立的点对，而是一个具有特定统计测度（$\mu$）与内在维度（$D$）的复杂数据流形。当我们将这一“单点上的几何死锁”放入高维概率空间中考量时，局部的误差张力将不可避免地在流形上弥散，演化为大面积的、具有正测度的“不可拟合灾区”。这种由几何局域极值向全局统计失效的升维推演，正是后续 DFG 定理（判别性拟合缺口，§4.3）及其所揭示的“维度诅咒”的物理雏形。
 
-> **注（扩展到 $\mathrm{dom}(r)$ 时的三元纠缠）**：推论 2 的分析严格限于采样域 $\mathcal{X}(r)$，其中 $\sigma$ 隐含于 $\Phi$ 的构造而不显式出现，两元张力 $(\varepsilon_r, L_{local})$ 足以刻画。若将分析扩展至整个 $\mathrm{dom}(r) \supseteq \mathcal{X}(r)$，则在 $\mathrm{dom}(r) \setminus \mathcal{X}(r)$ 的区域内，$\Phi(z) = \sigma(z)(z)$ 不受采样约束，$\sigma$ 的决策边界可能在 $\partial\mathcal{X}(r)$ 处被激活：由 §2 命题 5（路由分辨率极限），跨越边界时路径局部 Lipschitz $L_j$ 逼近系统全局极限 $L$，使分辨率死锁在边界处达到最极端形态。此时变分约束涉及**三元纠缠** $(\varepsilon_r,\, L,\, \sigma)$——三者无法分别独立优化，对 $\mathrm{dom}(r)$ 的分析须同时约束 $\sigma$ 在 $\partial\mathcal{X}(r)$ 处的边界曲率。因此推论 2 的主体保持在 $\mathcal{X}(r)$ 上以确保形式严格性；三元纠缠的正式处理见 §5 命题 4。
+> **注（扩展到 $\mathrm{dom}(r)$ 时的三元纠缠）**：推论 4.2 的分析严格限于采样域 $\mathcal{X}(r)$，其中 $\sigma$ 隐含于 $\Phi$ 的构造而不显式出现，两元张力 $(\varepsilon_r, L_{local})$ 足以刻画。若将分析扩展至整个 $\mathrm{dom}(r) \supseteq \mathcal{X}(r)$，则在 $\mathrm{dom}(r) \setminus \mathcal{X}(r)$ 的区域内，$\Phi(z) = \sigma(z)(z)$ 不受采样约束，$\sigma$ 的决策边界可能在 $\partial\mathcal{X}(r)$ 处被激活：由 命题 2.14（路由分辨率极限），跨越边界时路径局部 Lipschitz $L_j$ 逼近系统全局极限 $L$，使分辨率死锁在边界处达到最极端形态。此时变分约束涉及**三元纠缠** $(\varepsilon_r,\, L,\, \sigma)$——三者无法分别独立优化，对 $\mathrm{dom}(r)$ 的分析须同时约束 $\sigma$ 在 $\partial\mathcal{X}(r)$ 处的边界曲率。因此推论 4.2 的主体保持在 $\mathcal{X}(r)$ 上以确保形式严格性；三元纠缠的正式处理见 命题 5.6。
 
-**命题 1（综合逼近可行性条件，Comprehensive Approximation Feasibility）**：由 CAC 定理（上界）与 CAB 定理（下界）联合推导出系统逼近泛化的理论天花板。设 IDFS $\mathcal{F} = (F, \sigma)$ 拟合了采样集 $\mathcal{S}$，各极限参数齐备。对任意有效链 $q \in \mathcal{T}_l$ 和任意 $x, y \in \mathrm{dom}(q)$（$d(x,y) = \delta$），记目标变分 $\Delta = d(q(x), q(y))$。
+**命题 4.3（综合逼近可行性条件，Comprehensive Approximation Feasibility）**：由 CAC 定理（上界）与 CAB 定理（下界）联合推导出系统逼近泛化的理论天花板。设 IDFS $\mathcal{F} = (F, \sigma)$ 拟合了采样集 $\mathcal{S}$，各极限参数齐备。对任意有效链 $q \in \mathcal{T}_l$ 和任意 $x, y \in \mathrm{dom}(q)$（$d(x,y) = \delta$），记目标变分 $\Delta = d(q(x), q(y))$。
 
 定义**综合逼近天花板阈值（Comprehensive Approximation Threshold）**：
 
@@ -134,7 +134,7 @@ $$\varepsilon^*_y \;\geq\; \Delta \;-\; \mathcal{A}_l(\delta)$$
 > - **拟合综合耗损 $(\varepsilon_{max}+\rho_{max})\Lambda_l$**：由微观近似残差与局部目标变异带来的内生性妥协底座，并经由系统尾部连乘不可控地放大。这是逼近过拟合时最易被迅速挥霍的指标。
 > - **采样偏离底压 $\delta_{max}\Gamma_l$**：由观测流形与实际计算基座点间的刚性剥离诱发的累积空间漂移代价。
 >
-> 目标若强行越过这三项预算构筑的容限上限时，系统必将遭遇原理性的外推失效。特别指出，在参数饱和度极化体制下（参照 §3 推论 5，即当 $\Lambda_\infty < \infty$），该整体阈值将强制退化收敛为一个与初始输入距 $\delta$ 无关的有界常数，从而从根本逻辑上宣判长逻辑链对高频脉冲响应能力的丧失。
+> 目标若强行越过这三项预算构筑的容限上限时，系统必将遭遇原理性的外推失效。特别指出，在参数饱和度极化体制下（参照 推论 3.6，即当 $\Lambda_\infty < \infty$），该整体阈值将强制退化收敛为一个与初始输入距 $\delta$ 无关的有界常数，从而从根本逻辑上宣判长逻辑链对高频脉冲响应能力的丧失。
 
 ### 4.2 容量-精度不等式（CPI）
 
@@ -164,11 +164,11 @@ $$\mathcal{N}(r(A),\, 2\epsilon) \;\geq\; \mathcal{N}(A,\, 2\epsilon/k)$$
 > **注（无测度依赖）**：整个证明仅使用度量空间的紧致性和覆盖数，不涉及任何测度、体积或维度概念。这使得 CPI 定理在比 DFG 定理（§4.3）**严格更弱**的假设下成立——代价是结论从"不可拟合集的测度下界"退化为"路由容量的组合下界"。
 
 > **注（覆盖数比的几何本质：正交维度的暴力赎回）**：当 $k > 2L_{local}$（目标的判别强度超出系统局部光滑度的两倍）时，覆盖数比严格大于 1。
-> 令人深思的是它与推论 1（同向极化死锁）之间极其璀璨的理论对偶火花：在前文的 CAB 死锁构造中，一旦目标变分进入一维极化态，高维空间中本应用于缓冲的 $D-1$ 个“横向正交维度”会全部失效坍缩。单张平滑映射流形（受制于固定的主特征向量集）在面对多维复杂变分时，必然在大量方向上遭遇此类共线死锁。
+> 令人深思的是它与推论 4.1（同向极化死锁）之间极其璀璨的理论对偶火花：在前文的 CAB 死锁构造中，一旦目标变分进入一维极化态，高维空间中本应用于缓冲的 $D-1$ 个“横向正交维度”会全部失效坍缩。单张平滑映射流形（受制于固定的主特征向量集）在面对多维复杂变分时，必然在大量方向上遭遇此类共线死锁。
 >
 > 而 CPI 定理在此从宏观视角给出了系统的全局反制法则——**面对正交自由度的瘫痪，系统唯一的保命机制就是极其暴力的物理切分（增大 $|\mathrm{Im}(\sigma)|$）**。每切分出一个新的路由子域，系统就在局部重新部署了一组独立的基底特征集。在 $D$ 维流形下（度量熵 $\mathcal{N}(A, \delta) \asymp \delta^{-D}$），计算出的理论路由分支数必须呈指数级爆炸：$|\mathrm{Im}(\sigma)| \ge (2L_{local}/k)^D$。这也为现代 MoE 架构为何动辄需要成百上千个细粒度专家提供了终极几何学辩护：这正是系统为了“赎回”被死锁剥夺的高维正交逃生空间，所必须按指数折现支付的物理维度罚金。
 
-> **注（与§2 命题 1 的联系）**：CPI 定理的容量下界与 §2.3 命题 1（组合耗尽与路由满射）在结构上深度对偶。命题 1 从信息论角度建立 $|\mathrm{Im}(\sigma)| \geq e^{I_\epsilon(\mathcal{S}) - C_\epsilon}$（目标度量熵超出基算子变形熵的指数倍）；CPI 从覆盖数角度建立 $|\mathrm{Im}(\sigma)| \geq \mathcal{N}(A, 2\epsilon/k) / \mathcal{N}(A, \epsilon/L_{local})$（目标辨识需求超出系统解析力的覆盖数比）。两者独立成立，在不同的数学框架下各自刻画了同一物理事实：**高维判别性目标对离散路由多样性的不可退让的刚性需求**。
+> **注（与命题 2.4 的联系）**：CPI 定理的容量下界与 命题 2.4（组合耗尽与路由满射）在结构上深度对偶。命题 4.3 从信息论角度建立 $|\mathrm{Im}(\sigma)| \geq e^{I_\epsilon(\mathcal{S}) - C_\epsilon}$（目标度量熵超出基算子变形熵的指数倍）；CPI 从覆盖数角度建立 $|\mathrm{Im}(\sigma)| \geq \mathcal{N}(A, 2\epsilon/k) / \mathcal{N}(A, \epsilon/L_{local})$（目标辨识需求超出系统解析力的覆盖数比）。两者独立成立，在不同的数学框架下各自刻画了同一物理事实：**高维判别性目标对离散路由多样性的不可退让的刚性需求**。
 
 > **注（正交维度收紧：有效路由容量的真正下界）**：CPI 定理中 $|\mathrm{Im}(\sigma)|$ 计量的是路由分支的**代数总数**——包括可能在变分意义上冗余的分支。由 §2.4 的 $f$-链变分正交理论，两条变分平行的路由分支（$\mathrm{Cov}_{var}(q_A, q_B) \neq 0$）在覆盖数意义上是**近似共线的**——它们各自服务的输入子域的像集在 $\mathcal{X}$ 中相互重叠，不构成独立的覆盖贡献。
 >
@@ -190,9 +190,9 @@ $$\mu\bigl(U_\tau(r)\bigr) \;>\; 0$$
 
 即误差超过 $\tau$ 的输入集合具有严格正测度。
 
-**证明**（由推论 2 + 误差函数连续性）：先证 $r$ 在 $\mathcal{X}_r$ 上连续的情形（一般情形见后注）：
+**证明**（由推论 4.2 + 误差函数连续性）：先证 $r$ 在 $\mathcal{X}_r$ 上连续的情形（一般情形见后注）：
 
-1. 由推论 2（综合变分下界），$\varepsilon_r = \sup_{z \in \mathcal{X}_r} d(\Phi(z), r(z)) \geq (\Delta - L_{local}\rho - \Delta_{\sigma, \text{max}})/2 > \tau$。
+1. 由推论 4.2（综合变分下界），$\varepsilon_r = \sup_{z \in \mathcal{X}_r} d(\Phi(z), r(z)) \geq (\Delta - L_{local}\rho - \Delta_{\sigma, \text{max}})/2 > \tau$。
 2. 定义误差函数 $g(x) = d(\Phi(x), r(x))$。由 $\Phi$ Lipschitz 与 $r$ 连续，$g$ 在 $\mathcal{X}_r$ 上连续。
 3. 由 $\mathcal{X}_r$ 紧致与 $g$ 连续，sup 可达：存在 $x_0 \in \mathcal{X}_r$ 使得 $g(x_0) = \varepsilon_r > \tau$。
 4. 由 $g$ 在 $x_0$ 处的连续性，存在 $\delta > 0$ 使得 $B_\delta(x_0) \cap \mathcal{X}_r \subseteq \{x : g(x) > \tau\} \subseteq U_\tau(r)$（$U_\tau$ 以 $\geq$ 定义，包含严格超水平集）。
