@@ -4,13 +4,13 @@
 # 用法: ./sign.sh [章节目录, 默认当前目录]
 #
 # 生成:
-#   MULTI_HASH_MANIFEST.txt   三重哈希清单
+#   MANIFEST.txt              三重哈希清单
 #   MANIFEST.bundle           Sigstore 签名 + 时间戳包 (需 cosign)
 # ──────────────────────────────────────────────────────────────
 set -euo pipefail
 
 CHAPTER_DIR="${1:-.}"
-MANIFEST="MULTI_HASH_MANIFEST.txt"
+MANIFEST="MANIFEST.txt"
 
 # ── 颜色 ──
 RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[1;33m'; CYAN='\033[0;36m'; NC='\033[0m'
@@ -38,7 +38,8 @@ info "Python:     $($PYTHON --version 2>&1)"
 info "章节目录:   $(cd "$CHAPTER_DIR" && pwd)"
 
 # ── 收集 markdown 文件 ──
-FILES=$(find "$CHAPTER_DIR" -maxdepth 1 -name '*.md' -type f | sort)
+FILES=$(find "$CHAPTER_DIR" -maxdepth 1 -name '*.md' -type f \
+  ! -name 'MANIFEST.*' | sort)
 [[ -z "$FILES" ]] && fail "未在 $CHAPTER_DIR 中找到任何 .md 文件"
 
 FILE_COUNT=$(echo "$FILES" | wc -l | tr -d ' ')
