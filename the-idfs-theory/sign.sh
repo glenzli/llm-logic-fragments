@@ -62,7 +62,7 @@ print(f'BLAKE2b:  {hashlib.blake2b(data).hexdigest()}')
 cosign_sign() {
   local target="$1"
   if $HAS_COSIGN; then
-    cosign sign-blob "$target" --bundle "${target%.txt}.bundle" 2>/dev/null
+    cosign sign-blob "$target" --bundle "${target%.txt}.bundle"
     ok "$(dirname "$target")/MANIFEST.bundle"
   fi
 }
