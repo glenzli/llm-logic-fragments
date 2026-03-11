@@ -23,7 +23,7 @@ Type B 的定义性约束为 $l \le l^*_0 = \tau / E$（其中 $E = \varepsilon_
 > | §6.1 推论 8（Pareto 前沿） | **前提不满足** | 需走廊约束 |
 > | §6.1 完美即平庸定理 | **前提不满足** | 综合以上，四重缺陷全部消解 |
 
-**命题（Type B 平庸消解，Mediocrity Dissolution under Type B）**：设 IDFS $\mathcal{F} = (F, \sigma)$ 在 $l \le l^*_0$ 条件下运行。则 §6.1 完美即平庸定理的四重结构性缺陷**全部消解**：
+**命题 1（Type B 平庸消解，Mediocrity Dissolution under Type B）**：设 IDFS $\mathcal{F} = (F, \sigma)$ 在 $l \le l^*_0$ 条件下运行。则 §6.1 完美即平庸定理的四重结构性缺陷**全部消解**：
 
 (i) **误差可控但非瓶颈**：CAC 上界 $\varepsilon^*_q \le E \cdot \Lambda_l \le \tau$ 仍成立，但 $\tau$ 可通过调节 $l^*_0 = \tau/E$（即改变容差预算或单步精度）任意收紧，不受走廊的结构性锁定。
 
@@ -37,7 +37,7 @@ Type B 的定义性约束为 $l \le l^*_0 = \tau / E$（其中 $E = \varepsilon_
 
 > **注（Type B 的"自由度回归"）**：在 §6.1 的长链分析中，系统的核心参数 $\bar{L}$ 被双向夹击至走廊内的一个狭窄区间——这是所有平庸性的数学根源。Type B 通过将链深限制在 $l^*_0$ 以内，从根本上取消了夹击的上半部分（不需要收缩来抑制 CAC 爆炸），使得 $\bar{L}$ 从被囚禁的走廊参数回归为自由设计变量。系统设计者在单段内拥有完整的参数空间来优化性能，代价是单段的逻辑深度被截断。
 
-**命题（$M$-精度走廊，$M$-Precision Corridor）**：在 Type B 约束下，基函数库规模 $M = |F|$ 同时控制 CAC 上界与 CAB 下界，将系统的段内端到端误差 $\varepsilon^*_q$ 双向约束于一个 $M$-依赖的走廊之中：
+**命题 2（$M$-精度走廊，$M$-Precision Corridor）**：在 Type B 约束下，基函数库规模 $M = |F|$ 同时控制 CAC 上界与 CAB 下界，将系统的段内端到端误差 $\varepsilon^*_q$ 双向约束于一个 $M$-依赖的走廊之中：
 
 $$\varepsilon_{y,out}(M) \;\le\; \varepsilon^*_q \;\le\; \varepsilon_{max}(M) \cdot \Lambda_l + \delta_{max} \cdot \Gamma_l$$
 
@@ -100,7 +100,7 @@ $$\delta_\pi \;\triangleq\; \sup_{x \in \mathcal{X}}\; d(x, \pi(x))$$
 
 ---
 
-**定理（误差隔绝，Error Isolation）**：设 Type B 系统 $\Phi$ 的段内误差满足 $\varepsilon^*_{q^{(k)}} \le \tau$（对所有段 $k$ 和所有段内起点 $c \in \mathcal{C}$ 成立）。若码本 $\mathcal{C}$ 满足以下**信道编码条件（Channel Coding Condition）**：
+**定理 1（误差隔绝，Error Isolation）**：设 Type B 系统 $\Phi$ 的段内误差满足 $\varepsilon^*_{q^{(k)}} \le \tau$（对所有段 $k$ 和所有段内起点 $c \in \mathcal{C}$ 成立）。若码本 $\mathcal{C}$ 满足以下**信道编码条件（Channel Coding Condition）**：
 
 $$\tau \;<\; \frac{\Delta_{\mathcal{C}}}{2}$$
 
@@ -133,7 +133,7 @@ $$d(\hat{h}^{(k)},\, c') \;\ge\; d(c^*_k,\, c') - d(\hat{h}^{(k)},\, c^*_k) \;\g
 
 由此，$\tilde{x}_k = c^*_k = x^*_{k+1}$，第 $k+1$ 段从正确的码本点出发，归纳假设对 $k+1$ 成立。$\square$
 
-**推论（等效无限深度，Effective Infinite Depth）**：在误差隔绝定理的条件下，分段复合链 $\hat{\Psi}^n$ 可执行任意段数 $n$（等效链深 $l_{eff} = n \cdot l_0$ 任意大），每段误差恒 $\le \tau$。连续链 CAC 定理中的 $\Theta_{1,l}$ 指数级累积**被完全截断**——误差不跨段传播。
+**推论 1（等效无限深度，Effective Infinite Depth）**：在误差隔绝定理的条件下，分段复合链 $\hat{\Psi}^n$ 可执行任意段数 $n$（等效链深 $l_{eff} = n \cdot l_0$ 任意大），每段误差恒 $\le \tau$。连续链 CAC 定理中的 $\Theta_{1,l}$ 指数级累积**被完全截断**——误差不跨段传播。
 
 > **注（信道编码的类比）**：误差隔绝条件 $\tau < \Delta_{\mathcal{C}}/2$ 在结构上与 Shannon 信道编码理论中的**最小距离解码条件**完全对应。码本 $\mathcal{C}$ 扮演"信道码"的角色，$\tau$ 为"信道噪声"，$\Delta_{\mathcal{C}}/2$ 为"纠错半径"。只要噪声不超过纠错半径，解码器（量化映射 $\pi$）必然正确还原发送方（理想链 $q$）的意图。CAC 的指数级误差累积——本质上是"无编码信道的噪声雪崩"——被离散重置这一"逐符号编码"机制彻底阻断。
 
@@ -141,7 +141,7 @@ $$d(\hat{h}^{(k)},\, c') \;\ge\; d(c^*_k,\, c') - d(\hat{h}^{(k)},\, c^*_k) \;\g
 
 ---
 
-**定理（一般段间误差递推，General Inter-Segment Error Recurrence）**：当误差隔绝条件**不满足**时（即 $\tau \ge \Delta_{\mathcal{C}}/2$，或理想终点不落在码本邻域内），设第 $k$ 段的实际起点 $\tilde{x}_{k-1}$ 与理想起点 $x^*_k$ 之间的偏差为 $\varepsilon_{k-1} \triangleq d(\tilde{x}_{k-1}, x^*_k)$（$\varepsilon_0 = 0$）。则段间误差满足递推不等式：
+**定理 2（一般段间误差递推，General Inter-Segment Error Recurrence）**：当误差隔绝条件**不满足**时（即 $\tau \ge \Delta_{\mathcal{C}}/2$，或理想终点不落在码本邻域内），设第 $k$ 段的实际起点 $\tilde{x}_{k-1}$ 与理想起点 $x^*_k$ 之间的偏差为 $\varepsilon_{k-1} \triangleq d(\tilde{x}_{k-1}, x^*_k)$（$\varepsilon_0 = 0$）。则段间误差满足递推不等式：
 
 $$\varepsilon_k \;\le\; \bar{L}^{l_0} \cdot \varepsilon_{k-1} \;+\; \delta_\pi \;+\; \tau$$
 
@@ -159,7 +159,7 @@ $$\varepsilon_k \;=\; d(\tilde{x}_k, x^*_{k+1}) \;=\; d(\pi(\hat{h}^{(k)}), q^{(
 $$\;\le\; d(\pi(\hat{h}^{(k)}), \hat{h}^{(k)}) + d(\hat{h}^{(k)}, q^{(k)}(x^*_k))$$
 $$\;\le\; \delta_\pi + \bar{L}^{l_0} \cdot \varepsilon_{k-1} + \tau \quad \square$$
 
-**推论（段间误差的三体制，Three Regimes of Inter-Segment Error）**：记 $\alpha = \bar{L}^{l_0}$（段内端到端拉伸率），$\beta = \delta_\pi + \tau$（段内总噪声）。递推 $\varepsilon_k \le \alpha \varepsilon_{k-1} + \beta$ 给出：
+**推论 2（段间误差的三体制，Three Regimes of Inter-Segment Error）**：记 $\alpha = \bar{L}^{l_0}$（段内端到端拉伸率），$\beta = \delta_\pi + \tau$（段内总噪声）。递推 $\varepsilon_k \le \alpha \varepsilon_{k-1} + \beta$ 给出：
 
 $$\varepsilon_n \;\le\; \begin{cases} \dfrac{\beta}{1 - \alpha} & \text{若 } \alpha < 1 \text{（收敛体制，误差饱和）} \\[8pt] n\beta & \text{若 } \alpha = 1 \text{（临界体制，线性累积）} \\[8pt] \dfrac{\alpha^n - 1}{\alpha - 1}\,\beta & \text{若 } \alpha > 1 \text{（发散体制，指数爆炸）} \end{cases}$$
 
@@ -173,13 +173,13 @@ $$\varepsilon_n \;\le\; \begin{cases} \dfrac{\beta}{1 - \alpha} & \text{若 } \a
 
 §6.2.2 的代偿定律给出了 $M$ 与 $l^*_0$ 的基本关系。§7.2 的误差隔绝定理引入了码本 $\mathcal{C}$ 及其间距 $\Delta_{\mathcal{C}}$ 作为新的约束维度。本节将这些约束统一为一组刻画 Type B 系统工程参数空间的**闭合缩放律**。
 
-**命题（三元约束统一，Unified Triple Constraint）**：设 Type B 系统需以容差 $\tau$ 逼近目标集 $R$（度量熵 $I_\varepsilon(\mathcal{S})$），且通过分段复合实现等效深度 $l_{eff} = n \cdot l_0$。若要求误差隔绝条件成立，则系统参数必须同时满足：
+**命题 3（三元约束统一，Unified Triple Constraint）**：设 Type B 系统需以容差 $\tau$ 逼近目标集 $R$（度量熵 $I_\varepsilon(\mathcal{S})$），且通过分段复合实现等效深度 $l_{eff} = n \cdot l_0$。若要求误差隔绝条件成立，则系统参数必须同时满足：
 
 1. **代偿约束**（§6.2.2）：$\log M \;\ge\; (I_\varepsilon(\mathcal{S}) - C_\varepsilon) / l^*_0$；
 2. **隔绝约束**（§7.2）：$\Delta_{\mathcal{C}} \;>\; 2\tau$；
 3. **覆盖约束**：码本 $\mathcal{C}$ 必须使理想链的每段终点落在某个码本元素的 $(\Delta_{\mathcal{C}}/2 - \tau)$-邻域内。
 
-**推论（$l^*_0$ 的扩展代价，Depth Extension Cost）**：增大段长 $l^*_0$（以减少代偿定律中 $M$ 的需求）时，单步误差预算 $E = \tau / l^*_0$ 被反比压缩。由于 $\varepsilon_{max}$ 和 $\delta_{max}$ 受系统物理限制（拟合精度与采样域偏离），$E$ 不可无限压缩——存在**最大可行段长**：
+**推论 3（$l^*_0$ 的扩展代价，Depth Extension Cost）**：增大段长 $l^*_0$（以减少代偿定律中 $M$ 的需求）时，单步误差预算 $E = \tau / l^*_0$ 被反比压缩。由于 $\varepsilon_{max}$ 和 $\delta_{max}$ 受系统物理限制（拟合精度与采样域偏离），$E$ 不可无限压缩——存在**最大可行段长**：
 
 $$l^*_0 \;\le\; \frac{\tau}{\varepsilon_{max} + L_{max}\,\delta_{max}}$$
 
@@ -187,7 +187,7 @@ $$l^*_0 \;\le\; \frac{\tau}{\varepsilon_{max} + L_{max}\,\delta_{max}}$$
 
 > **注（三元博弈的工程含义）**：Type B 系统的设计者面对三个可调旋钮：段长 $l^*_0$、基函数库规模 $M$、码本精度 $\Delta_{\mathcal{C}}$。增大 $l^*_0$ 可降低 $M$（代偿约束放松），但要求更精密的微观拟合（$\varepsilon_{max} \downarrow$），同时收紧隔绝约束（$\tau = E \cdot l^*_0$ 虽不变，但 $E$ 降低意味着每步容差更紧）。增大 $|\mathcal{C}|$ 可降低 $\Delta_{\mathcal{C}}$，放松隔绝约束，但增加外部控制环的解码复杂度。这三个旋钮的联合优化构成了 Type B 架构的核心工程问题。
 
-**推论（码本规模的分辨率下界，Codebook Size Lower Bound）**：若理想链的终点集在 $\mathcal{X}$ 中的分布需要 $\mathcal{N}(\tau, \mathcal{X})$ 个 $\tau$-球覆盖，则为使隔绝约束的"覆盖条件"成立，码本规模必须满足：
+**推论 4（码本规模的分辨率下界，Codebook Size Lower Bound）**：若理想链的终点集在 $\mathcal{X}$ 中的分布需要 $\mathcal{N}(\tau, \mathcal{X})$ 个 $\tau$-球覆盖，则为使隔绝约束的"覆盖条件"成立，码本规模必须满足：
 
 $$|\mathcal{C}| \;\ge\; \mathcal{N}\!\left(\frac{\Delta_{\mathcal{C}}}{2} - \tau,\; \mathcal{X}_{target}\right)$$
 
