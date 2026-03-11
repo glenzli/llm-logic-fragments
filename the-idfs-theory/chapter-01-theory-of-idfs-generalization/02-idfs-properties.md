@@ -58,7 +58,7 @@ $$\sigma(x_2) \;=\; \sigma_l(x_1) \;\triangleq\; \sigma\bigl(\Phi^{l-1}(x_1)\big
 
 即系统用**同一条微观链**同时服务了一次单步任务（在 $x_2$ 处）和一次多步推理任务（从 $x_1$ 出发），形成计算程序层面的不可区分简并。路由混叠可由多种机制引起：组合耗尽（见下方推论）、$\sigma$ 的参数化约束、正则化、或有限精度表示等。
 
-**推论（组合耗尽下的路由混叠必然性，Necessity of Routing Aliasing under Combinatorial Exhaustion）**：
+**推论 3（组合耗尽下的路由混叠必然性，Necessity of Routing Aliasing under Combinatorial Exhaustion）**：
 在存在组合耗尽（$\sigma$ 退化为对 $F^{\le \mathcal{D}}$ 的满射）的复杂区域 $\mathcal{X}_{sub}$ 中，路由混叠**必然发生**。具体而言，对于任意一点 $x_1 \in \mathcal{X}_{sub}$，若其 $l$ 步宏观前向轨道保持在满射区域内（即 $\Phi^j(x_1) \in \mathcal{X}_{sub}$，$j = 0, \ldots, l-1$），且所诱导的复合微观链 $\sigma_l(x_1)$ 的总长度未超出微观深度上限（$|\sigma_l(x_1)| \le \mathcal{D}$），则必然存在 $x_2 \in \mathcal{X}_{sub}$ 使得 $\sigma(x_2) = \sigma_l(x_1)$。
 
 **证明**：
@@ -81,7 +81,7 @@ $$\mathrm{Overlap}(q_A, q_B) \;\triangleq\; |\{f_{a_1}, \ldots, f_{a_l}\} \cap \
 
 若 $\mathrm{Overlap}(q_A, q_B) = 0$——即两条链在演化过程中没有调用 $F$ 中任何相同的算子——则称 $q_A$ 和 $q_B$ **结构正交**。
 
-**命题（结构正交容量的组合爆炸）**：在 $|F| = M$ 的函数集中，可构造的长度为 $l$ 的两两结构正交 $f$-链的最大数量为：
+**命题 1a（结构正交容量的组合爆炸）**：在 $|F| = M$ 的函数集中，可构造的长度为 $l$ 的两两结构正交 $f$-链的最大数量为：
 
 $$N_{struct} \;=\; \left\lfloor M / l \right\rfloor$$
 
@@ -111,7 +111,7 @@ $$\mathrm{Cov}_{var}(q_A, q_B) \;\triangleq\; \mathbb{E}_{x \sim \mu,\, d(x,x') 
 
 > **注（欧氏空间中的简化）**：当 $\mathcal{X} \subseteq \mathbb{R}^n$ 时，$\delta q(x, x')$ 可用差向量 $\Delta q = q(x') - q(x)$ 替代，变分耦合度退化为变分向量的内积 $\langle \Delta q_A, \Delta q_B \rangle$ 的期望——即 Sobolev 型的导数内积。变分正交此时等价于两条链的局部形变**方向垂直**。
 
-**命题（结构正交蕴含变分正交）**：若 $q_A, q_B \in F^*$ 结构正交（算子集不交），且 $F$ 中各算子的像集在 Hausdorff 距离意义上彼此有正间距，则 $q_A$ 和 $q_B$ 变分正交。
+**命题 1b（结构正交蕴含变分正交）**：若 $q_A, q_B \in F^*$ 结构正交（算子集不交），且 $F$ 中各算子的像集在 Hausdorff 距离意义上彼此有正间距，则 $q_A$ 和 $q_B$ 变分正交。
 
 **证明**：设 $q_A = f_{a_l} \circ \cdots \circ f_{a_1}$，$q_B = f_{b_l} \circ \cdots \circ f_{b_1}$，算子集不交。$q_A$ 的末端输出落在 $f_{a_l}(\mathcal{X})$ 内，$q_B$ 的末端输出落在 $f_{b_l}(\mathcal{X})$ 内。对输入微扰，$\delta q_A$ 的幅度完全由 $f_{a_l}$ 的像集的局部几何决定，$\delta q_B$ 的幅度完全由 $f_{b_l}$ 的像集的局部几何决定。当两个像集在 Hausdorff 距离意义上分离时，它们的局部拉伸行为无结构性关联，变分耦合度在 $\mu$-平均下为零。$\square$
 
@@ -121,7 +121,45 @@ $$\mathrm{Cov}_{var}(q_A, q_B) \;\triangleq\; \mathbb{E}_{x \sim \mu,\, d(x,x') 
 > - $\kappa_\Phi \approx 1$（所有路径的形变率几乎相同）$\implies$ **变分正交维度坍缩**——结构上不同的 $f$-链在变分意义上全部"平行"，有效容量远低于代数容量 $M^\mathcal{D}$。这正是第二章 §6.2.1 Type A（路由简并、死库）的几何本质。
 > - $\kappa_\Phi \gg 1$（路径的形变率高度多样）$\implies$ **变分正交维度高**——同一算子 $f \in F$ 在不同输入域上产生不同方向的形变，共享算子不构成干扰。有效容量接近代数容量。这就是 Type B 的优势来源。
 
+**命题 1c（路由跳变代价的正交降阶，Orthogonal De-escalation of Routing Mismatch Penalty）**：§3.1 CAC 五项精细界中的路由失准惩罚 $\Delta^{err}_j = d(\sigma(h_{j-1})(h_{j-1}),\, \sigma(h^*_{j-1})(h_{j-1}))$ 度量的是**两条不同 $f$-链在同一输入处的输出差异**。该罚项在误差界中的累积行为，取决于实际激活链 $\sigma(h_{j-1})$ 与理想激活链 $\sigma(h^*_{j-1})$ 的**变分正交性**。
+
+设系统演化 $l$ 步，前 $l$ 步中存在 $n_{switch}$ 次路由跳变（$\sigma(h_{j-1}) \neq \sigma(h^*_{j-1})$，即实际轨道与理想轨道的路由决策分裂）。记第 $j$ 次跳变时，实际激活链 $q^{act}_j = \sigma(h_{j-1})$，理想激活链 $q^{ideal}_j = \sigma(h^*_{j-1})$，二者的**路由跳变向量**为 $\vec{\Delta}_j = q^{act}_j(h_{j-1}) - q^{ideal}_j(h_{j-1})$（在 $\mathcal{X} \subseteq \mathbb{R}^n$ 的局部切空间中）。则：
+
+(i) **完全同向（最坏情形）**：若所有 $n_{switch}$ 次跳变的跳变向量 $\vec{\Delta}_j$ 均沿同一方向对齐（$\vec{\Delta}_j = |\vec{\Delta}_j| \cdot \vec{v}$），则经尾部乘积放大后的总路由惩罚为：
+
+$$\sum_j \Delta^{err}_j \cdot \Theta_{j+1,l} \;=\; \sum_j |\vec{\Delta}_j| \cdot \Theta_{j+1,l} \;=\; \Delta_{max} \cdot \Lambda_l$$
+
+退化为 CAC 形式 A 的最保守界。此情形与 §3.1 推论 3（同向共线坍缩构造）完全同构——所有误差源坍缩于主特征射线。
+
+(ii) **变分正交（统计改善）**：若各次路由跳变时 $q^{act}_j$ 与 $q^{ideal}_j$ 变分正交（$\mathrm{Cov}_{var}(q^{act}_j, q^{ideal}_j) = 0$），则跳变向量 $\vec{\Delta}_j$ 的方向在切空间中**统计无关**（不同跳变事件的形变方向独立）。由 §3.2 统计精化界（SRB），在 type-$p$ Banach 空间中，路由惩罚的累积总和从最坏的 $\mathcal{O}(\Delta_{max} \cdot \Lambda_l)$ 降阶为：
+
+$$\left\|\sum_j \vec{\Delta}_j \cdot \Theta_{j+1,l}\right\| \;\sim\; \mathcal{O}\!\left(\Delta_{max} \cdot \Lambda_l^{1/p}\right)$$
+
+当 $p = 2$（Hilbert 空间）时，降阶为 $\mathcal{O}(\Delta_{max} \cdot \sqrt{\Lambda_l})$——路由惩罚的有效累积速率从线性降至平方根。
+
+**证明**：
+
+(i) 由三角不等式在一维子空间的退化，同向量的范数之和等于和的范数。尾部乘积放大保持方向不变。
+
+(ii) 路由跳变向量 $\vec{\Delta}_j$ 可视为由路由边界跨越事件引入的"噪声项"。变分正交保证了各跳变向量在切空间中方向独立。将 $\{\vec{\Delta}_j \cdot \Theta_{j+1,l}\}$ 视为零均值独立随机向量（均值为零是因为变分正交意味着形变方向无系统偏置），在 type-$p$ 空间中应用 type-$p$ 不等式（§3.2 定义），总和的 $p$-阶矩满足 $\mathbb{E}[\|\sum \vec{\Delta}_j \Theta_{j+1,l}\|^p] \leq T_p^p \sum \mathbb{E}[\|\vec{\Delta}_j \Theta_{j+1,l}\|^p] \leq T_p^p \Delta_{max}^p \sum \Theta_{j+1,l}^p$。由 Jensen 不等式或直接估计，$\sum \Theta_{j+1,l}^p \leq (\sum \Theta_{j+1,l})^p \cdot n_{switch}^{1-p} = \Lambda_l^p \cdot n_{switch}^{1-p}$，开 $p$ 次根并取 $n_{switch} \leq l$ 即得渐近阶。$\square$
+
+> **注（正交降阶的物理含义与 §3.2 漂移-扩散定律的闭合）**：此命题揭示了路由跳变代价的双重性质——它既是 §3.1 CAC 的**确定性代数项**（最坏情形同向累积），又可以是 §3.2 SRB 的**随机扩散项**（正交散射），取决于系统 $f$-链空间的正交结构。在 §3.2 的漂移-扩散框架中，同向路由跳变对应纯粹的**系统漂移**（$\mu_{bias}$），正交路由跳变对应**随机扩散**（$\eta_{noise}$）。因此，**$f$-链正交性是将路由惩罚从漂移项"降级"为扩散项的精确数学机制**。由此也可推知：在 §6.2 的路由碎裂博弈中，若系统通过优化 $\sigma$ 的路由拓扑使跳变方向趋于正交，则 $\Delta_\sigma$ 的实际 CAC 代价远低于最坏情形的 $\Delta_{max}\Lambda_l$——路由预算 $B_\sigma$ 的有效利用率因正交性而大幅提升。
+
+> **注（与 §5 推论 2 的联动：正交性的反劫持新含义）**：§5 推论 2 已证明变分正交在邻域劫持中提供侧向逃逸。当与路由惩罚的正交降阶联合时，正交性具有更深层的功能：在 §5 的劫持场景中，中间态 $h_1$ 进入 $r_B$ 的领地附近，$\Phi$ 在 $h_1$ 处选择的过渡链 $q_{transit}$ 若与 $r_B$ 的局部链 $q_{local}$ 变分正交，则不仅 $q_{local}$ 的形变不产生系统偏移（§5 原有结论），更关键的是，由此引发的路由跳变 $\Delta^{err}$ 在后续链路中以**扩散而非漂移**模式累积——劫持的"余震"不会沿主特征方向相干叠加，而是被正交方向分散。这从误差传播层面解释了为什么高正交维度的系统（高 $\kappa_\Phi$、大 $M$）更能抵御劫持的级联恶化。
+
+**命题 1d（$\Delta^{sam}$ 的结构正交消去，Structural Orthogonality Elimination of $\Delta^{sam}$）**：§3.1 CAC 五项精细界中的采样域路由失配项 $\Delta^{sam}_j = d(\sigma(h^*_{j-1})(x'_j),\; \sigma(x'_j)(x'_j))$ 度量的是：理想轨道所处位置 $h^*_{j-1}$ 的激活链与最近采样点 $x'_j$ 处的激活链，在 $x'_j$ 处的输出差异。该项在结构正交条件下**自动归零**。
+
+设 $h^*_{j-1}$ 为理想轨道的第 $j-1$ 步中间态，$x'_j = \mathrm{argmin}_{x \in \mathcal{X}(r_{i_j})} d(h^*_{j-1}, x)$ 为其最近采样点，距离为 $\delta_j = d(h^*_{j-1}, x'_j)$。设 $\sigma(h^*_{j-1})$ 激活的 $f$-链 $q_A$ 与 $\sigma(x'_j)$ 激活的 $f$-链 $q_B$ 结构正交（算子集不交），且 $F$ 中各算子的像集在 Hausdorff 距离意义上具有正间距 $d_H > 0$。
+
+则当 $\delta_j < d_H/L$ 时，$\sigma(h^*_{j-1}) = \sigma(x'_j)$——即 $h^*_{j-1}$ 与 $x'_j$ 必然位于同一路由分区内，从而 $\Delta^{sam}_j = 0$。
+
+**证明**：由 §2.5 命题 5（路由分辨率极限），路由决策边界两侧的最小输入间距为 $\geq \Delta_{decision}/L$。在结构正交条件下，算子像集的 Hausdorff 正间距 $d_H > 0$ 意味着不同路由分区的输出像集在 $d_H$ 尺度上分离。由此，路由决策产生的宏观行为差异 $\Delta_{decision} \geq d_H$，因此路由边界到 $h^*_{j-1}$ 的最小距离 $\geq d_H/L$。当 $\delta_j = d(h^*_{j-1}, x'_j) < d_H/L$ 时，$h^*_{j-1}$ 与 $x'_j$ 不可能被路由边界分隔（否则违反分辨率极限），故 $\sigma(h^*_{j-1}) = \sigma(x'_j)$，$\Delta^{sam}_j = d(\sigma(h^*_{j-1})(x'_j), \sigma(x'_j)(x'_j)) = 0$。$\square$
+
+> **注（$\Delta^{sam} = 0$ 的实际含义与局限）**：此命题表明，在算子像集充分分离的系统中，只要理想轨道的采样域偏离 $\delta_j$ 足够小（小于 $d_H/L$），采样域路由失配项自动消除。这为 Type B 系统提供了额外的精度优势——短链中 $\delta_j$ 被截断（命题 1a (i)），且 Type B 可通过增大 $M$ 来增加算子多样性和像集间距（$d_H$ 随 $M$ 增大趋于增加），两者协同使 $\Delta^{sam}$ 在 Type B 中几乎恒为零。然而在长链系统中，$\delta_j$ 因漂移累积可能远超 $d_H/L$，此消去条件不再成立——长链的采样域路由失配是结构性不可避免的。
+
 ---
+
+
 
 ### 2.5 迭代动力学与决策边界
 
@@ -163,7 +201,7 @@ $$d\!\bigl(\hat{h}_l^{(A)},\, \hat{h}_l^{(B)}\bigr) \;\geq\; \Pi_{k,l}^{-} \cdot
 
 **特例（输入差异）**：取 $k = 1$，$\Delta_0 = d(x_A, x_B)$，则退化为对原始输入差异的有限步放大：$d(\hat{h}_l^{(A)}, \hat{h}_l^{(B)}) \geq \Pi_{1,l}^{-} \cdot d(x_A, x_B)$。
 
-**推论（无穷扩张的拓扑不可能性）**：若假设该扩张链可无限延续且 $\Pi_{k,\infty}^{-} \to \infty$，则要求终态距离 $d(\hat{h}_\infty^{(A)}, \hat{h}_\infty^{(B)}) \to \infty$。然而，由于引理 1 规定的全有界 IDFS 拓扑容量限制，距离发散在有限的度量包络内**不可能发生**。因此，连续的强扩张路线（$\forall j, c_j > 1$）在真实的高维折叠空间中必然是**有限长**的；它只能作为局部的瞬态不稳定现象存在，且注定被系统的宏观非线性收缩或离散边界跳变（见命题 5）所强制截断。
+**推论 4（无穷扩张的拓扑不可能性）**：若假设该扩张链可无限延续且 $\Pi_{k,\infty}^{-} \to \infty$，则要求终态距离 $d(\hat{h}_\infty^{(A)}, \hat{h}_\infty^{(B)}) \to \infty$。然而，由于引理 1 规定的全有界 IDFS 拓扑容量限制，距离发散在有限的度量包络内**不可能发生**。因此，连续的强扩张路线（$\forall j, c_j > 1$）在真实的高维折叠空间中必然是**有限长**的；它只能作为局部的瞬态不稳定现象存在，且注定被系统的宏观非线性收缩或离散边界跳变（见命题 5）所强制截断。
 
 **证明**：局部放大不等式由扩张下界条件连续应用即得。推论部分依反证法：若无穷扩张成立，两点距离将超越全空间的固有直径 $\mathrm{diam}(\mathcal{X})$，这与引理 1 中像集容量 $\mathcal{C}_{\mathrm{img}} \leq \log M + C_\epsilon < \infty$（即存在全有界覆盖）的物理前提直接矛盾。因此无穷连乘假设不合法。$\square$
 

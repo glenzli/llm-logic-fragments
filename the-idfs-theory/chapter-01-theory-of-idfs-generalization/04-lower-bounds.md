@@ -170,6 +170,18 @@ $$\mathcal{N}(r(A),\, 2\epsilon) \;\geq\; \mathcal{N}(A,\, 2\epsilon/k)$$
 
 > **注（与§2 命题 1 的联系）**：CPI 定理的容量下界与 §2.3 命题 1（组合耗尽与路由满射）在结构上深度对偶。命题 1 从信息论角度建立 $|\mathrm{Im}(\sigma)| \geq e^{I_\epsilon(\mathcal{S}) - C_\epsilon}$（目标度量熵超出基算子变形熵的指数倍）；CPI 从覆盖数角度建立 $|\mathrm{Im}(\sigma)| \geq \mathcal{N}(A, 2\epsilon/k) / \mathcal{N}(A, \epsilon/L_{local})$（目标辨识需求超出系统解析力的覆盖数比）。两者独立成立，在不同的数学框架下各自刻画了同一物理事实：**高维判别性目标对离散路由多样性的不可退让的刚性需求**。
 
+> **注（正交维度收紧：有效路由容量的真正下界）**：CPI 定理中 $|\mathrm{Im}(\sigma)|$ 计量的是路由分支的**代数总数**——包括可能在变分意义上冗余的分支。由 §2.4 的 $f$-链变分正交理论，两条变分平行的路由分支（$\mathrm{Cov}_{var}(q_A, q_B) \neq 0$）在覆盖数意义上是**近似共线的**——它们各自服务的输入子域的像集在 $\mathcal{X}$ 中相互重叠，不构成独立的覆盖贡献。
+>
+> 定义 $|\mathrm{Im}(\sigma)|_{orth}$ 为 $\mathrm{Im}(\sigma)$ 中两两变分正交的最大子集大小。CPI 证明的第 2 步（路由分区 + union bound）本质上要求每个分区对覆盖数做**独立贡献**。当 $|\mathrm{Im}(\sigma)|$ 中大量分支变分平行时，这些分支的覆盖贡献存在严重重叠，union bound 给出的 $|\mathrm{Im}(\sigma)| \cdot \mathcal{N}(A, \epsilon/L_{local})$ 高估了 $\Phi(A)$ 的实际覆盖数。更精确的估计为：
+>
+> $$\mathcal{N}(\Phi(A),\, \epsilon) \;\leq\; |\mathrm{Im}(\sigma)|_{orth} \cdot \mathcal{N}(A,\, \epsilon/L_{local}) \;+\; (|\mathrm{Im}(\sigma)| - |\mathrm{Im}(\sigma)|_{orth}) \cdot \mathcal{N}_{red}$$
+>
+> 其中 $\mathcal{N}_{red} \leq \mathcal{N}(A, \epsilon/L_{local})$ 为冗余分支的覆盖贡献（因平行性可证 $\mathcal{N}_{red} \ll \mathcal{N}(A, \epsilon/L_{local})$）。在极端情形（所有非正交分支完全冗余，$\mathcal{N}_{red} = 0$）下，CPI 收紧为：
+>
+> $$|\mathrm{Im}(\sigma)|_{orth} \;\geq\; \frac{\mathcal{N}(A,\; 2\epsilon/k)}{\mathcal{N}(A,\; \epsilon/L_{local})}$$
+>
+> 这意味着系统不仅需要足够多的路由分支，更需要足够多的**变分正交**分支。在 §2.4 的框架下，$|\mathrm{Im}(\sigma)|_{orth}$ 受限于系统的变分正交维度，后者又受限于 $\kappa_\Phi$（路径 Lipschitz 跨度）。当 $\kappa_\Phi \approx 1$（Type A 的路由简并），$|\mathrm{Im}(\sigma)|_{orth} \approx 1$——即使代数上路由分支数庞大（$M^\mathcal{D}$），有效正交分支数坍缩至近 1，CPI 的需求在物理上不可能满足。**这从正交几何层面解释了 Type A 在高判别性目标下的根本失败。**
+
 ### 4.3 判别性拟合缺口定理（DFG）
 
 **引理（不可完美拟合集的正测度性，Positive Measure of Imperfect Fitting Sets）**：设 $(\mathcal{X}, d, \mu)$ 为度量概率空间，$\mu$ 完全支撑。设 IDFS $\mathcal{F} = (F, \sigma)$ 的计算映射 $\Phi$ 在各路由分区内局部为 $L_{local}$-Lipschitz，$(r, \mathcal{X}_r) \in \mathcal{S}$，$\mathcal{X}_r$ 紧致且 $\mathrm{int}(\mathcal{X}_r) \neq \emptyset$。若 $r$ 具有 $(\rho, \Delta)$-变分且 $\Delta > \Omega_1(\rho) = L_{local}\rho + \Delta_{\sigma, \text{max}}$（即目标变分超过系统单步拓扑应变力），则对任意 $\tau < (\Delta - L_{local}\rho - \Delta_{\sigma, \text{max}})/2$：

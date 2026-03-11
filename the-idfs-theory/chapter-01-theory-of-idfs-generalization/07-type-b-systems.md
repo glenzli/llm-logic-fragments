@@ -49,6 +49,26 @@ Type B 的定义性约束为 $l \le l^*_0 = \tau / E$（其中 $E = \varepsilon_
 
 > **注（方向惩罚的同步消解）**：§6 推论 2 的方向不对称性注记揭示，长链走廊实际上是**方向依赖的**——对扩张映射 $r$（$\mathrm{Lip}(r) > 1$），正向链的 $\delta^{fwd}$ 以 $\mathrm{Lip}(r)^n$ 指数增长，CAC 中 $\delta \cdot \Gamma$ 项主导误差累积，使正向走廊比逆向走廊**更窄**。推论 7 的对偶陷阱也因此获得方向结构：同一收缩步在正向链中是生存机制，在逆向链中可能成为崩溃触发器。Type B 的 $l \le l^*_0$ 约束不仅消解了走廊本身（命题 1 (i)–(iv)），也同步消解了这一方向惩罚——因为方向不对称性是通过 $\delta$ 的**指数级**长链累积发挥作用的，短链中 $\delta$ 的累积被截断在 $\tau$ 以内，方向差异无法发展为指数级的走廊扭曲。
 
+**命题 1a（CAC 域外项的短链免疫与路由碎裂解放，Short-Chain Immunity of OOD Terms and Routing Liberation）**：设 IDFS $\mathcal{F} = (F, \sigma)$ 在 $l \le l^*_0$ 条件下运行。则 CAC 五项精细界中的两个域外项——目标域外变分 $\rho_j$ 与路由失准惩罚 $\Delta_{\sigma,j}$——相对于长链系统具有质的结构优势：
+
+(i) **$\rho$ 截断免疫**：在 Type B 段内，理想轨道 $h^*_{j-1}$ 偏离采样域 $\mathcal{X}(r_{i_j})$ 的累积漂移被链深截断。由 CAC 递推，中间态偏离的上界满足 $d(h^*_{j-1}, x_0) \leq \sum_{k=1}^{j-1} \|r_{i_k}\|_{lip} \cdot \mathrm{diam}(\mathcal{X}(r_{i_k}))$（理想轨道的总位移），在 $j \le l \le l^*_0$ 步内，该总位移被截断为有限常数。因此每步偏离 $\delta_j = d(h^*_{j-1}, \mathcal{X}(r_{i_j}))$ 不因链深无限增长而发散，采样域偏离的加权总和 $\delta_{max}\Gamma_l \leq \delta_{max} L_{max} \Lambda_l \leq \delta_{max} L_{max} l^*_0$ 恒有限，从而 $\rho_j = d(r_{i_j}(x'_j), r_{i_j}(h^*_{j-1}))$ 受限于目标 $r_{i_j}$ 在有限 $\delta_j$-邻域内的局部振荡模。长链系统中 $\delta_j$ 因指数漂移趋于无穷导致 $\rho_j$ 不可控的灾难性链路，在 Type B 中**不可能发生**。
+
+(ii) **$\Delta_\sigma$ 纯正面解放**：由 §6.2 路由碎裂博弈命题，在长链系统中 $\Delta_\sigma$ 受零和博弈约束——增大 $\Delta_\sigma$ 释放 CAB 应变力的同时，等额消耗 CAC 误差预算 $B_\sigma$。在 Type B 中，由于 $\Lambda_l \leq l \leq l^*_0$（有限常数），CAC 中 $\Delta_{max}\Lambda_l$ 的代价被截断为 $\Delta_{max} \cdot l^*_0$——这是一个**有界常数代价**。因此：
+
+- 增大 $\Delta_\sigma$ 的 CAC 代价仅为 $\Delta_{max} \cdot l^*_0$（不爆炸），而非长链中的 $\Delta_{max} \cdot \bar{L}^l/({\bar{L}-1})$（指数级）；
+- 增大 $\Delta_\sigma$ 在 CAB 侧仍全额扩展 $\Omega_1(\rho) = L_{local}\rho + \Delta_{\sigma,\text{max}}$，放宽变分四元张力律 $2\varepsilon_r + L_{local}\rho + \Delta_{\sigma,\text{max}} \geq \Delta$ 对单步拟合残差 $\varepsilon_r$ 的下界约束。
+
+因此 Type B 中 $\Delta_\sigma$ 的**成本-收益比**远优于长链系统：每单位路由碎裂引入的 CAC 误差代价为 $O(l^*_0)$，换取的 CAB 拟合约束放宽为 $\Delta_{\sigma,\text{max}}/2$（推论 2 变分下界减半）。
+
+**证明**：
+
+(i) 在 CAC 精细界中，$\delta_j \leq d(h^*_{j-1}, \mathcal{X}(r_{i_j}))$。链深 $l \leq l^*_0$ 限制了理想轨道的总步数。由于每步位移受 $r_{i_j}$ 的局部形变率约束，$\sum_j \delta_j$ 有标准的有限上界。$\rho_j = d(r_{i_j}(x'_j), r_{i_j}(h^*_{j-1}))$ 是 $r_{i_j}$ 在距离不超过 $\delta_j$ 的两点间的输出差异——当 $\delta_j$ 有限（短链截断保证）时，$\rho_j$ 受限于 $r_{i_j}$ 在 $\delta_j$-邻域内的局部振荡特征，不因链深发散。
+
+(ii) CAC 形式 A 中 $\Delta_{max}\Lambda_l$ 项，在 $l \leq l^*_0$ 下 $\Lambda_l \leq \sum_{j=1}^{l^*_0} L_{max}^{l^*_0-j} \leq l^*_0 L_{max}^{l^*_0}$（上界）。当 Type B 选择 $\bar{L} \geq 1$ 时，该上界仍为有限数（因 $l^*_0$ 有限），不随链深趋于无穷。而在 §4 推论 2 的单步变分下界 $2\varepsilon_r + L_{local}\rho + \Delta_{\sigma,\text{max}} \geq \Delta$ 中，$\Delta_{\sigma,\text{max}}$ 直接减小 $\varepsilon_r$ 的下界——每增加一单位 $\Delta_{\sigma,\text{max}}$，$\varepsilon_r$ 的最低保证可降低 $1/2$ 单位。$\square$
+
+> **注（Type B 的 $\Delta_\sigma$ 优势与 §6.2 博弈命题的对接）**：§6.2 的路由碎裂博弈命题证明了长链系统中 $\Delta_\sigma$ 是严格的零和资源——为 CAB 释放的应变力等额消耗 CAC 误差预算。Type B 打破了这个零和结构：CAC 侧的代价被 $l^*_0$ 截断为常数，而 CAB 侧的收益（变分下界的松弛）保持不变。$\Delta_\sigma$ 在 Type B 中从"零和博弈的筹码"变为"正和博弈的工具"——这是短链架构相对于长链架构的第五条独立优势（继误差全域有界、采样非指数爆炸、抗劫持鲁棒性、方向惩罚消解之后）。
+
+
 **命题 2（$M$-精度走廊，$M$-Precision Corridor）**：在 Type B 约束下，基函数库规模 $M = |F|$ 同时控制 CAC 上界与 CAB 下界，将系统的段内端到端误差 $\varepsilon^*_q$ 双向约束于一个 $M$-依赖的走廊之中：
 
 $$\varepsilon_{y,out}(M) \;\le\; \varepsilon^*_q \;\le\; \varepsilon_{max}(M) \cdot \Lambda_l + \delta_{max} \cdot \Gamma_l$$
