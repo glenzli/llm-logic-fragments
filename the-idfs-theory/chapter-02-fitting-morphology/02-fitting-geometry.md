@@ -16,7 +16,7 @@ $$S(x_0) \;\triangleq\; \limsup_{\delta \to 0} \frac{d(\Phi(x_0 + \delta),\, \Ph
 
 $$J_\sigma(x_0, \delta) \;\triangleq\; \Pr_{x' \sim \mathrm{Unif}(B(x_0, \delta))}\!\bigl[\sigma(x') \neq \sigma(x_0)\bigr]$$
 
-即在 $x_0$ 的 $\delta$-球内均匀采样时，路由决策发生改变的概率。$J_\sigma$ 是不依赖语义标签的、纯粹基于 $\sigma$ 结构的形态判据。
+即在 $x_0$ 的 $\delta$-球内均匀采样时，路由决策发生改变的概率。$J_\sigma$ 是不依赖任何目标规则先验的、纯粹基于 $\sigma$ 结构的形态判据。
 
 > **注（$J_\sigma$ 与 $\rho_\sigma$ 的关系）**：路由跳变概率 $J_\sigma(x_0, \delta)$ 是 §1 定义 1.1 路由边界密度 $\rho_\sigma$ 的局部化动态版本。$\rho_\sigma$ 是全局的、静态的边界密度；$J_\sigma$ 是逐点的、尺度相关的跳变概率。由 co-area formula，$J_\sigma(x_0, \delta) \approx \rho_\sigma^{local}(x_0) \cdot \delta$（在 $\delta$ 小时的一阶近似），其中 $\rho_\sigma^{local}$ 是 $x_0$ 处的局部边界密度。$\sigma$-奇异等价于 $\rho_\sigma^{local} = \infty$，此时 $J_\sigma \to 1$（$\forall \delta > 0$）。
 
@@ -100,13 +100,13 @@ $$\bar{w} \;\triangleq\; \frac{1}{N} \sum_\beta \mathrm{diam}(V_\beta) \;\lesssi
 
 $$x_0 \;\in\; P_\tau(r_s), \quad x_{t+1} \;=\; \Phi(x_t), \quad t = 0, 1, \ldots, T-1$$
 
-**命题 3（槽内自稳定性，Intra-Groove Self-Stability）**：若 $\Phi$ 在 $P_\tau(r_s)$ 上满足 $\tau$-拟合条件，且 $r_s$ 具有**自回归不变性**——$r_s(x) \in P_\tau(r_s)$ 对所有 $x \in P_\tau(r_s)$ 成立——则自锚定链在 $P_\tau(r_s)$ 内**逐步自稳定**：
+**命题 3（槽内自稳定性，Intra-Groove Self-Stability）**：若 $\Phi$ 在 $P_\tau(r_s)$ 上满足 $\tau$-拟合条件，且 $r_s$ 具有**迭代不变性**——$r_s(x) \in P_\tau(r_s)$ 对所有 $x \in P_\tau(r_s)$ 成立——则自锚定链在 $P_\tau(r_s)$ 内**逐步自稳定**：
 
 $$d(x_{t+1}, r_s(x_t)) \;\leq\; \tau, \quad x_{t+1} \in P_\tau(r_s) \quad \forall\, t$$
 
-**证明**：由 $x_t \in P_\tau(r_s)$，$d(\Phi(x_t), r_s(x_t)) < \tau$，故 $x_{t+1} = \Phi(x_t)$ 与 $r_s(x_t)$ 的距离 $< \tau$。由自回归不变性，$r_s(x_t) \in P_\tau(r_s)$。若 $\tau$ 足够小使 $x_{t+1}$ 不跌出 $P_\tau(r_s)$ 的碎片连通分量，则 $x_{t+1} \in P_\tau(r_s)$。以 $T$ 步归纳即得。$\square$
+**证明**：由 $x_t \in P_\tau(r_s)$，$d(\Phi(x_t), r_s(x_t)) < \tau$，故 $x_{t+1} = \Phi(x_t)$ 与 $r_s(x_t)$ 的距离 $< \tau$。由迭代不变性，$r_s(x_t) \in P_\tau(r_s)$。若 $\tau$ 足够小使 $x_{t+1}$ 不跌出 $P_\tau(r_s)$ 的碎片连通分量，则 $x_{t+1} \in P_\tau(r_s)$。以 $T$ 步归纳即得。$\square$
 
-> **注（自回归不变性的含义）**：条件 $r_s(x) \in P_\tau(r_s)$ 是 $r_s$ 与 $\Phi$ 的**联合条件**——$P_\tau(r_s)$ 本身由 $\Phi$ 参与定义。该条件等价于 $\Phi(P_\tau(r_s)) \subseteq B_\tau(r_s(P_\tau(r_s))) \subseteq P_\tau(r_s)$，在精确序列复现场景中自然成立。
+> **注（迭代不变性的含义）**：条件 $r_s(x) \in P_\tau(r_s)$ 是 $r_s$ 与 $\Phi$ 的**联合条件**——$P_\tau(r_s)$ 本身由 $\Phi$ 参与定义。该条件等价于 $\Phi(P_\tau(r_s)) \subseteq B_\tau(r_s(P_\tau(r_s))) \subseteq P_\tau(r_s)$，在系统需要反复迭代输出来逼近特定轨迹的场景中自然成立。
 
 **命题 4（脱槽的不可逆性，Irreversibility of Groove Departure）**：设在自锚定链的第 $t^*$ 步，误差使 $x_{t^*+1} \notin P_\tau(r_s)$。则对所有后续步 $t > t^*$，系统不可能自发回到窄槽，除非外部干预。
 
