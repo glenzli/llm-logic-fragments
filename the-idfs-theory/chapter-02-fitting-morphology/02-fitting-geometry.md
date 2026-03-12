@@ -1,22 +1,34 @@
 ## 拟合几何
 
-§1 的三态分类基于路径 Lipschitz 常数 $L_i$ 与全局约束 $L$ 的关系，给出了拟合形态的**外部边界**——域宽、可复合性、CAC 状态。但分类本身不描述每种形态在 $F$-空间中的**内部拓扑结构**。本节逐一考察三种形态的拟合域 $P_\tau(r)$ 在度量空间 $\mathcal{X}$ 中呈现什么几何形态、具有怎样的稳定性、以及如何响应外部扰动。
+§1 的三态分类基于 $\sigma$-正则性与谱正则性的正交判据，给出了拟合形态的**定义边界**——域宽、可复合性、拓扑图像。但分类本身不描述每种形态在 $F$-空间中的**内部拓扑结构**。本节逐一考察三种形态的拟合域 $P_\tau(r)$ 在度量空间 $\mathcal{X}$ 中呈现什么几何形态、具有怎样的稳定性、以及如何响应外部扰动。
 
-### 2.0 局部扰动敏感性
+### 2.1 几何可观测量
 
-在展开三态的内部几何之前，定义一个贯穿本节的核心可观测量。
+在展开三态的内部几何之前，定义贯穿本节的两个核心可观测量。
 
 **定义（局部扰动敏感性，Local Perturbation Sensitivity）**：定义 $\Phi$ 在输入 $x_0$ 处的**局部扰动敏感性**：
 
 $$S(x_0) \;\triangleq\; \limsup_{\delta \to 0} \frac{d(\Phi(x_0 + \delta),\, \Phi(x_0))}{\delta}$$
 
-即 $\Phi$ 在 $x_0$ 处的有效局部 Lipschitz 常数。$S(x_0)$ 是**不依赖语义标签的、纯度量空间可计算的形态判据**——在任意 $x_0 \in \mathcal{X}$ 处测量 $\Phi$ 的局部扰动放大率，即可判定该点处于何种拟合形态（见 §2.1–§2.5 各小节的结论）。
+即 $\Phi$ 在 $x_0$ 处的有效局部 Lipschitz 常数。由 $\Phi$ 全局 $L$-Lipschitz，$S(x_0) \leq L$ 恒成立。在 $\sigma$-分片 $U_\alpha$ 内部，$S(x_0) = \|J(x_0)\| = \sigma_1(J(x_0))$（最大奇异值）。$S(x_0)$ 的值本身**不能区分**三种拟合形态（三态均满足 $S \leq L$），但其**空间不连续性**可以——见 §2.5。
+
+**定义（路由跳变概率，Routing Jump Probability）**：设 $x_0 \in \mathcal{X}$，$\delta > 0$。定义 $\Phi$ 在 $x_0$ 处的**路由跳变概率**为：
+
+$$J_\sigma(x_0, \delta) \;\triangleq\; \Pr_{x' \sim \mathrm{Unif}(B(x_0, \delta))}\!\bigl[\sigma(x') \neq \sigma(x_0)\bigr]$$
+
+即在 $x_0$ 的 $\delta$-球内均匀采样时，路由决策发生改变的概率。$J_\sigma$ 是不依赖语义标签的、纯粹基于 $\sigma$ 结构的形态判据。
+
+> **注（$J_\sigma$ 与 $\rho_\sigma$ 的关系）**：路由跳变概率 $J_\sigma(x_0, \delta)$ 是 §1 定义 1.1 路由边界密度 $\rho_\sigma$ 的局部化动态版本。$\rho_\sigma$ 是全局的、静态的边界密度；$J_\sigma$ 是逐点的、尺度相关的跳变概率。由 co-area formula，$J_\sigma(x_0, \delta) \approx \rho_\sigma^{local}(x_0) \cdot \delta$（在 $\delta$ 小时的一阶近似），其中 $\rho_\sigma^{local}$ 是 $x_0$ 处的局部边界密度。$\sigma$-奇异等价于 $\rho_\sigma^{local} = \infty$，此时 $J_\sigma \to 1$（$\forall \delta > 0$）。
 
 ---
 
-### 2.1 窄槽定理
+### 2.2 逐字式拟合
 
-§1 命题 2 证明了逐字式拟合的 $\tau$-拟合集 $P_\tau(r_s)$ 的直径不超过 $O(\tau/L_s)$。本节精细化这一结论，揭示 $P_\tau(r_s)$ 不仅小，而且具有**强各向异性**的内部结构。
+逐字式拟合（$\sigma$-奇异）在三态中呈现最极端的几何结构。本小节完整描绘其内部拓扑：离散窄槽形态、碎片尺度约束、以及自锚定-脱槽动力学。
+
+#### 2.2.1 离散窄槽定理
+
+§1 命题 1.3 证明了逐字式拟合（有效 $\sigma$-奇异）的 $\tau$-拟合集 $P_\tau(r_s)$ 的总测度趋于零。本节精细化这一结论，揭示 $P_\tau(r_s)$ 不仅小，而且具有**强各向异性**的内部结构。
 
 **定义（方向性直径，Directional Diameter）**：设 $A \subseteq \mathcal{X}$，$v$ 为 $\mathcal{X}$ 中的一个方向（在一般度量空间中，取 $v$ 为连接 $A$ 内两点的测地线方向）。定义 $A$ 沿 $v$ 方向的**方向性直径**：
 
@@ -28,181 +40,172 @@ $$d(r_s(x), r_s(y)) \;\geq\; k_s \cdot d(x, y)$$
 
 $k_s$ 量化了 $r_s$ 作为目标映射沿主变分方向的**最低变化率**。
 
-> **注（$k_s > 0$ 是逐字式拟合的内禀性质）**：$L_s \gg L$ 的定义前提意味着 $\Phi$ 在 $P_\tau(r_s)$ 上必须追踪一个高变分的目标——$r_s$ 的输出在极小的输入邻域内剧烈跳变。这种高变分恰恰要求 $r_s$ 在 $v_s$ 方向上是**局部单射**的（不同前缀位置映射到不同延续输出），从而保证 $k_s > 0$。一般地，$k_s$ 与 $L_s$ 同阶——两者量化的是同一现象（目标的高变分率）的两个方向。
+**命题 1（窄槽的各向异性，Anisotropy of the Narrow Groove）**：设 $(r_s, \mathcal{X}(r_s)) \in \mathcal{S}$ 处于逐字式拟合（$\sigma$-奇异），有效碎片最大直径为 $w$（§1 命题 1.3 定义）。设 $r_s$ 在 $P_\tau(r_s)$ 上沿方向 $v_s$ 具有变分下界 $k_s > 0$，总变分上界 $\Delta_s$。则 $P_\tau(r_s)$ 在每个有效碎片 $V_\beta$ 内的几何形态满足：
 
-**命题 1（窄槽的各向异性，Anisotropy of the Narrow Groove）**：设 $(r_s, \mathcal{X}(r_s)) \in \mathcal{S}$ 为逐字式拟合形态（$L_s \gg L$）。设 $r_s$ 在 $\mathcal{X}(r_s)$ 上具有 $(\rho, \Delta_s)$-变分（§4.1 定义），变分方向为 $v_s$，沿 $v_s$ 的变分下界为 $k_s > 0$。则 $P_\tau(r_s)$ 的几何形态满足：
+(i) **横向压缩**：在任意方向上，$P_\tau(r_s) \cap V_\beta$ 的直径受碎片直径约束：
 
-(i) **横向压缩**：在垂直于 $v_s$ 的方向上，$P_\tau(r_s)$ 的直径受 §1 命题 2 的整体直径约束控制：
+$$\mathrm{diam}(P_\tau(r_s) \cap V_\beta) \;\leq\; w$$
 
-$$\mathrm{diam}_{\perp v_s}(P_\tau(r_s)) \;\leq\; \mathrm{diam}(P_\tau(r_s)) \;\leq\; O\!\left(\frac{\tau}{L_s}\right)$$
+当 $\rho^{eff}_\sigma \to \infty$ 时，$w \to 0$（§1 命题 1.3 证明 (ii)），每个碎片内的拟合集退化为微小域。
 
-(ii) **纵向伸展受限**：沿 $v_s$ 方向，$P_\tau(r_s)$ 的直径受 $r_s$ 的总变分 $\Delta_s$ 与变分下界 $k_s$ 的比值控制：
+(ii) **纵向伸展受限**：若 $P_\tau(r_s)$ 中存在沿 $v_s$ 方向分离的两点 $x, y$（不必在同一碎片内），其间距受 $r_s$ 的总变分 $\Delta_s$ 与变分下界 $k_s$ 的比值控制：
 
-$$\mathrm{diam}_{v_s}(P_\tau(r_s)) \;\leq\; \frac{\Delta_s + 4\tau}{k_s}$$
+$$d(x, y) \;\leq\; \frac{\Delta_s + 4\tau}{k_s}$$
 
-(iii) **各向异性比**：当 $k_s \sim L_s$（逐字式拟合的典型情形）时，横向直径与纵向直径之比为：
+(iii) **各向异性比**：横向直径 $w$ 与纵向最大伸展之比为：
 
-$$\frac{\mathrm{diam}_{\perp v_s}}{\mathrm{diam}_{v_s}} \;\leq\; \frac{O(\tau/L_s)}{(\Delta_s + 4\tau)/k_s} \;\approx\; \frac{\tau}{\Delta_s} \quad (k_s \sim L_s,\; \tau \ll \Delta_s)$$
+$$\frac{w}{(\Delta_s + 4\tau)/k_s} \;\to\; 0 \quad \text{as } \rho^{eff}_\sigma \to \infty$$
 
-当 $\tau \ll \Delta_s$（拟合精度远小于目标变分幅度）时，各向异性比 $\ll 1$——$P_\tau(r_s)$ 为一条沿 $v_s$ 方向极度拉伸、垂直方向极度压扁的**窄槽（Narrow Groove）**。
+即 $P_\tau(r_s)$ 的宏观形态是沿 $v_s$ 方向散布的一族极小碎片——整体构成一条**离散窄槽（Discrete Narrow Groove）**。
 
 **证明**：
 
-(i) $P_\tau(r_s) \subseteq \mathcal{X}(r_s)$，故 $\mathrm{diam}_{\perp v_s}(P_\tau(r_s)) \leq \mathrm{diam}(P_\tau(r_s))$。后者由 §1 命题 2 给出上界 $O(\tau/L_s)$。
+(i) $P_\tau(r_s) \cap V_\beta \subseteq V_\beta$，直径不超过 $\mathrm{diam}(V_\beta) \leq w$。
 
 (ii) 取 $P_\tau(r_s)$ 中两点 $x, y$，沿 $v_s$ 方向分离。由追踪条件（$x, y \in P_\tau$）与反向三角不等式，$\Phi$ 在这两点的输出偏差满足下界：
 
 $$d(\Phi(x), \Phi(y)) \;\geq\; d(r_s(x), r_s(y)) - d(\Phi(x), r_s(x)) - d(\Phi(y), r_s(y)) \;>\; d(r_s(x), r_s(y)) - 2\tau$$
 
-由 $r_s$ 沿 $v_s$ 方向的变分下界 $k_s$：$d(r_s(x), r_s(y)) \geq k_s \cdot d(x, y)$。因此：
+由 $r_s$ 沿 $v_s$ 方向的变分下界 $k_s$：$d(r_s(x), r_s(y)) \geq k_s \cdot d(x, y)$。同时，由追踪条件与 $r_s$ 的总变分上界 $\Delta_s$：
 
-$$d(\Phi(x), \Phi(y)) \;>\; k_s \cdot d(x, y) - 2\tau \quad \text{…(下界)}$$
+$$d(\Phi(x), \Phi(y)) \;\leq\; d(\Phi(x), r_s(x)) + d(r_s(x), r_s(y)) + d(r_s(y), \Phi(y)) \;<\; \Delta_s + 2\tau$$
 
-同时，由追踪条件与 $r_s$ 的总变分上界 $\Delta_s$：
+联合上下界：$k_s \cdot d(x, y) - 2\tau < \Delta_s + 2\tau$，解得 $d(x, y) < (\Delta_s + 4\tau)/k_s$。
 
-$$d(\Phi(x), \Phi(y)) \;\leq\; d(\Phi(x), r_s(x)) + d(r_s(x), r_s(y)) + d(r_s(y), \Phi(y)) \;<\; \Delta_s + 2\tau \quad \text{…(上界)}$$
+> **注（co-Lipschitz 的来源）**：$\Phi$ 的膨胀下界 $d(\Phi(x), \Phi(y)) > k_s \cdot d(x,y) - 2\tau$ 来自**目标 $r_s$ 自身的变分下界 $k_s$**，经追踪条件（反向三角不等式）传导为系统 $\Phi$ 的近似膨胀下界。这不依赖 $\Phi$ 的 Lipschitz 上界（方向相反），而是逐字式拟合特有的结构——$r_s$ 的高变分迫使 $\Phi$ 也剧烈变化。
 
-联合上下界：$k_s \cdot d(x, y) - 2\tau < \Delta_s + 2\tau$，解得：
+(iii) 直接取商，$w \to 0$ 而纵向伸展的上界 $(\Delta_s + 4\tau)/k_s$ 有限。$\square$
 
-$$d(x, y) \;<\; \frac{\Delta_s + 4\tau}{k_s}$$
+> **注（窄槽从连续到离散）**：窄槽在新框架下退化为**离散碎片链**——沿 $v_s$ 方向排列的一族尺寸 $\leq w$ 的孤立碎片，总伸展 $\leq (\Delta_s + 4\tau)/k_s$。系统在每个碎片内用该碎片的 $f$-链精确追踪 $r_s$ 的一小段输出，碎片之间由不同的 $f$-链接力完成逐步复现。
 
-> **注（co-Lipschitz 的来源）**：此处 $\Phi$ 的膨胀下界 $d(\Phi(x), \Phi(y)) > k_s \cdot d(x,y) - 2\tau$ **不是**从 $\Phi$ 的 Lipschitz 上界 $L_s$ 推导的（Lipschitz 上界仅给出 $d(\Phi(x), \Phi(y)) \leq L_s \cdot d(x,y)$，方向相反）。它来自一条完全不同的因果链：**目标 $r_s$ 自身的变分下界 $k_s$**，经追踪条件（反向三角不等式），传导为系统 $\Phi$ 的近似膨胀下界。这是逐字式拟合特有的结构——正是因为 $r_s$ 的高变分迫使 $\Phi$ 剧烈变化，$\Phi$ 才"继承"了 $r_s$ 的 co-Lipschitz 性质。
+#### 2.2.2 碎片尺度的等距约束
 
-(iii) 直接取商。$\square$
+§1 命题 1.3 的证明中使用了"有效碎片直径 $w \to 0$"的性质。本节给出 $w$ 与 $\rho^{eff}_\sigma$ 之间的定量关系。
 
-> **注（窄槽的物理含义）**：窄槽几何揭示了逐字式拟合在 $F$-空间中的精确拓扑形态——它不是一个"小球"（各向同性的微小域），而是一条沿目标序列方向极度拉伸的**拓扑细丝**。系统在这条细丝上精确地追踪 $r_s$ 的逐步输出，但任何偏离细丝方向的微小扰动都会因极高曲率而被急剧放大。横向直径 $O(\tau/L_s)$ 的极小性是 §1 命题 2 的直接后果（整体域宽极小），而纵向直径 $(\Delta_s + 4\tau)/k_s$ 的相对"伸展"则是 $r_s$ 的高变分结构在窄槽内部的反映——$r_s$ 需要足够的空间来展开其 $\Delta_s$-变分，但 co-Lipschitz 约束 $k_s$ 限制了这一展开所能占据的最大空间范围。
+**命题 2（碎片尺度的等距上界，Isoperimetric Fragment Scale Bound）**：设 $\mathcal{X}(r_i) \subseteq \mathbb{R}^d$ 为有界域，$\sigma$ 在其上有效 $\sigma$-奇异，有效分片 $\{V_\beta\}$ 共 $N$ 个。则平均碎片直径满足：
 
----
+$$\bar{w} \;\triangleq\; \frac{1}{N} \sum_\beta \mathrm{diam}(V_\beta) \;\lesssim\; \left(\frac{\mu(\mathcal{X}(r_i))}{N}\right)^{1/d} \;\sim\; \left(\frac{\mu(\mathcal{X}(r_i))}{\rho^{eff}_\sigma}\right)^{1/(d-1)}$$
 
-### 2.2 自锚定与脱槽
+当 $\rho^{eff}_\sigma \to \infty$ 时，$\bar{w} \to 0$，速率由维度 $d$ 决定。
 
-逐字式拟合的一个关键现象是：系统在 $P_\tau(r_s)$ 内部可以**逐步自稳定地运行**——每一步输出被追加到输入后，新输入仍落在 $P_\tau(r_s)$ 内。但一旦某步输出偏出窄槽，后续不可恢复。本节将这一现象形式化。
+**证明思路**：由 isoperimetric inequality，$N$ 个分片在 $d$ 维空间中的平均体积 $\mu(\mathcal{X}(r_i))/N$，对应平均直径 $\sim (\mu/N)^{1/d}$。有效边界密度 $\rho^{eff}_\sigma = \mathcal{H}^{d-1}(\bigcup \partial V) / \mu$，由 isoperimetric inequality 的反向，$\mathcal{H}^{d-1}(\bigcup \partial V) \geq c_d \cdot N \cdot (\mu/N)^{(d-1)/d} = c_d \cdot \mu^{(d-1)/d} \cdot N^{1/d}$。因此 $\rho^{eff}_\sigma \geq c_d \cdot N^{1/d} / \mu^{1/d}$，解得 $N \lesssim (\rho^{eff}_\sigma)^d \cdot \mu$，代入平均直径公式即得。$\square$
 
-**定义（自锚定链，Self-Anchoring Chain）**：设 $(r_s, \mathcal{X}(r_s)) \in \mathcal{S}$ 为逐字式拟合。定义 $r_s$ 的**自锚定链**为长度 $T$ 的逐步复合序列：
+> **注（维度的角色）**：$d$ 越高，相同 $\rho^{eff}_\sigma$ 下碎片可以更大（高维空间有更多的"表面积预算"）。当系统的有效状态空间维度 $d$ 很高时，$1/(d-1) \approx 0$，碎片直径对 $\rho^{eff}_\sigma$ 的依赖极弱——需要极高的边界密度才能压低碎片尺度。
+
+#### 2.2.3 自锚定与脱槽
+
+逐字式拟合的关键动力学现象：系统在 $P_\tau(r_s)$ 内部可以**逐步自稳定地运行**，但一旦某步输出偏出窄槽，后续不可恢复。
+
+**定义（自锚定链，Self-Anchoring Chain）**：设 $(r_s, \mathcal{X}(r_s)) \in \mathcal{S}$ 处于逐字式拟合。定义 $r_s$ 的**自锚定链**为长度 $T$ 的逐步复合序列：
 
 $$x_0 \;\in\; P_\tau(r_s), \quad x_{t+1} \;=\; \Phi(x_t), \quad t = 0, 1, \ldots, T-1$$
 
-即系统从窄槽内的某个初始点出发，每步将输出作为下一步输入，逐步演化。
-
-**命题 2（槽内自稳定性，Intra-Groove Self-Stability）**：若 $\Phi$ 在 $P_\tau(r_s)$ 上满足条件 $d(\Phi(x), r_s(x)) < \tau$ 对所有 $x \in P_\tau(r_s)$ 成立（$\tau$-拟合集的定义），且 $r_s$ 具有**自回归不变性**——$r_s(x) \in P_\tau(r_s)$ 对所有 $x \in P_\tau(r_s)$ 成立——则自锚定链在 $P_\tau(r_s)$ 内**逐步自稳定**：
+**命题 3（槽内自稳定性，Intra-Groove Self-Stability）**：若 $\Phi$ 在 $P_\tau(r_s)$ 上满足 $\tau$-拟合条件，且 $r_s$ 具有**自回归不变性**——$r_s(x) \in P_\tau(r_s)$ 对所有 $x \in P_\tau(r_s)$ 成立——则自锚定链在 $P_\tau(r_s)$ 内**逐步自稳定**：
 
 $$d(x_{t+1}, r_s(x_t)) \;\leq\; \tau, \quad x_{t+1} \in P_\tau(r_s) \quad \forall\, t$$
 
-即每步输出 $x_{t+1} = \Phi(x_t)$ 与 $r_s$ 的理想输出 $r_s(x_t)$ 之间的偏差恒 $\leq \tau$，且 $x_{t+1}$ 留在窄槽内。
+**证明**：由 $x_t \in P_\tau(r_s)$，$d(\Phi(x_t), r_s(x_t)) < \tau$，故 $x_{t+1} = \Phi(x_t)$ 与 $r_s(x_t)$ 的距离 $< \tau$。由自回归不变性，$r_s(x_t) \in P_\tau(r_s)$。若 $\tau$ 足够小使 $x_{t+1}$ 不跌出 $P_\tau(r_s)$ 的碎片连通分量，则 $x_{t+1} \in P_\tau(r_s)$。以 $T$ 步归纳即得。$\square$
 
-**证明**：由 $x_t \in P_\tau(r_s)$，$d(\Phi(x_t), r_s(x_t)) < \tau$，故 $x_{t+1} = \Phi(x_t)$ 与 $r_s(x_t)$ 的距离 $< \tau$。由自回归不变性，$r_s(x_t) \in P_\tau(r_s)$。由三角不等式，$d(x_{t+1}, r_s(x_t)) < \tau$，若 $\tau < \mathrm{diam}_{v_s}(P_\tau(r_s))/2$（窄槽足够长以容纳 $\tau$-偏差），则 $x_{t+1} \in P_\tau(r_s)$。以 $T$ 步归纳即得。$\square$
+> **注（自回归不变性的含义）**：条件 $r_s(x) \in P_\tau(r_s)$ 是 $r_s$ 与 $\Phi$ 的**联合条件**——$P_\tau(r_s)$ 本身由 $\Phi$ 参与定义。该条件等价于 $\Phi(P_\tau(r_s)) \subseteq B_\tau(r_s(P_\tau(r_s))) \subseteq P_\tau(r_s)$，在精确序列复现场景中自然成立。
 
-> **注（自回归不变性的含义）**：条件 $r_s(x) \in P_\tau(r_s)$ 是 $r_s$ 与 $\Phi$ 的**联合条件**，而非仅 $r_s$ 的属性——$P_\tau(r_s) = \{x : d(\Phi(x), r_s(x)) < \tau\}$ 本身由 $\Phi$ 参与定义。该条件等价于要求 $\Phi$ 在整条窄槽上的像集仍落在窄槽内：$\Phi(P_\tau(r_s)) \subseteq B_\tau(r_s(P_\tau(r_s))) \subseteq P_\tau(r_s)$。这在精确序列复现的场景中自然成立：若 $r_s$ 的目标是逐步输出序列 $(w_1, w_2, \ldots, w_T)$，则每步的理想输出（下一个 token 的嵌入拼接到前缀后）仍是精确前缀邻域的元素，而 $\Phi$ 在窄槽内足够精确地追踪 $r_s$（$< \tau$）保证像点不跌出窄槽。窄槽沿序列方向延伸的拓扑正是 §2.1 纵向伸展的物理内容。
+**命题 4（脱槽的不可逆性，Irreversibility of Groove Departure）**：设在自锚定链的第 $t^*$ 步，误差使 $x_{t^*+1} \notin P_\tau(r_s)$。则对所有后续步 $t > t^*$，系统不可能自发回到窄槽，除非外部干预。
 
-**命题 3（脱槽的不可逆性，Irreversibility of Groove Departure）**：设在自锚定链的第 $t^*$ 步，误差使 $x_{t^*+1}$ 偏出 $P_\tau(r_s)$：$x_{t^*+1} \notin P_\tau(r_s)$。则对所有后续步 $t > t^*$，系统不可能自发回到窄槽——即不存在 $t' > t^*$ 使得 $x_{t'} \in P_\tau(r_s)$——除非外部干预将 $x_t$ 重置为 $P_\tau(r_s)$ 中的元素。
+**证明**：由 §1 命题 1.6（近孤立性），$P_\tau(r_s)$ 与其他规则的 $\tau$-拟合集交集可忽略。$x_{t^*+1}$ 落入某个 $\sigma$-正则域 $\mathcal{X}(r_j)$，后续轨道沿 $r_j$ 的拟合轨迹演化，完全偏离 $r_s$ 的窄槽。回归窄槽需要穿越到碎片直径 $w \to 0$ 的极小域——由第一章 §2 命题 2.14（路由分辨率极限），$\Phi$ 的 Lipschitz 连续性无法将轨道精确引导回该极小域。脱槽是**不可逆的拓扑事件**。$\square$
 
-**证明**：由 §1 命题 3（采样域近孤立性），$P_\tau(r_s)$ 与其他规则的 $\tau$-拟合集的交集直径不超过 $O(\tau/k_s)$，在 $k_s \gg L$ 时可忽略。一旦 $x_{t^*+1} \notin P_\tau(r_s)$，$x_{t^*+1}$ 落入某个 $\mathcal{X}(r_j)$（$r_j \neq r_s$）的领域——$\Phi$ 在该区域的行为由 $r_j$ 的拟合约束主导，其 Lipschitz 常数为 $L_j \leq L \ll L_s$。后续轨道 $x_{t^*+2}, x_{t^*+3}, \ldots$ 沿 $r_j$ 的拟合轨迹演化，以 $L_j$ 级的温和形变率运动——完全偏离 $r_s$ 的窄槽。
-
-回归窄槽需要 $x_t$ 从 $\mathcal{X}(r_j)$ 穿越到 $P_\tau(r_s)$。但由 第一章 §2 命题 5（路由分辨率极限），跨越 $\sigma$-决策边界需要 $d(x_t, P_\tau(r_s)) \leq \Delta/L$，而 $P_\tau(r_s)$ 的直径为 $O(\tau/L_s) \ll \Delta/L$——窄槽作为回归目标太小，$\Phi$ 的 Lipschitz 连续性无法将轨道精确引导回该极小域。
-
-因此，脱槽是**不可逆的拓扑事件**——与 §7.2 覆盖缺口注记的离散跳崖在机制上同构。$\square$
-
-> **注（与分段复合的结构类比）**：命题 2 的自锚定链在形式上是 §7.2 分段复合链的**退化特例**——段长 $l_0 = 1$，码本 $\mathcal{C}$ 退化为 $\Phi$ 在 $P_\tau(r_s)$ 上的像集。误差隔绝条件 $\tau < \Delta_{\mathcal{C}}/2$ 的类比物是：每步输出足够接近窄槽中心线，使得下一步的输入不跌出窄槽。脱槽（命题 3）对应码本覆盖缺口——输出偏出窄槽后，没有任何锚点能将轨道拉回，等价于覆盖条件被击穿。但有一个关键区别：真正的分段复合架构（§7.2）通过**外部验证**（显式码本 $\mathcal{C}$）实现重置，而逐字式拟合的"自锚定"是系统**内部**的自发行为，没有外部纠错机制。一旦脱槽，系统无法自我修正——这正是逐字式拟合不参与 $R^*$ 复合（$\chi_s = 0$）的动力学诠释。
+> **注（与分段复合的结构类比）**：自锚定链是 §7.2 分段复合链的**退化特例**（段长 $l_0 = 1$）。脱槽对应码本覆盖缺口。关键区别：分段复合通过**外部验证**实现重置，逐字式拟合的"自锚定"是系统**内部**的自发行为，无外部纠错——这正是 $\chi_s = 0$ 的动力学诠释。
 
 ---
 
-### 2.3 扰动敏感性
+### 2.3 事实式拟合
 
-窄槽的极端各向异性（命题 1）蕴含了逐字式拟合对外部扰动的极端敏感性。本节将其量化为一个可观测判据。
+事实式拟合（$\sigma$-正则 + $J(x)$ 谱退化）在几何上表现为信息维度的不可逆折叠。本小节推导谱退化的直接几何后果。
 
-**命题 4（逐字式拟合的 Lipschitz 不稳定性，Lipschitz Instability of Verbatim Fitting）**：设 $(r_s, \mathcal{X}(r_s)) \in \mathcal{S}$ 为逐字式拟合，$(r_i, \mathcal{X}(r_i)) \in \mathcal{S}$ 为逻辑式拟合（$L_i \leq L$）。对初始输入 $x_0$ 做 $\delta$-扰动得到 $x_0' = x_0 + \delta$，则系统在一步后的输出偏差满足：
+#### 2.3.1 维度坍缩定理
 
-| 拟合形态 | 输出偏差上界 | 量级 |
-|---|---|---|
-| 逻辑式拟合 | $d(\Phi(x_0), \Phi(x_0')) \leq L_i \cdot \delta$ | $O(\delta)$ |
-| 逐字式拟合 | $d(\Phi(x_0), \Phi(x_0')) \leq L_s \cdot \delta$ | $O(L_s \cdot \delta)$ |
+**命题 5（维度坍缩定理，Dimension Collapse Theorem）**：设 $\Phi$ 在 $\mathcal{X}(r_i)$ 上 $\sigma$-正则且谱退化：$\mathrm{rank}\, J(x) \leq r < d$，$\forall x \in \mathcal{X}(r_i)$。则 $\Phi$ 的像集 $\Phi(\mathcal{X}(r_i))$ 的 Hausdorff 维度满足：
 
-两者的输出偏差之比 $\geq L_s / L_i \gg 1$。
+$$\dim_H\!\bigl(\Phi(\mathcal{X}(r_i))\bigr) \;\leq\; r \;<\; d$$
 
-**证明**：直接由 $\Phi$ 在各自采样域上的路径 Lipschitz 常数定义。$\square$
+特别地，当 $J(x) \to 0$（所有奇异值趋于零）时，$\Phi(\mathcal{X}(r_i))$ 退化为接近**零维**的点云。
 
-**推论（扰动敏感性比作为形态判据，Perturbation Sensitivity Ratio as Morphology Criterion）**：由 §2.0 定义的局部扰动敏感性 $S(x_0)$：
+**证明**：$\mathrm{rank}\, J(x) \leq r$ 意味着 $\Phi$ 在 $x$ 的邻域内将 $d$ 维流形映射到 $\leq r$ 维的像。由秩定理，光滑映射的像集维度不超过雅可比的最大秩。在 $\sigma$-正则条件下 $\Phi$ 在每个分片内光滑（由确定的 $f$-链给出），故取分片像集之并，维度不超过 $r$。$\square$
 
-- $S(x_0) \leq L$（约束内）：$x_0$ 位于逻辑式或事实式拟合的域内。
-- $S(x_0) \gg L$（约束外）：$x_0$ 位于逐字式拟合的窄槽内。
+#### 2.3.2 吸收壁的误差截断
 
-> **注（三态的扰动特征谱）**：将扰动敏感性比与 §1 的三态汇总定理联合，得到完整的形态-扰动对应关系：
->
-> | 拟合形态 | $S(x_0)$ | 对扰动的响应 | 可复合性 |
-> |---|---|---|---|
-> | **逻辑式** | $\leq L$ | 稳定（扰动被温和放大） | ✅ |
-> | **事实式** | $\lesssim L$ | 局部稳定（边界区可能敏感） | ✅（条件性） |
-> | **逐字式** | $\gg L$ | **极不稳定**（微小扰动引发脱槽） | ❌ |
->
-> 此特征谱完全由 §1 的 $L_i$ 分类决定，与 §2.1 的窄槽几何自洽：$S \gg L$ 的极不稳定性正是窄槽极端各向异性的动力学表现——横向直径 $O(\tau/L_s)$ 的极小性意味着，任何垂直于窄槽的扰动 $\delta > O(\tau/L_s)$ 都足以将轨道推出 $P_\tau(r_s)$，触发命题 3 的不可逆脱槽。
+**命题 6（吸收壁的误差截断，Error Truncation by Absorbing Wall）**：设链中步骤 $j$ 处于事实式拟合，$\sigma_d(J_j) \leq \eta$（$\eta$ 小）。则从步骤 $j$ 起，链的尾部误差传播被截断：
+
+(i) **切向量压缩**：对任意切向量 $v$：$\|J_j \cdot v\| \leq \eta \|v\|$。经过步骤 $j$ 后，所有方向的微分信号被压缩至 $O(\eta)$。
+
+(ii) **有效传播量**：步骤 $j$ 输出的有效信号幅度仅为 $O(\eta)$，后续步骤的放大因子作用于此微弱信号上，总有效传播量为：
+
+$$\Theta_{j,l} \cdot \|v\| \;\sim\; \eta \cdot L^{l-j} \cdot \|v\|$$
+
+当 $\eta \to 0$ 时，无论后续链多长，有效传播 $\to 0$。
+
+(iii) **链深自动终止**：步骤 $j$ 后的输出是缺乏内部微分结构的"点信号"，下游步骤无法从无方向差分的输入中推导新结论——事实式拟合在链上充当**吸收壁**（§1 定义），有效链深 $l = 1$。
+
+> **注（$\eta$ 的相变）**：$\eta = 0$（完美常值映射）是绝对吸收壁。$\eta > 0$ 时是"泄漏"吸收壁——若 $\eta \cdot L^{l-j}$ 不可忽略，则残余信号仍可在下游被放大。定量条件：$\eta \cdot L^{l-j} \ll \tau$ 时终止有效，否则需将事实步视为逻辑步的退化极限。
 
 ---
 
-### 2.4 逻辑式拟合的几何：复合稳定域
+### 2.4 逻辑式拟合
 
-逻辑式拟合（$L_i \leq L$）的拟合域 $P_\tau(r_i)$ 在三态中是最"温和"的——宽域、低曲率、各向同性比接近 $1$。其内部几何没有逐字式的窄槽戏剧性，但有两个**二阶结构**值得推导。
+逻辑式拟合（$\sigma$-正则 + 谱正则）的拟合域 $P_\tau(r_i)$ 在三态中最"温和"——宽域、低曲率、各向同性比接近 $1$。其内部几何没有逐字式的窄槽戏剧性，但有两个**二阶结构**值得推导。
 
-**命题 5（复合稳定半径，Composition Stability Radius）**：设 $r_i$ 为逻辑式拟合规则（$L_i \leq L$），$q = r_i \circ \cdots \circ r_i$（$l$ 步自复合链）。定义**复合稳定半径** $\rho_l$ 为满足以下条件的最大 $\rho$：对所有 $x \in P_\tau(r_i)$，$B(x, \rho) \cap \mathcal{X} \subset P_\tau(r_i)$，且 $l$ 步复合后误差仍 $\leq \tau$：
+#### 2.4.1 复合稳定半径
+
+**命题 7（复合稳定半径，Composition Stability Radius）**：设 $r_i$ 为逻辑式拟合规则，$q = r_i \circ \cdots \circ r_i$（$l$ 步自复合链）。定义**复合稳定半径** $\rho_l$ 为满足以下条件的最大 $\rho$：对所有 $x \in P_\tau(r_i)$，$B(x, \rho) \cap \mathcal{X} \subset P_\tau(r_i)$，且 $l$ 步复合后误差仍 $\leq \tau$：
 
 $$\rho_l \;\geq\; \frac{\tau - \varepsilon_{max} \cdot \Lambda_l}{L^l}$$
 
-当 $l \leq l^*_0$（Type B 约束）时，分子 $\tau - \varepsilon_{max} \cdot \Lambda_l \geq 0$（CAC 保证误差 $\leq \tau$），复合稳定半径为正。
+当 $l \leq l^*_0$（Type B 约束）时，分子 $\tau - \varepsilon_{max} \cdot \Lambda_l \geq 0$，复合稳定半径为正。
 
-**证明**：对 $x_0 \in P_\tau(r_i)$，做 $\rho$-扰动得 $x_0' \in B(x_0, \rho)$。$l$ 步复合后的误差差异：
+**证明**：对 $x_0 \in P_\tau(r_i)$，做 $\rho$-扰动得 $x_0' \in B(x_0, \rho)$。$l$ 步复合后：$d(\Phi^l(x_0), \Phi^l(x_0')) \leq L^l \cdot \rho$。$\Phi^l(x_0)$ 自身与理想的距离 $\leq \varepsilon_{max} \cdot \Lambda_l$。要求总误差 $\leq \tau$：$\varepsilon_{max} \cdot \Lambda_l + L^l \cdot \rho \leq \tau$，解得 $\rho \leq (\tau - \varepsilon_{max} \cdot \Lambda_l)/L^l$。$\square$
 
-$$d(\Phi^l(x_0), \Phi^l(x_0')) \;\leq\; L^l \cdot \rho$$
+> **注（稳定半径与链深的对偶）**：$\rho_l$ 随 $l$ 以 $L^{-l}$ 指数衰减——链越长，对初始扰动越敏感。饱和态（$\bar{L} < 1$）下 $\rho_l$ 收敛至正常数；爆炸态（$\bar{L} \geq 1$）下 $\rho_l \to 0$。
 
-$\Phi^l(x_0)$ 自身与理想 $q(x_0)$ 的距离 $\leq \varepsilon_{max} \cdot \Lambda_l$。要求 $\Phi^l(x_0')$ 与 $q(x_0')$ 的距离仍 $\leq \tau$：
+#### 2.4.2 路由边界带
 
-$$\varepsilon_{max} \cdot \Lambda_l + L^l \cdot \rho \;\leq\; \tau$$
-
-解得 $\rho \leq (\tau - \varepsilon_{max} \cdot \Lambda_l)/L^l$。$\square$
-
-> **注（稳定半径与链深的对偶）**：$\rho_l$ 随 $l$ 以 $L^{-l}$ 指数衰减——链越长，对初始扰动越敏感。这不是缺陷而是 CAC 的忠实投影：§3 推论 2 的两态行为（$\bar{L} < 1$ 饱和 vs $\bar{L} \geq 1$ 爆炸）在此获得了空间几何的对偶——饱和态（$L < 1$）下 $\rho_l$ 收敛至正常数 $(\tau - \varepsilon_{max}/(1-L))$；爆炸态（$L \geq 1$）下 $\rho_l \to 0$，与逐字式窄槽的极端各向异性在 $L \to \infty$ 极限下**会合**。
-
-**命题 6（路由边界带，Routing Boundary Band）**：设 $r_i, r_j \in R$ 为相邻的逻辑式拟合规则，其采样域 $\mathcal{X}(r_i)$ 与 $\mathcal{X}(r_j)$ 共享路由边界——即存在路由决策面 $\partial_{ij} = \{x \in \mathcal{X} : \sigma \text{ 在 } x \text{ 处切换 } r_i \leftrightarrow r_j\}$。则 $\partial_{ij}$ 两侧存在宽度为 $O(\Delta_{ij}/L)$ 的**路由边界带**，在带内 $\Phi$ 的局部行为同时受 $r_i$ 和 $r_j$ 的拟合约束**竞争性影响**：
+**命题 8（路由边界带，Routing Boundary Band）**：设 $r_i, r_j \in R$ 为相邻的逻辑式拟合规则，其采样域共享路由边界 $\partial_{ij}$。则 $\partial_{ij}$ 两侧存在宽度为 $O(\Delta_{ij}/L)$ 的**路由边界带**，在带内 $\Phi$ 的局部行为同时受 $r_i$ 和 $r_j$ 的拟合约束**竞争性影响**：
 
 $$w_{ij} \;\leq\; \frac{d(r_i(x_0), r_j(x_0))}{L} \quad \text{对 } x_0 \in \partial_{ij}$$
 
-**证明**：由 第一章 §2 命题 5（路由分辨率极限），$\sigma$ 在 $\partial_{ij}$ 附近的切换精度受 $\Phi$ 的 Lipschitz 连续性限制。$\Phi$ 无法在 $\partial_{ij}$ 两侧无限尖锐地切换行为——在宽度 $\leq \Delta/L$ 的带内，$\Phi$ 被迫以连续方式从服务 $r_i$ 过渡到服务 $r_j$。$\square$
+**证明**：由第一章 §2 命题 2.14（路由分辨率极限），$\Phi$ 无法在 $\partial_{ij}$ 两侧无限尖锐地切换行为——在宽度 $\leq \Delta/L$ 的带内，$\Phi$ 被迫以连续方式从服务 $r_i$ 过渡到服务 $r_j$。$\square$
 
-> **注（路由边界带是事实式拟合的发源地）**：命题 6 揭示了事实式拟合形态的几何根源——它不是一个独立的拟合"类别"，而是**两个相邻逻辑式拟合域的路由边界带**。在边界带内，$\Phi$ 的 Lipschitz 约束被两侧的竞争性需求推至 $L_j \approx L$，产生了 §1 推论 1 中"约束边界"等价类的所有特征：条件性可复合、链深更紧、DFG 缺口更显著。
+> **注（路由边界带与谱退化的关系）**：路由边界带内 $\Phi$ 需同时满足两个方向的拟合约束，Lipschitz 预算被竞争性消耗。这是产生谱退化（$J \to 0$）的一种**几何机制**——但不是唯一来源。§1 的分类框架将事实式拟合定义为 $\sigma$-正则 + $J$ 谱退化，不预设其几何起源。路由边界带是一类重要的几何发源地，但 $J \to 0$ 也可以由 $f$-链自身的压缩性质产生。
 
 ---
 
-### 2.5 事实式拟合的几何：边界区链深骤降
+### 2.5 三态扰动特征分离
 
-命题 6 将事实式拟合定位为路由边界带。本节推导在边界带内的具体后果。
+§2.2–§2.4 分别推导了三态的内部几何。本节将三者在扰动响应上统一对比。
 
-**命题 7（边界区链深骤降，Boundary Zone Chain Depth Collapse）**：设 $r_j$ 为事实式拟合规则，位于路由边界带内（$L_j = L - \epsilon$，$\epsilon > 0$ 小）。设 $L > 1$（Type B 系统的典型情形，§6.2.2）。则 $r_j$ 的最大可行链深为：
+**命题 9（$\sigma$-奇异域的路由跳变必然性）**：设 $\Phi$ 在 $\mathcal{X}(r_s)$ 上 $\sigma$-奇异。则对任意 $x_0 \in \mathcal{X}(r_s)$ 和任意 $\delta > 0$：
 
-$$l_{max}^{(j)} \;=\; \frac{\log\!\bigl(1 + \tau(L_j - 1)/\varepsilon_{max}\bigr)}{\log L_j}$$
+$$J_\sigma(x_0, \delta) \;\to\; 1 \quad \text{as } \rho^{eff}_\sigma \to \infty$$
 
-当 $\epsilon \to 0$（$L_j \to L$）时，$l_{max}^{(j)}$ 趋近逻辑式拟合的链深 $l_{max}^{(L)} = \log(1 + \tau(L-1)/\varepsilon_{max})/\log L$。富余量：
+即任何有限扰动**几乎必然**触发路由跳变。
 
-$$\Delta l \;\approx\; \frac{\epsilon}{L \ln L} \cdot \frac{\tau(L-1)/\varepsilon_{max}}{1 + \tau(L-1)/\varepsilon_{max}}$$
+**证明**：$\sigma$-奇异意味着 $B(x_0, \delta)$ 内 $\sigma$-边界集的 $(d-1)$-维 Hausdorff 测度趋于无穷。由 co-area formula，球内不被边界分隔的最大连通域的体积比趋于零。均匀采样命中 $\sigma(x_0)$ 同一路由分区的概率 $\to 0$，$J_\sigma \to 1$。$\square$
 
-在 $\epsilon$ 小时微不足道——事实式拟合的链深与逻辑式拟合几乎无区别。
+**推论（三态的扰动特征分离）**：三种拟合形态通过 $(S, J_\sigma)$ 的联合行为完全分离：
 
-然而，将 $r_j$ 插入包含逻辑式拟合步骤的混合链后，整条链的有效 Lipschitz 常数由最坏步主导——链深退回 $l_{max}^{(L)}$，富余量被抵消。
+| 形态 | $S(x_0)$ | $J_\sigma(x_0, \delta)$ | 微分结构 | 物理响应 |
+|---|---|---|---|---|
+| **逐字** | $\leq L$（每片内） | $\to 1$ | 处处断裂 | 路由跳变导致计算路径不可预测 |
+| **事实** | $\to 0$（$J \to 0$） | $< c < 1$ | 连续但退化 | 信息被坍缩，微分信号消亡 |
+| **逻辑** | $\in [\sigma_{\min}, L]$ | $< c < 1$ | 连续且满秩 | 扰动被温和放大，结构保持 |
 
-**证明**：由 CAC 定理（§3.1），链深 $l$ 的误差上界为 $\varepsilon_{max} \cdot \Lambda_l$，其中 $\Lambda_l = \sum_{k=0}^{l-1} L_j^k = (L_j^l - 1)/(L_j - 1)$（均匀 Lipschitz 常数情形）。要求 $\varepsilon_{max} \cdot \Lambda_l \leq \tau$：
+> **注（从 $S$ 到 $(S, J_\sigma)$）**：$S(x_0)$ 单独无法区分三态——三态均满足 $S \leq L$。需联合 $J_\sigma$（路由跳变概率）才能完成分离。逐字拟合的"不稳定"不体现在 $\Phi$ 的单步输出放大上（$\Phi$ 连续），而体现在**微小扰动触发完全不同的计算路径**上。
 
-$$\frac{L_j^l - 1}{L_j - 1} \;\leq\; \frac{\tau}{\varepsilon_{max}}$$
+---
 
-解得 $L_j^l \leq 1 + \tau(L_j - 1)/\varepsilon_{max}$，取对数即得 $l_{max}^{(j)}$。
+### 2.6 三态几何的统一画像
 
-富余量 $\Delta l = l_{max}^{(j)} - l_{max}^{(L)}$ 通过对 $l_{max}$ 关于 $L_j$ 在 $L$ 处 Taylor 展开得到——$\partial l_{max}/\partial L_j < 0$（$L_j$ 越小链深越长），但变化率在 $L_j \approx L$ 附近由 $1/(L \ln L)$ 控制，当 $\epsilon$ 小时 $\Delta l$ 微不足道。
+§2.1–§2.5 完整地描绘了三态在 $F$-空间中的几何画像：
 
-对混合链，CAC 定理中 $\Theta_{j+1,l} = \prod_{k=j+1}^{l} L_k$，若任一步 $L_k = L$，则整条链的尾积 $\geq L^{l-j}$，有效链深退回逻辑式水平。$\square$
-
-> **注（$L_j = 1$ 的相变）**：当 $\epsilon = L - 1$（即 $L_j = 1$）时，几何级数退化为 $\Lambda_l = l$，链深恢复线性形式 $l_{max} = \tau/\varepsilon_{max}$。当 $\epsilon > L - 1$（即 $L_j < 1$）时，$\Lambda_l$ 收敛至 $1/(1 - L_j) < \infty$——**误差饱和，链深没有有限上界**。因此，$L_j = 1$ 构成事实式拟合的**链深相变线**：在其上方（$L_j > 1$），事实式拟合的链深有限且接近逻辑式；在其下方（$L_j < 1$），链深约束自动解除，"骤降"不再发生。§1 推论 1 的三态分类中事实式拟合的"条件性可复合"正是这一相变的宏观表现。
-
-> **注（三态几何的统一画像）**：§2.0–§2.5 完整地描绘了三态在 $F$-空间中的几何画像：
->
-> | 形态 | $P_\tau$ 拓扑 | $S(x_0)$ | 稳定半径 $\rho_l$ | 特有结构 |
-> |---|---|---|---|---|
-> | **逻辑式** | 宽域各向同性球 | $\leq L$ | $O((\tau - \varepsilon\Lambda_l)/L^l)$，正 | 路由边界带（命题 6） |
-> | **事实式** | 路由边界带 | $\lesssim L$ | 略大于逻辑式 | 链深骤降（命题 7） |
-> | **逐字式** | 窄槽（各向异性比 $\ll 1$） | $\gg L$ | $O(\tau/L_s)$，极小 | 脱槽不可逆（命题 3） |
-
+| 形态 | $P_\tau$ 拓扑 | $S(x_0)$ | $J_\sigma(x_0, \delta)$ | 稳定半径 $\rho_l$ | 特有结构 |
+|---|---|---|---|---|---|
+| **逻辑式** | 宽域各向同性球 | $\in [\sigma_{\min}, L]$ | $< c < 1$ | $O((\tau - \varepsilon\Lambda_l)/L^l)$，正 | 路由边界带（命题 8） |
+| **事实式** | 低维坍缩域 | $\to 0$ | $< c < 1$ | 由 $\eta$ 和后续链长决定 | 维度坍缩（命题 5） |
+| **逐字式** | 离散碎片链 | $\leq L$（每片内） | $\to 1$ | 碎片直径 $w \to 0$ | 脱槽不可逆（命题 4） |

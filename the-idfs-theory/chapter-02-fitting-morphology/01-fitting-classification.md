@@ -34,7 +34,7 @@ $$\sigma_d(x) \;\to\; 0 \qquad (\text{即 } \mathrm{rank}\, J(x) < d)$$
 
 ### 1.2 三类拟合形态
 
-$\sigma$ 和 $F$ 是 IDFS 的两个独立结构组件。三类拟合形态恰好对应于"退化/奇异发生在 $\sigma$、$F$、还是都不发生"这一组合判定。
+$\sigma$ 和 $F$ 是 IDFS 的两个独立结构组件。三类拟合形态恰好对应于"退化/奇异发生在 $\sigma$、$F$、还是都不发生"这一组合判定。以下用 $\chi$ 记可复合性指标（$\chi = 0$ 表示绝对不可复合），$l$ 记有效可复合链深（第一章 CAC 定理给出的最大可行链深 $l^*_0$ 的语境下）。
 
 #### 1.2.1 逐字式拟合（Verbatim Fitting）：狄拉克图钉
 
@@ -42,17 +42,17 @@ $\sigma$ 和 $F$ 是 IDFS 的两个独立结构组件。三类拟合形态恰好
 
 $$\sigma \text{ 在 } \mathcal{X}(r_i) \text{ 上 } \sigma\text{-奇异}：\quad \rho_\sigma(\mathcal{X}(r_i)) = \infty$$
 
-且 $\Phi$ 在每一 $\sigma$-分片 $U_\alpha$ 内部谱正则：$\kappa(J(x)) \leq C$，$\forall x \in U_\alpha^\circ$。
+> **注（每片内的典型谱行为）**：在逐字式拟合中，每一 $\sigma$-分片 $U_\alpha$ 内部 $\Phi$ 由确定的 $f$-链 $q_\alpha$ 给出。由于 $q_\alpha$ 是 $F$ 中有限个算子的复合，通常谱正则（$\kappa(J(x)) \leq C$）。但此条件并非逐字式拟合的**定义要件**——逐字式拟合的本质特征是 $\sigma$ 的路由碎裂，而非每片内部 $J$ 的谱状态。
 
-**复合性质**：$\chi = 0$（绝对不可复合）。设 $\varepsilon > 0$ 为上游误差。由 $\sigma$-奇异性，$\mathcal{X}(r_i)$ 内任意点的 $\varepsilon$-邻域几乎必然包含 $\sigma$ 的决策边界。跨越边界时 $\Phi$ 切换到不同的 $f$-链，导致输出发生 $O(1)$ 量级的不可预测跳变。形式地：
+**复合性质**：$\chi = 0$（绝对不可复合）。由 $\sigma$-奇异性，$\mathcal{X}(r_i)$ 内任意点的 $\varepsilon$-邻域几乎必然包含 $\sigma$ 的决策边界。注意 $\Phi$ 作为全局 $L$-Lipschitz 映射是**连续的**（$d(\Phi(x), \Phi(x')) \leq L \cdot d(x, x')$），输出本身不跳变。但跨越 $\sigma$-边界时系统切换到不同的 $f$-链，导致**局部微分结构断裂**——$J(x)$ 在边界两侧由不同 $f$-链的雅可比决定，方向与谱结构不连续。形式地：
 
-$$\forall \varepsilon > 0, \; \exists x, x' \in \mathcal{X}(r_i) : \quad d(x, x') < \varepsilon, \quad \sigma(x) \neq \sigma(x'), \quad d(\Phi(x), \Phi(x')) = \Omega(\tau)$$
+$$\forall \varepsilon > 0, \; \exists x, x' \in \mathcal{X}(r_i) : \quad d(x, x') < \varepsilon, \quad \sigma(x) \neq \sigma(x')$$
 
-因此误差传播呈现**混沌敏感性**——微小扰动导致宏观行为跳变，长链在此步瞬间断裂。
+在链式复合场景中，步骤 $j$ 的上游误差 $\varepsilon_j$ 使输出偏移至 $\sigma$-边界的另一侧。下一步 $\Phi$ 在偏移后的输入上激活不同的 $f$-链，产生与理想轨道**目标不相关**的计算路径。第一章 §2 命题 2.14（路由分辨率极限）表明，当 $\sigma$-碎片直径趋于零时，引发路由跳变所需的扰动量也趋于零——任何有限上游误差都几乎必然触发路由跳变，长链在此步断裂。
 
-> **注（拓扑图像——狄拉克图钉）**：逐字式拟合在流形上的拓扑图像是一根"图钉"——0 维奇异点。$\sigma$ 的碎裂将流形粉碎为尘埃：每一粒碎片内部完好（$\|J\| \leq L$），但碎片之间无连续性。这不是 $F$ 的问题，而是纯粹的 $\sigma$-奇异。
+> **注（拓扑图像——狄拉克图钉）**：逐字式拟合在流形上的拓扑图像是一根"图钉"——0 维奇异点。$\sigma$ 的碎裂将流形的微分结构粉碎为尘埃：每一粒碎片内部完好（$\|J\| \leq L$），但碎片之间的 $J$ 不连续。$\Phi$ 的值连续（$L$-Lipschitz），但其**微分结构**处处断裂。这不是 $F$ 的问题，而是纯粹的 $\sigma$-奇异。
 
-#### 1.2.2 事实式拟合（Fact Fitting）：拓扑黑洞
+#### 1.2.2 事实式拟合（Fact Fitting）：拓扑盆地
 
 **定义（事实式拟合）**：称 $\Phi$ 在 $\mathcal{X}(r_i)$ 上处于**事实式拟合**形态，若以下条件成立：
 
@@ -68,7 +68,7 @@ $$\|D\Phi_j \cdot v\| \;\leq\; \sigma_d(J_j) \cdot \|v\| \;\to\; 0, \qquad \fora
 
 即**所有方向上的差分信号**在经过谱退化映射后被压缩至零。下游步骤 $j+1, j+2, \ldots$ 收到的是一个没有内部结构的点信号——无论后续算子是什么，它们无法从无方向差分的输入中推导出任何新结论。事实在链上充当**吸收壁**。
 
-> **注（拓扑图像——黑洞）**：事实式拟合在流形上形成一个"拓扑盆地"——吸引域。一旦输入进入该区域，$F$ 算子将高维输入坍缩到同一个低维（乃至 0 维）输出。信息维度在此被不可逆地消灭。
+> **注（拓扑图像——盆地）**：事实式拟合在流形上形成一个"拓扑盆地"——吸引域。一旦输入进入该区域，$F$ 算子将高维输入坍缩到同一个低维（乃至 0 维）输出。信息维度在此被不可逆地消灭。
 
 #### 1.2.3 逻辑式拟合（Logic Fitting）：测地线
 
@@ -80,11 +80,11 @@ $$\sigma \text{ 在 } \mathcal{X}(r_i) \text{ 上 } \sigma\text{-正则}：\quad
 
 $$\mathrm{rank}\, J(x) = d, \qquad \kappa(J(x)) \leq C, \qquad \forall x \in \mathcal{X}(r_i)$$
 
-**复合性质**：$l \to \infty$（完美复合）。$J(x)$ 满秩良态意味着 $\Phi$ 在 $\mathcal{X}(r_i)$ 上是一个近似微分同胚，流形的拓扑结构（方向、距离、差分）被忠实地保持传递。形式地，设链中步骤 $j$ 为逻辑式拟合，输入切向量 $v$ 在该步的传播满足：
+**复合性质**：$l \to \infty$（完美复合）。$J(x)$ 满秩良态意味着 $\Phi$ 在 $\mathcal{X}(r_i)$ 上是一个**局部微分同胚**，流形的拓扑结构（方向、距离、差分）被忠实地保持传递。形式地，设链中步骤 $j$ 为逻辑式拟合，记 $\sigma_{\min} = \inf_{x \in \mathcal{X}(r_i)} \sigma_d(J(x)) > 0$（谱正则保证最小奇异值严格为正），则输入切向量 $v$ 在该步的传播满足：
 
-$$\frac{1}{C} \|v\| \;\leq\; \|J_j \cdot v\| \;\leq\; L \|v\|$$
+$$\sigma_{\min} \|v\| \;\leq\; \|J_j \cdot v\| \;\leq\; L \|v\|$$
 
-即信息既不被指数放大（上界 $L$），也不被湮灭（下界 $1/C$）。CAC 的级联传播在逻辑域内是受控的流形滑移，不是指数爆炸（$\sigma$-碎裂导致），也不是信号消亡（$J \to 0$ 导致）。
+其中条件数界 $\kappa \leq C$ 保证 $\sigma_{\min} \geq L/C$。即信息既不被指数放大（上界 $L$），也不被湮灭（下界 $\sigma_{\min} > 0$）。CAC 的级联传播在逻辑域内是受控的流形滑移，不是指数爆炸（$\sigma$-碎裂导致），也不是信号消亡（$J \to 0$ 导致）。
 
 > **注（拓扑图像——测地线）**：逻辑式拟合在流形上的拓扑图像是一条**测地线**——最自然的、无畸变的光滑轨道。如同黎曼流形上的测地线平行输运切向量而不引入额外弯曲，逻辑式映射忠实地搬运信息。这是三态中唯一的正则态，也是唯一允许长链演化而不丢失结构信息的形态。
 
@@ -94,11 +94,25 @@ $$\frac{1}{C} \|v\| \;\leq\; \|J_j \cdot v\| \;\leq\; L \|v\|$$
 
 "域宽"在以往被视为分类的一阶判据。基于正则性分析，域宽被严格**降格为拓扑状态的后验推论**。
 
-**命题 1.3（$\sigma$-奇异蕴含域宽萎缩）**：设 $\Phi$ 全局 $L$-Lipschitz，$\sigma$ 在 $\mathcal{X}(r_i)$ 上 $\sigma$-奇异。则对任意有限容差 $\tau$，拟合域 $P_\tau(r_i) = \{x \in \mathcal{X}(r_i) : d(\Phi(x), r_i(x)) < \tau\}$ 的测度满足：
+**定义（有效 $\sigma$-奇异性）**：称 $\sigma$-分片 $\{U_\alpha\}$ 在 $\mathcal{X}(r_i)$ 上**有效奇异**（effectively singular），若将所有共享相同 $f$-链且相邻的分片合并后，剩余分片的边界密度仍然发散。即记合并后的分片为 $\{V_\beta\}$（每个 $V_\beta$ 是使用同一 $f$-链的最大连通域），有效 $\sigma$-奇异要求：
 
-$$\mu(P_\tau(r_i)) \;\leq\; \frac{2\tau}{\inf_\alpha \mathrm{diam}(U_\alpha)} \cdot \sup_\alpha \mu(U_\alpha) \;\to\; 0 \quad \text{as } \rho_\sigma \to \infty$$
+$$\rho^{eff}_\sigma(\mathcal{X}(r_i)) \;\triangleq\; \frac{\mathcal{H}^{d-1}\!\bigl(\bigcup_\beta \partial V_\beta \cap \mathcal{X}(r_i)\bigr)}{\mu(\mathcal{X}(r_i))} \;=\; \infty$$
 
-**证明思路**：$\sigma$-奇异 $\Rightarrow$ 分片 $\{U_\alpha\}$ 的平均直径 $\bar{w} = \mathrm{diam}(U_\alpha) \to 0$。在每一片内 $\Phi$ 被约束为某条 $f$-链 $q_\alpha$。在相邻两片 $U_\alpha, U_\beta$ 的边界处，$\Phi$ 从 $q_\alpha$ 跳到 $q_\beta$。为使 $r_i$ 的 $\tau$-拟合在两片内同时成立，需要 $d(q_\alpha(x), q_\beta(x)) < 2\tau$ 在边界处。当碎片越来越密，能同时满足此条件的碎片组合越来越少，$P_\tau$ 退化为孤立碎片的稀疏子集。$\square$
+此条件排除了退化情况——$\sigma$ 在形式上碎裂为无穷片但所有碎片使用相同 $f$-链（此时合并后只有一片，无有效奇异）。
+
+**命题 1.3（有效 $\sigma$-奇异蕴含域宽萎缩）**：设 $\Phi$ 全局 $L$-Lipschitz，$\sigma$ 在 $\mathcal{X}(r_i)$ 上有效 $\sigma$-奇异。则对任意有限容差 $\tau$，拟合域 $P_\tau(r_i) = \{x \in \mathcal{X}(r_i) : d(\Phi(x), r_i(x)) < \tau\}$ 的测度满足：
+
+$$\mu(P_\tau(r_i)) \;\leq\; \sum_{q \in F^{\leq \mathcal{D}}} \mu\bigl(\{x \in \Sigma_q : d(q(x), r_i(x)) < \tau\}\bigr)$$
+
+其中 $\Sigma_q = \bigcup_{\alpha: q_\alpha = q} U_\alpha$ 为使用 $f$-链 $q$ 的所有碎片之并。当 $\rho^{eff}_\sigma \to \infty$ 时，$\mu(P_\tau(r_i)) \to 0$。
+
+**证明**：
+
+(i) **分解**：$P_\tau(r_i) = \bigsqcup_\alpha (P_\tau(r_i) \cap U_\alpha)$。在每片 $U_\alpha$ 内，$\Phi = q_\alpha$（固定 $f$-链）。故 $P_\tau(r_i) \cap U_\alpha = \{x \in U_\alpha : d(q_\alpha(x), r_i(x)) < \tau\}$。按链分组即得上式。
+
+(ii) **有效碎片的直径约束**：有效 $\sigma$-奇异意味着合并后的有效分片 $\{V_\beta\}$ 仍然碎裂为无穷多片。记有效碎片的最大直径为 $w = \sup_\beta \mathrm{diam}(V_\beta)$。当 $\rho^{eff}_\sigma \to \infty$ 时，$w \to 0$（否则有限多个大碎片的边界密度有限，与发散矛盾）。
+
+(iii) **单链域宽压缩**：每条链 $q$ 的碎片并集 $\Sigma_q$ 随 $\rho^{eff}_\sigma \to \infty$ 碎裂为直径 $\leq w \to 0$ 的不连通碎片集。在每个碎片 $V_\beta$ 内，$q$ 是 $L$-Lipschitz 的，其值域直径 $\leq Lw$。$r_i$ 在该碎片上的 $\tau$-近似集的测度不超过 $\mu(V_\beta)$。由于有效奇异保证相邻碎片使用不同的 $f$-链，$r_i$ 在不同碎片上需要被不同的 $q$-链近似。但 $\Phi$ 全局连续意味着 $q_\beta(x_0) = q_\gamma(x_0)$ 在边界点处，而 $q_\beta, q_\gamma$ 作为不同映射在远离边界时发散。$r_i$ 不可能同时在相邻碎片上被不同链均匀近似——每个碎片对 $P_\tau$ 的贡献独立受限于 $\mu(V_\beta) \to 0$，总和 $\mu(P_\tau) \to 0$。$\square$
 
 **命题 1.4（谱退化蕴含吸引盆地域宽）**：设 $\sigma$ 在 $\mathcal{X}(r_i)$ 上 $\sigma$-正则，$\Phi$ 在 $\mathcal{X}(r_i)$ 上谱退化（$\sigma_d(J) \to 0$）。设 $\Phi$ 在 $\mathcal{X}(r_i)$ 上近似常值：$\exists\, C_0 \in \mathcal{X}$ 使得 $\sup_{x \in \mathcal{X}(r_i)} d(\Phi(x), C_0) \leq \varepsilon_0$。则：
 
@@ -106,17 +120,23 @@ $$P_\tau(r_i) \;\supseteq\; \{x \in \mathcal{X}(r_i) : d(r_i(x), C_0) < \tau - \
 
 即**所有输出与 $C_0$ 接近的输入**都自动落入 $\tau$-拟合域。由于 $\Phi$ 在此区域的输出变分极小（$J \to 0$），大量分散的输入可以被同一个常值映射覆盖——拟合域具有中等至宽大的测度。
 
-**命题 1.5（谱正则蕴含全域贯通）**：设 $\Phi$ 在 $\mathcal{X}(r_i)$ 上 $\sigma$-正则且谱正则（$\kappa(J) \leq C$）。则 $\Phi|_{\mathcal{X}(r_i)}$ 是一个**双 Lipschitz 映射**：
+**命题 1.5（谱正则蕴含拓扑忠实性）**：设 $\Phi$ 在 $\mathcal{X}(r_i)$ 上 $\sigma$-正则且谱正则（$\mathrm{rank}\, J = d$，$\kappa(J) \leq C$）。记 $\sigma_{\min} = \inf_{x \in \mathcal{X}(r_i)} \sigma_d(J(x)) > 0$。则 $\Phi|_{\mathcal{X}(r_i)}$ 是一个**局部微分同胚**。在每个 $\sigma$-分片 $U_\alpha$ 内部，$\Phi$ 由确定的 $f$-链给出，对 $x, y \in U_\alpha$ 有：
 
-$$\frac{1}{C} \cdot d(x, y) \;\leq\; d(\Phi(x), \Phi(y)) \;\leq\; L \cdot d(x, y), \qquad \forall x, y \in \mathcal{X}(r_i)$$
+$$\sigma_{\min} \cdot d(x, y) \;\leq\; d(\Phi(x), \Phi(y)) \;\leq\; L \cdot d(x, y)$$
 
-特别地，$\Phi$ 在 $\mathcal{X}(r_i)$ 上是**单射**，不存在流形折叠或撕裂。若 $r_i$ 在 $\mathcal{X}(r_i)$ 上的 $\tau$-拟合成立，则 $P_\tau(r_i) = \mathcal{X}(r_i)$ 可以覆盖该规则的全部定义域——不存在因拓扑障碍导致的拟合空洞。
+其中条件数界保证 $\sigma_{\min} \geq L/C > 0$。$\Phi$ 的全局 $L$-Lipschitz 连续性保证了跨 $\sigma$-分片边界的连续性。$J(x)$ 满秩意味着 $\Phi$ 在 $\mathcal{X}(r_i)$ 上是**局部单射**——不存在流形折叠。若 $r_i$ 在 $\mathcal{X}(r_i)$ 上的 $\tau$-拟合成立，则 $P_\tau(r_i)$ 可以覆盖该规则的全部定义域——不存在因拓扑障碍导致的拟合空洞。
 
 ---
 
 ### 1.4 近孤立性
 
-**命题 1.6（逐字拟合的近孤立极值点性质）**：设 $(r_s, \mathcal{X}(r_s))$ 处于逐字式拟合（$\sigma$-奇异），$(r_j, \mathcal{X}(r_j))$ 处于逻辑式或事实式拟合（$\sigma$-正则）。设两者的 $\sigma$-分片结构不相容（即 $r_s$ 触发的密集碎裂边界集 $\partial_s$ 与 $r_j$ 的稳定链路域 $U_j$ 重合度有限）。则：
+**定义（$\sigma$-分片结构不相容）**：设 $\sigma$ 在 $\mathcal{X}(r_s)$ 上诱导分片 $\{U^{(s)}_\alpha\}$，边界集 $\partial_s = \bigcup_\alpha \partial U^{(s)}_\alpha \cap \mathcal{X}(r_s)$。设 $\sigma$ 在 $\mathcal{X}(r_j)$ 上诱导分片 $\{U^{(j)}_\beta\}$。称两者 **$\sigma$-分片结构不相容**，若 $r_s$ 的碎裂边界在 $r_j$ 的任何单个稳定分片内的密度保持有界：
+
+$$\sup_\beta \frac{\mathcal{H}^{d-1}(\partial_s \cap U^{(j)}_\beta)}{\mu(U^{(j)}_\beta)} \;<\; K$$
+
+对某个有界常数 $K < \infty$。即 $r_s$ 的密集碎裂边界不被 $r_j$ 的单个稳定分片“吸收”。
+
+**命题 1.6（逐字拟合的近孤立极值点性质）**：设 $(r_s, \mathcal{X}(r_s))$ 处于逐字式拟合（$\sigma$-奇异），$(r_j, \mathcal{X}(r_j))$ 处于逻辑式或事实式拟合（$\sigma$-正则）。设两者 $\sigma$-分片结构不相容（如上定义）。则：
 
 $$\mu\bigl(P_\tau(r_s) \cap P_\tau(r_j)\bigr) \;=\; o\bigl(\mu(P_\tau(r_j))\bigr) \quad \text{as } \rho_\sigma(\mathcal{X}(r_s)) \to \infty$$
 
@@ -132,15 +152,15 @@ $$\mu\bigl(P_\tau(r_s) \cap P_\tau(r_j)\bigr) \;=\; o\bigl(\mu(P_\tau(r_j))\bigr
 
 | 形态 | $\sigma$ | $J(x)$ | 拓扑图像 | 切向量传播 | 复合 | 域宽 |
 |---|---|---|---|---|---|---|
-| **逐字** | 奇异 ($\rho_\sigma = \infty$) | 每片内正则 | 图钉 | 混沌跳变 | $\chi=0$ | $\to 0$ |
-| **事实** | 正则 ($\rho_\sigma < \infty$) | 退化 ($\sigma_d \to 0$) | 黑洞 | $\|Jv\| \to 0$ | $l=1$ | 中等 |
-| **逻辑** | 正则 ($\rho_\sigma < \infty$) | 正则 ($\kappa \leq C$) | 测地线 | $\|v\|/C \leq \|Jv\| \leq L\|v\|$ | $l \to \infty$ | 全域 |
+| **逐字** | 奇异 ($\rho_\sigma = \infty$) | （不约束） | 图钉 | 微分结构断裂 | $\chi=0$ | $\to 0$ |
+| **事实** | 正则 ($\rho_\sigma < \infty$) | 退化 ($\sigma_d \to 0$) | 盆地 | $\|Jv\| \to 0$ | $l=1$ | 中等 |
+| **逻辑** | 正则 ($\rho_\sigma < \infty$) | 正则 ($\kappa \leq C$) | 测地线 | $\sigma_{\min}\|v\| \leq \|Jv\| \leq L\|v\|$ | $l \to \infty$ | 全域 |
 
 此分类具有以下结构性质：
 
 1. **判据正交性**：$\sigma$-正则性与谱正则性分别作用于 IDFS 的不同结构组件，相互独立。
 
-2. **完备性**：任何输入点 $x$ 处，$\Phi$ 的行为必然落入三种状态之一。$\sigma$ 要么奇异（逐字）、要么正则；在 $\sigma$-正则时，$J(x)$ 要么谱退化（事实）、要么谱正则（逻辑）。
+2. **完备性**：任何输入点 $x$ 处，$\Phi$ 的行为必然落入三种状态之一。$\sigma$ 要么奇异（逐字）、要么正则——$\sigma$-奇异性是逐字拟合的**充要条件**，不依赖 $J$ 的谱状态；在 $\sigma$-正则时，$J(x)$ 要么谱退化（事实）、要么谱正则（逻辑）。
 
 3. **域宽推论**：域宽差异不是分类判据，而是正则性状态的宏观后果（命题 1.3–1.5）。
 
