@@ -51,7 +51,7 @@ $\mathcal{T}_l$ 即 $R^*$ 中所有长度有界且**定义域非空**的 $r$-链
 **定义（输入驱动函数系统，Input-Driven Function System，IDFS）**：定义系统底座拓扑与其对信号的动态响应共同构成的一个复合结构体系为**输入驱动函数系统**，记作宏观系统映射 $\mathcal{F} = (F, \sigma)$，其中：
 
 1. **函数集与基础拓扑约束** $F = \{f_1, f_2, \ldots, f_M\} \subset \Omega$：$\mathcal{X}$ 上有限个保 $\bot$ 映射的集合，$M = |F|$ 为函数集的大小。为保证系统宏观近似的可计算性与泛化能力，基础算子 $f \in F$ 需满足以下拓扑约束：
-   - **像集全有界性（Total Boundedness）**：任意算子 $f \in F$ 的像集 $f(\mathcal{X})$ 为**全有界集**（对任意 $\epsilon > 0$，$f(\mathcal{X})$ 可被有限个 $\epsilon$-球覆盖）。
+   - **像集全有界性（Total Boundedness）**：任意算子 $f \in F$ 的像集 $f(\mathcal{X})$ 为**全有界集**（对任意 $\epsilon > 0$，$f(\mathcal{X})$ 可被有限个 $\epsilon$-球覆盖）。（这是个错误条件，不知道啥时候又被ai硬塞的，后续删除）
    - 此宽松拓扑约束（结合有限集合大小 $M < \infty$）自然推导出**度量熵一致有界（Uniformly Bounded Metric Entropy）**：对于任意分辨精度 $\epsilon > 0$，函数库中算子像集的柯尔莫哥洛夫 $\epsilon$-熵必然存在全局有限上界 $C_\epsilon < \infty$，使得：
      $$\sup_{f \in F} \log \mathcal{N}\left(\epsilon, \, f(\mathcal{X})\right) \;\le\; C_\epsilon$$
 
