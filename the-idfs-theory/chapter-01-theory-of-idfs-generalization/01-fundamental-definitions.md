@@ -2,19 +2,22 @@
 
 ### 1.1 度量空间与变换空间
 
-设 $(\mathcal{X}, d)$ 为**度量空间**。指定一个**空元素** $\bot \in \mathcal{X}$，表示"无输出"或"不适用"。
+设 $(\mathcal{X}, d)$ 为**度量空间**。指定一个**吸收元（absorbing element）** $\bot \in \mathcal{X}$ 作为空间基点，用于将偏函数全函数化：$\phi(x) = \bot$ 意味着 $\phi$ 在 $x$ 处未定义。
 
 定义**变换空间**：
 
 $$\Omega = \{\, \phi : \mathcal{X} \to \mathcal{X} \;\big|\; \phi(\bot) = \bot \,\}$$
 
-即 $\Omega$ 由所有**保 $\bot$ 映射**（$\bot$-preserving maps）构成。$\phi(x) = \bot$ 表示 $\phi$ 在 $x$ 处无输出。对 $\phi \in \Omega$，定义其**定义域**为使 $\phi$ 产生非空输出的全部输入：
+即 $\Omega$ 由所有**基点保持映射**（pointed maps）构成。对 $\phi \in \Omega$，定义其**定义域**为 $\phi$ 产生非 $\bot$ 值的全部输入：
 
 $$\mathrm{dom}(\phi) \;\triangleq\; \bigl\{\, x \in \mathcal{X} \;\big|\; \phi(x) \neq \bot \,\bigr\}$$
 
 $\mathrm{dom}(\phi)$ 即 $\phi$ 实际发生作用的输入集合。由 $\phi(\bot) = \bot$，复合链的定义域自然严格递缩：$\mathrm{dom}(\phi_2 \circ \phi_1) = \{x \in \mathrm{dom}(\phi_1) \mid \phi_1(x) \in \mathrm{dom}(\phi_2)\}$。
 
 $\Omega$ 在函数复合下构成**幺半群**：$\phi_2 \circ \phi_1 \in \Omega$，$\mathrm{id}_{\mathcal{X}} \in \Omega$。
+
+
+#### 1.1.1 采样与宏观采样集
 
 设 $R = \{r_1, r_2, \ldots, r_m\} \subset \Omega$ 为 $\Omega$ 的一个有限子集。
 
@@ -36,46 +39,50 @@ $\mathcal{T}_l$ 即 $R^*$ 中所有长度有界且**定义域非空**的 $r$-链
 
 在数学结构上，由于长链 $q$ 本身亦是变换空间 $\Omega$ 中的映射，将 $q$ 与其非空输入域结合而成的二元组 $(q, \mathrm{dom}(q))$，与微观采样集 $\mathcal{S}$ 中的基规则元素 $(r_i, \mathcal{X}(r_i))$ **结构上完全对应**（structurally analogous）。因此，有效链集 $\mathcal{T}_l$ 及附带的定义域集合，本质上构成了建立在自由幺半群 $R^*$ 上的**宏观采样集**（Macroscopic Sampling Set）。
 
-> **定义（采样集的度量熵，Metric Entropy of Sample Set）**：采样集 $\mathcal{S}$ 在 $\mathcal{X}$ 中诱导的**目标输出值集**为 $\mathcal{V}(\mathcal{S}) \triangleq \{r(x) \mid (r, \mathcal{X}(r)) \in \mathcal{S},\, x \in \mathcal{X}(r)\} \subseteq \mathcal{X}$。对给定精度 $\epsilon > 0$，定义采样集的**度量熵**为：
-> $$I_\epsilon(\mathcal{S}) \;\triangleq\; \log \mathcal{N}\bigl(\epsilon,\, \mathcal{V}(\mathcal{S})\bigr)$$
-> 即覆盖 $\mathcal{V}(\mathcal{S})$ 所需的最小 $\epsilon$-球数量的对数，度量系统必须产生的可分辨输出值的数量。
+#### 1.1.2 度量熵
+
+**定义（采样集的度量熵，Metric Entropy of Sample Set）**：采样集 $\mathcal{S}$ 在 $\mathcal{X}$ 中诱导的**目标输出值集**为 $\mathcal{V}(\mathcal{S}) \triangleq \{r(x) \mid (r, \mathcal{X}(r)) \in \mathcal{S},\, x \in \mathcal{X}(r)\} \subseteq \mathcal{X}$。对给定精度 $\epsilon > 0$，定义采样集的**度量熵**为：
+
+$$I_\epsilon(\mathcal{S}) \;\triangleq\; \log \mathcal{N}\bigl(\epsilon,\, \mathcal{V}(\mathcal{S})\bigr)$$
+
+即覆盖 $\mathcal{V}(\mathcal{S})$ 所需的最小 $\epsilon$-球数量的对数，度量系统必须产生的可分辨输出值的数量。
 
 ### 1.2 输入驱动函数系统（IDFS）
 
-**定义（输入驱动函数系统，Input-Driven Function System，IDFS）**：定义系统底座拓扑与其对信号的动态响应共同构成的一个复合结构体系为**输入驱动函数系统**，记作宏观系统映射 $\mathcal{F} = (F, \sigma)$，其中：
+**定义（输入驱动函数系统，Input-Driven Function System，IDFS）**：一个**输入驱动函数系统** $\mathcal{F} = (F, \sigma)$ 由以下要素构成：
 
-1. **函数集** $F = \{f_1, f_2, \ldots, f_M\} \subset \Omega$：$\mathcal{X}$ 上有限个保 $\bot$ 映射的集合，$M = |F|$ 为函数集的大小。
+1. **函数集** $F = \{f_1, f_2, \ldots, f_M\} \subset \Omega$：$\mathcal{X}$ 上有限个基点保持映射的集合，$M = |F|$ 为函数集的大小。
 
-2. **选择映射与系统微观深度** $\sigma : \mathcal{X} \to F^*$：将当前输入 $x$ 映射到 $F$ 上的一个可变长度复合链 $\sigma(x) = f_{i_k} \circ f_{i_{k-1}} \circ \cdots \circ f_{i_1}$（$k \geq 1$），表示对该输入应执行的微观计算计划。定义系统的**微观计算深度（Micro-Depth）** $\mathcal{D}$ 为选择映射可能产生的最长计算链长度：
-   $$\mathcal{D} \;\triangleq\; \sup_{x \in \mathcal{X}} \big|\sigma(x)\big| \;<\; \infty$$
-   （其中 $|\sigma(x)|$ 表示链中底层函数的个数 $k$，有限性反映物理系统的有限计算资源约束），它表征了单步宏观引力下系统所能调用的最大微观操作上限。
+2. **选择映射** $\sigma : \mathcal{X} \to F^*$：将输入 $x$ 映射到 $F$ 上的一个可变长度复合链 $\sigma(x) = f_{i_k} \circ f_{i_{k-1}} \circ \cdots \circ f_{i_1}$（$k \geq 1$）。
 
-**定义（IDFS 拓扑容量，Topological Capacity）**：IDFS 的系统容量可从两个互补维度刻画：
+3. **系统映射** $\Phi : \mathcal{X} \to \mathcal{X}$：由 $F$ 与 $\sigma$ 共同确定的全局单步映射，定义为
+   $$\Phi(x) \;\triangleq\; \sigma(x)(x)$$
+   即对输入 $x$，先由 $\sigma$ 选定计算链，再将该链作用于 $x$ 本身。
 
-1. **像集容量（Image Capacity）**——系统能产生多少可分辨的输出值：
-   $$\mathcal{C}_{\mathrm{img}}(\Phi, \epsilon) \;\triangleq\; \log \mathcal{N}\bigl(\epsilon,\, \Phi(\mathcal{X})\bigr)$$
-   由 $\Phi \in \mathrm{Lip}_L(\mathcal{X})$，像集容量受输入空间几何控制：$\mathcal{C}_{\mathrm{img}} \leq \log \mathcal{N}(\epsilon/L,\, \mathcal{X})$。
-2. **路由容量（Routing Capacity）**——系统能提供多少可分辨的计算路径：
-   $$\mathcal{C}_{\mathrm{route}}(\sigma) \;\triangleq\; \log |\mathrm{Im}(\sigma)|$$
+4. **Lipschitz 约束**：$\Phi$ 须满足全局 Lipschitz 连续性，即存在常数 $L \geq 0$ 使得
+   $$d\bigl(\Phi(x),\, \Phi(y)\bigr) \leq L \cdot d(x, y) \quad \forall\, x, y \in \mathcal{X}$$
 
-容量的上界由 §2 引理给出。
+定义系统的**微观计算深度（Micro-Depth）** $\mathcal{D}$ 为选择映射可能产生的最长计算链长度：
 
-对初始点 $x \in \mathcal{X}$，$\sigma(x)$ 确定哪条链，执行该链即完成一次**计算步骤**，引入记号 $\Phi \in \Omega$ 代表系统在整个度量空间上诱导出的全局单步映射：
+$$\mathcal{D} \;\triangleq\; \sup_{x \in \mathcal{X}} \big|\sigma(x)\big| \;\lt\; \infty$$
 
-$$\Phi(x) \;\triangleq\; \sigma(x)(x)$$
+（其中 $|\sigma(x)|$ 表示链中底层函数的个数 $k$，有限性反映物理系统的有限计算资源约束），它表征了单步宏观映射下系统所能调用的最大微观操作上限。
 
-即 $\Phi(x) = \sigma(x)(x) = (f_{i_k} \circ f_{i_{k-1}} \circ \cdots \circ f_{i_1})(x)$。$\sigma(x) \in F^*$ 本身是一个独立的映射对象（称为 $x$ 处的**激活链，Activated Chain**），可施加于**任意输入** $y$：$\sigma(x)(y)$ 表示"用 $x$ 处的路由决策所选定的 $f$-链作用于 $y$"——其中 $x$ 锁定路由选择，$y$ 可与 $x$ 不同。
+设 $\sigma(x) = f_{i_k} \circ \cdots \circ f_{i_1}$，则 $\Phi(x)$ 的计算沿**序贯管道**逐层传递：令 $h_0 = x$，逐步求值 $h_j = f_{i_j}(h_{j-1})$（$j = 1, \ldots, k$），最终 $\Phi(x) = h_k$。每个 $f_{i_j}$ 接收前一步的输出作为输入，链的终态即为系统的单步宏观输出。
 
-> **注（组合合法性与 IDFS 复合封闭性）**：由 $F \subset \Omega$ 且 $\Omega$ 在复合下构成幺半群，可直接验证：
-> 1. **$\Phi \in \Omega$**：$\sigma(x) \in F^* \subseteq \Omega$，且 $\Phi(\bot) = \sigma(\bot)(\bot) = \bot$（因每个 $f_i(\bot) = \bot$）。
-> 2. **$\Phi^l \in \Omega$**：幺半群的复合封闭性。
-> 3. **$l$-步宏观同构系统**：对任意 $l \geq 1$，$\Phi^l$ 自身构成新的 IDFS $\mathcal{F}_l = (F, \sigma_l)$，其中 $\sigma_l(x) = \sigma(\Phi^{l-1}(x)) \circ \cdots \circ \sigma(\Phi(x)) \circ \sigma(x)$。IDFS 在宏观复合下呈现**代数自相似性**。
+> **定义（激活链，Activated Chain）**：$\sigma(x) \in F^*$ 作为 $\Omega$ 中的映射对象，称为 $x$ 处的**激活链（Activated Chain）**。IDFS 的定义对 $\sigma$ 与 $f$ 的关系不施加任何约束——$\sigma$ 仅决定映射的选取与排列，其输出 $\sigma(x)$ 本身是 $\mathcal{X} \to \mathcal{X}$ 的完整映射，因此可施加于任意 $y \in \mathcal{X}$：
+> $$\sigma(x)(y) = (f_{i_k} \circ \cdots \circ f_{i_1})(y)$$
+> 此处 $x$ 决定**路由**（选取哪条链），$y$ 为**被变换对象**（链作用于谁）。$\Phi(x) = \sigma(x)(x)$ 即 $x$ 同时充当路由点与计算点的情形。
 
-**系统要求（Lipschitz 约束与级联扩张定律）**：IDFS $\mathcal{F} = (F, \sigma)$ 须满足在全空间上具有全局单步 Lipschitz 连续性，即存在常数 $L \geq 0$ 使得 $\Phi \in \mathrm{Lip}_L(\mathcal{X})$：
+> **注（宏观 $\Phi$ 与微观 $f$ 的 Lipschitz 解耦）**：Lipschitz 约束作用于宏观映射 $\Phi$，但**不要求**微观基函数 $f \in F$ 全局 Lipschitz 连续。例如，$F$ 中可包含 $\mathrm{Lip}(f) = \infty$ 的非线性算子 $f_{\text{unbounded}}$ 与保距算子 $f_{\text{id}}$；只要 $\sigma$ 的调度使得整条激活链的组合效果满足全局常数 $L$，$\Phi$ 即合法。换言之，$L$ 是 $\sigma$ 对 $F$ 进行分段组合后的**宏观闭包性质**，IDFS 的自洽性独立于基算子在非激活区域的解析行为。
 
-$$d\bigl(\Phi(x),\, \Phi(y)\bigr) \leq L \cdot d(x, y) \quad \forall\, x, y \in \mathcal{X}$$
+#### 1.2.1 级联系统 $\mathcal{F}^l$
 
-> **注（宏观系统 $\Phi$ 与微观算子 $f$ 的 Lipschitz 解耦）**：系统要求宏观迭代映射 $\Phi$ 满足全局 Lipschitz 常数 $L$，但这**不要求**微观基函数 $f \in F$ 在全空间上一致有界或全局 Lipschitz 连续。例如，$F$ 中可包含具有无界导数或局部极点的非线性算子 $f_{\text{unbounded}}$，以及保距算子 $f_{\text{id}}$。只要选择映射 $\sigma$ 保证在 $f_{\text{unbounded}}$ 发散的子空间内不被激活，而在其具有有限局部 Lipschitz 常数的区域内调度，并在算子切换边界保持适度的输出连续性，组合映射 $\Phi$ 依然可以构成具有有限稳定度 $L$ 的全局 Lipschitz 映射。换言之，全局 $L$ 是结构张量 $\sigma$ 对底层算子集 $F$ 进行分段定义域截断后的**宏观代数闭包性质**。IDFS 理论的自洽性完全独立于基算子 $f$ 在非激活区域的内蕴解析性质。
+由 $F \subset \Omega$ 且 $\Omega$ 在复合下构成幺半群，可直接验证：
+
+1. **$\Phi \in \Omega$**：$\sigma(x) \in F^* \subseteq \Omega$，且 $\Phi(\bot) = \sigma(\bot)(\bot) = \bot$（因每个 $f_i(\bot) = \bot$）。
+2. **$\Phi^l \in \Omega$**：幺半群的复合封闭性。
+3. **$l$-步宏观同构系统**：对任意 $l \geq 1$，$\Phi^l$ 自身构成新的 IDFS $\mathcal{F}_l = (F, \sigma_l)$，其中 $\sigma_l(x) = \sigma(\Phi^{l-1}(x)) \circ \cdots \circ \sigma(\Phi(x)) \circ \sigma(x)$。IDFS 在宏观复合下呈现**代数自相似性**。
 
 **定义（路径 Lipschitz 常数，Path Lipschitz Constant）**：在系统的实际动态转移中，局部的形变拉伸率完全由路由中心 $\sigma$ 为特定状态选定的映射路径决定。定义映射 $\Phi$ 沿任意合法路径的**有效局部 Lipschitz 常数**为 $L_q$（或在链式迭代中简记为第 $j$ 步的 $L_j$）。由于系统受全局稳态约束，必有上界：
 $$L_q \;\leq\; L$$
@@ -88,8 +95,6 @@ $\kappa_\Phi$ 精确地刻画了动态路由系统的有效内在异质分布。
 $$\bar{L} \;\triangleq\; \left(\prod_{j=1}^{l} L_j\right)^{1/l}$$
 由于均值属性，恒有 $\inf L_q \leq \bar{L} \leq \sup L_q$。$\bar{L}$ 在度量系统深度演化的误差界限（见 §3 CAC 定理）与泛化张力（见 §2.5）中起核心收束作用。
 
----
-
 针对 $l$-步连续复合映射 $\Phi^l$，依据考察尺度的不同，存在两重维度的**级联系统扩张律（Cascaded System Expansion Laws）**：
 
 1. **全局理论上界（Global Theoretical Bound）**：由单步系统常数 $L$ 的指数累积，强制确立全局极限定界 $\Phi^l \in \mathrm{Lip}_{L^l}(\mathcal{X})$：
@@ -99,6 +104,18 @@ $$\bar{L} \;\triangleq\; \left(\prod_{j=1}^{l} L_j\right)^{1/l}$$
    $$\Theta_{j,l} \;\triangleq\; \prod_{k=j}^{l} L_k \qquad \text{（约定 } j > l \text{ 时，空积 } \Theta_{j,l} = 1\text{）}$$
    此时，具体的局部端到端物理扩张存在一个更为紧致逼近的确切演化上界（其中由于每步 $L_k \leq L$，因而 $\Theta_{1,l} \leq L^l$ 恒成立）：
    $$d\bigl(\Phi^l(x),\, \Phi^l(y)\bigr) \leq \Theta_{1,l} \cdot d(x, y)$$
+
+#### 1.2.2 拓扑容量
+
+**定义（IDFS 拓扑容量，Topological Capacity）**：IDFS 的系统容量可从两个互补维度刻画：
+
+1. **像集容量（Image Capacity）**——系统能产生多少可分辨的输出值：
+   $$\mathcal{C}_{\mathrm{img}}(\Phi, \epsilon) \;\triangleq\; \log \mathcal{N}\bigl(\epsilon,\, \Phi(\mathcal{X})\bigr)$$
+   由 $\Phi \in \mathrm{Lip}_L(\mathcal{X})$，像集容量受输入空间几何控制：$\mathcal{C}_{\mathrm{img}} \leq \log \mathcal{N}(\epsilon/L,\, \mathcal{X})$。
+2. **路由容量（Routing Capacity）**——系统能提供多少可分辨的计算路径：
+   $$\mathcal{C}_{\mathrm{route}}(\sigma) \;\triangleq\; \log |\mathrm{Im}(\sigma)|$$
+
+容量的上界由 §2 引理给出。
 
 
 
