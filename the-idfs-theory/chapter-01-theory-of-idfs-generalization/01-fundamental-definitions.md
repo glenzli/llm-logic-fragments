@@ -84,16 +84,18 @@ $$\mathcal{D} \;\triangleq\; \sup_{x \in \mathcal{X}} \big|\sigma(x)\big| \;\lt\
 2. **$\Phi^l \in \Omega$**：幺半群的复合封闭性。
 3. **$l$-步宏观同构系统**：对任意 $l \geq 1$，$\Phi^l$ 自身构成新的 IDFS $\mathcal{F}_l = (F, \sigma_l)$，其中 $\sigma_l(x) = \sigma(\Phi^{l-1}(x)) \circ \cdots \circ \sigma(\Phi(x)) \circ \sigma(x)$。IDFS 在宏观复合下呈现**代数自相似性**。
 
+> **注（$\mathcal{F}_\infty$ 的 IDFS 合法性）**：$\mathcal{F}_l$ 对每个有限 $l$ 构成合法 IDFS。但当 $l \to \infty$ 时，$\mathcal{F}_\infty$ **不保证**是 IDFS：级联选择映射 $\sigma_\infty$ 的链长度趋于无穷（$|\sigma_\infty(x)| \leq l \cdot \mathcal{D} \to \infty$，违反微观深度有限性），且全局 Lipschitz 常数 $L^l$ 在 $L \geq 1$ 时发散。因此，本章后续对 $l \to \infty$ 的分析（§2 及后续章节），其含义均为：研究有限 IDFS 映射序列 $\{\Phi^l\}_{l \geq 1}$ 的渐近行为，而非假设极限对象 $\mathcal{F}_\infty$ 本身满足 IDFS 公理。
+
 **定义（路径 Lipschitz 常数，Path Lipschitz Constant）**：在系统的实际动态转移中，局部的形变拉伸率完全由路由中心 $\sigma$ 为特定状态选定的映射路径决定。定义映射 $\Phi$ 沿任意合法路径的**有效局部 Lipschitz 常数**为 $L_q$（或在链式迭代中简记为第 $j$ 步的 $L_j$）。由于系统受全局稳态约束，必有上界：
 $$L_q \;\leq\; L$$
 
 **定义（路径 Lipschitz 跨度，Path Lipschitz Span）**：系统能力的非均匀性并非取决于静态孤立的基函数库 $F$（因某些 $f$ 在极端区域根本不会被激活），而是由 $\sigma$ 实际拼缀出的所有可能路径的动态曲率范围决定。定义系统 $\Phi$ 的 **路径 Lipschitz 跨度** $\kappa_\Phi \geq 1$ 为系统在全域内展现出的最强与最弱路径 Lipschitz 常数之比（约定下界非零）：
 $$\kappa_\Phi \;\triangleq\; \frac{\sup L_q}{\inf L_q}$$
-$\kappa_\Phi$ 精确地刻画了动态路由系统的有效内在异质分布。$\kappa_\Phi = 1$ 当且仅当系统在任意路径折点处表现出的空间变形率均完全等同。其决定泛化张力的深刻结构性意义见 §2.5。
+$\kappa_\Phi$ 精确地刻画了动态路由系统的有效内在异质分布。$\kappa_\Phi = 1$ 当且仅当系统在任意路径折点处表现出的空间变形率均完全等同。其决定泛化张力的深刻结构性意义见 §2.4。
 
 **定义（路径等效 Lipschitz 常数 / 几何均值，Path Equivalent Lipschitz Constant / Geometric Mean）**：针对长度为 $l$ 的连续演化路径（涉及局部拉伸率 $L_1, L_2, \dots, L_l$），定义该路径的等效宏观形变率（几何均值）为主导端到端拉伸效果的平均倍率：
 $$\bar{L} \;\triangleq\; \left(\prod_{j=1}^{l} L_j\right)^{1/l}$$
-由于均值属性，恒有 $\inf L_q \leq \bar{L} \leq \sup L_q$。$\bar{L}$ 在度量系统深度演化的误差界限（见 §3 CAC 定理）与泛化张力（见 §2.5）中起核心收束作用。
+由于均值属性，恒有 $\inf L_q \leq \bar{L} \leq \sup L_q$。$\bar{L}$ 在度量系统深度演化的误差界限（见 §3 CAC 定理）与泛化张力（见 §2.4）中起核心收束作用。
 
 针对 $l$-步连续复合映射 $\Phi^l$，依据考察尺度的不同，存在两重维度的**级联系统扩张律（Cascaded System Expansion Laws）**：
 
@@ -115,7 +117,7 @@ $$\bar{L} \;\triangleq\; \left(\prod_{j=1}^{l} L_j\right)^{1/l}$$
 2. **路由容量（Routing Capacity）**——系统能提供多少可分辨的计算路径：
    $$\mathcal{C}_{\mathrm{route}}(\sigma) \;\triangleq\; \log |\mathrm{Im}(\sigma)|$$
 
-容量的上界由 §2 引理给出。
+容量的上界由 §2 命题给出。
 
 
 

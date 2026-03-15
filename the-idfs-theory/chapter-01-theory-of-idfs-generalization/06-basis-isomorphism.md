@@ -23,7 +23,7 @@ $$F_\varphi \;\triangleq\; F \cup \{\varphi\}, \qquad \sigma_\varphi(x) \;\trian
 
 1. $d(\Phi_\varphi(x), \Phi_\varphi(y)) = d(\Phi(\varphi(x)), \Phi(\varphi(y))) \leq L \cdot d(\varphi(x), \varphi(y)) \leq LK \cdot d(x,y)$。
 2. $\Phi_\varphi(x) = \sigma_\varphi(x)(x) = (\sigma(\varphi(x)) \circ \varphi)(x) = \sigma(\varphi(x))(\varphi(x)) = \Phi(\varphi(x))$。
-3. 由 §2.1 引理 2.1，将 $L$ 替换为 $L' = LK$ 即得。$\square$
+3. 由 §2.1 命题 2.1，将 $L$ 替换为 $L' = LK$ 即得。$\square$
 
 > **注（非 Lip 扩展）**：当 $\varphi \notin \mathrm{Lip}$ 时，$\Phi_\varphi = \Phi \circ \varphi$ 在代数上仍然良定义——$\mathcal{F}_\varphi$ 仍可作为形式系统运行。但 $\Phi_\varphi$ 不满足有限 Lip 常数，故 $\mathcal{F}_\varphi$ 不构成 IDFS，本章所有依赖 Lip 条件的定理（CAC、CAB、走廊约束等）均不适用。
 
@@ -125,5 +125,5 @@ $$d(\Phi'(x), \Phi'(y)) \;=\; d(\Phi(\varphi(x)),\, \Phi(y))$$
 
 当 $\varphi(x) \neq x$ 时，此距离一般不趋于零，$\Phi'$ 在 $\partial \mathcal{X}_{ctx}$ 上产生不连续跳变。因此条件偏置的合法化需要 $\varphi$ 在 $\partial \mathcal{X}_{ctx}$ 附近满足连续过渡条件：$\varphi(x) \to x$（$x \to \partial \mathcal{X}_{ctx}$）。
 
-> **注（全局偏置的结构优势）**：全局偏置不引入新的边界不连续，其 Lip 代价完全由 $K$ 的乘法因子吸收。条件偏置虽然在局部保留了原系统行为，但在边界处产生的 Lip 跳变等价于引入新的 $\sigma$-决策边界——由命题 2.9（路由分辨率极限），跳变幅度受 $\Delta/L'$ 约束。
+> **注（全局偏置的结构优势）**：全局偏置不引入新的边界不连续，其 Lip 代价完全由 $K$ 的乘法因子吸收。条件偏置虽然在局部保留了原系统行为，但在边界处产生的 Lip 跳变等价于引入新的 $\sigma$-决策边界——由命题 2.7（路由分辨率极限），跳变幅度受 $\Delta/L'$ 约束。
 

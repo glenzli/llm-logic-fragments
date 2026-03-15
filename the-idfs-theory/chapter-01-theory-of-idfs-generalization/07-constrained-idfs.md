@@ -23,7 +23,7 @@ $$\frac{\Delta - \varepsilon_x - \tau}{\delta} \;\leq\; \Theta_{1,l} \;\leq\; \f
 
 **上界方向**：由 CAC 定理（§3.1 形式 A），$\varepsilon^*_q \leq (\varepsilon_{\max}+\rho_{\max}+\Delta_{\max}) \cdot \Lambda_l + \delta_{\max} \cdot \Gamma_l \leq \tau$。由 $\Gamma_l = \sum_j L_j \Theta_{j+1,l} \leq L_{max} \Lambda_l$，整理得 $\Theta_{1,l} \leq \bar{L}^l$ 必须满足 $\Lambda_l$ 不超过 $\tau / (\varepsilon_{\max} + \rho_{\max} + \Delta_{\max} + L_{max} \delta_{\max})$。特别地，若 $\bar{L} > 1$，则 $\Lambda_l \sim \bar{L}^l / (\bar{L} - 1) \to \infty$，必然在有限深度内违约。
 
-**下界方向**：由 CAB 定理（§4.1），$\varepsilon^*_y \geq |\Delta - \varepsilon_x| - \Omega_l(\delta)$。在简化分析中取 $\Omega_l(\delta) \leq \bar{L}^l\delta + \Delta_{\max}\Lambda_l$（路由跳变累积上界），主导项为平滑拉伸 $\bar{L}^l\delta$。若要求此下界为正（即系统确实存在不可压缩的拟合残差），则 $\Theta_{1,l} = \bar{L}^l < (\Delta - \varepsilon_x) / \delta$（$\Delta_{\max}$ 项已被上界方向的 $\Lambda_l$ 约束吸收）。反之，若 $\Theta_{1,l}$ 过小——即 $\bar{L} < 1$（系统为路径平均收缩映射）——则 $\Theta_{1,l} = \bar{L}^l \to 0$，CAB 下界退化为 $\varepsilon^*_y \geq \Delta - \varepsilon_x$，看似下界仍在。然而，由 命题 2.7，全局收缩将系统的判别能力彻底压平：对任意 $a, b \in \mathcal{X}$，$d(\Phi^l(a), \Phi^l(b)) \leq \bar{L}^l \cdot d(a, b) \to 0$，系统在长链极限下将一切初始差异——包括不同输入之间的区分——映射为零。这意味着 $\Phi_q(x) \approx \Phi_q(y)$，系统丧失了在 $x$ 和 $y$ 之间做出不同响应的能力，从而**无法对任何具有非零变分的目标链 $q$ 实现有效拟合**。
+**下界方向**：由 CAB 定理（§4.1），$\varepsilon^*_y \geq |\Delta - \varepsilon_x| - \Omega_l(\delta)$。在简化分析中取 $\Omega_l(\delta) \leq \bar{L}^l\delta + \Delta_{\max}\Lambda_l$（路由跳变累积上界），主导项为平滑拉伸 $\bar{L}^l\delta$。若要求此下界为正（即系统确实存在不可压缩的拟合残差），则 $\Theta_{1,l} = \bar{L}^l < (\Delta - \varepsilon_x) / \delta$（$\Delta_{\max}$ 项已被上界方向的 $\Lambda_l$ 约束吸收）。反之，若 $\Theta_{1,l}$ 过小——即 $\bar{L} < 1$（系统为路径平均收缩映射）——则 $\Theta_{1,l} = \bar{L}^l \to 0$，CAB 下界退化为 $\varepsilon^*_y \geq \Delta - \varepsilon_x$，看似下界仍在。然而，由 命题 2.9，全局收缩将系统的判别能力彻底压平：对任意 $a, b \in \mathcal{X}$，$d(\Phi^l(a), \Phi^l(b)) \leq \bar{L}^l \cdot d(a, b) \to 0$，系统在长链极限下将一切初始差异——包括不同输入之间的区分——映射为零。这意味着 $\Phi_q(x) \approx \Phi_q(y)$，系统丧失了在 $x$ 和 $y$ 之间做出不同响应的能力，从而**无法对任何具有非零变分的目标链 $q$ 实现有效拟合**。
 
 综合两个方向：$\Theta_{1,l}$（及其几何均值 $\bar{L}$）被同时从上方和下方挤压。$\square$
 
@@ -184,13 +184,13 @@ $$\varepsilon_{i_{j^*}} \;\geq\; \frac{\Delta - L_{j^*}\rho_{var}}{2} - \frac{\t
 
 #### 命题 6.12（泛化-深度-控制不可能三元组，Generalization-Depth-Control Trilemma）
 
-**命题**：设 IDFS $\mathcal{F} = (F, \sigma)$ 需以容差 $\varepsilon$ 逼近目标规则集 $R$ 中的所有链。记 $\gamma_R$ 为 $R$ 的等效张力跨度（§2.5 定义）。则以下三个性质不可同时满足：
+**命题**：设 IDFS $\mathcal{F} = (F, \sigma)$ 需以容差 $\varepsilon$ 逼近目标规则集 $R$ 中的所有链。记 $\gamma_R$ 为 $R$ 的等效张力跨度（§2.4 定义）。则以下三个性质不可同时满足：
 
 1. **泛化性**（Generalization）：$R$ 具有高等效张力跨度 $\gamma_R \gg 1$。
 2. **链深**（Depth）：系统支持长链推理 $l \gg l^*_0$。
 3. **全路径控制**（Full-Path Control）：系统在所有目标链上同时满足 CAC+CAB。
 
-> **注（$\gamma_R$ 的泛化性）**：此处复用 §2.5 定义的等效张力跨度 $\gamma_R = \sup_{r \in R} \lambda_r \;/\; \inf_{r \in R} \lambda_r$，其中 $\lambda_r$ 是系统为了逼近目标 $r$ 必须释放出的等效宏观形变率。这一定义**不要求目标 $r \in R$ 本身具有 Lipschitz 性质**——它可以是离散的、非光滑的、甚至纯符号逻辑的映射。$\gamma_R$ 量化的是目标集对系统**动力学异质性需求**的差距，而非目标自身的解析性质。
+> **注（$\gamma_R$ 的泛化性）**：此处复用 §2.4 定义的等效张力跨度 $\gamma_R = \sup_{r \in R} \lambda_r \;/\; \inf_{r \in R} \lambda_r$，其中 $\lambda_r$ 是系统为了逼近目标 $r$ 必须释放出的等效宏观形变率。这一定义**不要求目标 $r \in R$ 本身具有 Lipschitz 性质**——它可以是离散的、非光滑的、甚至纯符号逻辑的映射。$\gamma_R$ 量化的是目标集对系统**动力学异质性需求**的差距，而非目标自身的解析性质。
 
 **证明**：
 
@@ -325,7 +325,7 @@ $$M \;\geq\; \exp\!\left(\frac{I_\varepsilon(\mathcal{S}) - \log \mathcal{N}(\va
 
 **证明**：
 
-由 引理 2.1，路由容量 $\mathcal{C}_{route} \le \mathcal{D}\log M + \log \mathcal{N}(\varepsilon/L, \mathcal{X})$。在 Type B 中，有效链深 $\mathcal{D} \le l^*_0$。由 命题 2.3（组合耗尽），若系统需以容差 $\varepsilon$ 覆盖目标集的度量熵 $I_\varepsilon(\mathcal{S})$，则必须：
+由 命题 2.1，路由容量 $\mathcal{C}_{route} \le \mathcal{D}\log M + \log \mathcal{N}(\varepsilon/L, \mathcal{X})$。在 Type B 中，有效链深 $\mathcal{D} \le l^*_0$。由 命题 2.4（组合耗尽），若系统需以容差 $\varepsilon$ 覆盖目标集的度量熵 $I_\varepsilon(\mathcal{S})$，则必须：
 
 $$I_\varepsilon(\mathcal{S}) \;\le\; \mathcal{C}_{route} \;\le\; l^*_0 \cdot \log M + \log \mathcal{N}(\varepsilon/L, \mathcal{X})$$
 
@@ -404,7 +404,7 @@ $\to$ **画像：强但脆**。Type C 在安全域内性能优异（§7.1 全部
 
 $$\Delta^{err}_{j^*} \;=\; d\bigl(\sigma(h_{j^*-1}(x'))(h_{j^*-1}(x')),\;\, \sigma(h_{j^*-1}(x_0))(h_{j^*-1}(x'))\bigr) \;\geq\; \frac{\Delta_\sigma^{bdry}}{L^{l-j^*}}$$
 
-其中 $\Delta_\sigma^{bdry}$ 为跨越路由边界时两条激活链的**末端输出最小分离度**——由 命题 2.9（路由分辨率极限），$\Delta_\sigma^{bdry} \geq \Delta_{decision}/L$（$\Delta_{decision}$ 为路由决策导致的宏观行为差异）。
+其中 $\Delta_\sigma^{bdry}$ 为跨越路由边界时两条激活链的**末端输出最小分离度**——由 命题 2.7（路由分辨率极限），$\Delta_\sigma^{bdry} \geq \Delta_{decision}/L$（$\Delta_{decision}$ 为路由决策导致的宏观行为差异）。
 
 (ii) **跳变幅度的尾积放大**：第 $j^*$ 步的路由偏转 $\Delta^{err}_{j^*}$ 在后续 $l - j^*$ 步中被尾部乘积 $\Theta_{j^*+1,l}$ 放大。端到端误差的跳变量至少为：
 
