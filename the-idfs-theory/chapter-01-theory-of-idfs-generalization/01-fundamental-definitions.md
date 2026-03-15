@@ -36,24 +36,15 @@ $\mathcal{T}_l$ 即 $R^*$ 中所有长度有界且**定义域非空**的 $r$-链
 
 在数学结构上，由于长链 $q$ 本身亦是变换空间 $\Omega$ 中的映射，将 $q$ 与其非空输入域结合而成的二元组 $(q, \mathrm{dom}(q))$，与微观采样集 $\mathcal{S}$ 中的基规则元素 $(r_i, \mathcal{X}(r_i))$ **结构上完全对应**（structurally analogous）。因此，有效链集 $\mathcal{T}_l$ 及附带的定义域集合，本质上构成了建立在自由幺半群 $R^*$ 上的**宏观采样集**（Macroscopic Sampling Set）。
 
-> **定义（微观采样集的拓扑信息量，Topological Information of Sample Set）**：
-> 微观采样集 $\mathcal{S}$ 在拓扑空间中并非无结构的散点，它定义了一个庞大的**目标集（Target Set）** $\mathcal{M}_\mathcal{S} \triangleq \{ (r, x) \mid (r, \mathcal{X}(r)) \in \mathcal{S},\, x \in \mathcal{X}(r) \} \subset \Omega \times \mathcal{X}$。为赋予其度量结构，我们在 $\Omega$ 上引入自然的上确界度量 $d_\Omega(r_i, r_j) \triangleq \sup_{x \in \mathrm{dom}(r_i) \cap \mathrm{dom}(r_j)} d(r_i(x), r_j(x))$（$\mathrm{dom}(r_i) \cap \mathrm{dom}(r_j) = \emptyset$ 时约定 $d_\Omega(r_i, r_j) = 0$），从而在积空间 $\Omega \times \mathcal{X}$ 上诱导积度量。对于给定的观测精度 $\epsilon > 0$，为度量该目标集所蕴含的空间信息量，我们定义采样集的**度量熵（Sample-Induced Metric Entropy）** 为覆盖该目标集所需的最小 $\epsilon$-球数量的对数：
-> $$I_\epsilon(\mathcal{S}) \;\triangleq\; \log \mathcal{N}\bigl(\epsilon, \mathcal{M}_\mathcal{S}\bigr)$$
-> 
-> **注（组合爆炸的数学本源）**：当度量空间 $\mathcal{X}$ 承载离散序列生成（如自然语言处理）或复杂逻辑推理任务时，$\mathcal{X}$ 可被具体实例化为**有限维积空间**。设词汇表（或符号集）为 $(V, d_V)$，序列长度为 $N$，则空间具体化为 $\mathcal{X} = V^N$（或含缺失标记的 $(V \cup \{\bot_0\})^N$，其中 $\bot = (\bot_0, \ldots, \bot_0)$）。在此实例化下，若不同词元或逻辑分支在目标集 $\mathcal{M}_\mathcal{S}$ 上具有**高正交性**——即局部微小改变导致语义目标发生剧烈跳跃，使得不同序列需要独立的 $\epsilon$-球覆盖——则目标集呈现指数级碎裂的崎岖结构。其 $\epsilon$-覆盖数随序列长度呈指数级增长：$\mathcal{N}(\epsilon, \mathcal{M}_\mathcal{S}) \sim \mathcal{O}\bigl(|V|^N\bigr)$。因此，度量熵呈现线性发散下界：
-> $$I_\epsilon(\mathcal{S}) \;=\; \Omega\bigl(N \cdot \log |V|\bigr)$$
-> 随着逻辑链推导步数（上下文长度）$N$ 的不断增长，目标世界所需记忆的信息量趋向于无穷大（$I_\epsilon(\mathcal{S}) \to \infty$）。这构成了后续所有组合近似与误差分析的极限背景板。
-
-
+> **定义（采样集的度量熵，Metric Entropy of Sample Set）**：采样集 $\mathcal{S}$ 在 $\mathcal{X}$ 中诱导的**目标输出值集**为 $\mathcal{V}(\mathcal{S}) \triangleq \{r(x) \mid (r, \mathcal{X}(r)) \in \mathcal{S},\, x \in \mathcal{X}(r)\} \subseteq \mathcal{X}$。对给定精度 $\epsilon > 0$，定义采样集的**度量熵**为：
+> $$I_\epsilon(\mathcal{S}) \;\triangleq\; \log \mathcal{N}\bigl(\epsilon,\, \mathcal{V}(\mathcal{S})\bigr)$$
+> 即覆盖 $\mathcal{V}(\mathcal{S})$ 所需的最小 $\epsilon$-球数量的对数，度量系统必须产生的可分辨输出值的数量。
 
 ### 1.2 输入驱动函数系统（IDFS）
 
 **定义（输入驱动函数系统，Input-Driven Function System，IDFS）**：定义系统底座拓扑与其对信号的动态响应共同构成的一个复合结构体系为**输入驱动函数系统**，记作宏观系统映射 $\mathcal{F} = (F, \sigma)$，其中：
 
-1. **函数集与基础拓扑约束** $F = \{f_1, f_2, \ldots, f_M\} \subset \Omega$：$\mathcal{X}$ 上有限个保 $\bot$ 映射的集合，$M = |F|$ 为函数集的大小。为保证系统宏观近似的可计算性与泛化能力，基础算子 $f \in F$ 需满足以下拓扑约束：
-   - **像集全有界性（Total Boundedness）**：任意算子 $f \in F$ 的像集 $f(\mathcal{X})$ 为**全有界集**（对任意 $\epsilon > 0$，$f(\mathcal{X})$ 可被有限个 $\epsilon$-球覆盖）。（这是个错误条件，不知道啥时候又被ai硬塞的，后续删除）
-   - 此宽松拓扑约束（结合有限集合大小 $M < \infty$）自然推导出**度量熵一致有界（Uniformly Bounded Metric Entropy）**：对于任意分辨精度 $\epsilon > 0$，函数库中算子像集的柯尔莫哥洛夫 $\epsilon$-熵必然存在全局有限上界 $C_\epsilon < \infty$，使得：
-     $$\sup_{f \in F} \log \mathcal{N}\left(\epsilon, \, f(\mathcal{X})\right) \;\le\; C_\epsilon$$
+1. **函数集** $F = \{f_1, f_2, \ldots, f_M\} \subset \Omega$：$\mathcal{X}$ 上有限个保 $\bot$ 映射的集合，$M = |F|$ 为函数集的大小。
 
 2. **选择映射与系统微观深度** $\sigma : \mathcal{X} \to F^*$：将当前输入 $x$ 映射到 $F$ 上的一个可变长度复合链 $\sigma(x) = f_{i_k} \circ f_{i_{k-1}} \circ \cdots \circ f_{i_1}$（$k \geq 1$），表示对该输入应执行的微观计算计划。定义系统的**微观计算深度（Micro-Depth）** $\mathcal{D}$ 为选择映射可能产生的最长计算链长度：
    $$\mathcal{D} \;\triangleq\; \sup_{x \in \mathcal{X}} \big|\sigma(x)\big| \;<\; \infty$$
@@ -62,9 +53,10 @@ $\mathcal{T}_l$ 即 $R^*$ 中所有长度有界且**定义域非空**的 $r$-链
 **定义（IDFS 拓扑容量，Topological Capacity）**：IDFS 的系统容量可从两个互补维度刻画：
 
 1. **像集容量（Image Capacity）**——系统能产生多少可分辨的输出值：
-   $$\mathcal{C}_{\mathrm{img}}(F, \epsilon) \;\triangleq\; \log \mathcal{N}\Bigl(\epsilon,\, \bigcup_{x \in \mathcal{X}} \sigma(x)(x)\Bigr)$$
+   $$\mathcal{C}_{\mathrm{img}}(\Phi, \epsilon) \;\triangleq\; \log \mathcal{N}\bigl(\epsilon,\, \Phi(\mathcal{X})\bigr)$$
+   由 $\Phi \in \mathrm{Lip}_L(\mathcal{X})$，像集容量受输入空间几何控制：$\mathcal{C}_{\mathrm{img}} \leq \log \mathcal{N}(\epsilon/L,\, \mathcal{X})$。
 2. **路由容量（Routing Capacity）**——系统能提供多少可分辨的计算路径：
-   $$\mathcal{C}_{\mathrm{route}}(F, \sigma, \epsilon) \;\triangleq\; \log\bigl(|\mathrm{Im}(\sigma)| \cdot e^{C_\epsilon}\bigr)$$
+   $$\mathcal{C}_{\mathrm{route}}(\sigma) \;\triangleq\; \log |\mathrm{Im}(\sigma)|$$
 
 容量的上界由 §2 引理给出。
 
@@ -92,7 +84,7 @@ $$L_q \;\leq\; L$$
 $$\kappa_\Phi \;\triangleq\; \frac{\sup L_q}{\inf L_q}$$
 $\kappa_\Phi$ 精确地刻画了动态路由系统的有效内在异质分布。$\kappa_\Phi = 1$ 当且仅当系统在任意路径折点处表现出的空间变形率均完全等同。其决定泛化张力的深刻结构性意义见 §2.5。
 
-**定义（路径等效 Lipschitz 常数 / 几何均值，Path Equivalent Lipschitz Constant / Geometric Mean）**：针对长度为 $l$ 的连续演化路径（涉及局部拉伸率 $L_1, L_2, \dots, L_l$），定义该路径的**等效宏观形变率（几何均值）**为主导端到端拉伸效果的平均倍率：
+**定义（路径等效 Lipschitz 常数 / 几何均值，Path Equivalent Lipschitz Constant / Geometric Mean）**：针对长度为 $l$ 的连续演化路径（涉及局部拉伸率 $L_1, L_2, \dots, L_l$），定义该路径的等效宏观形变率（几何均值）为主导端到端拉伸效果的平均倍率：
 $$\bar{L} \;\triangleq\; \left(\prod_{j=1}^{l} L_j\right)^{1/l}$$
 由于均值属性，恒有 $\inf L_q \leq \bar{L} \leq \sup L_q$。$\bar{L}$ 在度量系统深度演化的误差界限（见 §3 CAC 定理）与泛化张力（见 §2.5）中起核心收束作用。
 
