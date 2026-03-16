@@ -359,7 +359,7 @@ $$e_l(x) \;\leq\; \sum_{j=1}^{l} \bigl(\tau + \rho_j + \Delta_{\sigma,j}\bigr) \
 
 ---
 
-### 3.2 条件统计精化界
+### 3.2 type-$p$ 统计上界
 
 在 §3.1 的 CAC 定理中，我们得出了宏观误差的纯确定性逐点上界。本节引入**空间几何**与**时间相关性**两个维度的假设，将 CAC 界的最坏情形阶 $\mathcal{O}(l)$ 收紧至统计意义下的更优阶。
 
@@ -378,7 +378,7 @@ $$\mathbb{E}\!\left[\left\|\sum_j v_j\right\|^p\right] \;\leq\; T_p^p \cdot \sum
 
 > **注**：$\tau_c = 1$ 且 $\mathbb{E}[\epsilon_j \mid \mathbb{F}_{j-1}] = 0$ 即满足鞅差序列假设（Martingale Difference Sequence，MDS）。在一般工程现实中，有限容量的拟合系统通常无法严格满足 MDS；但在纯粹的理论极限下，满足 MDS 的系统等价于在**无偏先验（Unbiased Prior）**下的**最优贝叶斯估计器（Optimal Bayesian Estimator）**，其每次外推仅受内禀信息熵的不确定性限制。
 
-#### 定理 3.10（统计精化界，The Statistical Refinement Bound，SRB）
+#### 定理 3.10（type-$p$ 统计上界，Statistical Upper Bound，SUB）
 
 **定理 3.10**：设 IDFS $\mathcal{F} = (F, \sigma)$ 的度量空间 $\mathcal{X}$ 的局部切空间为 type-$p$ Banach 空间（$1 \leq p \leq 2$），系统演化误差序列 $\{\epsilon_j\}$ 的有效相关长度为 $\tau_c$，局部线性化算子 $T_{j,l} = \prod_{k=j+1}^l D\Phi(h_{k-1})$ 的算子范数受限于 $\Theta_{j,l}$。则宏观演化 $l$ 步后的总误差满足：
 
