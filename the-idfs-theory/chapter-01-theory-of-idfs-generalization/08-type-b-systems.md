@@ -11,8 +11,8 @@ Type B 的定义性约束为 $l \le l^*_0 = \tau / E$（其中 $E = \varepsilon_
 > | 定理/推论 | Type B 下的状态 | 说明 |
 > |-----------|----------------|------|
 > | §3 CAC 定理 | **适用** | 核心上界定理，$\varepsilon^*_q \le E \cdot \Lambda_l \le \tau$ |
-> | 推论 3.3（紧性） | **适用** | 上界仍可被取等 |
-> | 推论 3.4（保底链深） | **适用**（平凡） | $l^* \ge l^*_0 \ge l$，约束自动满足 |
+> | 推论 3.4（紧性） | **适用** | 上界仍可被取等 |
+> | 推论 3.5（保底链深） | **适用**（平凡） | $l^* \ge l^*_0 \ge l$，约束自动满足 |
 > | §4 CAB 定理 | **适用** | 核心下界定理，判别性约束仍有效 |
 > | §4 CPI 定理 | **适用** | 容量-精度不等式与链深无关 |
 > | 推论 6.2（长链收缩性） | **前提不满足** | 需 $l > l^*_0$，Type B 下不触发 |
@@ -58,13 +58,13 @@ Type B 的定义性约束为 $l \le l^*_0 = \tau / E$（其中 $E = \varepsilon_
 - 增大 $\Delta_\sigma$ 的 CAC 代价仅为 $\Delta_{max} \cdot l^*_0$（不爆炸），而非长链中的 $\Delta_{max} \cdot \bar{L}^l/({\bar{L}-1})$（指数级）；
 - 增大 $\Delta_\sigma$ 在 CAB 侧仍全额扩展 $\Omega_1(\rho) = L_{local}\rho + \Delta_{\sigma,\text{max}}$，放宽变分四元张力律 $2\varepsilon_r + L_{local}\rho + \Delta_{\sigma,\text{max}} \geq \Delta$ 对单步拟合残差 $\varepsilon_r$ 的下界约束。
 
-因此 Type B 中 $\Delta_\sigma$ 的**成本-收益比**远优于长链系统：每单位路由碎裂引入的 CAC 误差代价为 $O(l^*_0)$，换取的 CAB 拟合约束放宽为 $\Delta_{\sigma,\text{max}}/2$（推论 4.2 变分下界减半）。
+因此 Type B 中 $\Delta_\sigma$ 的**成本-收益比**远优于长链系统：每单位路由碎裂引入的 CAC 误差代价为 $O(l^*_0)$，换取的 CAB 拟合约束放宽为 $\Delta_{\sigma,\text{max}}/2$（推论 4.3 变分下界减半）。
 
 **证明**：
 
 (i) 在 CAC 精细界中，$\delta_j \leq d(h^*_{j-1}, \mathcal{X}(r_{i_j}))$。链深 $l \leq l^*_0$ 限制了理想轨道的总步数。由于每步位移受 $r_{i_j}$ 的局部形变率约束，$\sum_j \delta_j$ 有标准的有限上界。$\rho_j = d(r_{i_j}(x'_j), r_{i_j}(h^*_{j-1}))$ 是 $r_{i_j}$ 在距离不超过 $\delta_j$ 的两点间的输出差异——当 $\delta_j$ 有限（短链截断保证）时，$\rho_j$ 受限于 $r_{i_j}$ 在 $\delta_j$-邻域内的局部振荡特征，不因链深发散。
 
-(ii) CAC 形式 A 中 $\Delta_{max}\Lambda_l$ 项，在 $l \leq l^*_0$ 下 $\Lambda_l \leq \sum_{j=1}^{l^*_0} L_{max}^{l^*_0-j} \leq l^*_0 L_{max}^{l^*_0}$（上界）。当 Type B 选择 $\bar{L} \geq 1$ 时，该上界仍为有限数（因 $l^*_0$ 有限），不随链深趋于无穷。而在 推论 4.2 的单步变分下界 $2\varepsilon_r + L_{local}\rho + \Delta_{\sigma,\text{max}} \geq \Delta$ 中，$\Delta_{\sigma,\text{max}}$ 直接减小 $\varepsilon_r$ 的下界——每增加一单位 $\Delta_{\sigma,\text{max}}$，$\varepsilon_r$ 的最低保证可降低 $1/2$ 单位。$\square$
+(ii) CAC 形式 A 中 $\Delta_{max}\Lambda_l$ 项，在 $l \leq l^*_0$ 下 $\Lambda_l \leq \sum_{j=1}^{l^*_0} L_{max}^{l^*_0-j} \leq l^*_0 L_{max}^{l^*_0}$（上界）。当 Type B 选择 $\bar{L} \geq 1$ 时，该上界仍为有限数（因 $l^*_0$ 有限），不随链深趋于无穷。而在 推论 4.3 的单步变分下界 $2\varepsilon_r + L_{local}\rho + \Delta_{\sigma,\text{max}} \geq \Delta$ 中，$\Delta_{\sigma,\text{max}}$ 直接减小 $\varepsilon_r$ 的下界——每增加一单位 $\Delta_{\sigma,\text{max}}$，$\varepsilon_r$ 的最低保证可降低 $1/2$ 单位。$\square$
 
 > **注（Type B 的 $\Delta_\sigma$ 优势与 §7.2 博弈命题的对接）**：§7.2 的路由碎裂博弈命题证明了长链系统中 $\Delta_\sigma$ 是严格的零和资源——为 CAB 释放的应变力等额消耗 CAC 误差预算。Type B 打破了这个零和结构：CAC 侧的代价被 $l^*_0$ 截断为常数，而 CAB 侧的收益（变分下界的松弛）保持不变。$\Delta_\sigma$ 在 Type B 中从"零和博弈的筹码"变为"正和博弈的工具"——这是短链架构相对于长链架构的第五条独立优势（继误差全域有界、采样非指数爆炸、抗劫持鲁棒性、方向惩罚消解之后）。
 
@@ -203,7 +203,7 @@ $$\;\le\; \delta_\pi + L^{l_0} \cdot \varepsilon_{k-1} + \tau \quad \square$$
 
 $$\varepsilon_n \;\le\; \begin{cases} \dfrac{\beta}{1 - \alpha} & \text{若 } \alpha < 1 \text{（收敛体制，误差饱和）} \\[8pt] n\beta & \text{若 } \alpha = 1 \text{（临界体制，线性累积）} \\[8pt] \dfrac{\alpha^n - 1}{\alpha - 1}\,\beta & \text{若 } \alpha > 1 \text{（发散体制，指数爆炸）} \end{cases}$$
 
-> **注（三体制与 推论 3.2 的深层对应）**：段间误差递推的三体制在结构上与 推论 3.2（CAC 界的两态行为）精确对偶。CAC 描述的是**段内连续误差**随步数的累积：$\bar{L} < 1$ 时饱和，$\bar{L} \ge 1$ 时爆炸。此处的递推描述的是**段间离散误差**随段数的累积：$L^{l_0} < 1$ 时饱和，$L^{l_0} \ge 1$ 时爆炸。两者的对偶揭示了一条统一原则——**乘性误差传播的稳定性完全由谱半径决定**，无论是连续步的 $\bar{L}$ 还是离散段的 $L^{l_0}$。
+> **注（三体制与 推论 3.3 的深层对应）**：段间误差递推的三体制在结构上与 推论 3.3（CAC 界的两态行为）精确对偶。CAC 描述的是**段内连续误差**随步数的累积：$\bar{L} < 1$ 时饱和，$\bar{L} \ge 1$ 时爆炸。此处的递推描述的是**段间离散误差**随段数的累积：$L^{l_0} < 1$ 时饱和，$L^{l_0} \ge 1$ 时爆炸。两者的对偶揭示了一条统一原则——**乘性误差传播的稳定性完全由谱半径决定**，无论是连续步的 $\bar{L}$ 还是离散段的 $L^{l_0}$。
 
 > **注（路径感知的更紧界）**：定理 7.6 使用全局 $L^{l_0}$ 以保证对任意路由决策的普适性。在实际应用中，若已知两点 $\tilde{x}_{k-1}$ 与 $x^*_k$ 在 $\varepsilon_{k-1}$ 充分小时沿相同路径被路由（这在段内拟合误差远小于 $\sigma$-决策边界分辨率 $\Delta/L$ 时是合理的假设，见 命题 2.7），则 $L^{l_0}$ 可收紧为路径几何均值 $\bar{L}^{l_0}$，使三体制的分界更为乐观。
 
