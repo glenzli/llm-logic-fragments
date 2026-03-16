@@ -66,7 +66,9 @@ $$K < 1 \;\Rightarrow\; \mathcal{N}(A,\, \epsilon/(L_{local}K)) \;<\; \mathcal{N
 - $K > 1 \Rightarrow k - L'_{local} < k - L_{local}$，成功集直径增大，测度下界减小（约束放松）。当 $L_{local}K \geq k$ 时，DFG 前提 $k > L_{local}$ 被破坏，定理不适用。
 - $K < 1 \Rightarrow k - L'_{local} > k - L_{local}$，成功集收缩，测度下界增大（约束更严）。
 
-**推论 6.6（$K$-不可能定理）**：四个界关于 $K$ 的单调方向如下：
+**命题 6.6（SIB 界的 $K$-不变性）**：SIB 定理（§3.2）的下界取决于目标集 $\mathcal{S}$ 的度量熵 $I_\varepsilon(\mathcal{S})$，这是 $\mathcal{S}$ 的内禀性质，与系统的 Lipschitz 常数 $L$ 无关。$\varphi$-扩展将 $L \to LK$，但 $I_\varepsilon(\mathcal{S})$ 不变。因此 SIB 下界在任意基底扩展下严格不变。
+
+**推论 6.7（$K$-不可能定理）**：五个界关于 $K$ 的单调方向如下：
 
 | 界 | 类型 | $K < 1$ | $K > 1$ |
 |---|---|---|---|
@@ -74,39 +76,42 @@ $$K < 1 \;\Rightarrow\; \mathcal{N}(A,\, \epsilon/(L_{local}K)) \;<\; \mathcal{N
 | CAB | 下界 | 收紧（约束更严） | 松弛（约束放松） |
 | CPI | 下界 | 放松 | 更严 |
 | DFG | 下界 | 更严 | 放松 |
+| **SIB** | **下界** | **不变** | **不变** |
 
-任意两行中，$K < 1$ 与 $K > 1$ 列不同时全为有利方向。因此不存在 $K \neq 1$ 使所有界同时改善。
+CAC/CAB/CPI/DFG 中任意两行的 $K < 1$ 与 $K > 1$ 列不同时全为有利方向。因此不存在 $K \neq 1$ 使所有界同时改善。SIB 是唯一对 $\varphi$ 完全免疫的界——它由任务的内禀信息复杂度决定，系统端的任何预变换无法改变。
 
-> **注（恒等映射的唯一中性）**：$K = 1$（$\varphi = \mathrm{id}$）是唯一使上述四个界均不变的点。任何非平凡的 $\varphi$ 必然在至少一个界上产生代价。
+> **注（恒等映射的唯一中性）**：$K = 1$（$\varphi = \mathrm{id}$）是唯一使 CAC/CAB/CPI/DFG 四个界均不变的点。任何非平凡的 $\varphi$ 必然在至少一个界上产生代价。
 
-**定理 6.10（逐点代价转移，Pointwise Cost Transfer）**：设 $r$ 具有 $(\beta, k)$-局部判别性，$\varphi \in \mathrm{Lip}_K$，$K < 1$，且 $k > L_{local} \cdot K$。记精度 $\tau$ 下的不可拟合集为：
+**命题 6.8（误差再分配，Error Redistribution）**：基底扩展的逐点误差 $e_\varphi(x) = d(\Phi(\varphi(x)), r(x))$ 与原始误差 $e(x) = d(\Phi(x), r(x))$ 之间不存在逐点单调关系。具体地，存在 $(\Phi, r, \varphi)$ 的构型，使得改善集 $\{x : e_\varphi(x) < e(x)\}$ 与恶化集 $\{x : e_\varphi(x) > e(x)\}$ 同时非空——即使 $K = 1$（所有五个全局界不变）。
 
-$$U_\tau = \{x : d(\Phi(x), r(x)) > \tau\}, \qquad U_\tau^\varphi = \{x : d(\Phi_\varphi(x), r(x)) > \tau\}$$
+**证明**（构造性）：设 $\Phi \in \mathrm{Lip}_L(\mathcal{X})$ 对目标 $r$ 的拟合误差在 $\mathcal{X}$ 上非均匀：存在非空子集 $A, B \subseteq \mathcal{X}$，$A \cap B = \emptyset$，使得 $e(x) \leq \tau$（$x \in A$）且 $e(x) > \tau$（$x \in B$）。取 $\varphi \in \mathrm{Lip}_K(\mathcal{X})$ 满足以下两条件：
 
-若 $\varphi$ 改善了某点（$\exists\, x_1 \in U_\tau \setminus U_\tau^\varphi$），则必存在被劣化的点（$\exists\, x_2 \in U_\tau^\varphi \setminus U_\tau$）。
+1. **目标 $\varphi$-不变性**：$r \circ \varphi = r$（即 $r(\varphi(x)) = r(x)$，$\forall x$）；
+2. **区域交换**：$\varphi(B) \subseteq A$ 且 $\varphi(A) \subseteq B$。
 
-**证明**：
+由条件 1，扩展误差化简为：$e_\varphi(x) = d(\Phi(\varphi(x)), r(x)) = d(\Phi(\varphi(x)), r(\varphi(x))) = e(\varphi(x))$。
 
-1. 由 DFG（§4.3），原系统不可拟合集测度：$\mu(U_\tau) \geq \beta \cdot \mu(\mathcal{X}_r) - |\mathrm{Im}(\sigma)| \cdot c_D^+ \cdot \bigl(\frac{2\tau}{k - L_{local}}\bigr)^D \triangleq B_0$。
-2. 扩展系统中 $L'_{local} = L_{local}K$，DFG 给出：$\mu(U_\tau^\varphi) \geq \beta \cdot \mu(\mathcal{X}_r) - |\mathrm{Im}(\sigma)| \cdot c_D^+ \cdot \bigl(\frac{2\tau}{k - L_{local}K}\bigr)^D \triangleq B_\varphi$。
-3. 由 $K < 1$：$k - L_{local}K > k - L_{local}$ $\Rightarrow$ $\bigl(\frac{2\tau}{k - L_{local}K}\bigr)^D < \bigl(\frac{2\tau}{k - L_{local}}\bigr)^D$ $\Rightarrow$ $B_\varphi > B_0$。
-4. 若 $\exists\, x_1 \in U_\tau \setminus U_\tau^\varphi$（被救出），但 $U_\tau^\varphi \setminus U_\tau = \emptyset$（无劣化点），则 $U_\tau^\varphi \subseteq U_\tau \setminus \{x_1, \ldots\}$，$\mu(U_\tau^\varphi) \leq \mu(U_\tau) - \mu(\{x_1\})$。然而 $B_\varphi > B_0$ 要求 $\mu(U_\tau^\varphi) \geq B_\varphi > B_0 \leq \mu(U_\tau)$——当 DFG 下界紧致时矛盾。故 $U_\tau^\varphi \setminus U_\tau \neq \emptyset$。$\square$
+由条件 2：
+- $x_1 \in B$：$e_\varphi(x_1) = e(\varphi(x_1)) \leq \tau < e(x_1)$——**改善**。
+- $x_2 \in A$：$e_\varphi(x_2) = e(\varphi(x_2)) > \tau \geq e(x_2)$——**恶化**。
 
-> **注（代价转移的不等价性）**：DFG 下界的增长量 $B_\varphi - B_0 > 0$ 意味着被劣化的总测度**严格大于**被改善的总测度。$\varphi$ 的介入不是零和博弈——它是**负和**的：每改善一单位面积，至少劣化更多面积。
+当 $\varphi$ 为等距映射时 $K = 1$，推论 6.7 的五个界全部不变，但逐点误差分布已完全重新洗牌。$\square$
+
+**示例**：$\mathcal{X} = \mathbb{R}$，$\Phi(x) = \max(0, x)$，$r(x) = |x|$，$\varphi(x) = -x$（$K = 1$）。原始误差：$e(x) = 0$（$x \geq 0$），$e(x) = |x|$（$x < 0$）。扩展后：$e_\varphi(x) = |x|$（$x \geq 0$），$e_\varphi(x) = 0$（$x < 0$）。误差从负半轴完整搬运至正半轴。
 
 ### 6.3 复合扩展
 
-**命题 6.7（复合扩展的 Lip 链式法则）**：设 $\varphi_1, \varphi_2, \ldots, \varphi_n$ 为 $n$ 次依序扩展。则复合扩展系统 $\mathcal{F}_{\varphi_1 \circ \cdots \circ \varphi_n}$ 的全局 Lip 常数为：
+**命题 6.9（复合扩展的 Lip 链式法则）**：设 $\varphi_1, \varphi_2, \ldots, \varphi_n$ 为 $n$ 次依序扩展。则复合扩展系统 $\mathcal{F}_{\varphi_1 \circ \cdots \circ \varphi_n}$ 的全局 Lip 常数为：
 
 $$L'_n \;=\; L \cdot \prod_{i=1}^{n} K_i, \qquad K_i = \mathrm{Lip}(\varphi_i)$$
 
 **证明**：归纳应用定理 6.1。$\square$
 
-**推论 6.8（扩展次数的物理上限）**：设系统需维持 $l^*_0 \geq l_{\min}$。由 $l^*_{0,n} = \tau / E_n$ 及 $E_n$ 随 $L'_n$ 单调递增，可行扩展次数 $n$ 满足：
+**推论 6.10（扩展次数的物理上限）**：设系统需维持安全链深 $l^*_0 \geq l_{\min}$。由 $l^*_0 = \tau / E$ 且 $E$ 含 $L_{max}$（§3 CAC），扩展后 $L'_{max} = L_{max} \cdot \prod K_i$，$E$ 相应增大。设 $L'_{\sup}$ 为使 $l^*_0 \geq l_{\min}$ 成立的最大允许全局 Lip 常数，则可行扩展次数 $n$ 满足：
 
-$$\prod_{i=1}^{n} K_i \;\leq\; \frac{L'_{\max}}{L}$$
+$$\prod_{i=1}^{n} K_i \;\leq\; \frac{L'_{\sup}}{L}$$
 
-其中 $L'_{\max}$ 为使 $l^*_{0,n} \geq l_{\min}$ 的最大允许 Lip 常数。每次扩展消耗 Lip 预算，总预算有限。
+每次扩展消耗 Lip 预算，总预算有限。
 
 ### 6.4 全局偏置与条件偏置
 
@@ -119,11 +124,20 @@ $$\sigma'(x) \;=\; \begin{cases} \sigma(\varphi(x)) \circ \varphi & x \in \mathc
 
 条件偏置仅在子集 $\mathcal{X}_{ctx}$ 上激活扩展，其余区域保持原系统。
 
-**命题 6.9（条件偏置的 Lip 不连续性）**：条件偏置系统 $\Phi'$ 在边界 $\partial \mathcal{X}_{ctx}$ 上一般不满足全局 Lip 条件。设 $x \in \mathcal{X}_{ctx}$，$y \notin \mathcal{X}_{ctx}$，$d(x,y) \to 0$，则：
+**命题 6.11（条件偏置的 Lip 不连续性）**：条件偏置系统 $\Phi'$ 在边界 $\partial \mathcal{X}_{ctx}$ 上一般不满足全局 Lip 条件。设 $x \in \mathcal{X}_{ctx}$，$y \notin \mathcal{X}_{ctx}$，$d(x,y) \to 0$，则：
 
 $$d(\Phi'(x), \Phi'(y)) \;=\; d(\Phi(\varphi(x)),\, \Phi(y))$$
 
-当 $\varphi(x) \neq x$ 时，此距离一般不趋于零，$\Phi'$ 在 $\partial \mathcal{X}_{ctx}$ 上产生不连续跳变。因此条件偏置的合法化需要 $\varphi$ 在 $\partial \mathcal{X}_{ctx}$ 附近满足连续过渡条件：$\varphi(x) \to x$（$x \to \partial \mathcal{X}_{ctx}$）。
+由 $\Phi$ 的连续性，当 $y \to x$ 时 $\Phi(y) \to \Phi(x)$，故 $d(\Phi'(x), \Phi'(y)) \to d(\Phi(\varphi(x)), \Phi(x))$。当 $\varphi(x) \neq x$ 时，$d(\Phi(\varphi(x)), \Phi(x)) > 0$（一般情况），而 $d(x,y) \to 0$，故 $\Phi'$ 在 $x$ 处不连续，跳变幅度不超过 $L \cdot d(\varphi(x), x)$。因此条件偏置的合法化需要 $\varphi$ 在 $\partial \mathcal{X}_{ctx}$ 附近满足连续过渡条件：$\varphi(x) \to x$（$x \to \partial \mathcal{X}_{ctx}$）。$\square$
 
-> **注（全局偏置的结构优势）**：全局偏置不引入新的边界不连续，其 Lip 代价完全由 $K$ 的乘法因子吸收。条件偏置虽然在局部保留了原系统行为，但在边界处产生的 Lip 跳变等价于引入新的 $\sigma$-决策边界——由命题 2.7（路由分辨率极限），跳变幅度受 $\Delta/L'$ 约束。
+> **注（全局偏置与条件偏置的结构对比）**：
+>
+> | 维度 | 全局偏置 | 条件偏置 |
+> |---|---|---|
+> | 连续性 | $\Phi_\varphi \in \mathrm{Lip}_{LK}$，无新边界 | $\partial \mathcal{X}_{ctx}$ 处产生 Lip 跳变（命题 6.9） |
+> | 代价范围 | **全域**承受 $K$ 乘法代价 | 仅 $\mathcal{X}_{ctx}$ 内承受代价，其余区域保持原系统 |
+> | CAC/CAB 传播 | 全域 $L' = LK$ | $\mathcal{X}_{ctx}$ 内 $L' = LK$，外部 $L' = L$ |
+> | 路由结构 | 不引入新决策边界 | 边界跳变等价于新 $\sigma$-决策边界，受命题 2.7 约束 |
+>
+> 两者各有适用域：全局偏置以全域 $K$ 代价换取连续性保证；条件偏置以边界不连续为代价换取非目标区域的零代价。选择取决于 $\mathcal{X}_{ctx}$ 相对于 $\mathcal{X}$ 的测度占比和边界跳变的可控性。
 
