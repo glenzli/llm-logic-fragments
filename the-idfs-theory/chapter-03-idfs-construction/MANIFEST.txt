@@ -1,5 +1,5 @@
 # MANIFEST
-# Generated: 2026-03-13T15:44:41Z
+# Generated: 2026-03-16T15:38:16Z
 # Directory: ./chapter-03-idfs-construction
 
 ## 00-draft.md
