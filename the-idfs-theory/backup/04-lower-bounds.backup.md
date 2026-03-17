@@ -139,99 +139,182 @@ $$\varepsilon^*_y \geq \Delta - (\varepsilon_{max} + \rho_{max} + \Delta_{max})\
 >
 > 目标若强行越过这三项预算构筑的容限上限时，系统必将遭遇原理性的外推失效。特别指出，在参数饱和度极化体制下（参照 推论 3.7，即当 $\Lambda_\infty < \infty$），该整体阈值将强制退化收敛为一个与初始输入距 $\delta$ 无关的有界常数，从而从根本逻辑上宣判长逻辑链对高频脉冲响应能力的丧失。
 
-### 4.2 链误差下界（Chain Error Lower Bound, CEL）
+**定义（$k$-co-Lipschitz 子集）**：称 $r$ 在 $A \subseteq \mathcal{X}_r$ 上 **$k$-co-Lipschitz**，若：
 
-§4.1 的下界针对**单步或端到端**的拟合误差。本节推导**链误差**（多步组合误差）的上确界下界——当系统 $\Phi$ 沿链路径的各步 $f$-链具有 co-Lipschitz 性且存在非零种子误差时，链的最大误差随深度几何增长。
+$$d(r(x), r(y)) \geq k \cdot d(x,y) \quad \forall\, x, y \in A$$
 
-**定义（$k$-co-Lipschitz 子集）**：设 $g: \mathcal{X} \to \mathcal{X}$ 为映射。称 $g$ 在 $A \subseteq \mathrm{dom}(g)$ 上 **$k$-co-Lipschitz**，若：
+以下记此类 $A$ 为 $r$ 的 **co-Lipschitz 子集**。当 $A = \mathcal{X}_r$ 时即全局 $k$-co-Lipschitz。当 $\mathcal{X}_r$ 上存在测度 $\mu$ 时，若 $\mu(A) \geq \beta \cdot \mu(\mathcal{X}_r)$（$\beta \in (0,1]$），则称 $r$ 为 **$(\beta, k)$-局部 co-Lipschitz**（DFG 定理 4.7 使用此测度加强版本）。
 
-$$d(g(x), g(y)) \geq k \cdot d(x,y) \quad \forall\, x, y \in A$$
+> **注（自然性）**：几乎所有非退化的连续映射在其定义域的某个正测度子集上满足 co-Lipschitz。仅"常函数型"映射（在正测度集上完全平坦）不满足。§4.2（CPI）、§4.3（DFG）、§4.4（CEL）均以 co-Lipschitz 子集的存在为前提。
 
-co-Lipschitz 性度量映射的**信息保持度**：$k > 0$ 保证不同输入映射为不同输出（单射性的量化加强），$k > 1$ 表示映射放大距离。对任意映射，其 co-Lipschitz 常数 $k$ 不超过 Lipschitz 常数 $L$。
 
-> **注（与 §2 拟合形态的联系）**：在 IDFS 中 $\Phi|_{C_i} = f_i$（路由分区内系统为单一基函数）。$f_i$ 在 $C_i$ 上的 co-Lipschitz 性质对应不同的拟合形态：Logic Fitting（$J$ 有界，$k > 0$）→ 信息保持；Fact Fitting（$J \to 0$，$k = 0$）→ 信息坍缩，不满足 co-Lipschitz；Verbatim Fitting（$J \to \infty$，$k \gg 1$）→ 高保真但高放大。
+### 4.2 co-Lipschitz 容量-精度不等式（CPI）
 
-**定理 4.5（链误差下界，Chain Error Lower Bound, CEL）**：设 IDFS $\mathcal{F} = (F, \sigma)$，链 $q = (r_{i_1}, \ldots, r_{i_l}) \in \mathcal{T}_l$（$l \geq 2$），$x_0 \in \mathrm{dom}(q)$。记理想轨道 $h^*_j = r_{i_j}(h^*_{j-1})$（$h^*_0 = x_0$），实际轨道 $h_j = \Phi(h_{j-1})$，链误差 $e_j = d(h_j, h^*_j)$。
+**定理 4.5（容量-精度不等式，Capacity-Precision Inequality，CPI）**：设 $(\mathcal{X}, d)$ 为度量空间，$r$ 为 $(β, k)$-局部 co-Lipschitz，$A \subseteq \mathcal{X}_r$ 为其 co-Lipschitz 子集（$A$ 全有界）。设 IDFS $\mathcal{F} = (F, \sigma)$ 的计算映射 $\Phi$ 在各路由分区内局部为 $L_{local}$-Lipschitz，全局路由分支数为 $|\mathrm{Im}(\sigma)|$。
 
-设第 $j$ 步理想轨道所选路由 $\sigma(h^*_{j-1}) = f_{a_j}$（与 CAC 中 $L_j$ 的约定一致）在包含 $h_{j-1}, h^*_{j-1}$ 的区域上 $k_j$-co-Lipschitz。定义**路由失配代价**（与 CAC 中的 $\Delta^{err}_j$ 对偶）：
+若系统在 $A$ 上实现全局误差 $\sup_{x \in A} d(\Phi(x), r(x)) \leq \epsilon$，则路由容量必须满足：
 
-$$\Delta^{co}_j \;\triangleq\; d(\sigma(h_{j-1})(h_{j-1}),\; \sigma(h^*_{j-1})(h_{j-1}))$$
+$$|\mathrm{Im}(\sigma)| \;\geq\; \frac{\mathcal{N}\bigl(A,\; 2\epsilon/k\bigr)}{\mathcal{N}\bigl(A,\; \epsilon/L_{local}\bigr)}$$
 
-即同一输入 $h_{j-1}$ 在实际路由与理想路由下的输出差异。设 $\Phi$ 以误差 $\varepsilon_j$ 拟合 $r_{i_j}$（$\sup_x d(\Phi(x), r_{i_j}(x)) \leq \varepsilon_j$）。设种子误差 $\tau > 0$：$\exists\, x_0$ 使得 $e_1 \geq \tau$。则单步递推为：
+其中 $\mathcal{N}(A, \delta)$ 为 $A$ 的 $\delta$-覆盖数（即最少需要多少个半径为 $\delta$ 的球覆盖 $A$）。
 
-$$e_j \;\geq\; k_j \cdot e_{j-1} \;-\; \Delta^{co}_j \;-\; \varepsilon_j$$
+**证明**（路由分区 + Lipschitz 覆盖传递）：
 
-闭式下界为：
+1. **覆盖传递**：由 $\sup_{x \in A} d(\Phi(x), r(x)) \leq \epsilon$，对任意 $r(x) \in r(A)$，存在 $\Phi(x)$ 使 $d(\Phi(x), r(x)) \leq \epsilon$。因此 $r(A) \subseteq B(\Phi(A), \epsilon)$——即 $\Phi(A)$ 是 $r(A)$ 的 $\epsilon$-网。由三角不等式，$\Phi(A)$ 的任意 $\epsilon$-覆盖给出 $r(A)$ 的 $2\epsilon$-覆盖：
+$$\mathcal{N}(r(A),\, 2\epsilon) \;\leq\; \mathcal{N}(\Phi(A),\, \epsilon)$$
 
-$$\sup_{x_0} e_l \;\geq\; \tau \cdot \prod_{j=2}^{l} k_j \;-\; \sum_{j=2}^{l}\left(\Delta^{co}_j + \varepsilon_j\right) \cdot \prod_{i=j+1}^{l} k_i$$
+2. **路由分区**：$\sigma$ 将 $A$ 分为至多 $|\mathrm{Im}(\sigma)|$ 个分区 $\{C_i\}$，每个分区内 $\Phi|_{C_i}$ 为固定 $L_{local}$-Lipschitz 映射。由 Lipschitz 映射的覆盖数保持性：
+$$\mathcal{N}(\Phi(A \cap C_i),\, \epsilon) \;\leq\; \mathcal{N}(A \cap C_i,\, \epsilon/L_{local}) \;\leq\; \mathcal{N}(A,\, \epsilon/L_{local})$$
+由 union bound：
+$$\mathcal{N}(\Phi(A),\, \epsilon) \;\leq\; |\mathrm{Im}(\sigma)| \cdot \mathcal{N}(A,\, \epsilon/L_{local})$$
 
-记 $k_{\min} = \min_j k_j$，$C_{\max} = \max_j (\Delta^{co}_j + \varepsilon_j)$，则：
+3. **co-Lipschitz 放大**：$r$ 的 $k$-co-Lipschitz 性意味着 $r^{-1}$（在像集上）是 $1/k$-Lipschitz，故：
+$$\mathcal{N}(r(A),\, 2\epsilon) \;\geq\; \mathcal{N}(A,\, 2\epsilon/k)$$
 
-$$\sup_{x_0} e_l \;\geq\; k_{\min}^{l-1}\left(\tau - \frac{C_{\max}}{k_{\min} - 1}\right) + \frac{C_{\max}}{k_{\min} - 1}$$
+4. 合并 1–3：$|\mathrm{Im}(\sigma)| \cdot \mathcal{N}(A, \epsilon/L_{local}) \geq \mathcal{N}(A, 2\epsilon/k)$，移项即得。$\square$
 
-当 $k_{\min} > 1$ 且 $\tau > C_{\max}/(k_{\min} - 1)$ 时，下界为正且随 $l$ 几何增长。
+
+> **注（覆盖数比的几何本质）**：当 $k > 2L_{local}$ 时，覆盖数比严格大于 1。这与推论 4.2（同向极化死锁）形成对偶：CAB 死锁构造中，目标变分进入一维极化态时，$D-1$ 个横向正交维度全部失效坍缩。CPI 从宏观视角给出反制——必须通过增大 $|\mathrm{Im}(\sigma)|$ 来弥补单一平滑映射的正交维度缺失。在 $D$ 维流形下（度量熵 $\mathcal{N}(A, \delta) \asymp \delta^{-D}$），路由分支数必须满足 $|\mathrm{Im}(\sigma)| \geq (2L_{local}/k)^D$——关于维度 $D$ 的指数级增长。
+
+> **注（与命题 2.4 的联系）**：CPI 定理的容量下界与 命题 2.4（组合耗尽与路由满射）在结构上深度对偶。命题 2.4 从组合论角度证明路由必然满射——有效链集 $\mathcal{T}_l$ 终将穷尽 $\mathrm{Im}(\sigma)$ 的全部容量；CPI 从覆盖数角度证明路由容量必须足够大——高 co-Lipschitz 目标要求 $|\mathrm{Im}(\sigma)|$ 至少达到覆盖数比的下界。两者独立成立，在不同的数学框架下各自刻画了同一物理事实：**高维 co-Lipschitz 目标对离散路由多样性的不可退让的刚性需求**。
+
+
+### 4.3 co-Lipschitz 拟合缺口定理（DFG）
+
+**引理 4.6（不可完美拟合集的正测度性，Positive Measure of Imperfect Fitting Sets）**：设 $(\mathcal{X}, d, \mu)$ 为度量概率空间，$\mu$ 完全支撑。设 IDFS $\mathcal{F} = (F, \sigma)$ 的计算映射 $\Phi$ 在各路由分区内局部为 $L_{local}$-Lipschitz，$(r, \mathcal{X}_r) \in \mathcal{S}$，$\mathcal{X}_r$ 紧致且正则闭（$\mathcal{X}_r = \overline{\mathrm{int}(\mathcal{X}_r)}$）。若 $r$ 具有 $(\rho, \Delta)$-变分且 $\Delta > \Omega_1(\rho) = L_{local}\rho + \Delta_{\sigma, \text{max}}$（即目标变分超过系统单步拓扑应变力），则对任意 $\tau < (\Delta - L_{local}\rho - \Delta_{\sigma, \text{max}})/2$：
+
+$$\mu\bigl(U_\tau(r)\bigr) \;>\; 0$$
+
+即误差超过 $\tau$ 的输入集合具有严格正测度。
+
+**证明**（由推论 4.3 + 误差函数连续性）：先证 $r$ 在 $\mathcal{X}_r$ 上连续的情形（一般情形见后注）：
+
+1. 由推论 4.3（综合变分下界），$\varepsilon_r = \sup_{z \in \mathcal{X}_r} d(\Phi(z), r(z)) \geq (\Delta - L_{local}\rho - \Delta_{\sigma, \text{max}})/2 > \tau$。
+2. 定义误差函数 $g(x) = d(\Phi(x), r(x))$。由 $\Phi$ Lipschitz 与 $r$ 连续，$g$ 在 $\mathcal{X}_r$ 上连续。
+3. 由 $\mathcal{X}_r$ 紧致与 $g$ 连续，sup 可达：存在 $x_0 \in \mathcal{X}_r$ 使得 $g(x_0) = \varepsilon_r > \tau$。
+4. 由 $g$ 在 $x_0$ 处的连续性，存在 $\delta > 0$ 使得 $B_\delta(x_0) \cap \mathcal{X}_r \subseteq \{x : g(x) > \tau\} \subseteq U_\tau(r)$（$U_\tau$ 以 $\geq$ 定义，包含严格超水平集）。
+5. 由 $\mathcal{X}_r$ 正则闭（$\mathcal{X}_r = \overline{\mathrm{int}(\mathcal{X}_r)}$），$x_0 \in \mathcal{X}_r$ 必为 $\mathrm{int}(\mathcal{X}_r)$ 的极限点，故对任意 $\delta > 0$，$B_\delta(x_0) \cap \mathrm{int}(\mathcal{X}_r) \neq \emptyset$。此非空开集由 $\mu$ 的完全支撑性具有正测度，故 $\mu(B_\delta(x_0) \cap \mathcal{X}_r) > 0$。
+
+因此 $\mu(U_\tau(r)) \geq \mu(B_\delta(x_0) \cap \mathcal{X}_r) > 0$。$\square$
+
+> **注（定量下界）**：证明中的 $\delta$ 可被显式量化。由 $g$ 的 Lipschitz 常数 $\mathrm{Lip}(g) \leq L_{local} + \mathrm{Lip}(r)$（在单一路由分区内），令 $\delta_\tau = \frac{\varepsilon_r - \tau}{L_{local} + \mathrm{Lip}(r)}$，则 $B_{\delta_\tau}(x_0) \cap \mathcal{X}_r \subseteq U_\tau(r)$。若 $\mu$ 为 Ahlfors $D$-正则（即存在常数 $c_D^-, c_D^+ > 0$ 使得 $c_D^- \cdot s^D \leq \mu(B_s(x)) \leq c_D^+ \cdot s^D$，其中 $D$ 为 $\mathcal{X}$ 的 Ahlfors 维数），则 $\mu(U_\tau(r)) \geq c_D^- \cdot \delta_\tau^D$。此量化反映了"$r$ 的变分越剧烈（$\Delta/\rho$ 越大）、系统局部越平滑（$L_{local}$ 越小），不可拟合集越大"的直觉。值得注意的是，路由跳变代价 $\Delta_{\sigma, \text{max}}$ 的存在会缩小引理的适用阈值——这意味着在路由碎裂的区域，系统的离散断层已经无偿消耗了一部分拓扑应变力，反而放松了局部拟合的底噪触发条件。
+
+> **注（$r$ 不连续时的一般情形）**：上述证明利用了 $r$ 的连续性来保证 $g$ 连续。若 $r$ 在某点 $x_0 \in \mathrm{int}(\mathcal{X}_r)$ **不连续**（存在 $z_n \to x_0$ 使 $r(z_n) \to a \neq r(x_0)$），则由 $\Phi$ 的连续性 $\Phi(z_n) \to \Phi(x_0)$，故 $g(z_n) \to d(\Phi(x_0), a)$。由三角不等式 $d(a, r(x_0)) \leq d(\Phi(x_0), a) + d(\Phi(x_0), r(x_0))$，故 $\max(d(\Phi(x_0), a),\, g(x_0)) \geq d(a, r(x_0))/2 > 0$。若 $d(\Phi(x_0), a) > 0$，则由 $z \mapsto d(\Phi(z), a)$ 的连续性，存在 $z_n$ 的开邻域使 $g > 0$。因此**连续函数 $\Phi$ 无法跟踪 $r$ 的跳跃，不连续只会扩大 $U_\tau(r)$**——定理结论在一般情形下仍然成立。
+
+**定义（$(\beta, k)$-局部 co-Lipschitz）**：称连续映射 $r$ 在 $\mathcal{X}_r$ 上 **$(\beta, k)$-局部 co-Lipschitz**，若存在子集 $A \subseteq \mathcal{X}_r$，$\mu(A) \geq \beta \cdot \mu(\mathcal{X}_r)$（$\beta \in (0,1]$），使得：
+
+$$d(r(x), r(y)) \geq k \cdot d(x,y) \quad \forall\, x, y \in A$$
+
+参数 $\beta$ 量化了 co-Lipschitz 性质的**覆盖度**，$k$ 量化了其**强度**。$\beta = 1$ 时退化为全局 $k$-co-Lipschitz。
+
+> **注（自然性）**：$(\beta, k)$-局部 co-Lipschitz 远弱于全局 co-Lipschitz。几乎所有非退化的连续映射都满足此条件：非常值的连续映射在其定义域的几乎全部区域上具有正的局部扩张率。仅"常函数型"映射（在正测度集上完全平坦）不满足——但此类映射不产生非平凡的拟合需求。
+
+**定理 4.7（co-Lipschitz 拟合缺口定理，Discriminative Fitting Gap，DFG）**：设 $(\mathcal{X}, d, \mu)$ 为度量概率空间，$\mu$ 为 Ahlfors $D$-正则测度（即 $c_D^- \cdot s^D \leq \mu(B_s(x)) \leq c_D^+ \cdot s^D$；注意 Ahlfors 正则蕴含完全支撑）。设 IDFS $\mathcal{F} = (F, \sigma)$ 的计算映射 $\Phi$ 在各路由分区内局部为 $L_{local}$-Lipschitz，$(r, \mathcal{X}_r) \in \mathcal{S}$，$r$ 为 $(\beta, k)$-局部 co-Lipschitz 且 $k > L_{local}$（即目标的 co-Lipschitz 扩张率超过系统在各路由分区内的局部 Lipschitz 常数——在分区内部无路由跳变，故此处不含 $\Delta_\sigma$ 项）。则对任意 $\tau > 0$：
+
+$$\mu\bigl(U_\tau(r)\bigr) \;\geq\; \beta \cdot \mu(\mathcal{X}_r) \;-\; |\mathrm{Im}(\sigma)| \cdot c_D^+ \cdot \left(\frac{2\tau}{k - L_{local}}\right)^D$$
+
+**证明**（路由分区 + co-Lipschitz 直径约束）：
+
+1. **路由分区**：$\sigma$ 将 $\mathcal{X}_r$ 分为至多 $|\mathrm{Im}(\sigma)|$ 个分区单元 $\{C_i\}$，每个单元内 $\Phi|_{C_i}$ 为固定 $L_{local}$-Lipschitz 函数（分区内部不存在路由跳变，$\Delta_\sigma = 0$）。
+2. **直径约束**：设 $A$ 为 $r$ 的 co-Lipschitz 子集。对每个路由单元 $C_i$，取 $x, y \in S_\tau \cap C_i \cap A$（其中 $S_\tau = \{z : d(\Phi(z), r(z)) < \tau\}$ 为成功集）。由于 $x, y$ 属于同一路由分区，$\Phi$ 在此分区内为连续的 $L_{local}$-Lipschitz 映射，三角不等式给出：
+$$k \cdot d(x,y) \leq d(r(x), r(y)) \leq d(r(x), \Phi(x)) + d(\Phi(x), \Phi(y)) + d(\Phi(y), r(y)) < \tau + L_{local} \cdot d(x,y) + \tau$$
+故 $(k - L_{local}) \cdot d(x,y) < 2\tau$，即 $\mathrm{diam}(S_\tau \cap C_i \cap A) < \frac{2\tau}{k - L_{local}}$。
+
+3. **体积估计**：$S_\tau \cap C_i \cap A$ 被包含在某直径为 $\frac{2\tau}{k-L_{local}}$ 的球内，由 Ahlfors 正则性：$\mu(S_\tau \cap C_i \cap A) \leq c_D^+ \cdot \left(\frac{2\tau}{k-L_{local}}\right)^D$。
+4. **Union bound**：$\mu(S_\tau \cap A) \leq |\mathrm{Im}(\sigma)| \cdot c_D^+ \cdot \left(\frac{2\tau}{k-L_{local}}\right)^D$。
+5. **测度差**：$\mu(U_\tau \cap A) = \mu(A) - \mu(S_\tau \cap A) \geq \beta \cdot \mu(\mathcal{X}_r) - |\mathrm{Im}(\sigma)| \cdot c_D^+ \cdot \left(\frac{2\tau}{k-L_{local}}\right)^D$。
+
+由 $U_\tau(r) \supseteq U_\tau \cap A$，结论成立。$\square$
+
+> **注（可解读性）**：界中的两项有清晰的对抗结构。第一项 $\beta \cdot \mu(\mathcal{X}_r)$ 是$r$ 的 co-Lipschitz 区域总测度。第二项 $|\mathrm{Im}(\sigma)| \cdot c_D^+ \cdot \left(\frac{2\tau}{k-L_{local}}\right)^D$ 是系统通过路由分支所能覆盖的最大成功集测度——路由分支数 $|\mathrm{Im}(\sigma)|$ 乘以每个分区内 co-Lipschitz 约束下的成功集体积上界。特别地，下界为正的充分条件为：
+> $$\tau \;<\; \frac{k - L_{local}}{2}\left(\frac{\beta \cdot \mu(\mathcal{X}_r)}{|\mathrm{Im}(\sigma)| \cdot c_D^+}\right)^{1/D}$$
+
+**推论 4.8（宏观容错界的不可突破定理，Unbreakable Bound on Macroscopic Error Tolerance）**：设 DFG 定理的假设成立。若要求不可拟合集的测度占比不超过容忍度 $\alpha$（$0 \leq \alpha < \beta$），即 $\mu(U_\tau(r)) \leq \alpha \cdot \mu(\mathcal{X}_r)$，则误差容差 $\tau$ 必须满足：
+
+$$\tau \;\geq\; \frac{k - L_{local}}{2} \cdot \left( \frac{(\beta - \alpha) \cdot \mu(\mathcal{X}_r)}{|\mathrm{Im}(\sigma)| \cdot c_D^+} \right)^{1/D}$$
+
+**证明**：将系统要求 $\mu(U_\tau(r)) \leq \alpha \cdot \mu(\mathcal{X}_r)$ 代入 DFG 定理的测度下界结论中得：
+$$ \alpha \cdot \mu(\mathcal{X}_r) \;\geq\; \mu(U_\tau(r)) \;\geq\; \beta \cdot \mu(\mathcal{X}_r) \;-\; |\mathrm{Im}(\sigma)| \cdot c_D^+ \cdot \left(\frac{2\tau}{k - L_{local}}\right)^D $$
+移项并隔离参数 $\tau$ 项：
+$$ |\mathrm{Im}(\sigma)| \cdot c_D^+ \cdot \left(\frac{2\tau}{k - L_{local}}\right)^D \;\geq\; (\beta - \alpha) \cdot \mu(\mathcal{X}_r) $$
+由于 $k > L_{local}$，两边同取 $1/D$ 次方并移去系数 $\frac{2}{k-L_{local}}$，即立刻解出 $\tau$ 必须满足如下不等式：
+$$ \tau \;\geq\; \frac{k - L_{local}}{2} \cdot \left( \frac{(\beta - \alpha) \cdot \mu(\mathcal{X}_r)}{|\mathrm{Im}(\sigma)| \cdot c_D^+} \right)^{1/D} $$
+$\square$
+
+> **注（物理实质与维度诅咒）**：
+> 1. **有效复杂度阻力 $(\beta - \alpha)$**：当目标的 co-Lipschitz 覆盖率 $\beta$ 超过允许的失败率 $\alpha$ 时，下界被触发。若要求完全拟合（$\alpha \to 0$），分子取极限 $\beta$。
+> 2. **co-Lipschitz 差 $(k - L_{local})/2$**：误差下界正比于目标 co-Lipschitz 常数 $k$ 与系统分区内局部 Lipschitz 常数 $L_{local}$ 之差。当 $L_{local} \ll L$ 时（系统依赖路由碎裂提升全局容量），每个分区内部的拟合精度代价反而更高。
+> 3. **维度诅咒**：$1/D$ 次方揭示了核心维度效应。设 $|\mathrm{Im}(\sigma)|$ 的增长率为 $M(D)$，若 $\log M(D) = o(D)$（亚指数级容量增长），则：
+> $$\left(\frac{(\beta - \alpha)\mu(\mathcal{X}_r)}{M(D) \cdot c_D^+}\right)^{1/D} \;\to\; 1 \quad (D \to \infty)$$
+> 故容错极限收敛至 $\tau_{min} \to (k - L_{local})/2$。即：在亚指数容量体制下，单纯扩大网络容量无法突破由 $(k - L_{local})/2$ 决定的误差硬底。突破此界要求 $|\mathrm{Im}(\sigma)| = 2^{\Omega(D)}$（路由分支数关于维度指数增长），这在工程上通常不可行。
+
+### 4.4 链误差下界（Chain Error Lower Bound, CEL）
+
+§4.1–4.3 的下界均针对**单步**拟合误差。本节利用 co-Lipschitz 子集上的拟合继承性质，推导**链误差**（多步组合误差）的上确界下界——当目标的 co-Lipschitz 常数 $k > 1$ 且种子误差足够大时，链的最大误差随深度**几何增长**。
+
+**引理 4.9（拟合继承的近似 co-Lipschitz，Approximate co-Lipschitz Inheritance）**：设 $r$ 在 $A \subseteq \mathcal{X}_r$ 上 $k$-co-Lipschitz，$\Phi$ 以误差 $\varepsilon$ 拟合 $r$（$\sup_{x \in \mathcal{X}_r} d(\Phi(x), r(x)) \leq \varepsilon$）。则对任意 $x, y \in A$：
+
+$$d(\Phi(x), \Phi(y)) \;\geq\; k \cdot d(x,y) \;-\; 2\varepsilon$$
+
+**证明**：
+
+1. 由三角不等式：$d(r(x), r(y)) \leq d(r(x), \Phi(x)) + d(\Phi(x), \Phi(y)) + d(\Phi(y), r(y)) \leq \varepsilon + d(\Phi(x), \Phi(y)) + \varepsilon$。
+2. 移项：$d(\Phi(x), \Phi(y)) \geq d(r(x), r(y)) - 2\varepsilon$。
+3. 由 $r|_A$ 的 $k$-co-Lipschitz 性：$d(r(x), r(y)) \geq k \cdot d(x,y)$。
+4. 合并：$d(\Phi(x), \Phi(y)) \geq k \cdot d(x,y) - 2\varepsilon$。$\square$
+
+**定理 4.10（链误差下界，Chain Error Lower Bound, CEL）**：设 IDFS $\mathcal{F} = (F, \sigma)$，链 $q = (r_{i_1}, \ldots, r_{i_l}) \in \mathcal{T}_l$（$l \geq 2$），$x_0 \in \mathrm{dom}(q)$。记理想轨道 $h^*_j = r_{i_j}(h^*_{j-1})$（$h^*_0 = x_0$），实际轨道 $h_j = \Phi(h_{j-1})$，链误差 $e_j = d(h_j, h^*_j)$。设各步目标 $r_{i_j}$ 在 $A_j \subseteq \mathcal{X}_{r_{i_j}}$ 上 $k_j$-co-Lipschitz，$\Phi$ 以误差 $\varepsilon_j$ 拟合 $r_{i_j}$，且 $h_j, h^*_j \in A_{j+1}$。设种子误差 $\tau > 0$：$\exists\, x_0$ 使得 $e_1 \geq \tau$。则：
+
+$$\sup_{x_0} e_l \;\geq\; \tau \cdot \prod_{j=2}^{l} k_j \;-\; 3 \sum_{j=2}^{l} \varepsilon_j \cdot \prod_{i=j+1}^{l} k_i$$
+
+记 $k_{\min} = \min_j k_j$，$\varepsilon_{\max} = \max_j \varepsilon_j$，则：
+
+$$\sup_{x_0} e_l \;\geq\; k_{\min}^{l-1}\left(\tau - \frac{3\varepsilon_{\max}}{k_{\min}-1}\right) + \frac{3\varepsilon_{\max}}{k_{\min}-1}$$
+
+当 $k_{\min} > 1$ 且 $\tau > 3\varepsilon_{\max}/(k_{\min}-1)$ 时，下界为正且随 $l$ 几何增长。
+
+> **注（条件的自然性）**：$A_{j+1} \subseteq \mathcal{X}_{r_{i_{j+1}}}$，故 $h_j, h^*_j \in A_{j+1}$ 已蕴含域内执行（$h_j \in \mathcal{X}_{r_{i_{j+1}}}$）。条件仅额外要求轨迹点落在 co-Lipschitz 子集内，而非整个采样域——推论 4.11 和 4.12 证明在 a.e. co-Lipschitz 下满足此条件的 $x_0$ 集合有正测度。
 
 **证明**：
 
 1. $e_1 \geq \tau$（给定）。
-2. 对 $j \geq 2$，分解 $d(\Phi(h_{j-1}), \Phi(h^*_{j-1}))$。由反三角不等式，插入中间点 $\sigma(h^*_{j-1})(h_{j-1})$（理想路由对实际轨道点的输出）：
-$$d(\Phi(h_{j-1}), \Phi(h^*_{j-1})) = d(\sigma(h_{j-1})(h_{j-1}),\; \sigma(h^*_{j-1})(h^*_{j-1})) \;\geq\; d(\sigma(h^*_{j-1})(h_{j-1}),\; \sigma(h^*_{j-1})(h^*_{j-1})) - d(\sigma(h_{j-1})(h_{j-1}),\; \sigma(h^*_{j-1})(h_{j-1}))$$
-第一项：同一 $f$-链 $\sigma(h^*_{j-1}) = f_{a_j}$ 作用于 $h_{j-1}$ 与 $h^*_{j-1}$，由 $f_{a_j}$ 的 $k_j$-co-Lipschitz：$\geq k_j \cdot e_{j-1}$。
-第二项：$= \Delta^{co}_j$（路由失配代价）。
-合并：$d(\Phi(h_{j-1}), \Phi(h^*_{j-1})) \geq k_j \cdot e_{j-1} - \Delta^{co}_j$。
-3. 反三角不等式展开 $e_j$：
-$$e_j = d(\Phi(h_{j-1}), r_{i_j}(h^*_{j-1})) \;\geq\; d(\Phi(h_{j-1}), \Phi(h^*_{j-1})) - d(\Phi(h^*_{j-1}), r_{i_j}(h^*_{j-1})) \;\geq\; k_j \cdot e_{j-1} - \Delta^{co}_j - \varepsilon_j$$
-4. 展开递推即得闭式解。$\square$
+2. 由条件 $h_j, h^*_j \in A_{j+1}$，引理 4.9 适用。
+3. 由引理 4.9：$d(\Phi(h_j), \Phi(h^*_j)) \geq k_{j+1} \cdot e_j - 2\varepsilon_{j+1}$。
+4. $e_{j+1} = d(\Phi(h_j), r_{i_{j+1}}(h^*_j)) \geq d(\Phi(h_j), \Phi(h^*_j)) - d(\Phi(h^*_j), r_{i_{j+1}}(h^*_j)) \geq k_{j+1} e_j - 3\varepsilon_{j+1}$。
+5. 展开递推即得闭式解。$\square$
 
-> **注（与 CAC 的逐步对偶）**：CAC 与 CEL 的递推共享同一步的 $f$-链 $\sigma(h^*_{j-1}) = f_{a_j}$，其 Lip 常数为 $L_j$，co-Lip 常数为 $k_j$（$k_j \leq L_j$）。逐步对偶结构为：
->
-> $$k_j \cdot e_{j-1} - (\Delta^{co}_j + \varepsilon_j) \;\leq\; e_j \;\leq\; L_j \cdot e_{j-1} + (\varepsilon_{i_j} + \rho_j + L_j\delta_j + \Delta_{\sigma,j})$$
->
-> | | CAC（上界） | CEL（下界） |
-> |---|---|---|
-> | 放大因子 | $L_j$（路径 Lip） | $k_j$（路径 co-Lip） |
-> | 同一 $f$-链 | $\sigma(h^*_{j-1})$ | $\sigma(h^*_{j-1})$ |
-> | 噪声方向 | 累积（$+$） | 消耗（$-$） |
-> | 路由失配 | $\Delta^{err}_j + \Delta^{sam}_j$ | $\Delta^{co}_j$ |
-> | 增长条件 | $L_j > 1$ | $k_j > 1$（蕴含 $L_j > 1$） |
+> **注（CEL 与 CAC 的对偶结构）**：CAC 递推 $e_j \leq L_j \cdot e_{j-1} + (\varepsilon_j + \rho_j + \Delta_j + L_j\delta_j)$ 对应 CEL 递推 $e_j \geq k_j \cdot e_{j-1} - 3\varepsilon_j$。放大因子从 $L_j$ 切换为 $k_j$，噪声方向从累积切换为消耗。
 
-### 4.3 type-$p$ 统计下界
+> **注（CEL 与 CAC 的独立性）**：CAC 的放大因子 $L_j = \mathrm{Lip}(\Phi|_{\text{分区}})$ 是**系统**的性质，CEL 的增长因子 $k_j$ 是**目标** $r_{i_j}$ 的 co-Lipschitz 性质——两者关于不同的映射，无 $k_j \leq L_j$ 的先验约束。因此 CEL 和 CAC 是结构上独立的界：当 CEL 条件满足时（$k_j > 1$、种子误差足够大），链误差 $e_j$ 被夹在 CEL 下界（$\geq k_j e_{j-1} - 3\varepsilon_j$）与 CAC 上界（$\leq L_j e_{j-1} + C_j$）之间，二者从不同方向约束同一物理量。
 
-§4.2 的 CEL 通过逐步标量递推得到误差增长下界，噪声项取最坏情形（全额线性消耗）。本节在 §3.2 引理 3.11 的线性化误差传播框架下，直接从**向量**层面推导下界——利用 type-$p$ 空间的方向对消性质，收紧噪声消耗，**抬高**下界。
+**推论 4.11（CEL 的几何测度下界）**：设 $(\mathcal{X}, d, \mu)$ 为 $D$-维 Ahlfors 正则空间（$\mu(B_r(x)) \asymp r^D$）。设各步目标 $r_{i_j}$ 均为 a.e. $k_j$-co-Lipschitz，$\Phi$ 为 $L$-Lipschitz。定义各步的目标覆盖体积 $V_j = \mu(A_{j+1} \cap \mathrm{Im}(\Phi^j))$。则满足定理 4.10 全部条件的初始点集 $E$ 有正测度：
 
-**定理 4.6（type-$p$ 统计下界，Statistical Lower Bound，SLB）**：设引理 3.11 的线性化框架成立且余项可忽略。设 $\mathcal{X}$ 为 type-$p$ Banach 空间（$1 \leq p \leq 2$），传播算子 $T_{1,l}$ 的最小奇异值（co-范数）$\sigma_{\min}(T_{1,l}) \geq \kappa_l > 0$（即 $\|T_{1,l} \cdot \mathbf{v}\| \geq \kappa_l \cdot \|\mathbf{v}\|$），传播后噪声序列 $\{T_{s+1,l} \cdot \mathbf{n}_s\}$ 的有效相关长度为 $\tau_c$。设噪声为零均值（$\mathbb{E}[\mathbf{n}_s] = 0$）或已分离非零均值分量（参见推论 4.7 的漂移-消耗分解；非零均值分量以 $\mathcal{O}(l)$ 线性消耗）。则零均值噪声分量的消耗满足：
+$$\mu(E) \;\geq\; \prod_{j=1}^{l-1} \frac{V_j}{L^{j \cdot D}}$$
 
-$$\|\mathbf{e}_l\| \;\geq\; \kappa_l \cdot \|\mathbf{e}_0\| \;-\; \mathcal{O}\!\left(\tau_c^{1-1/p} \cdot l^{1/p}\right)$$
+特别地，只要 $V_j > 0$（$\Phi$ 在每步至少部分覆盖目标的 co-Lipschitz 区域），CEL 下界必然成立。
 
-**证明**：
+**证明**：$\Phi^j$ 为 $j$ 个 $L$-Lipschitz 映射的复合，故 $L^j$-Lipschitz。由 Ahlfors 正则空间上 Lipschitz 映射的 Hausdorff 测度放缩律：$\mu(f(E)) \leq (\mathrm{Lip}\, f)^D \cdot \mu(E)$。对 $E_j = (\Phi^j)^{-1}(A_{j+1} \cap \mathrm{Im}(\Phi^j))$，有 $\Phi^j(E_j) \supseteq A_{j+1} \cap \mathrm{Im}(\Phi^j)$，故：
 
-1. 由引理 3.11：$\mathbf{e}_l = T_{1,l} \cdot \mathbf{e}_0 + \sum_{s=1}^{l} T_{s+1,l} \cdot \mathbf{n}_s$。
-2. 反三角不等式：$\|\mathbf{e}_l\| \geq \|T_{1,l} \cdot \mathbf{e}_0\| - \|\sum_{s=1}^{l} T_{s+1,l} \cdot \mathbf{n}_s\|$。
-3. 第一项：由 $T_{1,l}$ 的 co-范数定义，$\|T_{1,l} \cdot \mathbf{e}_0\| \geq \kappa_l \cdot \|\mathbf{e}_0\|$。
-4. 第二项：与定理 3.12（SUB）证明完全同构——将噪声序列分块，块内最坏情形叠加，块间应用 type-$p$ 不等式，得 $\|\sum T_{s+1,l} \cdot \mathbf{n}_s\| \sim \mathcal{O}(\tau_c^{1-1/p} \cdot l^{1/p})$。
-5. 合并即得。$\square$
+$$\mu(E_j) \;\geq\; \frac{V_j}{L^{j \cdot D}}$$
 
-> **注（$\kappa_l$ 与 CEL 中 $\prod k_j$ 的关系）**：$\kappa_l = \sigma_{\min}(T_{1,l}) = \sigma_{\min}(\prod A_j)$。当各 $A_j$ 为正规算子时 $\sigma_{\min}(\prod A_j) = \prod \sigma_{\min}(A_j)$，此时 $\kappa_l = \prod k_j$（与 CEL 的路径 co-Lip 乘积一致）。一般情形下 $\kappa_l \leq \prod \sigma_{\min}(A_j)$。
+好集 $E = \bigcap_j E_j$。由 Bonferroni 不等式 $\mu(\bigcap E_j) \geq 1 - \sum (1 - \mu(E_j))$，当各 $\mu(E_j)$ 接近 1 时好集接近满测。一般情形下 $\mu(E) \geq \min_j \mu(E_j) = \min_j V_j / L^{jD} > 0$。$\square$
 
-> **注（与定理 3.12 的对偶结构）**：SLB 和 SUB 共享同一噪声向量和 $\sum T_{s+1,l} \cdot \mathbf{n}_s$，但对其使用方向相反：
->
-> | | SUB（§3.2 定理 3.12） | SLB（本定理） |
-> |---|---|---|
-> | 误差界方向 | 上界（$\leq$） | 下界（$\geq$） |
-> | 系统项 | $\|T_{1,l}\| \cdot \|\mathbf{e}_0\| \leq \Theta_{1,l} \cdot \|\mathbf{e}_0\|$ | $\|T_{1,l} \cdot \mathbf{e}_0\| \geq \kappa_l \cdot \|\mathbf{e}_0\|$ |
-> | 噪声项 | $+\;\|\sum T \cdot \mathbf{n}\|$（累积） | $-\;\|\sum T \cdot \mathbf{n}\|$（消耗） |
-> | type-$p$ 效果 | 累积减少 → 上界下降 | 消耗减少 → 下界上升 |
->
-> 两者从相反方向收拢。在理想统计极限（$p=2$，$\tau_c=1$）下，噪声阶均为 $\mathcal{O}(\sqrt{l})$，误差被夹逼在 $[\kappa_l \tau - \mathcal{O}(\sqrt{l}),\; \Theta_{1,l} \tau + \mathcal{O}(\sqrt{l})]$ 的窄带内。
+> **注**：下界随深度 $l$ 指数衰减（因子 $L^{-lD}$），但只要每步目标覆盖 $V_j > 0$，好集**始终正测度**。此推论不要求 $\Phi$ 的非奇异性，仅依赖 Ahlfors 正则性和 Lipschitz 放缩律。
 
-**推论 4.7（漂移-消耗对偶，Drift-Consumption Duality）**：将噪声向量 $\mathbf{n}_s$ 沿 $T_{1,l} \cdot \mathbf{e}_0$ 方向正交分解（对偶于 §3.2 推论 3.14 的漂移-扩散分解）：
+**推论 4.12（a.e. 非奇异下的 CEL）**：设 $\Phi$ 具有**坍缩区** $Z_\Phi \subseteq \mathcal{X}$，满足：$\Phi$ 在 $\mathcal{X} \setminus Z_\Phi$ 上非奇异（即对任意零测集 $N$，$\mu(\Phi^{-1}(N) \setminus Z_\Phi) = 0$）。设各步目标 $r_{i_j}$ 均为 a.e. $k_j$-co-Lipschitz。则满足定理 4.10 全部条件的初始点集 $E$ 满足：
 
-$$\mathbf{n}_s \;=\; \mu^{co}_s \;+\; \eta^{co}_s$$
+$$\mu(E) \;\geq\; 1 - (l-1) \cdot \mu(Z_\Phi)$$
 
-其中 $\mu^{co}_s$ 为沿初始误差传播方向的投影（**有效消耗**），$\eta^{co}_s$ 为正交分量（**无效消耗**）。则噪声消耗总量分解为：
+当 $\mu(Z_\Phi)$ 较小时，CEL 对绝大多数 $x_0$ 成立。
 
-$$\left\|\sum_{s=1}^{l} T_{s+1,l} \cdot \mathbf{n}_s\right\| \;\leq\; \underbrace{\left\|\sum T_{s+1,l} \cdot \mu^{co}_s\right\|}_{\text{有效消耗：}\mathcal{O}(l)} \;+\; \underbrace{\left\|\sum T_{s+1,l} \cdot \eta^{co}_s\right\|}_{\text{无效消耗：}\mathcal{O}(\tau_c^{1-1/p} l^{1/p})}$$
+**证明**：记 $N_j = \mathcal{X}_{r_{i_j}} \setminus A_j$（$\mu(N_j) = 0$）。第 $j$ 步的坏集为 $B_j = \{x_0 : h_j(x_0) \in N_{j+1} \text{ 或 } h^*_j(x_0) \in N_{j+1}\}$。
 
-有效消耗（漂移分量）与增长方向对齐，全额线性消耗增长——这是噪声真正"阻止"误差增长的部分。无效消耗（扩散分量）正交于增长方向，由 type-$p$ 对消限制为 $\mathcal{O}(l^{1/p})$ 阶。
+1. **理想轨道**：$x_0 \to h^*_j(x_0)$ 为 co-Lipschitz 映射的复合，故单射。$B_j^* = (h^*_j)^{-1}(N_{j+1})$ 为 $N_{j+1}$ 在单射映射下的原像，等于其 Lipschitz 逆映射对 $N_{j+1}$ 的前向像，由 Lusin N（前向方向）知 $\mu(B_j^*) = 0$。
+2. **实际轨道**：$B_j^\Phi = \Phi^{-1}(N_{j+1})$。由非奇异条件：$\mu(B_j^\Phi \setminus Z_\Phi) = 0$，故 $\mu(B_j^\Phi) \leq \mu(Z_\Phi)$。
 
-> **注（CAC 坍缩的对偶）**：§3.2 推论 3.15 证明了 CAC 坍缩等价于系统漂移占主导（$\eta = 0$，随机扩散消失）。对偶地，CEL 增长最持久的情形等价于有效消耗为零（$\mu^{co} = 0$）——所有噪声正交于增长方向，无法阻止误差增长。此时 $\|\mathbf{e}_l\| \geq \kappa_l \tau - \mathcal{O}(l^{1/p})$，误差以接近纯 $\kappa_l$ 的速率增长。
+$\mu(\mathrm{dom}(q) \setminus E) \leq \sum_{j=1}^{l-1} \mu(B_j) \leq \sum_{j=1}^{l-1} \mu(Z_\Phi) = (l-1) \cdot \mu(Z_\Phi)$。$\square$
+
+> **注（完全非奇异的特殊情形）**：当 $\mu(Z_\Phi) = 0$（即 $\Phi_*\mu \ll \mu$）时，$\mu(E) = 1$，CEL 对 a.e. $x_0$ 成立。对可微映射 $\Phi$，这等价于 Jacobian 行列式几乎处处非零。
+
+
+

@@ -378,13 +378,41 @@ $$\mathbb{E}\!\left[\left\|\sum_j v_j\right\|^p\right] \;\leq\; T_p^p \cdot \sum
 
 > **注**：$\tau_c = 1$ 且 $\mathbb{E}[\epsilon_j \mid \mathbb{F}_{j-1}] = 0$ 即满足鞅差序列假设（Martingale Difference Sequence，MDS）。在一般工程现实中，有限容量的拟合系统通常无法严格满足 MDS；但在纯粹的理论极限下，满足 MDS 的系统等价于在**无偏先验（Unbiased Prior）**下的**最优贝叶斯估计器（Optimal Bayesian Estimator）**，其每次外推仅受内禀信息熵的不确定性限制。
 
-#### 定理 3.11（type-$p$ 统计上界，Statistical Upper Bound，SUB）
+#### 引理 3.11（线性化误差传播，Linearized Error Propagation）
 
-**定理 3.11**：设 IDFS $\mathcal{F} = (F, \sigma)$ 的度量空间 $\mathcal{X}$ 的局部切空间为 type-$p$ Banach 空间（$1 \leq p \leq 2$），系统演化误差序列 $\{\epsilon_j\}$ 的有效相关长度为 $\tau_c$，局部线性化算子 $T_{j,l} = \prod_{k=j+1}^l D\Phi(h_{k-1})$ 的算子范数受限于 $\Theta_{j,l}$。则宏观演化 $l$ 步后的总误差满足：
+**引理 3.11**：设 $\mathcal{X}$ 为 Banach 空间，$\Phi$ 沿理想轨道 $\{h^*_j\}$ Fréchet 可微。记 $A_j = D\Phi(h^*_{j-1})$ 为第 $j$ 步的 Jacobian 算子，$\mathbf{n}_j = \Phi(h^*_{j-1}) - r_{i_j}(h^*_{j-1})$ 为理想轨道点处的拟合噪声向量（$\|\mathbf{n}_j\| \leq \varepsilon_j$）。定义传播算子 $T_{s,l} = \prod_{k=s}^{l} A_k$（$T_{l+1,l} = \mathrm{Id}$），$\|T_{s,l}\| \leq \Theta_{s,l}$。设 $D\Phi$ 在理想轨道的 $\delta$-邻域内 $M$-Lipschitz（即 $\|D\Phi(x) - D\Phi(y)\| \leq M \cdot \|x - y\|$）。则误差向量 $\mathbf{e}_j = h_j - h^*_j$ 的精确展开为：
 
-$$\|E_l\| \;\sim\; \mathcal{O}\!\left(\tau_c^{1-1/p} \cdot l^{1/p}\right)$$
+$$\mathbf{e}_l \;=\; T_{1,l} \cdot \mathbf{e}_0 \;+\; \sum_{s=1}^{l} T_{s+1,l} \cdot \mathbf{n}_s \;+\; \mathbf{R}_l$$
 
-**证明精要**：将 $l$ 步误差序列分为 $\lfloor l/\tau_c \rfloor$ 个长度为 $\tau_c$ 的块。块内误差可相干叠加（最坏情况），每块误差 $\sim \mathcal{O}(\tau_c)$。块间近似独立，在 type-$p$ 空间中对 $\lfloor l/\tau_c \rfloor$ 个独立块应用 type-$p$ 不等式，得块间叠加 $\sim \mathcal{O}((l/\tau_c)^{1/p})$。两者合成：$\mathcal{O}(\tau_c \cdot (l/\tau_c)^{1/p}) = \mathcal{O}(\tau_c^{1-1/p} \cdot l^{1/p})$。$\square$
+其中余项 $\mathbf{R}_l = \sum_{s=1}^{l} T_{s+1,l} \cdot \mathbf{r}_s$，逐步余项 $\mathbf{r}_s$ 满足 $\|\mathbf{r}_s\| \leq \frac{M}{2}\|\mathbf{e}_{s-1}\|^2$（Fréchet 余项的标准界）。设链误差在 $\delta$-邻域内（$\|\mathbf{e}_j\| \leq \delta$，$j = 0, \ldots, l-1$），则余项总量的显式上界为：
+
+$$\|\mathbf{R}_l\| \;\leq\; \frac{M\delta^2}{2} \sum_{s=1}^{l} \Theta_{s+1,l}$$
+
+**证明**：
+
+1. 由 Fréchet 可微性与 $D\Phi$ 的 $M$-Lipschitz：$\Phi(h^*_{j-1} + \mathbf{e}_{j-1}) = \Phi(h^*_{j-1}) + A_j \cdot \mathbf{e}_{j-1} + \mathbf{r}_j$，其中 $\|\mathbf{r}_j\| \leq \frac{M}{2}\|\mathbf{e}_{j-1}\|^2$（此为 Fréchet 导数余项的标准二阶界，由 $D\Phi$ 的 Lipschitz 性保证）。
+2. 逐步递推：$\mathbf{e}_j = A_j \cdot \mathbf{e}_{j-1} + \mathbf{n}_j + \mathbf{r}_j$。
+3. 展开 $l$ 步（线性递推的叠加原理 + 逐步余项传播）：$\mathbf{e}_l = T_{1,l} \cdot \mathbf{e}_0 + \sum_{s=1}^{l} T_{s+1,l} \cdot (\mathbf{n}_s + \mathbf{r}_s)$。分离噪声与余项即得。
+4. 余项界：$\|\mathbf{R}_l\| \leq \sum_{s=1}^{l} \|T_{s+1,l}\| \cdot \|\mathbf{r}_s\| \leq \sum_{s=1}^{l} \Theta_{s+1,l} \cdot \frac{M}{2}\|\mathbf{e}_{s-1}\|^2 \leq \frac{M\delta^2}{2} \sum_{s=1}^{l} \Theta_{s+1,l}$。$\square$
+
+> **注（余项可忽略的条件与自洽验证）**：引理中 $\|\mathbf{e}_j\| \leq \delta$ 为先验假设。可通过自洽论证（bootstrapping）验证：先忽略余项，由线性化界计算 $\delta_{lin} = \max_j \|\mathbf{e}_j\|_{lin}$（即 CAC/SUB 给出的误差估计）；再检验余项条件 $\frac{M\delta_{lin}^2}{2} \sum \Theta_{s+1,l} \ll \delta_{lin}$，即 $M\delta_{lin} \sum \Theta_{s+1,l} \ll 2$。当此条件成立时，取 $\delta = \delta_{lin}$，精确误差满足 $\|\mathbf{e}_j\|_{exact} \leq \delta_{lin}(1 + \mathcal{O}(M\delta_{lin} l))$，线性化自洽。在扩展性系统（$L > 1$）中 $\delta_{lin}$ 随 $l$ 指数增长，自洽条件给出**最大有效链深** $l_{max}$——超过 $l_{max}$ 后线性化失效，此时应退回 CAC 确定性界。
+
+> **注（与 CAC 的关系）**：在一般度量空间中（无向量结构），CAC 对 $\|\mathbf{e}_l\|$ 的上界通过三角不等式得出：$\|\mathbf{e}_l\| \leq \|T_{1,l}\| \cdot \|\mathbf{e}_0\| + \sum \|T_{s+1,l}\| \cdot \|\mathbf{n}_s\| = \mathcal{O}(l)$。这等价于对 $\sum T \cdot \mathbf{n}_s$ 取逐项范数再求和（最坏方向对齐）。线性化框架保留了**向量求和的对消结构**，使 type-$p$ 不等式可以利用方向随机性获得更紧的界。
+
+#### 定理 3.12（type-$p$ 统计上界，Statistical Upper Bound，SUB）
+
+**定理 3.12**：设引理 3.11 的线性化框架成立且余项可忽略。设 $\mathcal{X}$ 为 type-$p$ Banach 空间（$1 \leq p \leq 2$），传播后噪声序列 $\{T_{s+1,l} \cdot \mathbf{n}_s\}$ 的有效相关长度为 $\tau_c$。设噪声为零均值（$\mathbb{E}[\mathbf{n}_s] = 0$）或已分离非零均值分量（参见推论 3.14 的漂移-扩散分解；非零均值分量以 $\mathcal{O}(l)$ 线性累积，不受 type-$p$ 约束）。则零均值噪声分量的贡献满足：
+
+$$\left\|\sum_{s=1}^{l} T_{s+1,l} \cdot \mathbf{n}_s\right\| \;\sim\; \mathcal{O}\!\left(\tau_c^{1-1/p} \cdot l^{1/p}\right) \cdot \max_s \|T_{s+1,l}\| \cdot \varepsilon_s$$
+
+故 $\|\mathbf{e}_l\| \leq \Theta_{1,l} \cdot \|\mathbf{e}_0\| + \mathcal{O}(\tau_c^{1-1/p} \cdot l^{1/p})$。
+
+**证明**：
+
+1. 由引理 3.11，$\|\mathbf{e}_l\| \leq \|T_{1,l}\| \cdot \|\mathbf{e}_0\| + \|\sum T_{s+1,l} \cdot \mathbf{n}_s\|$（三角不等式）。
+2. 将 $l$ 步噪声序列分为 $m = \lfloor l/\tau_c \rfloor$ 个块，每块长 $\tau_c$。块内噪声可全额相干叠加：$\|\sum_{s \in \text{block}} T \cdot \mathbf{n}_s\| \leq \tau_c \cdot \max \|T \cdot \mathbf{n}_s\| = \mathcal{O}(\tau_c)$。
+3. 块间近似独立（$\tau_c$ 定义）。对 $m$ 个独立块向量在 type-$p$ 空间中应用 type-$p$ 不等式：$\mathbb{E}[\|\sum_{\text{blocks}}\|^p] \leq T_p^p \sum_{\text{blocks}} \mathbb{E}[\|\cdot\|^p]$，得块间叠加 $\sim \mathcal{O}(m^{1/p}) = \mathcal{O}((l/\tau_c)^{1/p})$。
+4. 合成：$\mathcal{O}(\tau_c \cdot (l/\tau_c)^{1/p}) = \mathcal{O}(\tau_c^{1-1/p} \cdot l^{1/p})$。$\square$
 
 > **注（退化验证）**：
 > - $(p = 2,\, \tau_c = 1)$：$\mathcal{O}(1^{1/2} \cdot l^{1/2}) = \mathcal{O}(\sqrt{l})$，退化为理想统计界（下方推论）。
@@ -392,17 +420,17 @@ $$\|E_l\| \;\sim\; \mathcal{O}\!\left(\tau_c^{1-1/p} \cdot l^{1/p}\right)$$
 > - $(p = 1,\, \tau_c = 1)$：$\mathcal{O}(1^{0} \cdot l) = \mathcal{O}(l)$，一般空间即使独立也无正交对消。
 > - $(p = 2,\, \tau_c = l)$：$\mathcal{O}(l^{1/2} \cdot l^{1/2}) = \mathcal{O}(l)$，希尔伯特空间但完全相关也无对消。
 
-#### 定理 3.12（理想统计界，The Statistical Ideal Bound，SIB）
+#### 定理 3.13（理想统计界，The Statistical Ideal Bound，SIB）
 
-**定理 3.12**：若 $\mathcal{X}$ 局部同胚于希尔伯特空间（$p = 2$）且误差满足鞅差序列假设（$\tau_c = 1$），则统计精化界退化为：
+**定理 3.13**：若 $\mathcal{X}$ 局部同胚于希尔伯特空间（$p = 2$）且误差满足鞅差序列假设（$\tau_c = 1$），则统计精化界退化为：
 
-$$\sqrt{\mathbb{E}[\|E_l\|^2]} \;\leq\; \sqrt{ \sum_{j=1}^l \left( \Theta_{j,l} \cdot \sqrt{\mathbb{E}[\|\epsilon_j\|^2]} \right)^2 }$$
+$$\sqrt{\mathbb{E}[\|E_l\|^2]} \;\leq\; \sqrt{ \sum_{j=1}^l \left( \Theta_{j+1,l} \cdot \sqrt{\mathbb{E}[\|\epsilon_j\|^2]} \right)^2 }$$
 
-**证明**：在 $p = 2$（希尔伯特空间）下，$\epsilon_j$ 零均值且 $\tau_c = 1$（逐步独立），经确定性线性算子映射后的误差序列 $\{T_{j,l}(\epsilon_j)\}$ 在切空间中保持正交，即 $\mathbb{E}[\langle T_{i,l}(\epsilon_i), T_{j,l}(\epsilon_j) \rangle] = 0 \quad (\forall i \neq j)$。根据 Bienaymé 等式，总误差的平方期望等于各部分误差平方期望之和。取算子范数放缩 $\|T_{j,l}\| \leq \Theta_{j,l}$，两边开均方根，得证。$\square$
+**证明**：在 $p = 2$（希尔伯特空间）下，$\epsilon_j$ 零均值且 $\tau_c = 1$（逐步独立），经确定性线性算子 $T_{j+1,l}$ 映射后的误差序列 $\{T_{j+1,l}(\epsilon_j)\}$ 在切空间中保持正交，即 $\mathbb{E}[\langle T_{i+1,l}(\epsilon_i), T_{j+1,l}(\epsilon_j) \rangle] = 0 \quad (\forall i \neq j)$。根据 Bienaymé 等式，总误差的平方期望等于各部分误差平方期望之和。取算子范数放缩 $\|T_{j+1,l}\| \leq \Theta_{j+1,l}$，两边开均方根，得证。$\square$
 
 > **注**：SIB 是统计精化界在 $(p, \tau_c)$ 参数空间中的**极端理想点**——它同时要求空间具备最强的正交对消能力（Hilbert）和误差具备最弱的时间相关性（完全独立），因此给出了最紧的渐近阶 $\mathcal{O}(\sqrt{l})$。这是动力学系统在多步迭代下泛化误差的**绝对涨落底线**。
 
-**推论 3.13（漂移-扩散定律，Drift-Diffusion Law）**：在一般系统中，受限于微观基函数集 $F$ 的局部结构偏置以及有效采样覆盖的有限性，系统的单步误差演化通常无法自发满足严格的 MDS 假设。单步误差向量必定包含一个系统性的方向偏置（Drift）。将真实误差 $\epsilon_j$ 进行正交分解：
+**推论 3.14（漂移-扩散定律，Drift-Diffusion Law）**：在一般系统中，受限于微观基函数集 $F$ 的局部结构偏置以及有效采样覆盖的有限性，系统的单步误差演化通常无法自发满足严格的 MDS 假设。单步误差向量必定包含一个系统性的方向偏置（Drift）。将真实误差 $\epsilon_j$ 进行正交分解：
 
 $$\epsilon_j \;=\; \mu_j \;+\; \eta_j$$
 
@@ -412,7 +440,7 @@ $$\epsilon_j \;=\; \mu_j \;+\; \eta_j$$
 
 代入线性化演化积分，宏观总误差被分解为两项：
 
-$$\mathbb{E}[\|E_l\|^2] \;=\; \underbrace{ \left\| \sum_{j=1}^l T_{j,l}(\mu_j) \right\|^2 }_{\text{系统漂移项：} \mathcal{O}(l^2)} \;+\; \underbrace{ \sum_{j=1}^l \mathbb{E}\left[ \|T_{j,l}(\eta_j)\|^2 \right] }_{\text{随机扩散项：} \mathcal{O}(\tau_c^{2-2/p} \cdot l^{2/p})}$$
+$$\mathbb{E}[\|E_l\|^2] \;=\; \underbrace{ \left\| \sum_{j=1}^l T_{j+1,l}(\mu_j) \right\|^2 }_{\text{系统漂移项：} \mathcal{O}(l^2)} \;+\; \underbrace{ \sum_{j=1}^l \mathbb{E}\left[ \|T_{j+1,l}(\eta_j)\|^2 \right] }_{\text{随机扩散项：} \mathcal{O}(\tau_c^{2-2/p} \cdot l^{2/p})}$$
 
 开方后，系统的泛化总误差呈现为漂移-扩散动力学形式：
 
@@ -420,12 +448,12 @@ $$Error_{total} \;\sim\; \underbrace{\mathcal{O}(l) \cdot \|\mu_{bias}\|}_{\text
 
 > **注（漂移-扩散的不对称性）**：漂移项始终以 $\mathcal{O}(l)$ 线性增长——这是确定性相干叠加的必然结果，与空间几何和时间相关性均无关。因此，包含强系统性漂移（$\mu_{bias} \neq 0$）的系统必然坠入 CAC 灾难界。空间几何参数 $p$ 和时间相关长度 $\tau_c$ **仅能改善噪声项的涨落底线**，而无法触及漂移项——后者的消除必须依赖外部的对抗或校验机制。
 
-**推论 3.14（CAC 坍缩的几何-统计等价性，Geometric-Statistical Equivalence of CAC Collapse）**：推论 3.4 证明 CAC 上界绝对紧致时所依托的**同向共线拉伸（Collinear Stretching）**构造，在物理法则上完全等价于漂移-扩散定律中**系统漂移项取得统治地位的非各向同性极值形态**。
+**推论 3.15（CAC 坍缩的几何-统计等价性，Geometric-Statistical Equivalence of CAC Collapse）**：推论 3.4 证明 CAC 上界绝对紧致时所依托的**同向共线拉伸（Collinear Stretching）**构造，在物理法则上完全等价于漂移-扩散定律中**系统漂移项取得统治地位的非各向同性极值形态**。
 
 **证明**：在同向共面拉伸构造中，泛化路线被剥夺了独立自由度并强行压缩于单一主特征射线上。在此极端几何拓扑下，第 $j$ 步的一切微观偏差均沿着特征方向发生严格的平移叠加，即微观误差向量呈现确定性的完全同向偏置：$\epsilon_j = \mu_j$，而代表周围维度统计对消自由度的随机涨落彻底消失，即方差 $\eta_j \equiv 0$。
 
 代入漂移-扩散方程验证：右侧第二项（随机扩散项）因 $\|\eta\| = 0$ 被绝对归零。系统的整体误差演化百分之百由左侧第一项接管：
-$$Error_{total} \;\approx\; \left\| \sum_{j=1}^l T_{j,l}(\mu_j) \right\| \;\sim\; \mathcal{O}(l) \cdot \|\mu_{bias}\|$$
+$$Error_{total} \;\approx\; \left\| \sum_{j=1}^l T_{j+1,l}(\mu_j) \right\| \;\sim\; \mathcal{O}(l) \cdot \|\mu_{bias}\|$$
 
 当误差仅由第一项构成时，所有的相干矢量投影都在同一个一维法向量标架上，使得空间累加由原本可能具备高维折叠缓冲性质的积分运算，直接退化为一维数量序列的最坏情况线性累加（代数上界）。此时，系统不留任何统计学后路地精准撞击 CAC 灾难天花板。$\square$
 
