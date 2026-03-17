@@ -114,6 +114,7 @@ $$\varepsilon^*_y \;\geq\; \Delta_q - \varepsilon_x - \Omega_1(\delta) \;\geq\; 
 
 > **注（扩展到 $\mathrm{dom}(r)$ 时的三元纠缠）**：推论 4.3 的分析严格限于采样域 $\mathcal{X}(r)$，其中 $\sigma$ 隐含于 $\Phi$ 的构造而不显式出现，两元张力 $(\varepsilon_r, L_{local})$ 足以刻画。若将分析扩展至整个 $\mathrm{dom}(r) \supseteq \mathcal{X}(r)$，则在 $\mathrm{dom}(r) \setminus \mathcal{X}(r)$ 的区域内，$\Phi(z) = \sigma(z)(z)$ 不受采样约束，$\sigma$ 的决策边界可能在 $\partial\mathcal{X}(r)$ 处被激活：由 命题 2.7（路由分辨率极限），跨越边界时路径局部 Lipschitz $L_j$ 逼近系统全局极限 $L$，使分辨率死锁在边界处达到最极端形态。此时变分约束涉及**三元纠缠** $(\varepsilon_r,\, L,\, \sigma)$——三者无法分别独立优化，对 $\mathrm{dom}(r)$ 的分析须同时约束 $\sigma$ 在 $\partial\mathcal{X}(r)$ 处的边界曲率。因此推论 4.2 的主体保持在 $\mathcal{X}(r)$ 上以确保形式严格性；三元纠缠的正式处理见 命题 5.6。
 
+
 **命题 4.4（综合逼近可行性条件，Comprehensive Approximation Feasibility）**：由 CAC 定理（上界）与 CAB 定理（下界）联合推导出系统逼近泛化的理论天花板。设 IDFS $\mathcal{F} = (F, \sigma)$ 拟合了采样集 $\mathcal{S}$，各极限参数齐备。对任意有效链 $q \in \mathcal{T}_l$ 和任意 $x, y \in \mathrm{dom}(q)$（$d(x,y) = \delta$），记目标变分 $\Delta = d(q(x), q(y))$。
 
 定义**综合逼近天花板阈值（Comprehensive Approximation Threshold）**：
