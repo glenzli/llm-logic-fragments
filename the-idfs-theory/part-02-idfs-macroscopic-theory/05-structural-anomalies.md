@@ -1,6 +1,6 @@
 ## 结构特异性
 
-本章揭示 IDFS 单映射共享架构产生的一系列反直觉结构特异性。所有异常现象共享同一根源：$\Phi$ 是为所有采样对 $(r, \mathcal{X}(r)) \in \mathcal{S}$ 全局共享的单一映射——它在某个区域上被一条采样约束锁定的行为，会对途经该区域的所有链路产生不可预见的副作用。§5.1 从单步的方向不对称性出发（命题 5.1–2），§5.2 揭示多步组合中这种不对称性如何被放大为灾难性的链路劫持（命题 5.3），§5.3 上升至系统层面，证明采样集扩增对拟合效果不具有单调性保证（命题 5.6）。
+本章揭示 IDFS 单映射共享架构产生的一系列反直觉结构特异性。所有异常现象共享同一根源：$\Phi$ 是为所有采样对 $(r, \mathcal{X}(r)) \in \mathcal{S}$ 全局共享的单一映射——它在某个区域上被一条采样约束锁定的行为，会对途经该区域的所有链路产生不可预见的副作用。§5.1 从单步的方向不对称性出发（命题 5.1–2），§5.2 揭示多步组合中这种不对称性如何被放大为灾难性的链路劫持（命题 5.3），§5.3 上升至系统层面，证明采样集扩增对拟合效果不具有单调性保证（命题 5.5）。
 
 ### 5.1 采样约束的方向不对称性
 
@@ -107,21 +107,12 @@ $$d(\Phi(h_1), r_{target}(h_1)) \;\geq\; d(r_B(h_1), r_{target}(h_1)) - d(\Phi(h
 
 逆序链 $q_B = (r_2, r_1)$：$y \in [D,D+1] \xrightarrow{r_2} h_1 \approx y+D \in \mathcal{X}(r_3)$，**劫持发生**——$r_3$ 将 $\Phi(h_1)$ 锁定为 $h_1 - 2D \approx y-D$，而目标 $r_1(r_2(y)) = y+2D$，误差 $\approx 3D \gg \varepsilon$。$\square$
 
-**推论 5.5（变分正交对邻域劫持的缓解，Mitigation of Neighborhood Hijacking via Variational Orthogonality）**：
-
-命题 5.3 中劫持灾难的硬核条件是：中间态 $h_1$ **落入** $r_B$ 的采样域 $\mathcal{X}(r_B)$ 内——此时 $\Phi(h_1)$ 被采样约束硬性锁定，与 $\sigma$ 的路由选择无关（因为无论 $\sigma$ 选择哪条 $f$-链来计算 $\Phi(h_1)$，最终输出都是唯一的，且必须满足 $d(\Phi(h_1), r_B(h_1)) \leq \varepsilon_B$）。**在采样域绝对重合的情形下，变分正交无法提供任何拯救。**
-
-但在实际系统中，命题 5.3 示例构造的精确重合是一个**零测度事件**。更常见的情形是：$h_1$ 落在 $\mathcal{X}(r_B)$ 的 $\varepsilon$-**邻域**中，但 $h_1 \notin \mathcal{X}(r_B)$。此时 $\Phi(h_1)$ 不直接受 $r_B$ 的采样约束控制——$\sigma$ 在 $h_1$ 处拥有**路由自由度**。劫持此时退化为**间接劫持**：由 Lipschitz 连续性，$\Phi(h_1)$ 被 $\Phi$ 在 $\mathcal{X}(r_B)$ 上的行为拉偏，拉偏幅度受限于 $L \cdot d(h_1, \mathcal{X}(r_B))$。
-
-在此间隙中，$f$-链正交性（§2.4）提供了**结构性的侧向逃逸**：若 $\sigma$ 在 $h_1$ 处选择的 $f$-链 $q_{transit}$ 与 $r_B$ 在 $\mathcal{X}(r_B)$ 上所激活的 $f$-链 $q_{local}$ **变分正交**（$\mathrm{Cov}_{var}(q_{transit}, q_{local}) = 0$），则 $q_{local}$ 为拟合 $r_B$ 而产生的局部形变，在 $q_{transit}$ 的输出方向上**不产生系统性偏移**。途经链的误差从命题 5.3 的 $O(\Delta)$（绝对劫持）降至 $O(L\varepsilon)$（Lipschitz 自然传播），劫持被**从灾难性降级为常规误差积累**。
-
-> **注（逃逸的条件与代价）**：侧向逃逸依赖两个前提：(i) $h_1$ 与 $\mathcal{X}(r_B)$ 之间存在非零间距（$\delta > 0$），为 $\sigma$ 的路由切分提供物理空间；(ii) $Im(\sigma)$ 中存在足够多的变分正交 $f$-链可供分配。前者由系统的单步近似精度 $\varepsilon$ 和链路的几何构型决定；后者由 $|F| = M$ 的函数集规模和路径 Lipschitz 跨度 $\kappa_\Phi$（§1.2）共同决定——$M$ 越大、$\kappa_\Phi$ 越高，$F^*$ 中可供动员的变分正交方向越多，系统在邻域间隙中实施"错峰路由"的能力越强。但当 $h_1$ 精确落入采样域（$\delta = 0$）时，逃逸空间归零，命题 5.3 的绝对劫持不可避免。
 
 ### 5.3 采样集扩增的非单调性
 
 经典统计学习的核心信念之一是"更多数据 → 更好泛化"。本节证明：在 IDFS 框架中，这一信念**不成立**。采样集 $\mathcal{S}$ 的扩增对系统的拟合效果不提供单调递增保证，且存在两种结构上独立的扩增模式，其效果截然不同。
 
-**命题 5.6（采样集扩增的非单调性，Non-Monotonicity of Sampling Set Expansion）**：设 IDFS $\mathcal{F} = (F, \sigma)$ 的系统容量 $(L, M)$ 固定。记 $\mathcal{F}(\mathcal{S}) = \{\Phi \in \mathrm{Lip}_L(\mathcal{X}) : \sup_{x \in \mathcal{X}(r)} d(\Phi(x), r(x)) \leq \varepsilon,\; \forall (r, \mathcal{X}(r)) \in \mathcal{S}\}$ 为满足所有采样约束的可行映射集。设 $\mathrm{cost}(\Phi, T)$ 为 $\Phi$ 在目标任务集 $T$ 上的代价函数（如端到端链误差）。则：
+**命题 5.5（采样集扩增的非单调性，Non-Monotonicity of Sampling Set Expansion）**：设 IDFS $\mathcal{F} = (F, \sigma)$ 的系统容量 $(L, M)$ 固定。记 $\mathcal{F}(\mathcal{S}) = \{\Phi \in \mathrm{Lip}_L(\mathcal{X}) : \sup_{x \in \mathcal{X}(r)} d(\Phi(x), r(x)) \leq \varepsilon,\; \forall (r, \mathcal{X}(r)) \in \mathcal{S}\}$ 为满足所有采样约束的可行映射集。设 $\mathrm{cost}(\Phi, T)$ 为 $\Phi$ 在目标任务集 $T$ 上的代价函数（如端到端链误差）。则：
 
 **(i) 可行集的单调收缩**：$\mathcal{S}_1 \subseteq \mathcal{S}_2 \;\Longrightarrow\; \mathcal{F}(\mathcal{S}_1) \supseteq \mathcal{F}(\mathcal{S}_2)$。因此
 
@@ -143,11 +134,11 @@ $$\inf_{\Phi \in \mathcal{F}(\mathcal{S}_1)} \mathrm{cost}(\Phi, T) \;\leq\; \in
 
 **模式 B：采样对追加**（$\mathcal{S} \to \mathcal{S} \cup \{(r_{new}, \mathcal{X}_{new})\}$，全新规则）——引入新的拟合目标。
 
-- $\varepsilon$ 效应（负面）：可行集收缩，与已有规则冲突不可避免（见下推论 5.7）。
+- $\varepsilon$ 效应（负面）：可行集收缩，与已有规则冲突不可避免（见下推论 5.6）。
 - $\delta$ 效应（负面）：新约束可劫持已有链路（命题 5.3 机制），使域外链误差从"可能差"变为"必然差"。
 - **净效果单调非递增，可严格退化**：新采样对不为任何已有规则填补 $\delta$ 间隙（它只服务 $r_{new}$），却在其采样域上锁死 $\Phi$ 的行为，两个效应同向为负。
 
-**推论 5.7（训练追加的强制退化，Forced Degradation under Training Augmentation）**：模式 B 的退化不仅是可行集论证的抽象后果，而是存在确定性构型使退化**被强制保证**。此退化有两条结构独立的通道：
+**推论 5.6（训练追加的强制退化，Forced Degradation under Training Augmentation）**：模式 B 的退化不仅是可行集论证的抽象后果，而是存在确定性构型使退化**被强制保证**。此退化有两条结构独立的通道：
 
 (a) **域内直接冲突**：若 $\mathcal{X}_{new} \cap \mathcal{X}(r) \neq \emptyset$ 且 $\Delta(x) = d(r(x), r_{new}(x)) > 0$ 对某些 $x$ 成立，则由三角不等式：
 
@@ -160,4 +151,5 @@ $$\varepsilon_r(x) + \varepsilon_{r_{new}}(x) \;\geq\; \Delta(x) \qquad \forall 
 (b) **域外链路劫持**：即使 $\mathcal{X}_{new} \cap \mathcal{X}(r) = \emptyset$（域完全不相交），新规则仍可破坏已有规则的**链路性能**——这正是命题 5.3 的实例化。在 $(r_1, [0,1])$ 的链 $q = (r_1, r_1)$ 原本可以自由运行的构型中，追加 $(r_2, [D, D+1])$ 将 $\Phi$ 在中间态域锁死为错误行为，链误差从 $0$ 升至 $\geq 2D$。
 
 > **注（反直觉的根源）**：在经典统计学习中，训练样本是**信息**——更多样本意味着更好的估计。但在 IDFS 中，采样对是**硬约束**——它强制 $\Phi$ 在特定域上锁定为特定行为。每增加一条约束，$\Phi$ 的全局行为自由度减少。通道 (a) 是域内直接冲突——新旧规则在重叠域上竞争 $\Phi$ 的输出空间。通道 (b) 是域外链路劫持——新规则通过 $\Phi$ 的全局共享性，在远离其采样域的位置锁死了旧任务的链路行为。两者的共同根源是 IDFS 的单映射共享架构：$\Phi$ 是为所有采样对服务的全局函数，任何局部约束都有全局后果。
+
 
