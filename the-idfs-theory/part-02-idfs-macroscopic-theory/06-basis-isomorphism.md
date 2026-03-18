@@ -37,9 +37,14 @@ $$F_\varphi \;\triangleq\; F \cup \{\varphi\}, \qquad \sigma_\varphi(x) \;\trian
 
 ### 6.2 扩展系统的误差界
 
-$\varphi$-扩展系统的广义 Lipschitz 常数为 $L' = LK$（定理 6.1），但 CAC 误差界的传播不仅涉及 Lipschitz 放缩（乘性），还涉及 $\varphi$ 对采样域的偏移（加性）。两者需分别处理。
+**定义（域相容扩展与域外扩展）**：设 $\varphi$-扩展系统的路由为 $\sigma_\varphi(x) = \sigma(\varphi(x)) \circ \varphi$，对应的 $r$-链为 $q = \sigma(\varphi(x))$。
 
-**命题 6.2（CAC 界的 $\varphi$-传播）**：设 $\mathrm{Lip}(\varphi) = K < \infty$。扩展系统 $\Phi_\varphi = \Phi \circ \varphi$ 的 CAC 误差上界为：
+- **域相容扩展**：$\varphi(x) \in \mathrm{dom}(q)$——$\varphi$ 将输入映入被选链路的定义域。链的所有微观步可正常执行，§3–§4 的误差分析完整适用。
+- **域外扩展**：$\varphi(x) \notin \mathrm{dom}(q)$——链无法执行（$q(\varphi(x)) = \bot$）。此为灾难性退化，误差界无意义。
+
+域相容条件的关键在于：**只要首步输入 $\varphi(x) \in \mathrm{dom}(q)$，后续微观中间态由链的级联结构保证**（§1.1 有效链定义）。$\varphi(x)$ 未必落在采样域 $\mathcal{X}(r_{i_1})$ 内，但只要在 $\mathrm{dom}(q)$ 内，链的所有微观步均可正常执行，§3–§4 的误差分析无需额外修改。
+
+**命题 6.2（CAC 界的 $\varphi$-传播）**：设 $\mathrm{Lip}(\varphi) = K < \infty$，且扩展为域相容（$\varphi(x) \in \mathrm{dom}(\sigma(\varphi(x)))$）。则扩展系统 $\Phi_\varphi = \Phi \circ \varphi$ 的 CAC 误差上界为：
 
 $$\varepsilon^*_{q,\varphi} \;\leq\; (\varepsilon_{\max}^\varphi + \rho_{\max}^\varphi + \Delta_{\max}) \cdot \Lambda_l^\varphi \;+\; \delta_{\max}^\varphi \cdot \Gamma_l^\varphi$$
 
@@ -49,21 +54,18 @@ $$\Theta_{j,l}^\varphi \;=\; \prod_{k=j}^{l} L'_k \;=\; K^{l-j+1} \cdot \Theta_{
 
 $$\Lambda_l^\varphi \;=\; \sum_{j=1}^l \Theta_{j+1,l}^\varphi \;=\; \sum_{j=1}^l K^{l-j} \cdot \Theta_{j+1,l}, \qquad \Gamma_l^\varphi \;=\; \Theta_{1,l}^\varphi \;=\; K^l \cdot \Theta_{1,l}$$
 
-而 $\varepsilon_j^\varphi$、$\delta_j^\varphi$、$\rho_j^\varphi$ 为**扩展系统的**误差项（加性效应）。其中 $\varepsilon_j^\varphi = d(\Phi(x'_j), r_{i_j}(x'_j))$（$x'_j \in \mathcal{X}(r_{i_j})$ 为最近采样点，故 $\varepsilon_j^\varphi \leq \varepsilon_{i_j}$，与原系统一致）。$\delta_j^\varphi$、$\rho_j^\varphi$ 按 $\varphi$ 与采样域的关系分为两种情形：
+而 $\varepsilon_j^\varphi$、$\delta_j^\varphi$、$\rho_j^\varphi$ 为扩展系统的误差项。$\varphi$-扩展对 CAC 界的效应分为两个独立维度：
 
-**(i)（域内扩展）**：若 $\varphi$ 将链路中间态映入采样域（$\varphi(h_{j-1}) \in \mathcal{X}(r_{i_j})$），则 $\delta_j^\varphi = 0$，$\rho_j^\varphi = 0$，误差项与原系统一致，CAC 界退化为纯 $K$-放缩：$K < 1 \Rightarrow \bar{\varepsilon} \downarrow$，$K > 1 \Rightarrow \bar{\varepsilon} \uparrow$。
+1. **乘性传播**（$K$-确定）：$\Theta$ 系数通过 $K$ 确定性放缩——$K < 1$ 缩小，$K > 1$ 放大。
+2. **加性误差**（$\varphi$-几何确定）：$\varepsilon^\varphi$、$\rho^\varphi$、$\delta^\varphi$ 取决于 $\varphi$ 将输入映到 $\mathrm{dom}(q)$ 内的**何处**，与 $K$ 的大小无关。若 $\varphi$ 映到 $r$ 变化剧烈的区域，$\rho^\varphi$ 可远大于原系统的 $\rho$。
 
-**(ii)（域外扩展）**：若 $\varphi(h_{j-1}) \notin \mathcal{X}(r_{i_j})$，则 $\varphi$ 在第 $j$ 步引入域偏移：
+两个维度的**净效果无法仅由 $K$ 决定**。
 
-$$\delta_j^\varphi \;=\; d(\varphi(h_{j-1}),\; \mathcal{X}(r_{i_j})), \qquad \rho_j^\varphi \;=\; d(r_{i_j}(x'_j),\; r_{i_j}(\varphi(h_{j-1})))$$
+**证明**：域相容条件保证链可执行。§3 CAC 递推中各步广义 Lipschitz 常数从 $L_j$ 变为 $L_jK$，$\Theta_{j,l}^\varphi = K^{l-j+1} \cdot \Theta_{j,l}$。加性误差项 $\delta_j^\varphi$、$\rho_j^\varphi$ 由 $\varphi(x)$ 在 $\mathrm{dom}(q)$ 内的位置决定。$\square$
 
-其中 $x'_j = \mathrm{proj}_{\mathcal{X}(r_{i_j})}(\varphi(h_{j-1}))$。$K > 1$ 时两个效应同向（$\Lambda$, $\Gamma$ 放大 + $\rho^\varphi$, $\delta^\varphi$ 膨胀），上界必然增大。$K < 1$ 时乘性收缩与加性膨胀**竞争**，净效果不确定。
+> **注（域相容的物理意义）**：域相容条件 $\varphi(x) \in \mathrm{dom}(q)$ 是 $\varphi$-扩展有意义的**最低要求**——链必须能执行。满足此条件后，误差界的结构与原始 CAC 一致——$\varphi$ 不引入新类型的误差项，但改变了各项的**取值**（乘性部分通过 $K$，加性部分通过 $\varphi$ 的几何映射）。域外扩展（$\varphi(x) \notin \mathrm{dom}(q)$）意味着系统在 $\varphi(x)$ 处根本无法计算。
 
-**证明**：乘性部分：§3 CAC 递推中各步广义 Lipschitz 常数从 $L_j$ 变为 $L_jK$，$\Theta_{j,l}^\varphi = K^{l-j+1} \cdot \Theta_{j,l}$。加性部分：CAC 的 $\delta$、$\rho$ 项在每步由 $\varphi(h_{j-1})$ 相对于 $\mathcal{X}(r_{i_j})$ 的位置决定——$\varphi$ 映入域内时这些项为零，映出域外时按 CAC 单步结构产生非零贡献。两部分合成即得。$\square$
-
-> **注（域外效应的物理意义）**：域内扩展（$K$-放缩）是纯粹的精度-容量权衡；域外扩展（$\delta^\varphi + \rho^\varphi$）则是**$\varphi$ 将输入推入系统未被采样约束覆盖的区域**的结构性代价。后者与 §5.2 的链路劫持机制同源——区别在于劫持是采样集 $\mathcal{S}$ 的内部冲突，域外扩展是 $\varphi$ **从外部**引入的域偏移。
-
-**命题 6.3（CAB 界的 $\varphi$-传播）**：设 $\mathrm{Lip}(\varphi) = K < \infty$。扩展系统的 CAB 误差下界为：
+**命题 6.3（CAB 界的 $\varphi$-传播）**：设 $\mathrm{Lip}(\varphi) = K < \infty$，域相容。扩展系统的 CAB 误差下界为：
 
 $$\varepsilon^*_{y,\varphi} \;\geq\; |\Delta_\varphi - \varepsilon_{\varphi,x}| \;-\; \Omega_{l,\varphi}$$
 
@@ -71,61 +73,47 @@ $$\varepsilon^*_{y,\varphi} \;\geq\; |\Delta_\varphi - \varepsilon_{\varphi,x}| 
 
 $$\Omega_{l,\varphi} \;=\; \Theta_{1,l}^\varphi \cdot \delta_{\max}^\varphi \;+\; \sum_{j=1}^l \Delta_{\sigma,j} \cdot \Theta_{j+1,l}^\varphi \;=\; K^l \Theta_{1,l} \cdot \delta_{\max}^\varphi \;+\; \sum_{j=1}^l \Delta_{\sigma,j} \cdot K^{l-j} \Theta_{j+1,l}$$
 
-与命题 6.2 平行，$\delta_{\max}^\varphi$ 按 $\varphi$ 与采样域的关系分为两种情形：
+与命题 6.2 平行：$K$ 放缩 $\Theta$（乘性），$\delta_{\max}^\varphi$ 由 $\varphi$ 的几何决定（加性）。两个维度的净效果无法仅由 $K$ 决定。
 
-**(i)（域内扩展）**：$\delta^\varphi = \delta$，乘性系数 $K^l$, $K^{l-j}$ 直接放缩消耗项：$K < 1 \Rightarrow \Omega_{l,\varphi} < \Omega_l$（下界 $\underline{\varepsilon} \uparrow$），$K > 1$ 时反之。
-
-**(ii)（域外扩展）**：$\delta_j^\varphi \geq \delta_j$。$K > 1$ 时两个效应同向（$\Theta$ 放大 + $\delta^\varphi$ 膨胀），$\Omega_{l,\varphi} > \Omega_l$ **无条件成立**，下界必然降低。$K < 1$ 时两个效应**竞争**——$K^l$ 的乘性收缩与 $\delta^\varphi$ 的加性膨胀方向相反，净效果不确定；当 $\delta_{\max}^\varphi > \delta_{\max} / K^l$ 时，$\Omega_{l,\varphi}$ 仍可大于 $\Omega_l$。
-
-**证明**：§4 CAB 定理中各步广义 Lipschitz 常数从 $L_j$ 变为 $L_jK$，$\Theta_{j,l}^\varphi = K^{l-j+1} \cdot \Theta_{j,l}$。消耗项 $\Omega_l$ 中的 $\Theta$ 同步放缩，$\delta$ 项使用扩展系统的 $\delta^\varphi$。$\square$
+**证明**：§4 CAB 定理中各步广义 Lipschitz 常数从 $L_j$ 变为 $L_jK$，$\Theta_{j,l}^\varphi = K^{l-j+1} \cdot \Theta_{j,l}$。消耗项 $\Omega_l$ 中的 $\Theta$ 同步放缩。$\square$
 
 
-**命题 6.4（SIB 界的 $\varphi$-传播）**：设 $\mathrm{Lip}(\varphi) = K < \infty$。SIB（§3.2 定理 3.13）在理想统计条件（$p=2$，$\tau_c=1$）下给出误差上界 $\sqrt{\mathbb{E}[\|E_l\|^2]} \leq \sqrt{\sum_{j=1}^l (\Theta_{j+1,l} \cdot \sqrt{\mathbb{E}[\|\epsilon_j\|^2]})^2}$。$\varphi$-扩展下 $\Theta_{j+1,l}^\varphi = K^{l-j} \Theta_{j+1,l}$，且 $\mathbb{E}[\|\epsilon_j\|^2]$ 应取**扩展系统的**逐步误差方差 $\mathbb{E}[\|\epsilon_j^\varphi\|^2]$。
+**命题 6.4（SIB 界的 $\varphi$-传播）**：设 $\mathrm{Lip}(\varphi) = K < \infty$，域相容。SIB（§3.2 定理 3.13）在理想统计条件（$p=2$，$\tau_c=1$）下给出误差上界 $\sqrt{\mathbb{E}[\|E_l\|^2]} \leq \sqrt{\sum_{j=1}^l (\Theta_{j+1,l} \cdot \sqrt{\mathbb{E}[\|\epsilon_j\|^2]})^2}$。$\varphi$-扩展下 $\Theta_{j+1,l}^\varphi = K^{l-j} \Theta_{j+1,l}$（$K$-确定），$\mathbb{E}[\|\epsilon_j^\varphi\|^2]$ 由扩展系统的逐步误差决定（$\varphi$-几何确定）。
 
-**(i)（域内扩展）**：$\epsilon_j^\varphi = \epsilon_j$，纯 $K$-放缩：$K < 1 \Rightarrow \bar{\varepsilon}^{SIB} \downarrow$，$K > 1 \Rightarrow \bar{\varepsilon}^{SIB} \uparrow$。
+渐近阶 $\mathcal{O}(\sqrt{l})$ 不因 $K$ 改变，但乘性系数和加性误差项分别受 $K$ 与 $\varphi$ 影响。
 
-**(ii)（域外扩展）**：$\mathbb{E}[\|\epsilon_j^\varphi\|^2] \geq \mathbb{E}[\|\epsilon_j\|^2]$（域偏移增大逐步误差）。$K > 1$ 时两效应同向，上界必增；$K < 1$ 时 $\Theta$ 缩小与 $\epsilon^\varphi$ 增大竞争，净效果不确定。
+**证明**：$\Theta_{j+1,l}^\varphi = K^{l-j} \Theta_{j+1,l}$。代入 SIB 公式，$\Theta$ 项乘以 $K^{l-j}$。$\square$
 
-SIB 的渐近阶 $\mathcal{O}(\sqrt{l})$ 不因 $K$ 改变（由 type-$p$ 与 $\tau_c$ 决定），但系数随 $K$ 和域偏移放缩。
+**推论 6.5（$\varphi$-扩展的误差界双维效应）**：设域相容。$\varphi$-扩展对所有误差界（CAC/SIB/CAB）的效应分解为两个独立维度：
 
-**证明**：$\Theta_{j+1,l}^\varphi = \prod_{k=j+1}^l (L_k K) = K^{l-j} \Theta_{j+1,l}$。代入 SIB 公式，$\Theta$ 项乘以 $K^{l-j}$，$\epsilon_j$ 取扩展系统值。$\square$
+| 维度 | 来源 | 效应 |
+|---|---|---|
+| 乘性传播 | $K = \mathrm{Lip}(\varphi)$ | $K < 1$ 缩小 $\Theta$，$K > 1$ 放大 $\Theta$ |
+| 加性误差 | $\varphi$ 的几何映射 | $\varepsilon^\varphi$, $\rho^\varphi$, $\delta^\varphi$ 取决于 $\varphi$ 映到 $\mathrm{dom}(q)$ 内何处 |
 
-**推论 6.5（$K$-窄化定理，$K$-Narrowing Theorem）**：记 $\bar{\varepsilon}_q$ 为 CAC 上界，$\bar{\varepsilon}^{SIB}_q$ 为 SIB 上界，$\underline{\varepsilon}_y$ 为 CAB 下界。$\varphi$-扩展后对应量记为 $\bar{\varepsilon}_{q,\varphi}$、$\bar{\varepsilon}^{SIB}_{q,\varphi}$、$\underline{\varepsilon}_{y,\varphi}$。则 $K$ 的效应按域内/域外分为：
+**$K$-窄化的充分条件**：
 
-| 界 | $K < 1$ 域内 | $K > 1$ 域内 | $K < 1$ 域外 | $K > 1$ 域外 |
-|---|---|---|---|---|
-| CAC 上界 | $\bar{\varepsilon} \downarrow$ | $\bar{\varepsilon} \uparrow$ | 不确定 | $\bar{\varepsilon} \uparrow$ |
-| SIB 上界 | $\bar{\varepsilon}^{SIB} \downarrow$ | $\bar{\varepsilon}^{SIB} \uparrow$ | 不确定 | $\bar{\varepsilon}^{SIB} \uparrow$ |
-| CAB 下界 | $\underline{\varepsilon} \uparrow$ | $\underline{\varepsilon} \downarrow$ | 不确定 | $\underline{\varepsilon} \downarrow$ |
+- $K < 1$ 且 $\varphi$ **不增大**加性误差（$\varepsilon^\varphi \leq \varepsilon$, $\rho^\varphi \leq \rho$, $\delta^\varphi \leq \delta$）$\Rightarrow$ 上界降、下界升（窄化）。
+- $K > 1$ 且 $\varphi$ **不减小**加性误差（$\varepsilon^\varphi \geq \varepsilon$, $\rho^\varphi \geq \rho$, $\delta^\varphi \geq \delta$）$\Rightarrow$ 上界升、下界降（扩张）。
+
+两个方向的充分条件对加性项的要求**相反**。不满足对应条件时，净效果取决于两个维度的竞争。
+
+> **注（恒等映射的唯一中性）**：$K = 1$，$\varphi = \mathrm{id}$ 是唯一使所有误差界不变的点——乘性系数不变 ($K = 1$) 且加性项不变（$\varepsilon^\varphi = \varepsilon$, $\rho^\varphi = \rho$, $\delta^\varphi = \delta$）。
 
 
-**域内**：上界与下界**反向运动**——$K < 1$ 时误差窗口 $[\underline{\varepsilon},\; \bar{\varepsilon}]$ 窄化（上界降、下界升），$K > 1$ 时窗口扩张。不存在 $K \neq 1$ 使误差窗口单侧收缩。
-
-**域外 $K > 1$**：三个界**同向运动**（上界升、下界降），窗口确定性扩张。
-
-**域外 $K < 1$**：乘性收缩与加性域偏移竞争，**三个界的方向均不确定**——窄化定理不成立。
-
-> **注（域内窄化的物理意义）**：在域内扩展下，$K < 1$ 将系统映射到收缩空间，所有距离被 $K$ 倍压缩。上界下降因为误差传播被抑制（好），但下界上升因为系统分辨能力同步下降——不同目标之间的距离也被压缩，拟合精度的几何下限随之上升（坏）。两者不可分离。
-
-> **注（恒等映射的唯一中性）**：$K = 1$（$\varphi = \mathrm{id}$）是唯一使 CAC/SIB/CAB 三个界均不变的点。任何非平凡的 $\varphi$ 必然在误差窗口的两端同时产生效应。
-
-> **注（CAC 误差项的联合效应）**：CAC 递推（§3.1）中的采样偏移 $\delta_j$ 可视为 $1$-Lipschitz 的逐步基底扩展（$\varphi_j: h^*_{j-1} \mapsto x'_j$，最近采样点投影）。在 §3.1 的 (B) 项分解中，若定义 $\varepsilon'_j = d(\Phi(x'_j), r_{i_j}(h^*_{j-1}))$，则 $\varepsilon'_j$ 合并了 (III)（逼近误差 $\varepsilon_{i_j}$）与 (IV)（目标变分 $\rho_j$）为单一可观测量，$\varepsilon'_j \leq \varepsilon_{i_j} + \rho_j$（三角不等式严格成立时严格更小）。此合并本身改善有限，但揭示了 $\varepsilon$ 与 $\rho$ 并非独立叠加——它们的联合效应 $\varepsilon'_j$ 在通常情况下优于各自上界之和。
-
-> **注（收缩扩展的域外局限）**：推论 6.5 的域外 $K < 1$ 列表明，收缩映射（$K < 1$）**不充分**保证误差减少。当 $\varphi$ 将中间态推出采样域时，$\delta^\varphi$ 和 $\rho^\varphi$ 的加性膨胀可能抵消甚至逆转 $K^l$ 的乘性收缩。收缩的效果取决于 $\varphi$ 是否将输入保持在采样域内。
-
-> **注（自扩展与收敛性）**：取 $\varphi = \Phi$（注·同构的三层结构中的第 2 层），则 $\Phi^l$ 是 $l-1$ 次自扩展。当 $L < 1$ 时，$\mathrm{Lip}(\Phi^l) \leq L^l \to 0$，系统收敛到不动点，CAC 界几何衰减——这正是 §3 的结论从基底同构视角的重新诠释。当 $L > 1$ 时，$\mathrm{Lip}(\Phi^l) \leq L^l \to \infty$，推论 6.9 的 CAC 约束确定了最大安全级联深度。
+> **注（自扩展与收敛性）**：取 $\varphi = \Phi$（注·同构的三层结构中的第 2 层），则 $\Phi^l$ 是 $l-1$ 次自扩展。乘性维度：当 $L < 1$ 时，$\mathrm{Lip}(\Phi^l) \leq L^l \to 0$（$\Theta$ 几何衰减）；$L > 1$ 时，$L^l \to \infty$（推论 6.9 的 CAC 约束确定最大安全级联深度）。加性维度：自扩展的 $\varepsilon^\varphi$、$\rho^\varphi$、$\delta^\varphi$ 在 $\Phi(x)$ 处而非 $x$ 处取值，净效果取决于 $\Phi$ 的几何。
 
 **命题 6.6（CEL 增长率的 co-Lipschitz 调制）**：设 $\mathrm{Lip}(\varphi) = K$ 且 $\varphi$ 在 $A_\varphi \subseteq \mathcal{X}$ 上 $k_\varphi$-co-Lipschitz（$k_\varphi \leq K$）。设 CEL（定理 4.5）成立，$\Phi$ 的各步路径 co-Lip 常数为 $k_j$。设 $h_{j-1}, h^*_{j-1} \in A_\varphi$。则扩展系统 $\Phi_\varphi = \Phi \circ \varphi$ 的 CEL 递推中，有效 co-Lip 常数从 $k_j$ 变为 $k_j \cdot k_\varphi$：
 
 $$e_j \;\geq\; k_j \cdot k_\varphi \cdot e_{j-1} \;-\; \Delta^{co}_j \;-\; \varepsilon^\varphi_j$$
 
-其中 $\varepsilon^\varphi_j$ 为扩展系统在理想轨道点处的拟合误差。闭式下界中的增长率从 $k_{\min}^{l-1}$ 变为 $(k_{\min} \cdot k_\varphi)^{l-1}$：$k_\varphi > 1$ 时放大，$k_\varphi < 1$ 时衰减。
+其中 $\varepsilon^\varphi_j$ 为扩展系统在理想轨道点处的拟合误差（$\varphi$-几何确定）。乘性维度：闭式下界的增长率从 $k_{\min}^{l-1}$ 变为 $(k_{\min} \cdot k_\varphi)^{l-1}$（$k_\varphi > 1$ 放大，$k_\varphi < 1$ 衰减）。加性维度：$\varepsilon^\varphi_j$ 和 $\Delta^{co}_j$ 作为惩罚项被扣除，其大小取决于 $\varphi$ 的几何映射。实际下界是否增长取决于两个维度的竞争。
 
 **证明**：扩展系统 $\Phi_\varphi = \Phi \circ \varphi$。$\varphi$ 的 $k_\varphi$-co-Lipschitz 保证 $d(\varphi(h_{j-1}), \varphi(h^*_{j-1})) \geq k_\varphi \cdot e_{j-1}$。$\Phi$ 对 $\varphi$ 输出应用路径 co-Lip $k_j$，贡献乘性因子 $k_j$。两者合成得 $k_j \cdot k_\varphi$，路由失配与拟合误差按原 CEL 结构扣除。$\square$
 
-> **注（CEL 由 $k_\varphi$ 而非 $K$ 驱动）**：CEL 的增长率取决于 $k_\varphi$（$\varphi$ 的 co-Lip），而非 $K$（$\varphi$ 的 Lip）。二者的约束 $k_\varphi \leq K$ 意味着 $K < 1$ 蕴含 $k_\varphi < 1$（增长必然衰减），但 $K > 1$ 不蕴含 $k_\varphi > 1$（增长放大取决于 $\varphi$ 的具体结构）。因此 CEL 调制是推论 6.5 中 $K$-窄化之外的**独立维度**，需要额外的 co-Lip 假设。
+> **注（CEL 由 $k_\varphi$ 而非 $K$ 驱动）**：CEL 的乘性增长率取决于 $k_\varphi$（$\varphi$ 的 co-Lip），而非 $K$（$\varphi$ 的 Lip）。二者的约束 $k_\varphi \leq K$ 意味着 $K < 1$ 蕴含 $k_\varphi < 1$（乘性增长必然衰减），但 $K > 1$ 不蕴含 $k_\varphi > 1$（增长放大取决于 $\varphi$ 的具体结构）。与推论 6.5 的双维效应类似，CEL 也同时受乘性（$k_\varphi$）和加性（$\varepsilon^\varphi_j$）两个维度影响。
 
-> **注（SLB 的 $k_\varphi$-调制）**：统计下界 SLB（§4.3 定理 4.6）在 $\varphi$-扩展下的传播与 CEL 一致。SLB 中 $\kappa_l = \sigma_{\min}(T_{1,l})$ 在扩展后变为 $\kappa_l^\varphi = \sigma_{\min}(T_{1,l}^\varphi)$，由 $\sigma_{\min}(D\Phi \cdot D\varphi) \geq \sigma_{\min}(D\Phi) \cdot \sigma_{\min}(D\varphi)$，得 $\kappa_l^\varphi \geq k_\varphi^l \cdot \kappa_l$。噪声消耗项的 type-$p$ 缩减阶 $\mathcal{O}(\tau_c^{1-1/p} l^{1/p})$ 不受 $k_\varphi$ 影响。故 SLB 的 $k_\varphi$-调制与 CEL 同向：$k_\varphi > 1$ 时下界抬高，$k_\varphi < 1$ 时下界降低。
+> **注（SLB 的 $k_\varphi$-调制）**：统计下界 SLB（§4.3 定理 4.6）在 $\varphi$-扩展下的传播与 CEL 一致。SLB 中 $\kappa_l = \sigma_{\min}(T_{1,l})$ 在扩展后变为 $\kappa_l^\varphi = \sigma_{\min}(T_{1,l}^\varphi)$，由 $\sigma_{\min}(D\Phi \cdot D\varphi) \geq \sigma_{\min}(D\Phi) \cdot \sigma_{\min}(D\varphi)$，得 $\kappa_l^\varphi \geq k_\varphi^l \cdot \kappa_l$（乘性维度）。噪声消耗项的 type-$p$ 缩减阶 $\mathcal{O}(\tau_c^{1-1/p} l^{1/p})$ 不受 $k_\varphi$ 影响（加性维度不变）。因此 SLB 的 $\varphi$-扩展效应以乘性维度为主：$k_\varphi > 1$ 时乘性下界抬高，$k_\varphi < 1$ 时降低。
 
 
 ### 6.3 误差再分配
@@ -143,7 +131,7 @@ $$e_j \;\geq\; k_j \cdot k_\varphi \cdot e_{j-1} \;-\; \Delta^{co}_j \;-\; \vare
 - $x_1 \in B$：$e_\varphi(x_1) = e(\varphi(x_1)) \leq \tau < e(x_1)$——**改善**。
 - $x_2 \in A$：$e_\varphi(x_2) = e(\varphi(x_2)) > \tau \geq e(x_2)$——**恶化**。
 
-当 $\varphi$ 为等距映射时 $K = 1$，推论 6.5 的三个界全部不变，但逐点误差分布已完全重新洗牌。$\square$
+当 $\varphi$ 为等距映射时 $K = 1$，推论 6.5 的两个维度均不变（乘性：$K = 1$；加性：等距保持误差项），但逐点误差分布已完全重新洗牌。$\square$
 
 **示例**：$\mathcal{X} = \mathbb{R}$，$\Phi(x) = \max(0, x)$，$r(x) = |x|$，$\varphi(x) = -x$（$K = 1$）。原始误差：$e(x) = 0$（$x \geq 0$），$e(x) = |x|$（$x < 0$）。扩展后：$e_\varphi(x) = |x|$（$x \geq 0$），$e_\varphi(x) = 0$（$x < 0$）。误差从负半轴完整搬运至正半轴。
 
@@ -183,8 +171,8 @@ $$d(\Phi'(x), \Phi'(y)) \;=\; d(\Phi(\varphi(x)),\, \Phi(y))$$
 > | 维度 | 全局偏置 | 条件偏置 |
 > |---|---|---|
 > | 连续性 | $\mathrm{Lip}(\Phi_\varphi) \leq LK$，无新边界 | $\partial \mathcal{X}_{ctx}$ 处产生 Lipschitz 跳变（命题 6.10） |
-> | 代价范围 | **全域**承受 $K$ 乘法代价 | 仅 $\mathcal{X}_{ctx}$ 内承受代价，其余区域保持原系统 |
-> | CAC/CAB 传播 | 全域 $L' = LK$ | $\mathcal{X}_{ctx}$ 内 $L' = LK$，外部 $L' = L$ |
+> | 乘性代价 | **全域**承受 $K$ 乘法代价 | 仅 $\mathcal{X}_{ctx}$ 内承受代价，其余区域保持原系统 |
+> | CAC/CAB 乘性传播 | 全域 $L' = LK$ | $\mathcal{X}_{ctx}$ 内 $L' = LK$，外部 $L' = L$ |
 > | 路由结构 | 不引入新决策边界 | 边界跳变等价于新 $\sigma$-决策边界，受命题 2.7 约束 |
 >
 > 两者各有适用域：全局偏置以全域 $K$ 代价换取连续性保证；条件偏置以边界不连续为代价换取非目标区域的零代价。选择取决于 $\mathcal{X}_{ctx}$ 相对于 $\mathcal{X}$ 的测度占比和边界跳变的可控性。
