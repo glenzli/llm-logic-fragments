@@ -59,7 +59,7 @@ $$\varepsilon^*_y \;=\; \Delta \;-\; \varepsilon_x \;-\; \Omega_l(\delta)$$
 即：即使系统投入了错综复杂的断裂路由（$\Delta_\sigma > 0$），理论计算给出的该死锁下界在广泛的泛函空间中也是**无可改善的（存在紧致实例全额变现该灾难下界）**。
 
 **证明（同向极化构筑，Collinear Polarization Construction）**：
-为证明涵盖 $\Delta_{\sigma,j} > 0$ 时的界限绝对紧致性，我们构造一个让系统极值拓扑应变力被“单向榨干”的张量流形特例。此构造机制与前述上界 推论 3.4 （关于 CAC 上界的严格坍缩证明）的底层几何公理完全同构：即利用所有误差源在单一方向上的**共线坍缩（Collinear Collapse）**。
+为证明涵盖 $\Delta_{\sigma,j} > 0$ 时的界限绝对紧致性，我们构造一个让系统极值拓扑应变力被“单向榨干”的张量流形特例。此构造机制与前述上界 推论 3.3 （关于 CAC 上界的严格坍缩证明）的底层几何公理完全同构：即利用所有误差源在单一方向上的**共线坍缩（Collinear Collapse）**。
 
 设系统嵌入于 Banach 空间 $\mathcal{X}$ 中。取任意单位向量 $v \in \mathcal{X}$（$\|v\| = 1$），作为构造中所有误差源与演化方向的公共对齐轴。
 
@@ -112,7 +112,7 @@ $$\varepsilon^*_y \;\geq\; \Delta_q - \varepsilon_x - \Omega_1(\delta) \;\geq\; 
 
 > **注（从几何基点向高维分布的延展）**：以上推论确立了最纯粹的度量几何底线，证明了即使在两点间也必然存在无法弥合的误差张力。然而，实际的物理系统与训练集绝非孤立的点对，而是一个具有特定统计测度（$\mu$）与内在维度（$D$）的复杂数据流形。当我们将这一“单点上的几何死锁”放入高维概率空间中考量时，局部的误差张力将不可避免地在流形上弥散，演化为大面积的、具有正测度的“不可拟合灾区”。这种由几何局域极值向全局统计失效的升维推演，正是后续 DFG 定理（co-Lipschitz 拟合缺口，§4.3）及其所揭示的“维度诅咒”的物理雏形。
 
-> **注（扩展到 $\mathrm{dom}(r)$ 时的三元纠缠）**：推论 4.3 的分析严格限于采样域 $\mathcal{X}(r)$，其中 $\sigma$ 隐含于 $\Phi$ 的构造而不显式出现，两元张力 $(\varepsilon_r, L_{local})$ 足以刻画。若将分析扩展至整个 $\mathrm{dom}(r) \supseteq \mathcal{X}(r)$，则在 $\mathrm{dom}(r) \setminus \mathcal{X}(r)$ 的区域内，$\Phi(z) = \sigma(z)(z)$ 不受采样约束，$\sigma$ 的决策边界可能在 $\partial\mathcal{X}(r)$ 处被激活：由 命题 2.7（路由分辨率极限），跨越边界时路径局部 Lipschitz $L_j$ 逼近系统全局极限 $L$，使分辨率死锁在边界处达到最极端形态。此时变分约束涉及**三元纠缠** $(\varepsilon_r,\, L,\, \sigma)$——三者无法分别独立优化，对 $\mathrm{dom}(r)$ 的分析须同时约束 $\sigma$ 在 $\partial\mathcal{X}(r)$ 处的边界曲率。因此推论 4.2 的主体保持在 $\mathcal{X}(r)$ 上以确保形式严格性；三元纠缠的正式处理见 命题 5.6。
+> **注（扩展到 $\mathrm{dom}(r)$ 时的三元纠缠）**：推论 4.3 的分析严格限于采样域 $\mathcal{X}(r)$，其中 $\sigma$ 隐含于 $\Phi$ 的构造而不显式出现，两元张力 $(\varepsilon_r, L_{local})$ 足以刻画。若将分析扩展至整个 $\mathrm{dom}(r) \supseteq \mathcal{X}(r)$，则在 $\mathrm{dom}(r) \setminus \mathcal{X}(r)$ 的区域内，$\Phi(z) = \sigma(z)(z)$ 不受采样约束，$\sigma$ 的决策边界可能在 $\partial\mathcal{X}(r)$ 处被激活：由 命题 2.6（路由分辨率极限），当 $L < \infty$ 时，跨越边界时路径局部 Lipschitz $L_j$ 逼近系统全局极限 $L$，使分辨率死锁在边界处达到最极端形态。此时变分约束涉及**三元纠缠** $(\varepsilon_r,\, L,\, \sigma)$——三者无法分别独立优化，对 $\mathrm{dom}(r)$ 的分析须同时约束 $\sigma$ 在 $\partial\mathcal{X}(r)$ 处的边界曲率。因此推论 4.2 的主体保持在 $\mathcal{X}(r)$ 上以确保形式严格性；三元纠缠的正式处理见 命题 5.6。
 
 
 **命题 4.4（综合逼近可行性条件，Comprehensive Approximation Feasibility）**：由 CAC 定理（上界）与 CAB 定理（下界）联合推导出系统逼近泛化的理论天花板。设 IDFS $\mathcal{F} = (F, \sigma)$ 拟合了采样集 $\mathcal{S}$，各极限参数齐备。对任意有效链 $q \in \mathcal{T}_l$ 和任意 $x, y \in \mathrm{dom}(q)$（$d(x,y) = \delta$），记目标变分 $\Delta = d(q(x), q(y))$。
@@ -138,7 +138,7 @@ $$\varepsilon^*_y \geq \Delta - (\varepsilon_{max} + \rho_{max} + \Delta_{max})\
 > - **拟合与路由综合耗损 $(\varepsilon_{max}+\rho_{max}+\Delta_{max})\Lambda_l$**：由微观近似残差、局部目标变异与理想-近似轨道间路由失配带来的内生性妥协底座，经由系统尾部连乘不可控地放大。
 > - **采样偏离底压 $\delta_{max}\Gamma_l$**：由观测流形与实际计算基座点间的刚性剥离诱发的累积空间漂移代价。
 >
-> 目标若强行越过这三项预算构筑的容限上限时，系统必将遭遇原理性的外推失效。特别指出，在参数饱和度极化体制下（参照 推论 3.7，即当 $\Lambda_\infty < \infty$），该整体阈值将强制退化收敛为一个与初始输入距 $\delta$ 无关的有界常数，从而从根本逻辑上宣判长逻辑链对高频脉冲响应能力的丧失。
+> 目标若强行越过这三项预算构筑的容限上限时，系统必将遭遇原理性的外推失效。特别指出，在参数饱和度极化体制下（参照 推论 3.6，即当 $\Lambda_\infty < \infty$），该整体阈值将强制退化收敛为一个与初始输入距 $\delta$ 无关的有界常数，从而从根本逻辑上宣判长逻辑链对高频脉冲响应能力的丧失。
 
 ### 4.2 链误差下界（Chain Error Lower Bound, CEL）
 
@@ -206,17 +206,17 @@ $$\|\mathbf{e}_l\| \;\geq\; \kappa_l \cdot \|\mathbf{e}_0\| \;-\; \mathcal{O}\!\
 
 **证明**：
 
-1. 由引理 3.11：$\mathbf{e}_l = T_{1,l} \cdot \mathbf{e}_0 + \sum_{s=1}^{l} T_{s+1,l} \cdot \mathbf{n}_s$。
+1. 由引理 3.8：$\mathbf{e}_l = T_{1,l} \cdot \mathbf{e}_0 + \sum_{s=1}^{l} T_{s+1,l} \cdot \mathbf{n}_s$。
 2. 反三角不等式：$\|\mathbf{e}_l\| \geq \|T_{1,l} \cdot \mathbf{e}_0\| - \|\sum_{s=1}^{l} T_{s+1,l} \cdot \mathbf{n}_s\|$。
 3. 第一项：由 $T_{1,l}$ 的 co-范数定义，$\|T_{1,l} \cdot \mathbf{e}_0\| \geq \kappa_l \cdot \|\mathbf{e}_0\|$。
-4. 第二项：与定理 3.12（SUB）证明完全同构——将噪声序列分块，块内最坏情形叠加，块间应用 type-$p$ 不等式，得 $\|\sum T_{s+1,l} \cdot \mathbf{n}_s\| \sim \mathcal{O}(\tau_c^{1-1/p} \cdot l^{1/p})$。
+4. 第二项：与定理 3.9（SUB）证明完全同构——将噪声序列分块，块内最坏情形叠加，块间应用 type-$p$ 不等式，得 $\|\sum T_{s+1,l} \cdot \mathbf{n}_s\| \sim \mathcal{O}(\tau_c^{1-1/p} \cdot l^{1/p})$。
 5. 合并即得。$\square$
 
 > **注（$\kappa_l$ 与 CEL 中 $\prod k_j$ 的关系）**：$\kappa_l = \sigma_{\min}(T_{1,l}) = \sigma_{\min}(\prod A_j)$。当各 $A_j$ 为正规算子时 $\sigma_{\min}(\prod A_j) = \prod \sigma_{\min}(A_j)$，此时 $\kappa_l = \prod k_j$（与 CEL 的路径 co-Lip 乘积一致）。一般情形下 $\kappa_l \leq \prod \sigma_{\min}(A_j)$。
 
-> **注（与定理 3.12 的对偶结构）**：SLB 和 SUB 共享同一噪声向量和 $\sum T_{s+1,l} \cdot \mathbf{n}_s$，但对其使用方向相反：
+> **注（与定理 3.9 的对偶结构）**：SLB 和 SUB 共享同一噪声向量和 $\sum T_{s+1,l} \cdot \mathbf{n}_s$，但对其使用方向相反：
 >
-> | | SUB（§3.2 定理 3.12） | SLB（本定理） |
+> | | SUB（§3.2 定理 3.9） | SLB（本定理） |
 > |---|---|---|
 > | 误差界方向 | 上界（$\leq$） | 下界（$\geq$） |
 > | 系统项 | $\|T_{1,l}\| \cdot \|\mathbf{e}_0\| \leq \Theta_{1,l} \cdot \|\mathbf{e}_0\|$ | $\|T_{1,l} \cdot \mathbf{e}_0\| \geq \kappa_l \cdot \|\mathbf{e}_0\|$ |
@@ -225,7 +225,7 @@ $$\|\mathbf{e}_l\| \;\geq\; \kappa_l \cdot \|\mathbf{e}_0\| \;-\; \mathcal{O}\!\
 >
 > 两者从相反方向收拢。在理想统计极限（$p=2$，$\tau_c=1$）下，噪声阶均为 $\mathcal{O}(\sqrt{l})$，误差被夹逼在 $[\kappa_l \tau - \mathcal{O}(\sqrt{l}),\; \Theta_{1,l} \tau + \mathcal{O}(\sqrt{l})]$ 的窄带内。
 
-**推论 4.7（漂移-消耗对偶，Drift-Consumption Duality）**：将噪声向量 $\mathbf{n}_s$ 沿 $T_{1,l} \cdot \mathbf{e}_0$ 方向正交分解（对偶于 §3.2 推论 3.14 的漂移-扩散分解）：
+**推论 4.7（漂移-消耗对偶，Drift-Consumption Duality）**：将噪声向量 $\mathbf{n}_s$ 沿 $T_{1,l} \cdot \mathbf{e}_0$ 方向正交分解（对偶于 §3.2 推论 3.11 的漂移-扩散分解）：
 
 $$\mathbf{n}_s \;=\; \mu^{co}_s \;+\; \eta^{co}_s$$
 
@@ -235,4 +235,4 @@ $$\left\|\sum_{s=1}^{l} T_{s+1,l} \cdot \mathbf{n}_s\right\| \;\leq\; \underbrac
 
 有效消耗（漂移分量）与增长方向对齐，全额线性消耗增长——这是噪声真正"阻止"误差增长的部分。无效消耗（扩散分量）正交于增长方向，由 type-$p$ 对消限制为 $\mathcal{O}(l^{1/p})$ 阶。
 
-> **注（CAC 坍缩的对偶）**：§3.2 推论 3.15 证明了 CAC 坍缩等价于系统漂移占主导（$\eta = 0$，随机扩散消失）。对偶地，CEL 增长最持久的情形等价于有效消耗为零（$\mu^{co} = 0$）——所有噪声正交于增长方向，无法阻止误差增长。此时 $\|\mathbf{e}_l\| \geq \kappa_l \tau - \mathcal{O}(l^{1/p})$，误差以接近纯 $\kappa_l$ 的速率增长。
+> **注（CAC 坍缩的对偶）**：§3.2 推论 3.12 证明了 CAC 坍缩等价于系统漂移占主导（$\eta = 0$，随机扩散消失）。对偶地，CEL 增长最持久的情形等价于有效消耗为零（$\mu^{co} = 0$）——所有噪声正交于增长方向，无法阻止误差增长。此时 $\|\mathbf{e}_l\| \geq \kappa_l \tau - \mathcal{O}(l^{1/p})$，误差以接近纯 $\kappa_l$ 的速率增长。

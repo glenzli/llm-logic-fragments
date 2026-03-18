@@ -59,8 +59,9 @@ $$I_\epsilon(\mathcal{S}) \;\triangleq\; \log \mathcal{N}\bigl(\epsilon,\, \math
    $$\Phi(x) \;\triangleq\; \sigma(x)(x)$$
    即对输入 $x$，先由 $\sigma$ 选定计算链，再将该链作用于 $x$ 本身。
 
-4. **Lipschitz 约束**：$\Phi$ 须满足全局 Lipschitz 连续性，即存在常数 $L \geq 0$ 使得
-   $$d\bigl(\Phi(x),\, \Phi(y)\bigr) \leq L \cdot d(x, y) \quad \forall\, x, y \in \mathcal{X}$$
+4. **广义 Lipschitz 常数**：定义系统映射 $\Phi$ 的**广义 Lipschitz 常数**为
+   $$L \;\triangleq\; \sup_{x \neq y} \frac{d(\Phi(x),\, \Phi(y))}{d(x, y)} \;\in\; \bar{\mathbb{R}}_+ \;=\; [0, +\infty]$$
+   $L < \infty$ 时 $\Phi$ 满足标准 Lipschitz 连续性；$L = +\infty$ 亦为合法 IDFS——此时系统映射不保证全局度量正则性，但 IDFS 的代数结构（路由、链复合、采样约束）仍完全有效。后续定理中凡需要 $L < \infty$ 的场合均显式标注为前提条件。
 
 定义系统的**微观计算深度（Micro-Depth）** $\mathcal{D}$ 为选择映射可能产生的最长计算链长度：
 
@@ -74,7 +75,7 @@ $$\mathcal{D} \;\triangleq\; \sup_{x \in \mathcal{X}} \big|\sigma(x)\big| \;\lt\
 > $$\sigma(x)(y) = (f_{i_k} \circ \cdots \circ f_{i_1})(y)$$
 > 此处 $x$ 决定**路由**（选取哪条链），$y$ 为**被变换对象**（链作用于谁）。$\Phi(x) = \sigma(x)(x)$ 即 $x$ 同时充当路由点与计算点的情形。
 
-> **注（宏观 $\Phi$ 与微观 $f$ 的 Lipschitz 解耦）**：Lipschitz 约束作用于宏观映射 $\Phi$，但**不要求**微观基函数 $f \in F$ 全局 Lipschitz 连续。例如，$F$ 中可包含 $\mathrm{Lip}(f) = \infty$ 的非线性算子 $f_{\text{unbounded}}$ 与保距算子 $f_{\text{id}}$；只要 $\sigma$ 的调度使得整条激活链的组合效果满足全局常数 $L$，$\Phi$ 即合法。换言之，$L$ 是 $\sigma$ 对 $F$ 进行分段组合后的**宏观闭包性质**，IDFS 的自洽性独立于基算子在非激活区域的解析行为。
+> **注（广义 Lip 常数与基函数的关系）**：广义 Lip 常数 $L \in \bar{\mathbb{R}}_+$ 是 $\sigma$ 对 $F$ 进行分段组合后的**宏观闭包性质**——它由所有激活链的组合行为决定，而非单个基函数的性质。$F$ 中可包含 $\mathrm{Lip}(f) = \infty$ 的非线性算子，只要 $\sigma$ 的调度使得实际被激活的链路在所途经区域上具有有限的局部 Lip 常数，系统在该区域上的误差传播即可被定量分析。IDFS 的自洽性独立于基算子在非激活区域的解析行为。
 
 #### 1.2.1 级联系统 $\mathcal{F}^l$
 
@@ -84,36 +85,34 @@ $$\mathcal{D} \;\triangleq\; \sup_{x \in \mathcal{X}} \big|\sigma(x)\big| \;\lt\
 2. **$\Phi^l \in \Omega$**：幺半群的复合封闭性。
 3. **$l$-步宏观同构系统**：对任意 $l \geq 1$，$\Phi^l$ 自身构成新的 IDFS $\mathcal{F}_l = (F, \sigma_l)$，其中 $\sigma_l(x) = \sigma(\Phi^{l-1}(x)) \circ \cdots \circ \sigma(\Phi(x)) \circ \sigma(x)$。IDFS 在宏观复合下呈现**代数自相似性**。
 
-> **注（$\mathcal{F}_\infty$ 的 IDFS 合法性）**：$\mathcal{F}_l$ 对每个有限 $l$ 构成合法 IDFS。但当 $l \to \infty$ 时，$\mathcal{F}_\infty$ **不保证**是 IDFS：级联选择映射 $\sigma_\infty$ 的链长度趋于无穷（$|\sigma_\infty(x)| \leq l \cdot \mathcal{D} \to \infty$，违反微观深度有限性），且全局 Lipschitz 常数 $L^l$ 在 $L \geq 1$ 时发散。因此，本章后续对 $l \to \infty$ 的分析（§2 及后续章节），其含义均为：研究有限 IDFS 映射序列 $\{\Phi^l\}_{l \geq 1}$ 的渐近行为，而非假设极限对象 $\mathcal{F}_\infty$ 本身满足 IDFS 公理。
+> **注（$\mathcal{F}_\infty$ 的 IDFS 合法性）**：$\mathcal{F}_l$ 对每个有限 $l$ 构成合法 IDFS。但当 $l \to \infty$ 时，$\mathcal{F}_\infty$ **不保证**是 IDFS：级联选择映射 $\sigma_\infty$ 的链长度趋于无穷（$|\sigma_\infty(x)| \leq l \cdot \mathcal{D} \to \infty$，违反微观深度有限性）。因此，本章后续对 $l \to \infty$ 的分析（§2 及后续章节），其含义均为：研究有限 IDFS 映射序列 $\{\Phi^l\}_{l \geq 1}$ 的渐近行为，而非假设极限对象 $\mathcal{F}_\infty$ 本身满足 IDFS 公理。
 
-**定义（路径 Lipschitz 常数，Path Lipschitz Constant）**：在系统的实际动态转移中，局部的形变拉伸率完全由路由中心 $\sigma$ 为特定状态选定的映射路径决定。定义映射 $\Phi$ 沿任意合法路径的**有效局部 Lipschitz 常数**为 $L_q$（或在链式迭代中简记为第 $j$ 步的 $L_j$）。由于系统受全局稳态约束，必有上界：
-$$L_q \;\leq\; L$$
+**定义（路径广义 Lipschitz 常数，Path Generalized Lipschitz Constant）**：在系统的实际动态转移中，局部的形变拉伸率完全由路由中心 $\sigma$ 为特定状态选定的映射路径决定。定义映射 $\Phi$ 沿任意合法路径的**有效局部广义 Lipschitz 常数**为 $L_q \in \bar{\mathbb{R}}_+$（或在链式迭代中简记为第 $j$ 步的 $L_j$）。路径广义 Lip 常数 $L_q$ 由该路径上激活链的局部行为决定，与其他路由区域无关。当 $L < \infty$ 时，必有 $L_q \leq L$。
 
-**定义（路径 Lipschitz 跨度，Path Lipschitz Span）**：系统能力的非均匀性并非取决于静态孤立的基函数库 $F$（因某些 $f$ 在极端区域根本不会被激活），而是由 $\sigma$ 实际拼缀出的所有可能路径的动态曲率范围决定。定义系统 $\Phi$ 的 **路径 Lipschitz 跨度** $\kappa_\Phi \geq 1$ 为系统在全域内展现出的最强与最弱路径 Lipschitz 常数之比（约定下界非零）：
+**定义（路径广义 Lipschitz 跨度，Path Generalized Lipschitz Span）**：系统能力的非均匀性并非取决于静态孤立的基函数库 $F$（因某些 $f$ 在极端区域根本不会被激活），而是由 $\sigma$ 实际拼缀出的所有可能路径的动态曲率范围决定。定义系统 $\Phi$ 的 **路径广义 Lipschitz 跨度** $\kappa_\Phi \in [1, +\infty]$ 为系统在全域内展现出的最强与最弱路径广义 Lipschitz 常数之比（约定下界非零）：
 $$\kappa_\Phi \;\triangleq\; \frac{\sup L_q}{\inf L_q}$$
-$\kappa_\Phi$ 精确地刻画了动态路由系统的有效内在异质分布。$\kappa_\Phi = 1$ 当且仅当系统在任意路径折点处表现出的空间变形率均完全等同。其决定泛化张力的深刻结构性意义见 §2.4。
+$\kappa_\Phi$ 精确地刻画了动态路由系统的有效内在异质分布。$\kappa_\Phi = 1$ 当且仅当系统在任意路径折点处表现出的空间变形率均完全等同。当 $\sup L_q = +\infty$ 但 $\inf L_q < \infty$ 时，$\kappa_\Phi = +\infty$，反映系统包含不可控路径。当 $\inf L_q = +\infty$（所有路径均不满足有限 Lip）时，比值 $\infty/\infty$ 未定义，$\kappa_\Phi$ 失去意义——此类系统不具备可度量的异质性结构。其决定泛化张力的深刻结构性意义见 §2.4。
 
-**定义（路径等效 Lipschitz 常数 / 几何均值，Path Equivalent Lipschitz Constant / Geometric Mean）**：针对长度为 $l$ 的连续演化路径（涉及局部拉伸率 $L_1, L_2, \dots, L_l$），定义该路径的等效宏观形变率（几何均值）为主导端到端拉伸效果的平均倍率：
+**定义（路径等效广义 Lipschitz 常数 / 几何均值，Path Equivalent Generalized Lipschitz Constant / Geometric Mean）**：针对长度为 $l$ 的连续演化路径（涉及局部拉伸率 $L_1, L_2, \dots, L_l$），定义该路径的等效宏观形变率（几何均值）为主导端到端拉伸效果的平均倍率：
 $$\bar{L} \;\triangleq\; \left(\prod_{j=1}^{l} L_j\right)^{1/l}$$
-由于均值属性，恒有 $\inf L_q \leq \bar{L} \leq \sup L_q$。$\bar{L}$ 在度量系统深度演化的误差界限（见 §3 CAC 定理）与泛化张力（见 §2.4）中起核心收束作用。
+由于均值属性，恒有 $\inf L_q \leq \bar{L} \leq \sup L_q$。当任一 $L_j = +\infty$ 时，$\bar{L} = +\infty$——几何均值在扩展实数上退化为空真上界。$\bar{L}$ 在度量系统深度演化的误差界限（见 §3 CAC 定理）与泛化张力（见 §2.4）中起核心收束作用。
 
-针对 $l$-步连续复合映射 $\Phi^l$，依据考察尺度的不同，存在两重维度的**级联系统扩张律（Cascaded System Expansion Laws）**：
+针对 $l$-步连续复合映射 $\Phi^l$，定义**尾部乘积（Tail Product）**与**级联系统扩张律（Cascaded System Expansion Laws）**：
 
-1. **全局理论上界（Global Theoretical Bound）**：由单步系统常数 $L$ 的指数累积，强制确立全局极限定界 $\Phi^l \in \mathrm{Lip}_{L^l}(\mathcal{X})$：
-   $$d\bigl(\Phi^l(x),\, \Phi^l(y)\bigr) \leq L^l \cdot d(x, y)$$
+**定义（尾部乘积）**：记第 $j$ 步的路径广义 Lipschitz 常数为 $L_j \in \bar{\mathbb{R}}_+$。定义自第 $j$ 步至第 $l$ 步的累积截断乘积为：
+$$\Theta_{j,l} \;\triangleq\; \prod_{k=j}^{l} L_k \;\in\; \bar{\mathbb{R}}_+ \qquad \text{（约定 } j > l \text{ 时，空积 } \Theta_{j,l} = 1\text{）}$$
+乘积在扩展实数 $\bar{\mathbb{R}}_+$ 上按标准算术运算：含 $+\infty$ 因子时 $\Theta_{j,l} = +\infty$（除非存在零因子）。当所有 $L_j < \infty$ 时，$\Theta_{1,l} = \prod L_j < \infty$，此时局部端到端扩张满足确切演化上界：
+$$d\bigl(\Phi^l(x),\, \Phi^l(y)\bigr) \leq \Theta_{1,l} \cdot d(x, y)$$
 
-2. **确切扩张尾积（Exact Expansion Tail Product）**：记第 $j$ 步的实际路径 Lipschitz 常数为 $L_j$。连续迭代映射的真实空间拉伸由路径张量的**尾部乘积（Tail Product）**决定。定义自第 $j$ 步至第 $l$ 步的累积截断乘积为：
-   $$\Theta_{j,l} \;\triangleq\; \prod_{k=j}^{l} L_k \qquad \text{（约定 } j > l \text{ 时，空积 } \Theta_{j,l} = 1\text{）}$$
-   此时，具体的局部端到端物理扩张存在一个更为紧致逼近的确切演化上界（其中由于每步 $L_k \leq L$，因而 $\Theta_{1,l} \leq L^l$ 恒成立）：
-   $$d\bigl(\Phi^l(x),\, \Phi^l(y)\bigr) \leq \Theta_{1,l} \cdot d(x, y)$$
+当 $L < \infty$ 时，由 $L_j \leq L$ 可得全局理论上界 $\Theta_{1,l} \leq L^l$。
 
 #### 1.2.2 拓扑容量
 
 **定义（IDFS 拓扑容量，Topological Capacity）**：IDFS 的系统容量可从两个互补维度刻画：
 
-1. **像集容量（Image Capacity）**——系统能产生多少可分辨的输出值：
+1. **像集容量（Image Capacity）**——在精度 $\epsilon > 0$ 下，系统能产生多少可分辨的输出值：
    $$\mathcal{C}_{\mathrm{img}}(\Phi, \epsilon) \;\triangleq\; \log \mathcal{N}\bigl(\epsilon,\, \Phi(\mathcal{X})\bigr)$$
-   由 $\Phi \in \mathrm{Lip}_L(\mathcal{X})$，像集容量受输入空间几何控制：$\mathcal{C}_{\mathrm{img}} \leq \log \mathcal{N}(\epsilon/L,\, \mathcal{X})$。
+   其中 $\mathcal{N}(\epsilon, A)$ 为覆盖集合 $A$ 所需的最小 $\epsilon$-球数量，$\epsilon$ 为分辨精度——两个输出值之间的距离小于 $\epsilon$ 时视为不可分辨。像集容量的上界由 §2 命题给出。
 2. **路由容量（Routing Capacity）**——系统能提供多少可分辨的计算路径：
    $$\mathcal{C}_{\mathrm{route}}(\sigma) \;\triangleq\; \log |\mathrm{Im}(\sigma)|$$
 
