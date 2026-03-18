@@ -144,6 +144,17 @@ $$U_\tau(r_i) \;\triangleq\; \bigl\{\, x \in \mathcal{X}(r_i) \;\big|\; d\bigl(\
 
 $$U_\tau(\mathcal{S}) \;\triangleq\; \bigcup_{(r_i, \mathcal{X}(r_i)) \in \mathcal{S}} U_\tau(r_i)$$
 
-> **注（完美拟合集，Perfect Fitting Set）**：为考察极致精度的逼近区域，定义不可完美拟合集 $U_\tau(r_i)$ 的补集，即系统的**$\tau$-拟合集** $P_\tau(r_i) = \{ x \in \mathcal{X}(r_i) \mid d(\Phi(x), r_i(x)) < \tau \}$。考察极限情形 $\tau \to 0^+$，该拟合集将严格收缩至极小值论域 $P_{0^+}(r_i) = \{ x \mid d(\Phi(x), r_i(x)) = 0 \}$，此即为系统在采样点上的**完美拟合集（Perfect Fitting Set）**。完美拟合集代表了模型对样本能实现“零误差绝对记忆”的极端点簇。
+> **注（完美拟合集，Perfect Fitting Set）**：为考察极致精度的逼近区域，定义不可完美拟合集 $U_\tau(r_i)$ 的补集，即系统的**$\tau$-拟合集** $P_\tau(r_i) = \{ x \in \mathcal{X}(r_i) \mid d(\Phi(x), r_i(x)) < \tau \}$。考察极限情形 $\tau \to 0^+$，该拟合集将严格收缩至极小值论域 $P_{0^+}(r_i) = \{ x \mid d(\Phi(x), r_i(x)) = 0 \}$，此即为系统在采样点上的**完美拟合集（Perfect Fitting Set）**。完美拟合集代表了模型对样本能实现"零误差绝对记忆"的极端点簇。
 
 
+### 1.5 计算有界性与非图灵完备性
+
+上述定义直接决定了 IDFS 的**计算论定位**——它在计算能力层级中处于何处。
+
+**定理 1.5（IDFS 的非图灵完备性）**：IDFS 不具备图灵完备性。
+
+**证明**：IDFS $\mathcal{F} = (F, \sigma)$ 的单步执行 $\Phi(x) = \sigma(x)(x)$ 中，$\sigma(x)$ 是 $F^*$ 中的一条有限长链 $q = f_{i_k} \circ \cdots \circ f_{i_1}$（$k \le \mathcal{D}$）。因此 $\Phi$ 的每次求值在至多 $\mathcal{D}$ 步内终止。级联系统 $\mathcal{F}^l$ 的总有效链深 $l \cdot \mathcal{D}$ 仍然有限。
+
+图灵完备系统能够表达**不终止计算**（停机问题的不可判定性即依赖于此）。由于 IDFS 的一切计算在有限步内终止，它无法表达不终止计算，因此不具备图灵完备性。$\square$
+
+> **注（非图灵完备性的根源）**：非图灵完备性源于两条基本约束的联合：(1) $F$ 有限（$|F| = M$），限制了单步计算的多样性；(2) $f$-链深度有界（$k \le \mathcal{D}$），限制了计算的时间展开。二者共同将 IDFS 的计算能力封死在有限自动机与图灵机之间——系统能执行的不同计算总数上界为 $\sum_{k=0}^{\mathcal{D}} M^k$，这是一个有限数。

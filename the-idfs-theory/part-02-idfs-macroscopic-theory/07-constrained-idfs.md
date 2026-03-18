@@ -181,19 +181,19 @@ $$\varepsilon_{i_{j^*}} \;\geq\; \frac{\Delta - L_{j^*}\rho_{var} - \tau/\Lambda
 
 **命题**：设 IDFS $\mathcal{F} = (F, \sigma)$ 需以容差 $\varepsilon$ 逼近目标规则集 $R$ 中的所有链。则以下三个性质不可同时满足：
 
-1. **泛化性**（Generalization）：$R$ 包含变分异质性显著的目标（$K > Md$ 种不同变分模式，由 §2 命题 2.10b 迫使 $\kappa_\Phi \gg 1$）。
+1. **泛化性**（Generalization）：$R$ 包含高变分目标（存在 $r_a$ 具有 $(\rho, \Delta_a)$-变分，$\Delta_a$ 足够大）。
 2. **链深**（Depth）：系统支持长链推理 $l \gg l^*_0$。
 3. **全路径 $\tau$-可控**（Full-Path $\tau$-Control）：系统在所有目标链上同时满足 $\varepsilon^*_q \leq \tau$。
 
 **证明**：
 
-**泛化性 $\to$ 高 $\kappa_\Phi$**：由 §2 命题 2.10b，若 $R$ 的变分模式数量 $K > Md$（超出系统方向容量），则 $\kappa_\Phi \gg 1$。系统的路径 Lipschitz 常数 $\{L_j\}$ 在不同区域必须表现出极大的异质性——在某些区域近似强收缩（$L_j \ll 1$），在另一些区域近似强扩张（$L_j \gg 1$）。
+**泛化性 $\to$ 高 $L$**：由 §4 推论 4.3，逐近高变分目标 $r_a$（$(\rho, \Delta_a)$-变分）要求系统在 $r_a$ 的路径上展现 $L_{\text{local}} \geq (\Delta_a - 2\varepsilon - \Delta_{\sigma,\max})/\rho$。$\Delta_a$ 越大，强制的 $L$ 越高。
 
-**高 $\kappa_\Phi$ + 长链 $\to$ 递推棘轮加速**：由推论 7.2 的递推 $\Lambda_{l+1} = L_{l+1}\Lambda_l + 1$，高 $\kappa_\Phi$ 意味着某些路径上存在 $L_j \gg 1$ 的步骤。这些扩张步将 $\Lambda_l$ 快速推向天花板 $l^*_0$，迫使后续步骤强制收缩（$L_{j+1} \leq (l^*_0-1)/\Lambda_l \ll 1$）。收缩越剧烈，$S_l$ 积累越快，$\Theta_{1,l}$ 衰减越急——系统在高变分路径上被迫进入深度致盲（推论 7.5）和对偶陷阱（推论 7.6）。
+**高 $L$ + 长链 $\to$ 棘轮加速**：由推论 7.2 的递推 $\Lambda_{l+1} = L_{l+1}\Lambda_l + 1$，$r_a$ 路径上的高 $L$ 步骤将 $\Lambda_l$ 快速推向天花板 $l^*_0$，迫使后续步骤强制收缩（$L_{j+1} \leq (l^*_0-1)/\Lambda_l \ll 1$）。收缩越剧烈，$S_l$ 积累越快，$\Theta_{1,l}$ 衰减越急——系统在 $r_a$ 路径上被迫进入深度致盲（推论 7.5）和对偶陷阱（推论 7.6）。
 
-**全路径 $\tau$-可控的不可能**：对高变分目标的 $\tau$-可控性被棘轮强制转化为极端收缩，产生不可避免的拟合瓶颈。同一系统 $\Phi$ 在低变分目标路径上 $L_j$ 较温和，棘轮压力较小——但 $\Phi$ 是**单一映射**，其局部 Lipschitz 行为在中间态 $h_{j-1}$ 处由 $\Phi$ 本身决定。$\kappa_\Phi \gg 1$ 意味着系统**已将**用于不同目标的局部行为分布在极宽的 $L$ 范围内。不存在 $\{L_j\}$ 序列能同时：(i) 在高变分路径上以足够大的 $L$ 追踪 $\Delta_a$，(ii) 维持全路径 $\Lambda_l \leq l^*_0$ 不爆炸，(iii) 避免 $\Theta_{1,l} \to 0$ 带来的致盲和瓶颈。$\square$
+**全路径 $\tau$-可控的不可能**：对高变分目标 $r_a$，$\tau$-可控性被棘轮强制转化为极端收缩，产生不可避免的拟合瓶颈（推论 7.6）。即便系统在其他目标路径上表现良好，仅 $r_a$ 一条路径的失控即足以违反全路径 $\tau$-可控性。$\square$
 
-> **注（等距陷阱）**：一个自然的逃逸尝试是令 $\Phi$ 为全局等距映射（$L_j \equiv 1$，$\kappa_\Phi = 1$）。然而，由命题 2.10b，$\kappa_\Phi = 1$ 意味着系统只有 $d$ 个方向槽位可用——仅能区分 $d$ 种变分模式。对于变分模式数量远超 $d$ 的非平凡 $R$，等距系统的单步逼近误差在多数目标上不可接受，$\varepsilon_{\max}$ 原地飙升并通过 CAC 反向压垮有效链深。泛化能力与链深的张力是**度量空间内禀且绝对的**。
+> **注（等距陷阱）**：一个自然的逃逸尝试是令 $\Phi$ 为全局等距映射（$L_j \equiv 1$）。然而，由推论 4.3，逼近 $\Delta_a$ 大的目标要求 $L_{\text{local}} \geq (\Delta_a - 2\varepsilon)/\rho$。当 $\Delta_a \gg \rho$ 时，等距系统无法满足此下界，单步逼近误差 $\varepsilon_r \geq (\Delta_a - \rho)/2$ 原地飙升并通过 CAC 反向压垮有效链深。泛化能力与链深的张力是**度量空间内禀且绝对的**。
 
 #### 命题 7.13（路由碎裂的上下界对偶博弈，Upper-Lower Bound Duality Game of Routing Fragmentation）
 
@@ -228,7 +228,7 @@ $$\min_y \varepsilon^*_y \;\geq\; \Delta - \varepsilon_x - \bar{L}^l\delta - B_\
 
 #### 7.2.1 Type A：放弃泛化性（死记硬背系统，Rote Memorization System）
 
-**设定**：系统选择 $\gamma_R \approx 1$（目标集的等效张力跨度极小），由 命题 2.10，$\kappa_\Phi \approx 1$，从而 $L_{max}/\bar{L} \approx 1$。
+**设定**：系统选择 $\gamma_R \approx 1$（目标集的等效张力跨度极小），由 命题 2.11，$\kappa_\Phi \approx 1$，从而 $L_{max}/\bar{L} \approx 1$。
 
 **命题 7.14（查表退化，Lookup Degeneration）**：设 IDFS $\mathcal{F}$ 在 $\gamma_R \approx 1$ 条件下运行。则：
 
@@ -244,7 +244,7 @@ $$\min_y \varepsilon^*_y \;\geq\; \Delta - \varepsilon_x - \bar{L}^l\delta - B_\
 
 (ii) 由推论 7.4 公式 $l_{max} = \ln\zeta / (\ln(L_{max}/\bar{L}) + 1/l^*_0)$，当 $\ln(L_{max}/\bar{L}) \to 0$ 时，$l_{max} \to l^*_0 \ln\zeta$，取到上确界。
 
-(iii) 由 命题 2.10，基函数库的内部跨度 $\kappa_\Phi \ge \gamma_R$。当 $\gamma_R \approx 1$ 时，$\kappa_\Phi \approx 1$，即 $\sup_q \bar{L}_q / \inf_q \bar{L}_q \approx 1$。因此，无论 $\sigma$ 如何选择路径，所有路径的端到端拉伸率几乎相同。系统的路由容量 $\mathcal{C}_{route} \sim \mathcal{D}\log M$ 在代数上存在，但在度量意义上坍缩为等效的单通道映射。$\square$
+(iii) 由 命题 2.11，基函数库的内部跨度 $\kappa_\Phi \ge \gamma_R$。当 $\gamma_R \approx 1$ 时，$\kappa_\Phi \approx 1$，即 $\sup_q \bar{L}_q / \inf_q \bar{L}_q \approx 1$。因此，无论 $\sigma$ 如何选择路径，所有路径的端到端拉伸率几乎相同。系统的路由容量 $\mathcal{C}_{route} \sim \mathcal{D}\log M$ 在代数上存在，但在度量意义上坍缩为等效的单通道映射。$\square$
 
 > **注（零维吸引子极端）**：在路由简并条件下，若系统进一步选择 $\bar{L} \to 0$（以最大化训练点稳定性），则 $B_{sat} \to \varepsilon_{max}$（推论 7.6），系统像集坍缩为若干孤立的零维不动点。此时多步"推理"（$\Phi^l(x)$ 随 $l$ 增大）仅是原地跌落，丧失了历时计算的意义。若选择 $\bar{L} \approx 1$（等距映射），则由等距陷阱（§7.2 注），对 $\mathrm{Lip}(r) \neq 1$ 的目标，单步误差 $\varepsilon_r \ge |\mathrm{Lip}(r) - 1| \cdot \mathrm{diam}(\mathcal{X}_r)$，系统退化为刚性平移器。
 
@@ -316,9 +316,9 @@ $$M \;\geq\; \exp\!\left(\frac{I_\varepsilon(\mathcal{S}) - \log \mathcal{N}(\va
 
 **证明**：
 
-由 命题 2.1，路由容量 $\mathcal{C}_{route} \le \mathcal{D}\log M + \log \mathcal{N}(\varepsilon/L, \mathcal{X})$。在 Type B 中，有效链深 $\mathcal{D} \le l^*_0$。由 命题 2.4（组合耗尽），若系统需以容差 $\varepsilon$ 覆盖目标集的度量熵 $I_\varepsilon(\mathcal{S})$，则必须：
+由 命题 2.1，路由容量 $\mathcal{C}_{route} \le (\mathcal{D}+1)\log M + \log \mathcal{N}(\varepsilon/L, \mathcal{X})$。在 Type B 中，有效链深 $\mathcal{D} \le l^*_0$。由 命题 2.4（组合耗尽），若系统需以容差 $\varepsilon$ 覆盖目标集的度量熵 $I_\varepsilon(\mathcal{S})$，则必须：
 
-$$I_\varepsilon(\mathcal{S}) \;\le\; \mathcal{C}_{route} \;\le\; l^*_0 \cdot \log M + \log \mathcal{N}(\varepsilon/L, \mathcal{X})$$
+$$I_\varepsilon(\mathcal{S}) \;\le\; \mathcal{C}_{route} \;\le\; (l^*_0+1) \cdot \log M + \log \mathcal{N}(\varepsilon/L, \mathcal{X})$$
 
 整理得：
 
