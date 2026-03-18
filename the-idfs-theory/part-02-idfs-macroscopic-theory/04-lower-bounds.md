@@ -8,8 +8,8 @@
 设某输入对 $x, y \in \mathrm{dom}(q)$ 满足以下空间相态（$x, y \in \mathrm{dom}(q)$ 保证理想链 $q$ 在两点处可执行，即 $q(x), q(y) \neq \bot$；近似轨道 $\Phi_q(x), \Phi_q(y)$ 由 IDFS 闭合性保证为 $\mathcal{X}$ 中的良定义元素）：
 1. **输入分离与目标跃迁**：起点的初始距离为 $d(x, y) = \delta > 0$，但在理想长链 $q$ 下的映射距离跃迁为 $d(q(x), q(y)) = \Delta > 0$。
 2. **拟合参数**：系统在参考点 $x$ 处的端到端逼近误差（拟合残差）记为 $\varepsilon_x \triangleq d(\Phi_q(x), q(x)) \geq 0$。
-3. **系统扩张极限（拓扑应变力）**：系统在宏观映射下的最大分离拉伸，由 IDFS 的分段 Lipschitz 结构与路由跳变累积共同决定。在每一单步中，$\Phi$ 在路由分区内部满足 $L_j$-Lipschitz（连续拉伸），而跨越路由边界时额外引入平移跳变代价 $\Delta_{\sigma,j}$。经过 $l$ 步累积，两条从 $x$ 与 $y$ 出发的近似轨道之间的最大分离，等于连续平滑拉伸（$\bar{L}^l \cdot \delta$）与各步路由跳变经尾部乘积放大后的加权总和。记全链路的**最大拓扑应变力（Maximum Topological Strain Capacity）**为：
-   $$\Omega_{l}(\delta) \;\triangleq\; \underbrace{\bar{L}^l \cdot \delta}_{\text{基础平滑拉伸}} \;+\; \underbrace{\sum_{j=1}^l \Delta_{\sigma, j} \cdot \Theta_{j+1,l}}_{\text{多步路由跳变累积}}$$
+3. **系统扩张极限（拓扑应变力）**：系统在宏观映射下的最大分离拉伸，由 IDFS 的分段 Lipschitz 结构与路由跳变累积共同决定。在每一单步中，$\Phi$ 在路由分区内部满足 $L_j$-Lipschitz（连续拉伸），而跨越路由边界时额外引入平移跳变代价 $\Delta_{\sigma,j}$。经过 $l$ 步累积，两条从 $x$ 与 $y$ 出发的近似轨道之间的最大分离，等于连续平滑拉伸（$\Theta_{1,l} \cdot \delta$）与各步路由跳变经尾部乘积放大后的加权总和。记全链路的**最大拓扑应变力（Maximum Topological Strain Capacity）**为：
+   $$\Omega_{l}(\delta) \;\triangleq\; \underbrace{\Theta_{1,l} \cdot \delta}_{\text{基础平滑拉伸}} \;+\; \underbrace{\sum_{j=1}^l \Delta_{\sigma, j} \cdot \Theta_{j+1,l}}_{\text{多步路由跳变累积}}$$
    在此路径上的最大相对拉伸被紧致地界定为 $d(\Phi_q(x), \Phi_q(y)) \leq \Omega_{l}(\delta)$。（该界由逐步递推 $d(h_j^x, h_j^y) \leq L_j \cdot d(h_{j-1}^x, h_{j-1}^y) + \Delta_{\sigma,j}$——桥接同一 $f$-链的 Lipschitz 性与跨路由跳变——展开得到，结构与 CAC 递推同构。）
 
 定义**末端结构瓶颈（Intrinsic Structural Bottleneck）**为：
@@ -48,7 +48,7 @@ $\square$
 
 > **注（拓扑应变力与门控解耦机制，Topological Strain and Gated Decoupling）**：将路由惩罚 $\Delta_\sigma$ 纳入系统扩张容限 $\Omega_l(\delta)$，从数学形式上扩大了减项，使得理论刚性下界得到适度放宽。这揭示了一个关键的架构设计法则：面对目标域的剧烈变分（高 $\Delta$），纯粹的平滑系统极易因全局 $L$ 的刚性约束而陷入泛化瓶颈（即拓扑死锁）；**系统突破该死锁的工程途径，在于通过离散门控引入流形断层（主动接纳跨路由边界的平移跳变 $\Delta_\sigma$）**。网络通过路由碎片化产生的拓扑扩张，实质上人为放大了 $\Omega_{l}$ 的容忍极限，从而在数学上吸收了由 $|\Delta - \varepsilon_x|$ 带来的刚性逼近误差。
 >
-> 这从底层理论上解释了，在处理复杂的高维认知分布或长程逻辑推理时，现代架构（如混合专家网络 MoE）为何普遍采用高度非连续的门控结构：**严格的平滑连续映射会在高变分目标前迅速丧失逼近容量**，而通过局部路由切换引入受控的拓扑断裂，正是系统为了规避逼近误差极值下界、实现泛化能力解耦的重要机制。
+> 这从底层理论上解释了，在处理高变分目标时，为何引入非连续的门控结构是必要的：**严格的平滑连续映射会在高变分目标前迅速丧失逼近容量**，而通过局部路由切换引入受控的拓扑断裂，正是系统为了规避逼近误差极值下界、实现泛化能力解耦的重要机制。
 
 > **注（末端结构瓶颈 $\varepsilon_{y,\text{out}}$ 的含义）**：项 $\varepsilon_{y,\text{out}}$ 剖离出了 IDFS 末端算子层的结构刚性。无论前置映射 $\Phi'_q$ 将中间态流形通过应变力撕裂得多么复杂，IDFS 的端到端最终输出必须经过某个底层算子 $f \in F$ 映射回输出空间。若目标像点 $q(y)$ 不在任何 $f \in F$ 的可达集 $\bigcup_{f \in F} f(\mathcal{X})$ 中，则 $\varepsilon_{y,\text{out}} > 0$ 成为不可消除的常数瓶颈：此时前置计算中的一切精妙运算与路由碎裂皆无用武之地，端到端误差被末端算子的结构底盖死死卡定。
 
@@ -73,7 +73,7 @@ $$\varepsilon^*_y \;=\; \Delta \;-\; \varepsilon_x \;-\; \Omega_l(\delta)$$
 3. **最大化应变力演化加载（关键步）**：
    在长度为 $l$ 的累积迭代映射中，令系统使用的基函数簇仅沿着射线 $v$ 的方向产生最不利拉伸：每经历第 $j$ 步更新，物理演化沿 $v$ 被线性扩张 $L_j$ 倍。更极端地是，令其网格划分 $\sigma$ 在这每一步的 $y$ 的轨迹前缘精准穿插一条跨路由分界面（路由切换缝），导致基底函数替换而强行引入的向量平移跳变正相平行于 $v$ 且振幅恰为预留的 $\Delta_{\sigma, j}$。
    经历全 $l$ 步物理洗礼后，系统在 $y$ 与 $x$ 的相对分离不仅达到其 Lipschitz 几何倍缩展，更叠加上了一切碎片跃迁向量之和：
-   $$\Phi^l(y) - \Phi^l(x) \;=\; \left( \bar{L}^l\delta + \sum_{j=1}^l \Delta_{\sigma,j}\Theta_{j+1,l} \right) \cdot v \;=\; \Omega_l(\delta) \cdot v$$
+   $$\Phi^l(y) - \Phi^l(x) \;=\; \left( \Theta_{1,l}\cdot\delta + \sum_{j=1}^l \Delta_{\sigma,j}\Theta_{j+1,l} \right) \cdot v \;=\; \Omega_l(\delta) \cdot v$$
    进而得知：$\Phi^l(y) \;=\; (\varepsilon_x + \Omega_l(\delta)) \cdot v$。
 
 4. **系统崩溃清算**：
@@ -106,7 +106,7 @@ $$\varepsilon^*_y \;\geq\; \Delta_q - \varepsilon_x - \Omega_1(\delta) \;\geq\; 
 
 由于局部闭集上的度量控制，$x, y \in \mathcal{X}_r$，两点的误差均受同一 sup 约束限制：$\varepsilon_x \leq \varepsilon_r$，$\varepsilon^*_y \leq \varepsilon_r$。代入上式解开：$\varepsilon_r \geq \Delta - \varepsilon_r - L_{local}\rho - \Delta_{\sigma, \text{max}}$，移项后即得所证综合表达式。$\square$
 
-> **注（变分四元张力律）**：不等式 $2\varepsilon_r + L_{local}\rho + \Delta_{\sigma, \text{max}} \geq \Delta$ 刻画了四个极值参数间的根本性互斥张力：局部变分强度（宏观上表现为 $\Delta/\rho$）、路径局部平滑度（$L_{local}$）、离散路由跳跃界（$\Delta_{\sigma, \text{max}}$）与单步拟合残差（$\varepsilon_r$）无法同时被极小化。对于主要依赖连续映射的平滑网络（$L_{local} \ll L$ 且 $\Delta_\sigma \approx 0$），若强制逼近高频变分目标，系统在常规演化步上将面临刚性的下界限制，必须承担**实质性的基础拟合误差 $\varepsilon_r \geq (\Delta - L_{local}\rho)/2$**。这再次印证了为何现代架构（如 MoE）需要引入非连续门控以提升 $\Delta_{\sigma}$ 上限，其本质正是为了化解此处的极小化冲突。
+> **注（变分四元张力律）**：不等式 $2\varepsilon_r + L_{local}\rho + \Delta_{\sigma, \text{max}} \geq \Delta$ 刻画了四个极值参数间的根本性互斥张力：局部变分强度（宏观上表现为 $\Delta/\rho$）、路径局部平滑度（$L_{local}$）、离散路由跳跃界（$\Delta_{\sigma, \text{max}}$）与单步拟合残差（$\varepsilon_r$）无法同时被极小化。对于主要依赖连续映射的平滑系统（$L_{local} \ll L$ 且 $\Delta_\sigma \approx 0$），若强制逼近高频变分目标，必须承担**实质性的基础拟合误差 $\varepsilon_r \geq (\Delta - L_{local}\rho)/2$**。引入非连续路由门控以提升 $\Delta_{\sigma}$ 上限，其本质正是为了化解此处的极小化冲突。
 
 > **注（与 5-Term CAC 的底层对接）**：推论 4.3 为五项精细化上界机制提供了下界的对偶解释。它揭示了单步泛化误差 $\varepsilon_{i_j}$ 不可规避的物理来源：输入空间的高变异度必然需要在演化中得以释放——要么通过剧烈的连续扭曲（增大 $L$），要么通过离散的拓扑断崖（积聚 $\Delta_\sigma$），否则就必须承受静态的底线错位（导致大 $\varepsilon_r$）。CAB 下界定出了这种局部妥协的最小代价；而一旦进入 CAC 上界的传导阶段，这些微观层面无法消除的单步误差，将立刻与宏观尾部扩张系数 $\Theta_{j+1,l}$ 发生乘性耦合，最终在端到端尺度上引发指数级扩散。这种从微观代价必然性到宏观误差爆炸性生长的完整链条，正是 OOD 坍塌定律的物理本质。
 
@@ -121,7 +121,7 @@ $$\varepsilon^*_y \;\geq\; \Delta_q - \varepsilon_x - \Omega_1(\delta) \;\geq\; 
 
 $$\mathcal{A}_l(\delta) \;\triangleq\; \underbrace{\Omega_l(\delta)}_{\text{拓扑应变力限}} \;+\; \underbrace{(\varepsilon_{\max} + \rho_{\max} + \Delta_{\max}) \cdot \Lambda_l}_{\text{微观拟合与路由耗损}} \;+\; \underbrace{\delta_{\max} \cdot \Gamma_l}_{\text{采样偏离空间底压}}$$
 
-（注：其中 $\Omega_l(\delta) = \bar{L}^l\delta + \Delta_{\max}\cdot\Lambda_l$ 为 $x$-$y$ 近似轨道间的路由差异代价；$\Delta_{\max}\Lambda_l$ 项另行出现于微观耗损中，对应 CAC 中理想-近似轨道间的路由失配代价——两者度量不同的物理路由跳变，不可合并）
+（注：其中 $\Omega_l(\delta) = \Theta_{1,l}\cdot\delta + \Delta_{\max}\cdot\Lambda_l$ 为 $x$-$y$ 近似轨道间的路由差异代价；$\Delta_{\max}\Lambda_l$ 项另行出现于微观耗损中，对应 CAC 中理想-近似轨道间的路由失配代价——两者度量不同的物理路由跳变，不可合并）
 
 则系统在 $y$ 处的宏观逼近误差带有绝对不可逆跨越的数学下底线：
 
@@ -131,7 +131,7 @@ $$\varepsilon^*_y \;\geq\; \Delta \;-\; \mathcal{A}_l(\delta)$$
 
 **证明**：由 CAB 死锁界：$\varepsilon^*_y \geq \Delta - \varepsilon_x - \Omega_l(\delta)$。由 CAC 上界（形式 A 均匀化）：$\varepsilon_x \leq (\varepsilon_{max} + \rho_{max} + \Delta_{max})\Lambda_l + \delta_{max}\Gamma_l$。代入：
 $$\varepsilon^*_y \geq \Delta - (\varepsilon_{max} + \rho_{max} + \Delta_{max})\Lambda_l - \delta_{max}\Gamma_l - \Omega_l(\delta) = \Delta - \mathcal{A}_l(\delta)$$
-其中 $\Omega_l(\delta) \leq \bar{L}^l\delta + \Delta_{max}\Lambda_l$，与 CAC 中的 $\Delta_{max}\Lambda_l$ 分别对应两种独立的路由跳变来源（轨道间 vs 理想-近似间），不可合并。$\square$
+其中 $\Omega_l(\delta) \leq \Theta_{1,l}\cdot\delta + \Delta_{max}\Lambda_l$，与 CAC 中的 $\Delta_{max}\Lambda_l$ 分别对应两种独立的路由跳变来源（轨道间 vs 理想-近似间），不可合并。$\square$
 
 > **注（逼近资源三元预算解构）**：逼近阈值 $\mathcal{A}_l(\delta)$ 结构性地分解为三个彼此独立的刚性物理预算：
 > - **拓扑应变极限 $\Omega_l(\delta)$**：系统跟随并包容目标变分的唯一主动结构性支撑，融合了系统固有的动态连续扩张本底 $\bar{L}$ 和离散路由门控赋予的跳变余量 $\Delta_\sigma$。
