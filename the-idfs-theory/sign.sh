@@ -67,6 +67,48 @@ cosign_sign() {
   fi
 }
 
+# ── Footer 戳记 ──
+# 格式: ----\n*[IDFS] ⊢ [GLENZLI] ⊢ [Part XX] ⊢ [chapter-name] ⊢ [hash]*
+# hash 基于剥离 footer 后的纯正文内容
+stamp_footer() {
+  local filepath="$1"
+  local dir_basename part_num chapter_name content_hash
+
+  # 从路径推导 Part 编号和章节名
+  dir_basename=$(basename "$(dirname "$filepath")")
+  # part-02-idfs-macroscopic-theory -> 02
+  part_num=$(echo "$dir_basename" | sed -n 's/^part-\([0-9]*\).*/\1/p')
+  [[ -z "$part_num" ]] && part_num="XX"
+  # 08-type-ii-systems.md -> 08-type-ii-systems
+  chapter_name=$(basename "$filepath" .md)
+
+  # 剥离已有 footer（从末尾的 ---- + *[IDFS] ─ 行开始），计算纯内容 hash
+  content_hash=$($PYTHON -c "
+import re, hashlib, sys
+with open(sys.argv[1], 'r', encoding='utf-8') as f:
+    text = f.read()
+# 剥离末尾的 footer: ----\n*[IDFS]...*\n (allowing trailing whitespace/newlines)
+text_clean = re.sub(r'\n*-{3,}\n\*\[IDFS\][^*]*\*\s*$', '', text)
+content = text_clean.rstrip('\n') + '\n'
+print(hashlib.sha256(content.encode('utf-8')).hexdigest()[:16])
+" "$filepath")
+
+  local footer_marker="----"
+  local footer_line="*[IDFS] ⊢ [GLENZLI] ⊢ [Part ${part_num}] ⊢ [${chapter_name}] ⊢ [${content_hash}]*"
+
+  # 写回文件：剥离旧 footer + 追加新 footer
+  $PYTHON -c "
+import re, sys
+with open(sys.argv[1], 'r', encoding='utf-8') as f:
+    text = f.read()
+text_clean = re.sub(r'\n*-{3,}\n\*\[IDFS\][^*]*\*\s*$', '', text)
+content = text_clean.rstrip('\n')
+footer = sys.argv[2] + '\n' + sys.argv[3] + '\n'
+with open(sys.argv[1], 'w', encoding='utf-8') as f:
+    f.write(content + '\n\n' + footer)
+" "$filepath" "$footer_marker" "$footer_line"
+}
+
 # ── 对单个目录生成 MANIFEST.txt + bundle ──
 sign_dir() {
   local dir="$1"
@@ -79,6 +121,11 @@ sign_dir() {
   local count
   count=$(echo "$files" | wc -l | tr -d ' ')
   info "$(basename "$dir")：${count} 个文件"
+
+  # 先对每个 .md 文件戳记 footer
+  echo "$files" | while IFS= read -r f; do
+    stamp_footer "$f"
+  done
 
   cat > "$manifest" <<EOF
 # MANIFEST
@@ -133,30 +180,55 @@ if [[ $# -ge 1 ]]; then
   done
   sign_root
 else
-  DIRS=$(find . -mindepth 1 -maxdepth 1 -type d ! -name '.*' | sort)
-  [[ -z "$DIRS" ]] && fail "未找到子目录"
+  # 收集目录到数组
+  DIRS=()
+  while IFS= read -r d; do
+    DIRS+=("$d")
+  done < <(find . -mindepth 1 -maxdepth 1 -type d ! -name '.*' | sort)
+  [[ ${#DIRS[@]} -eq 0 ]] && fail "未找到子目录"
 
   echo ""
   printf "${BOLD}发现以下目录:${NC}\n"
   echo ""
-  i=1
-  while IFS= read -r d; do
+  for i in "${!DIRS[@]}"; do
+    d="${DIRS[$i]}"
     count=$(find "$d" -maxdepth 1 -name '*.md' -type f ! -name 'MANIFEST.*' 2>/dev/null | wc -l | tr -d ' ')
-    printf "  ${CYAN}%d.${NC} %-50s ${GREEN}%s 个 .md 文件${NC}\n" "$i" "$d" "$count"
-    i=$((i + 1))
-  done < <(echo "$DIRS")
+    printf "  ${CYAN}%d.${NC} %-50s ${GREEN}%s 个 .md 文件${NC}\n" "$((i + 1))" "$d" "$count"
+  done
   echo ""
 
-  printf "${BOLD}生成哈希清单？${NC} [Y/n] "
-  read -r confirm
-  case "$confirm" in
-    [nN]*) echo "已取消。"; exit 0 ;;
+  printf "${BOLD}选择要签名的目录 (输入编号，空格分隔，或 all/回车 = 全部，q = 取消):${NC} "
+  read -r selection
+
+  case "$selection" in
+    [qQ]*) echo "已取消。"; exit 0 ;;
   esac
 
+  SELECTED=()
+  if [[ -z "$selection" || "$selection" == "all" ]]; then
+    SELECTED=("${DIRS[@]}")
+  else
+    for idx in $selection; do
+      if [[ "$idx" =~ ^[0-9]+$ ]] && (( idx >= 1 && idx <= ${#DIRS[@]} )); then
+        SELECTED+=("${DIRS[$((idx - 1))]}")
+      else
+        warn "忽略无效编号: $idx"
+      fi
+    done
+  fi
+
+  [[ ${#SELECTED[@]} -eq 0 ]] && fail "未选择任何目录"
+
   echo ""
-  while IFS= read -r d; do
+  info "将签名 ${#SELECTED[@]} 个目录:"
+  for d in "${SELECTED[@]}"; do
+    printf "  → %s\n" "$d"
+  done
+  echo ""
+
+  for d in "${SELECTED[@]}"; do
     sign_dir "$d"
-  done < <(echo "$DIRS")
+  done
 
   sign_root
 fi
@@ -171,9 +243,13 @@ ok "完成 ✓"
 # ── 自动提交 ──
 if ! $NO_COMMIT && git rev-parse --is-inside-work-tree &>/dev/null; then
   echo ""
-  git add -A '*.txt' '*.bundle' -- '**/MANIFEST.txt' '**/MANIFEST.bundle' 'MANIFEST.txt' 'MANIFEST.bundle' 2>/dev/null
-  git add MANIFEST.txt MANIFEST.bundle */MANIFEST.txt */MANIFEST.bundle 2>/dev/null || true
-  TIMESTAMP=$(date -u '+%Y-%m-%dT%H:%M:%SZ')
-  git commit -m "sign: $TIMESTAMP" --allow-empty
-  ok "已提交: sign: $TIMESTAMP"
+  # 添加所有变更：footer 修改的 .md + MANIFEST.txt + MANIFEST.bundle
+  git add -A . 2>/dev/null
+  if git diff --cached --quiet; then
+    info "无变更，跳过提交"
+  else
+    TIMESTAMP=$(date -u '+%Y-%m-%dT%H:%M:%SZ')
+    git commit -m "sign: $TIMESTAMP"
+    ok "已提交: sign: $TIMESTAMP"
+  fi
 fi

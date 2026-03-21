@@ -177,4 +177,5 @@ $$d(\Phi'(x), \Phi'(y)) \;=\; d(\Phi(\varphi(x)),\, \Phi(y))$$
 >
 > 两者各有适用域：全局偏置以全域 $K$ 代价换取连续性保证；条件偏置以边界不连续为代价换取非目标区域的零代价。选择取决于 $\mathcal{X}_{ctx}$ 相对于 $\mathcal{X}$ 的测度占比和边界跳变的可控性。
 
-
+----
+*[IDFS] ⊢ [GLENZLI] ⊢ [Part 02] ⊢ [06-basis-isomorphism] ⊢ [ea7751486df944e5]*
