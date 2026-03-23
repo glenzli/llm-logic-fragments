@@ -109,6 +109,20 @@ with open(sys.argv[1], 'w', encoding='utf-8') as f:
 " "$filepath" "$footer_marker" "$footer_line"
 }
 
+# ── 比较文件哈希（忽略 Generated 时间戳行）──
+manifest_content_hash() {
+  local file="$1"
+  [[ -f "$file" ]] || { echo ""; return; }
+  # 剥离 Generated 时间戳行后计算哈希，确保只比较实质内容
+  $PYTHON -c "
+import hashlib, re, sys
+with open(sys.argv[1], 'r') as f:
+    text = f.read()
+text = re.sub(r'^# Generated:.*$', '', text, flags=re.MULTILINE)
+print(hashlib.sha256(text.encode()).hexdigest())
+" "$file"
+}
+
 # ── 对单个目录生成 MANIFEST.txt + bundle ──
 sign_dir() {
   local dir="$1"
@@ -127,7 +141,12 @@ sign_dir() {
     stamp_footer "$f"
   done
 
-  cat > "$manifest" <<EOF
+  # 保存旧 MANIFEST 的内容哈希（忽略时间戳）
+  local old_hash
+  old_hash=$(manifest_content_hash "$manifest")
+
+  local tmp_manifest="${manifest}.tmp"
+  cat > "$tmp_manifest" <<EOF
 # MANIFEST
 # Generated: $(date -u '+%Y-%m-%dT%H:%M:%SZ')
 # Directory: $dir
@@ -135,11 +154,21 @@ sign_dir() {
 EOF
 
   echo "$files" | while IFS= read -r f; do
-    echo "## $(basename "$f")" >> "$manifest"
-    triple_hash "$f" >> "$manifest"
-    echo "" >> "$manifest"
+    echo "## $(basename "$f")" >> "$tmp_manifest"
+    triple_hash "$f" >> "$tmp_manifest"
+    echo "" >> "$tmp_manifest"
   done
 
+  local new_hash
+  new_hash=$(manifest_content_hash "$tmp_manifest")
+
+  if [[ "$old_hash" == "$new_hash" && -n "$old_hash" ]]; then
+    rm -f "$tmp_manifest"
+    info "$(basename "$dir")/MANIFEST.txt 内容未变化，跳过签名"
+    return 0
+  fi
+
+  mv -f "$tmp_manifest" "$manifest"
   ok "$(basename "$dir")/MANIFEST.txt"
   cosign_sign "$manifest"
 }
@@ -155,7 +184,11 @@ sign_root() {
   echo ""
   info "生成根级合并校验..."
 
-  cat > "$root_manifest" <<EOF
+  local old_hash
+  old_hash=$(manifest_content_hash "$root_manifest")
+
+  local tmp_manifest="${root_manifest}.tmp"
+  cat > "$tmp_manifest" <<EOF
 # ROOT MANIFEST
 # Generated: $(date -u '+%Y-%m-%dT%H:%M:%SZ')
 # 以下为各子目录 MANIFEST.txt 的二次哈希校验
@@ -163,11 +196,21 @@ sign_root() {
 EOF
 
   echo "$manifests" | while IFS= read -r m; do
-    echo "## $m" >> "$root_manifest"
-    triple_hash "$m" >> "$root_manifest"
-    echo "" >> "$root_manifest"
+    echo "## $m" >> "$tmp_manifest"
+    triple_hash "$m" >> "$tmp_manifest"
+    echo "" >> "$tmp_manifest"
   done
 
+  local new_hash
+  new_hash=$(manifest_content_hash "$tmp_manifest")
+
+  if [[ "$old_hash" == "$new_hash" && -n "$old_hash" ]]; then
+    rm -f "$tmp_manifest"
+    info "根级 MANIFEST.txt 内容未变化，跳过签名"
+    return 0
+  fi
+
+  mv -f "$tmp_manifest" "$root_manifest"
   ok "MANIFEST.txt (根级合并)"
   cosign_sign "$root_manifest"
 }
