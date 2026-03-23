@@ -166,3 +166,5 @@ $$\mu(C_\tau(U_\alpha)) \;\geq\; (1 - \eta) \cdot \mu(U_\alpha)$$
 | **收缩态** | $\mathrm{rad}_\sigma \geq \tau$ | $\tau$-坍缩域 | $< \eta$ | 可正但信号已退化 | 胖纤维铺砌（命题 2.7）、信息漏斗（命题 2.8） |
 | **保持态** | $\mathrm{rad}_\sigma \geq \tau$ | 宽域 | $\geq \eta$ | $(\tau' - \varepsilon^*_q)/L^l$，正 | 洁净集全方向保持（命题 2.9） |
 
+----
+*[IDFS] ⊢ [GLENZLI] ⊢ [Part XX] ⊢ [02-fitting-geometry] ⊢ [2987ac5fac2ce84c]*

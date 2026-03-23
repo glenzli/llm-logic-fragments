@@ -60,3 +60,6 @@ $$\varepsilon^* \;=\; \varepsilon_0 \cdot \min_{R_0 \;\text{生成}\; R}\; \max_
 即 $\varepsilon^*$ 是在全纯相容理想化条件下，遍历所有生成基选择后的**最优精度下界**。在现实场景（含有 $\delta, \rho, \Delta_\sigma$）中，实际覆盖精度总满足 $\varepsilon_{\mathrm{actual}} \geq \varepsilon^*$，$\varepsilon^*$ 一般不可达，仅作为理论参照。
 
 **证明**：直接由生成基约简推论的域链相容特例，对所有可行的 $R_0$ 取最优（最小化误差放大因子）即得。$\square$
+
+----
+*[IDFS] ⊢ [GLENZLI] ⊢ [Part XX] ⊢ [_temp_generative_basis] ⊢ [7dd756f91ded6557]*

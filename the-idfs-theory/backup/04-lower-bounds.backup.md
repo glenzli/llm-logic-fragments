@@ -316,5 +316,5 @@ $\mu(\mathrm{dom}(q) \setminus E) \leq \sum_{j=1}^{l-1} \mu(B_j) \leq \sum_{j=1}
 
 > **注（完全非奇异的特殊情形）**：当 $\mu(Z_\Phi) = 0$（即 $\Phi_*\mu \ll \mu$）时，$\mu(E) = 1$，CEL 对 a.e. $x_0$ 成立。对可微映射 $\Phi$，这等价于 Jacobian 行列式几乎处处非零。
 
-
-
+----
+*[IDFS] ⊢ [GLENZLI] ⊢ [Part XX] ⊢ [04-lower-bounds.backup] ⊢ [834337ad315febc4]*
