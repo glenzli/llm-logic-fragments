@@ -1,6 +1,6 @@
-## §9 计算纤维
+## §7 计算纤维
 
-§8 建立了 Type II 系统的分段复合架构与误差传播理论。本节退回到更基础的层面，建立一套基于**计算纤维**的分析工具，揭示 IDFS 在定义域扩张、误差控制、链深约束等现象背后的信息论结构。
+本节退回到更基础的层面，建立一套基于**计算纤维**的分析工具，揭示 IDFS 在定义域扩张、误差控制、链深约束等现象背后的信息论结构。
 
 ### 7.1 映射的计算纤维
 
@@ -85,6 +85,21 @@ $$\mathrm{FI}_\varepsilon(\phi) \;\geq\; \log \mathcal{N}(\varepsilon, \mathrm{d
 
 **证明**：$\phi \in \mathrm{Lip}_{L_\phi}$ 蕴含 $\phi$ 将 $\mathrm{dom}(\phi)$ 中的 $\varepsilon/L_\phi$-球映射到 $\varepsilon$-球内。因此 $\mathcal{N}(\varepsilon, \mathrm{Im}(\phi)) \leq \mathcal{N}(\varepsilon/L_\phi, \mathrm{dom}(\phi))$。$\square$
 
+
+**命题 7.2（分辨率-吸收界）**：设 $\psi \in \Omega$，最小 $\varepsilon$-吸收半径 $\underline{\alpha}_\psi^\varepsilon = \alpha > 0$。则：
+
+$$\mathrm{CD}_\varepsilon(\psi) \;\leq\; \log \mathcal{N}(\alpha,\; \mathrm{dom}(\psi))$$
+
+等价地：
+
+$$\mathrm{FI}_\varepsilon(\psi) \;\geq\; \log \mathcal{N}(\varepsilon,\; \mathrm{dom}(\psi)) - \log \mathcal{N}(\alpha,\; \mathrm{dom}(\psi))$$
+
+即吸收半径越大，输出多样性越低，纤维膨胀越大。
+
+**证明**：取 $\mathrm{dom}(\psi)$ 的 $\alpha$-覆盖 $\{c_1, \ldots, c_M\}$，$M = \mathcal{N}(\alpha, \mathrm{dom})$。对每个 $c_i$，由吸收半径定义（§7.1），$B(c_i, \alpha) \subseteq \mathfrak{F}_\psi^\varepsilon(\psi(c_i))$，即 $B(c_i, \alpha)$ 中所有点在 $\psi$ 下输出落入 $B(\psi(c_i), \varepsilon)$。因此 $\{\psi(c_1), \ldots, \psi(c_M)\}$ 构成 $\mathrm{Im}(\psi)$ 的 $\varepsilon$-网，$\mathcal{N}(\varepsilon, \mathrm{Im}(\psi)) \leq M$。取对数即得。$\square$
+
+> **注**：当 $\alpha \leq \varepsilon$ 时，$\mathcal{N}(\alpha, \mathrm{dom}) \geq \mathcal{N}(\varepsilon, \mathrm{dom})$，FI 下界为零（平凡）。当 $\alpha > \varepsilon$ 时——吸收半径超过分辨率尺度——给出非平凡的 FI 下界。
+
 ---
 
 ### 7.4 三纤维不可区分定理
@@ -109,7 +124,7 @@ $$\mathrm{TFI}^{\varepsilon_r, \varepsilon_f}(x_0) \;\triangleq\; \mathfrak{F}_{
 
 其中目标纤维和计算纤维使用 $\varepsilon$-纤维（$\varepsilon = 0$ 退化为精确纤维），路由纤维保持精确（$\sigma$ 为离散值映射，同一路由区域内精确相等）。当 $\varepsilon_r = \varepsilon_f = 0$ 时，简记 $\mathrm{TFI}(x_0) \triangleq \mathrm{TFI}^{0,0}(x_0)$。
 
-**定理 7.2（三纤维不可区分定理）**：对任意 $x \in \mathrm{TFI}^{\varepsilon_r, \varepsilon_f}(x_0)$：
+**定理 7.3（三纤维不可区分定理）**：对任意 $x \in \mathrm{TFI}^{\varepsilon_r, \varepsilon_f}(x_0)$：
 
 $$d(\Phi(x), r_j(x)) \;\leq\; \tau_0 + \varepsilon_r + \varepsilon_f$$
 
@@ -131,9 +146,9 @@ $$d(\Phi(x), r_j(x)) \;\leq\; \tau_0 + (L_r + L_f) \cdot \delta$$
 
 #### 纤维扩散：从采样集到定义域
 
-定理 7.2 直接给出 IDFS 拟合如何从采样集 $\mathcal{X}(r_j)$ 向 $\mathrm{dom}(r_j)$ 扩散的精确表达。
+定理 7.3 直接给出 IDFS 拟合如何从采样集 $\mathcal{X}(r_j)$ 向 $\mathrm{dom}(r_j)$ 扩散的精确表达。
 
-**推论 7.3（纤维扩散，Fiber Diffusion）**：设 $\Phi$ 在 $\mathcal{X}(r_j)$ 上以容差 $\tau$ 拟合 $r_j$。对 $\tau' \geq \tau$，定义 $r_j$ 在容差 $\tau'$ 下的**纤维扩散集**：
+**推论 7.4（纤维扩散，Fiber Diffusion）**：设 $\Phi$ 在 $\mathcal{X}(r_j)$ 上以容差 $\tau$ 拟合 $r_j$。对 $\tau' \geq \tau$，定义 $r_j$ 在容差 $\tau'$ 下的**纤维扩散集**：
 
 $$\mathcal{X}_{\tau'}(r_j) \;\triangleq\; \bigcup_{x_0 \in \mathcal{X}(r_j)} \mathrm{TFI}^{\varepsilon_r, \varepsilon_f}(x_0) \quad \text{其中} \quad \varepsilon_r + \varepsilon_f \leq \tau' - \tau_0(x_0),\; \varepsilon_r, \varepsilon_f \geq 0$$
 
@@ -155,7 +170,7 @@ $$\mathcal{X}_{\tau'}(r_j) \;\triangleq\; \bigcup_{x_0 \in \mathcal{X}(r_j)} \ma
 
 #### 基本纤维吸收
 
-**定理 7.4（纤维吸收定理）**：设 $\phi_2 \circ \phi_1$ 为两步复合。设 $\phi_1$ 在 $x$ 处的理想输出为 $y$，实际输出为 $\hat{y} = \phi_1(x)$，误差 $\delta = d(\hat{y}, y)$。
+**定理 7.5（纤维吸收定理）**：设 $\phi_2 \circ \phi_1$ 为两步复合。设 $\phi_1$ 在 $x$ 处的理想输出为 $y$，实际输出为 $\hat{y} = \phi_1(x)$，误差 $\delta = d(\hat{y}, y)$。
 
 (i) **精确吸收**：若 $\hat{y}$ 与 $y$ 落入 $\phi_2$ 的同一根纤维（$\phi_2(\hat{y}) = \phi_2(y)$），则 $\phi_2(\phi_1(x)) = \phi_2(y)$——前步误差 $\delta$ 被**完全吸收**，不传播到后续输出。
 
@@ -172,7 +187,7 @@ $$d(\phi_2(\phi_1(x)), \phi_2(y)) \leq \varepsilon$$
 
 在映射链 $\psi = \phi_k \circ \cdots \circ \phi_1$ 中，纤维吸收在每一步都可能发生。设 $h_m = \phi_m(\cdots(\phi_1(x)))$ 为第 $m$ 步的实际中间态，$h_m^*$ 为理想中间态，误差 $\delta_m = d(h_m, h_m^*)$。
 
-**命题 7.5（映射链逐步吸收）**：在链的第 $m+1$ 步，误差的有效传播满足：
+**命题 7.6（映射链逐步吸收）**：在链的第 $m+1$ 步，误差的有效传播满足：
 
 $$\delta_{m+1} \leq \begin{cases} 0 & \text{若 } \delta_m \leq \alpha_{\phi_{m+1}}^0(h_m^*) \quad \text{（精确吸收）} \\ \varepsilon_{m+1} & \text{若 } \delta_m \leq \alpha_{\phi_{m+1}}^{\varepsilon_{m+1}}(h_m^*) \quad \text{（$\varepsilon$-吸收）} \\ L_{\phi_{m+1}} \cdot \delta_m & \text{否则} \quad \text{（广义 Lip 放大，$L_{\phi_{m+1}} \in \bar{\mathbb{R}}_+$）} \end{cases}$$
 
@@ -180,7 +195,7 @@ $$\delta_{m+1} \leq \begin{cases} 0 & \text{若 } \delta_m \leq \alpha_{\phi_{m+
 
 因此，映射链的端到端误差传播不是简单的 $\prod L_{\phi_m}$ 乘积。在纤维吸收发生的步骤，有效放大因子**降至零**（精确吸收）或被**截断为** $\varepsilon_{m+1}/\delta_m$（$\varepsilon$-吸收），实际误差路径远短于最坏情况的广义 Lip 乘积。
 
-> **注（CAC 上界的保守性来源）**：CAC 定理（§3）以 $\Theta_{j,l} = \prod_{k=j}^l L_k$ 逐层放大误差。实际传播远小于此上界，有两个来源：**(1)** 局部横截 Lip $L^\perp_\phi(y) \leq L_\phi$——每步的有效放大因子取决于具体中间输出 $y_m$，而非全局 $\sup$；**(2)** $\varepsilon$-纤维吸收——命题 7.5 的前两分支在每步将误差截断为 $\varepsilon$ 或 $0$，而非以 $L$ 传播。两者在 $f$-chain 内部（微观）和 $\Phi$-链的 $r$-链层面（宏观，CAC 的适用范围）**双重发生**——微观层面的吸收已隐含地降低了宏观 $L_k$ 的取值，但宏观层面 $\Phi$-级吸收是额外的、不被 $L_k$ 捕捉的保守性来源。
+> **注（CAC 上界的保守性来源）**：CAC 定理（§3）以 $\Theta_{j,l} = \prod_{k=j}^l L_k$ 逐层放大误差。实际传播远小于此上界，有两个来源：**(1)** 局部横截 Lip $L^\perp_\phi(y) \leq L_\phi$——每步的有效放大因子取决于具体中间输出 $y_m$，而非全局 $\sup$；**(2)** $\varepsilon$-纤维吸收——命题 7.6 的前两分支在每步将误差截断为 $\varepsilon$ 或 $0$，而非以 $L$ 传播。两者在 $f$-chain 内部（微观）和 $\Phi$-链的 $r$-链层面（宏观，CAC 的适用范围）**双重发生**——微观层面的吸收已隐含地降低了宏观 $L_k$ 的取值，但宏观层面 $\Phi$-级吸收是额外的、不被 $L_k$ 捕捉的保守性来源。
 
 > **注（吸收的不可预测性）**：吸收步集 $\mathcal{A}$ 的分布与 $\phi$-chain 各步的吸收半径 $\alpha_{\phi_m}^\varepsilon(h_{m-1}^*)$ 高度关联，无法从链的全局统计量预测——即使 $\varepsilon$-吸收后残余仅为 $\varepsilon$，也可能超出下一步的吸收半径 $\alpha_{\phi_{m+1}}^\varepsilon$ 而逃逸；反之，未被吸收的误差经 Lip 传播后也可能恰好落入后续步的吸收半径内。唯一可以在一般性层面断言的是：高维空间中吸收半径更大（纤维更厚），为吸收的持续发生提供了更大的**结构性容量**。
 
@@ -188,7 +203,7 @@ $$\delta_{m+1} \leq \begin{cases} 0 & \text{若 } \delta_m \leq \alpha_{\phi_{m+
 
 ### 7.6 链级纤维膨胀与深度极限
 
-**命题 7.6（链级纤维膨胀的可加性）**：设 $\psi = \phi_2 \circ \phi_1$。则：
+**命题 7.7（链级纤维膨胀的可加性）**：设 $\psi = \phi_2 \circ \phi_1$。则：
 
 $$\mathrm{FI}_\varepsilon(\psi) \;=\; \mathrm{FI}_\varepsilon(\phi_1) \;+\; \mathrm{FI}_\varepsilon(\phi_2|_{\mathrm{Im}(\phi_1)})$$
 
@@ -198,7 +213,7 @@ $$\mathrm{FI}_\varepsilon(\psi) = \underbrace{[\log \mathcal{N}(\varepsilon, \ma
 
 $\square$
 
-**推论 7.7（$k$-步链的纤维膨胀）**：设 $\psi = \phi_k \circ \cdots \circ \phi_1$。则：
+**推论 7.8（$k$-步链的纤维膨胀）**：设 $\psi = \phi_k \circ \cdots \circ \phi_1$。则：
 
 $$\mathrm{FI}_\varepsilon(\psi) \;=\; \sum_{m=1}^{k} \mathrm{FI}_\varepsilon(\phi_m|_{\mathrm{Im}(\phi_{m-1} \circ \cdots \circ \phi_1)})$$
 
@@ -206,7 +221,7 @@ $$\mathrm{FI}_\varepsilon(\psi) \;=\; \sum_{m=1}^{k} \mathrm{FI}_\varepsilon(\ph
 
 每一步复合贡献一项纤维膨胀。总膨胀是逐步膨胀之和——链越长，累积纤维坍缩越深，有效输出多样性逐步衰减。
 
-**推论 7.8（余维可加性）**：将推论 7.7 除以 $\log(1/\varepsilon)$，得映射链的纤维余维可加：
+**推论 7.9（余维可加性）**：将推论 7.8 除以 $\log(1/\varepsilon)$，得映射链的纤维余维可加：
 
 $$\mathrm{codim}_\varepsilon(\psi) \;=\; \sum_{m=1}^{k} \mathrm{codim}_\varepsilon(\phi_m|_{\mathrm{Im}(\phi_{m-1} \circ \cdots \circ \phi_1)})$$
 
@@ -221,7 +236,7 @@ $$\mathrm{codim}_\varepsilon(\psi) \;=\; \sum_{m=1}^{k} \mathrm{codim}_\varepsil
 - **吸收步集** $\mathcal{A}(x) = \{m \mid \delta_{m-1}(x) \leq \alpha_{\phi_m}^{\varepsilon_m}(h_{m-1}^*(x))\}$——前一步误差在第 $m$ 步的吸收半径内，发生 $\varepsilon$-纤维吸收。
 - **有效消耗步集** $\mathcal{A}^c(x) = \{1, \ldots, k\} \setminus \mathcal{A}(x)$——误差超出吸收半径、纤维坍缩真正消耗分辨率的步骤。
 
-**定理 7.9（纤维深度极限，Fiber Depth Limit）**：设映射链 $\psi_F = \phi_k \circ \cdots \circ \phi_1$ 以容差 $\tau$ 拟合目标链 $\psi_R$，即对所有 $x \in \mathrm{dom}(\psi_F)$，$d(\psi_F(x), \psi_R(x)) \leq \tau$。设在输入子集 $S \subseteq \mathrm{dom}(\psi_F)$ 上吸收步集 $\mathcal{A}$ 一致。则有效深度受限于**分辨率预算** $B$：
+**定理 7.10（纤维深度极限，Fiber Depth Limit）**：设映射链 $\psi_F = \phi_k \circ \cdots \circ \phi_1$ 以容差 $\tau$ 拟合目标链 $\psi_R$，即对所有 $x \in \mathrm{dom}(\psi_F)$，$d(\psi_F(x), \psi_R(x)) \leq \tau$。设在输入子集 $S \subseteq \mathrm{dom}(\psi_F)$ 上吸收步集 $\mathcal{A}$ 一致。则有效深度受限于**分辨率预算** $B$：
 
 $$\sum_{m \in \mathcal{A}^c} \mathrm{FI}_\varepsilon(\phi_m|_{\cdots}) \;\leq\; B \;\triangleq\; \log \mathcal{N}(\varepsilon, \mathrm{dom}(\psi_F)) - \mathrm{CD}_\varepsilon(\psi_R) + C_\tau$$
 
@@ -235,7 +250,7 @@ $$\mathcal{N}(\varepsilon, \mathrm{Im}(\psi_F)) \;\geq\; \mathcal{N}(\varepsilon
 
 取对数：$\mathrm{CD}_\varepsilon(\psi_F) \geq \mathrm{CD}_\varepsilon(\psi_R) - C_\tau$。
 
-**第二步**（FI 分解）：由推论 7.7，$\mathrm{CD}_\varepsilon(\psi_F) = \log \mathcal{N}(\varepsilon, \mathrm{dom}(\psi_F)) - \sum_{m=1}^{k} \mathrm{FI}_\varepsilon(\phi_m|_{\cdots})$。吸收步 $m \in \mathcal{A}$ 不消耗有效分辨率（误差被纤维吸收而非传播），故有效消耗仅为 $\sum_{m \in \mathcal{A}^c} \mathrm{FI}_\varepsilon(\phi_m|_{\cdots})$。
+**第二步**（FI 分解）：由推论 7.8，$\mathrm{CD}_\varepsilon(\psi_F) = \log \mathcal{N}(\varepsilon, \mathrm{dom}(\psi_F)) - \sum_{m=1}^{k} \mathrm{FI}_\varepsilon(\phi_m|_{\cdots})$。吸收步 $m \in \mathcal{A}$ 不消耗有效分辨率（误差被纤维吸收而非传播），故有效消耗仅为 $\sum_{m \in \mathcal{A}^c} \mathrm{FI}_\varepsilon(\phi_m|_{\cdots})$。
 
 **第三步**（合并）：将第二步代入第一步的下界，移项即得。$\square$
 
@@ -251,7 +266,7 @@ $$\mathcal{N}(\varepsilon, \mathrm{Im}(\psi_F)) \;\geq\; \mathcal{N}(\varepsilon
 
 $$\eta_\varepsilon(\psi_F) \;\triangleq\; \frac{\sum_{m \in \mathcal{A}^c} \mathrm{FI}_\varepsilon(\phi_m|_{\cdots})}{B} \;\in\; [0, 1]$$
 
-定理 7.9 等价于 $\eta \leq 1$。$1 - \eta$ 为**深度安全裕度**——衡量系统距纤维枯竭的余量。$\eta \ll 1$ 时预算充裕；$\eta \to 1$ 时纤维退化，泛化趋于枯竭。当 $\mathcal{A} = \varnothing$ 时 $\eta$ 即朴素利用率（所有步骤全额计入）。
+定理 7.10 等价于 $\eta \leq 1$。$1 - \eta$ 为**深度安全裕度**——衡量系统距纤维枯竭的余量。$\eta \ll 1$ 时预算充裕；$\eta \to 1$ 时纤维退化，泛化趋于枯竭。当 $\mathcal{A} = \varnothing$ 时 $\eta$ 即朴素利用率（所有步骤全额计入）。
 
 > **注（$\eta$ 的量级依赖）**：当 $\log \mathcal{N}(\varepsilon, \mathrm{dom})$ 远大于 $k$ 步的总 FI 消耗时，$\eta \to 0$——纤维深度极限不构成有效约束。但这不意味着 $\phi$-chain 的链深无约束：链越长，各步的误差经逐步传播后累积越大，这是度量论层面的独立约束。
 
@@ -259,13 +274,13 @@ $$\eta_\varepsilon(\psi_F) \;\triangleq\; \frac{\sum_{m \in \mathcal{A}^c} \math
 
 #### 维度预算方程
 
-将定理 7.9 除以 $\log(1/\varepsilon)$，得**维度计数**版本：
+将定理 7.10 除以 $\log(1/\varepsilon)$，得**维度计数**版本：
 
 $$\sum_{m \in \mathcal{A}^c} \mathrm{codim}_\varepsilon(\phi_m|_{\cdots}) \;\leq\; \mathrm{dim}_\varepsilon(\mathrm{dom}(\psi_F)) - \mathrm{dim}_\varepsilon(\mathrm{Im}(\psi_R)) + C'_\tau$$
 
 输入维度 $\geq$ 累积坍缩维度 + 目标输出维度。被吸收的步骤即使坍缩了维度也不计入。
 
-> **注（微观与宏观深度约束的结构类比）**：定理 7.9 约束的是微观层面的 $\phi$-chain 链深（$f$-chain 内部的基函数步数），而 §7 的 Lip 链深上界约束的是宏观层面的 $r$-链深（$\Phi$ 的迭代次数）——两者不是同一个“深度”。但它们共享相同的结构：**Lipschitz 收缩是度量层面的纤维变粗**——$L < 1$ 意味着 $\phi$ 将邻近的点拉得更近，即纤维在 $\varepsilon$-尺度上变得更宽。无论微观还是宏观，链太长都导致纤维累积坍缩耗尽分辨率。
+> **注（微观与宏观深度约束的结构类比）**：定理 7.10 约束的是微观层面的 $\phi$-chain 链深（$f$-chain 内部的基函数步数），而 §7 的 Lip 链深上界约束的是宏观层面的 $r$-链深（$\Phi$ 的迭代次数）——两者不是同一个“深度”。但它们共享相同的结构：**Lipschitz 收缩是度量层面的纤维变粗**——$L < 1$ 意味着 $\phi$ 将邻近的点拉得更近，即纤维在 $\varepsilon$-尺度上变得更宽。无论微观还是宏观，链太长都导致纤维累积坍缩耗尽分辨率。
 
 > **注（维度预算与纤维退化）**：当 $\mathrm{dim}_\varepsilon(\mathrm{dom})$ 足够大时，每步纤维坍缩可视为"消耗若干维度"，维度越高，分辨率预算越充裕，为更深的 $\phi$-chain 提供了更大的**结构性可能**。当预算耗尽（$\eta \to 1$）时，纤维退化为单点集：$\mathfrak{F}_{\psi_F}(\psi_F(x_0)) \cap \mathcal{X} = \{x_0\}$，$\mathrm{TFI}^{\varepsilon_r, \varepsilon_f}(x_0)$（§7.4）退化为 $\{x_0\}$，纤维层面的泛化能力**归零**，$L^\perp(y) \to L$，吸收与扩散优势同时消失。**纤维是泛化的载体——纤维退化是纤维层面泛化的根本极限。** 预算是否充裕、纤维退化是否实际发生，取决于 $\phi$-chain 各步的具体纤维结构，不能仅从维度大小推断。
 
@@ -283,7 +298,7 @@ $$d(\phi(x'), \phi(x'')) \leq \varepsilon \quad \text{但} \quad d(\psi(x'), \ps
 
 则称 $\phi$ 与 $\psi$ 在 $(x', x'')$ 上发生 **$\varepsilon$-纤维冲突**——$\phi$ 将 $\psi$ 需要区分的两个输入（几乎）坍缩到同一输出。$\varepsilon = 0$ 即精确纤维冲突。
 
-**命题 7.10（$\varepsilon$-纤维冲突的不可拟合性）**：设映射链 $\hat{\psi} = \phi_k \circ \cdots \circ \phi_1$ 拟合目标 $\psi$。若在第 $m$ 步发生 $\varepsilon$-纤维冲突——即 $d(\phi_m(h'_{m-1}), \phi_m(h''_{m-1})) \leq \varepsilon$——且链的剩余部分 $\hat{\psi}_{\mathrm{tail}} = \phi_k \circ \cdots \circ \phi_{m+1}$ 的广义 Lip 常数为 $L_{\mathrm{tail}} \in \bar{\mathbb{R}}_+$，则 $\psi$ 在 $x'$、$x''$ 上的最大拟合误差满足：
+**命题 7.11（$\varepsilon$-纤维冲突的不可拟合性）**：设映射链 $\hat{\psi} = \phi_k \circ \cdots \circ \phi_1$ 拟合目标 $\psi$。若在第 $m$ 步发生 $\varepsilon$-纤维冲突——即 $d(\phi_m(h'_{m-1}), \phi_m(h''_{m-1})) \leq \varepsilon$——且链的剩余部分 $\hat{\psi}_{\mathrm{tail}} = \phi_k \circ \cdots \circ \phi_{m+1}$ 的广义 Lip 常数为 $L_{\mathrm{tail}} \in \bar{\mathbb{R}}_+$，则 $\psi$ 在 $x'$、$x''$ 上的最大拟合误差满足：
 
 $$\max\{d(\hat{\psi}(x'), \psi(x')),\; d(\hat{\psi}(x''), \psi(x''))\} \;\geq\; \frac{d(\psi(x'), \psi(x'')) - L_{\mathrm{tail}} \cdot \varepsilon}{2}$$
 
@@ -317,7 +332,7 @@ $$\mathrm{TFI}_k^\varepsilon(x_0) \;\triangleq\; \mathfrak{F}_\sigma(\sigma(x_0)
 
 $\varepsilon = 0$ 即精确 $k$-纤维交集。$\varepsilon > 0$ 时目标纤维和计算纤维从精确等值集扩展为 $\varepsilon$-邻域，交集更大——但模糊意味着保障从精确不可区分退化为 $\varepsilon$-近似不可区分。路由纤维保持精确（$\sigma$ 为离散值映射，同一路由区域内精确相等）。
 
-**命题 7.11（$\varepsilon$-$k$-纤维交集的维度递减）**：设 $\delta > 0$ 为度量分辨率尺度（区别于纤维容差 $\varepsilon$）。若 $k+2$ 层纤维约束（其中路由纤维为精确纤维，其余为 $\varepsilon$-纤维）彼此**独立**——即余维可加——则 $\varepsilon$-$k$-纤维交集的有效度量维度满足下界：
+**命题 7.12（$\varepsilon$-$k$-纤维交集的维度递减）**：设 $\delta > 0$ 为度量分辨率尺度（区别于纤维容差 $\varepsilon$）。若 $k+2$ 层纤维约束（其中路由纤维为精确纤维，其余为 $\varepsilon$-纤维）彼此**独立**——即余维可加——则 $\varepsilon$-$k$-纤维交集的有效度量维度满足下界：
 
 $$\mathrm{dim}_\delta(\mathrm{TFI}_k^\varepsilon(x_0)) \;\geq\; \mathrm{dim}_\delta(\mathrm{dom}) - \mathrm{codim}_\delta(\sigma) - \mathrm{codim}_\delta(q_f) - \sum_{j=1}^{k} \mathrm{codim}_\delta(r_j)$$
 
@@ -336,4 +351,4 @@ $$\mathrm{dim}_\delta(\mathrm{TFI}_k^\varepsilon(x_0)) \;\geq\; \mathrm{dim}_\de
 > **注（维度的祝福）**：第二部分建立了**维度诅咒**的图景：高维使采样稀疏、路由混叠加剧、深度折叠不可避免。纤维视角则揭示了另一面——**维度的祝福**。设 $f: \mathcal{X} \to \mathcal{Y}$，$\mathrm{dim}_\delta(\mathcal{X}) = n$，$\mathrm{dim}_\delta(\mathcal{Y}) = m$，$m \ll n$。则 $f$ 的纤维维度约为 $n - m$：输入空间越高维，纤维越厚，每个输出值对应的等价输入集合越大。当 $m \ll n$ 时，输入空间的**绝大部分维度**属于纤维方向——高维为吸收提供了巨大的**结构性容量**。诅咒与祝福并非矛盾，而是同一高维结构的两个面——诅咒在**采样层面**（覆盖困难），祝福在**结构层面**（吸收的可能性更丰富）。但祝福是结构性可能，不是保障——纤维增厚是否实际带来泛化改善，取决于具体的纤维几何与采样分布的匹配。
 
 ----
-*[IDFS] ⊢ [GLENZLI] ⊢ [Part 03] ⊢ [09-computational-fiber] ⊢ [e259133e3de4fc52]*
+*[IDFS] ⊢ [GLENZLI] ⊢ [Part 03] ⊢ [07-computational-fiber] ⊢ [e259133e3de4fc52]*
