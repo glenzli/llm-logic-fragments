@@ -351,4 +351,4 @@ $$\mathrm{dim}_\delta(\mathrm{TFI}_k^\varepsilon(x_0)) \;\geq\; \mathrm{dim}_\de
 > **注（维度的祝福）**：第二部分建立了**维度诅咒**的图景：高维使采样稀疏、路由混叠加剧、深度折叠不可避免。纤维视角则揭示了另一面——**维度的祝福**。设 $f: \mathcal{X} \to \mathcal{Y}$，$\mathrm{dim}_\delta(\mathcal{X}) = n$，$\mathrm{dim}_\delta(\mathcal{Y}) = m$，$m \ll n$。则 $f$ 的纤维维度约为 $n - m$：输入空间越高维，纤维越厚，每个输出值对应的等价输入集合越大。当 $m \ll n$ 时，输入空间的**绝大部分维度**属于纤维方向——高维为吸收提供了巨大的**结构性容量**。诅咒与祝福并非矛盾，而是同一高维结构的两个面——诅咒在**采样层面**（覆盖困难），祝福在**结构层面**（吸收的可能性更丰富）。但祝福是结构性可能，不是保障——纤维增厚是否实际带来泛化改善，取决于具体的纤维几何与采样分布的匹配。
 
 ----
-*[IDFS] ⊢ [GLENZLI] ⊢ [Part 03] ⊢ [07-computational-fiber] ⊢ [e259133e3de4fc52]*
+*[IDFS] ⊢ [GLENZLI] ⊢ [Part 03] ⊢ [07-computational-fiber] ⊢ [5afc874174dff460]*

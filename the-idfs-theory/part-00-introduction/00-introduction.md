@@ -72,4 +72,4 @@ IDFS 理论按从抽象到具体、从宏观到微观的逻辑层次组织为以
 **核心路径**：Part 01 → Part 02（§2–§6）→ Part 03（§7–§8）→ Part 04。Part 01–02 建立一般 IDFS 的宏观理论，Part 03 深入微观纤维结构，Part 04 在约束下分类讨论系统设计。
 
 ----
-*[IDFS] ⊢ [GLENZLI] ⊢ [Part 00] ⊢ [00-introduction] ⊢ [ad2de7a657da7dcd]*
+*[IDFS] ⊢ [GLENZLI] ⊢ [Part 00] ⊢ [00-introduction] ⊢ [fcf573bd17c9d942]*

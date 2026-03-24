@@ -69,4 +69,4 @@ $$|\mathcal{A}^c(q_F)| \;\leq\; k_F \;\leq\; k_{\min}$$
 > **注（纤维保持条件的限制）**：以上纤维层面的收益依赖命题 8.9 的纤维保持条件 $\underline{\alpha}_\psi^\varepsilon \geq \min(\underline{\alpha}_{\phi_1}^\varepsilon, \underline{\alpha}_{\phi_2}^\varepsilon)$。该条件要求宏算子的纤维至少与其组成部分的瓶颈一样厚——这是一个关于宏算子**内部结构**的非平凡假设，不能从可分解性本身推出。当条件不满足时，冗余仍降低链深，但纤维层面的优势无法保证。
 
 ----
-*[IDFS] ⊢ [GLENZLI] ⊢ [Part 04] ⊢ [14-minimal-basis] ⊢ [NEW]*
+*[IDFS] ⊢ [GLENZLI] ⊢ [Part 04] ⊢ [14-minimal-basis] ⊢ [284331b819e3db53]*

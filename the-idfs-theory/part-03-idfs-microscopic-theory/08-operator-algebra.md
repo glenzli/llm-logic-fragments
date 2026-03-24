@@ -246,4 +246,4 @@ $$d_\Omega(\phi_1, \phi_1')\big|_{\mathrm{Im}(\varphi)} \;\leq\; \underline{\alp
 > **注（误差再分配的纤维解释）**：§6 命题 6.7 证明了误差在空间上的再分配（改善集与恶化集同时非空）。从纤维视角：$\varphi$ 将输入重映射到链的不同纤维区域。改善发生在 $\varphi(x)$ 落入链的**厚纤维区域**（吸收半径大）的点；恶化发生在 $\varphi(x)$ 落入**薄纤维区域**的点。误差再分配的本质是**输入与纤维几何的匹配度重洗**。
 
 ----
-*[IDFS] ⊢ [GLENZLI] ⊢ [Part 03] ⊢ [08-operator-algebra] ⊢ [a8029e2f743ee9b7]*
+*[IDFS] ⊢ [GLENZLI] ⊢ [Part 03] ⊢ [08-operator-algebra] ⊢ [c0ab17afc08c28b1]*
