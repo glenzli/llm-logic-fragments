@@ -39,4 +39,4 @@
 - **第六部分：结构化空间上的 IDFS**。当 $\mathcal{X}$ 具有额外结构（离散/token 空间、向量空间）时，$\psi$ 的具体形式。
 
 ----
-*[IDFS] ⊢ [GLENZLI] ⊢ [Part 02] ⊢ [07-summary] ⊢ [b5c17b194399e90d]*
+*[IDFS] ⊢ [GLENZLI] ⊢ [Part XX] ⊢ [07-summary] ⊢ [b5c17b194399e90d]*

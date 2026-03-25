@@ -393,4 +393,4 @@ $$Error_{total} \;\approx\; \left\| \sum_{j=1}^l T_{j+1,l}(\mu_j) \right\| \;\si
 > **注（上界的双面同构）**：这个等价性深刻揭示了：代数的 CAC 不等式与统计的 Drift-Diffusion 并非两套平行的度量，而是对同一个系统性崩溃现象的两面描述。当系统发生局部崩溃时，在代数上叫"满足了所有三角放缩的同向性"，在统计上则叫做"系统随机扩散自由度丧失导致的纯漂移积累"。
 
 ----
-*[IDFS] ⊢ [GLENZLI] ⊢ [Part 02] ⊢ [03-upper-bounds] ⊢ [bc5ee45ca9476bd4]*
+*[IDFS] ⊢ [GLENZLI] ⊢ [Part XX] ⊢ [03-upper-bounds] ⊢ [bc5ee45ca9476bd4]*

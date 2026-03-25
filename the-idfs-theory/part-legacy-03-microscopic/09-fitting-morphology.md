@@ -223,4 +223,4 @@ $$B(x, \tau_f) \cap U_\alpha \;\subseteq\; \mathfrak{F}^{\tau_f}(\Phi(x))$$
 链中收缩步越多，吸收能力越强但有效深度越短（定理 7.10 的分辨率预算消耗越快）；保持步越多，深度越深但吸收越弱。两者之间的平衡由分辨率预算和目标的输出复杂度共同决定——这是命题 7.2 和 8.10 的三约束在链中的逐步实现。$P$-链是**唯一使分辨率预算衰减最慢**的链类型，因此是复合计算的最优信道。
 
 ----
-*[IDFS] ⊢ [GLENZLI] ⊢ [Part 03] ⊢ [09-fitting-morphology] ⊢ [664a92ea9e0407d6]*
+*[IDFS] ⊢ [GLENZLI] ⊢ [Part XX] ⊢ [09-fitting-morphology] ⊢ [664a92ea9e0407d6]*

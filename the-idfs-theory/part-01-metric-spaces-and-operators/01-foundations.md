@@ -69,7 +69,5 @@ $$\theta_{j,l,d'} \;\triangleq\; \prod_{k=j}^{l} L_{k,d'} \;\in\; \bar{\mathbb{R
 取 $d' = d$ 时简记 $\theta_{j,l} \triangleq \theta_{j,l,d}$。当所有 $L_{k,d'} < \infty$ 时：
 $$d'\bigl(c_\phi(x),\, c_\phi(y)\bigr) \leq \theta_{1,l,d'} \cdot d'(x, y)$$
 
-
-
 ----
-*[IDFS] ⊢ [GLENZLI] ⊢ [Part 01] ⊢ [01-foundations]*
+*[IDFS] ⊢ [GLENZLI] ⊢ [Part 01] ⊢ [01-foundations] ⊢ [2ebbb96f3432846b]*

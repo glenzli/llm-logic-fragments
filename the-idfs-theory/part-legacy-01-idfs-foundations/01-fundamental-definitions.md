@@ -183,4 +183,4 @@ $$U_\tau(\mathcal{S}) \;\triangleq\; \bigcup_{(r_i, \mathcal{X}(r_i)) \in \mathc
 > **注（非图灵完备性的根源）**：非图灵完备性源于两条基本约束的联合：(1) $F$ 有限（$|F| = M$），限制了单步计算的多样性；(2) $f$-链深度有界（$k \le \mathcal{D}$），限制了计算的时间展开。二者共同将 IDFS 的计算能力封死在有限自动机与图灵机之间——系统能执行的不同计算总数上界为 $\sum_{k=0}^{\mathcal{D}} M^k$，这是一个有限数。
 
 ----
-*[IDFS] ⊢ [GLENZLI] ⊢ [Part 01] ⊢ [01-fundamental-definitions] ⊢ [2707b28f6c8120dc]*
+*[IDFS] ⊢ [GLENZLI] ⊢ [Part XX] ⊢ [01-fundamental-definitions] ⊢ [8bb379316504b2bd]*

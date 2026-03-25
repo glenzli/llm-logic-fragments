@@ -134,4 +134,4 @@ $$d_{\Omega, d'}(\phi_1 \circ \psi,\; \phi_2 \circ \psi) \;=\; d_{\Omega, d'}(\p
 > **注（算子链中每一步的双重角色）**：在链 $c_\phi = \phi_k \circ \cdots \circ \phi_1$ 中，步 $\phi_m$（$1 < m < k$）同时扮演两个角色：作为 $\phi_{m-1} \circ \cdots \circ \phi_1$ 的**左因子**，其 Lip 常数决定上游差异的放大率；作为 $\phi_{m+1}$ 的**右因子**，$\mathrm{Im}(\phi_m \circ \cdots \circ \phi_1)$ 决定下游的有效比较域。
 
 ----
-*[IDFS] ⊢ [GLENZLI] ⊢ [Part 01] ⊢ [02-component-analysis]*
+*[IDFS] ⊢ [GLENZLI] ⊢ [Part 01] ⊢ [02-component-analysis] ⊢ [85faf40ff0286a41]*

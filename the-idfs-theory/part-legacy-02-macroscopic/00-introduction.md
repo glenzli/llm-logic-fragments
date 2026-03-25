@@ -22,4 +22,4 @@
 - **§6 计算的基底同构**：证明对输入的任意预变换 $\varphi$ 等价于 IDFS 基底扩展（定理 6.1），量化 Lip 代价及其对 CAC/CAB 界的传播，推导扩展不逃逸三元困境、复合扩展的链式法则与物理上限。
 
 ----
-*[IDFS] ⊢ [GLENZLI] ⊢ [Part 02] ⊢ [00-introduction] ⊢ [28f047fbaffc539d]*
+*[IDFS] ⊢ [GLENZLI] ⊢ [Part XX] ⊢ [00-introduction] ⊢ [28f047fbaffc539d]*

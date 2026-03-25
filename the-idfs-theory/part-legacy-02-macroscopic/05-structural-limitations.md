@@ -126,4 +126,4 @@ $$\varepsilon_r(x) + \varepsilon_{r_{new}}(x) \;\geq\; \Delta(x) \qquad \forall 
 > **注（反直觉的根源）**：在经典统计学习中，训练样本是**信息**——更多样本意味着更好的估计。但在 IDFS 中，采样对是**硬约束**——它强制 $\Phi$ 在特定域上锁定为特定行为。每增加一条约束，$\Phi$ 的全局行为自由度减少。通道 (a) 是域内直接冲突——新旧规则在重叠域上竞争 $\Phi$ 的输出空间。通道 (b) 是域外链路劫持——新规则通过 $\Phi$ 的全局共享性，在远离其采样域的位置锁死了旧任务的链路行为。两者的共同根源是 IDFS 的单映射共享架构：$\Phi$ 是为所有采样对服务的全局函数，任何局部约束都有全局后果。
 
 ----
-*[IDFS] ⊢ [GLENZLI] ⊢ [Part 02] ⊢ [05-structural-limitations] ⊢ [a97a583d97594a7d]*
+*[IDFS] ⊢ [GLENZLI] ⊢ [Part XX] ⊢ [05-structural-limitations] ⊢ [a97a583d97594a7d]*
