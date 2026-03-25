@@ -58,17 +58,7 @@ $$L_{\phi, d'} \;\triangleq\; \sup_{\substack{x, y \in \mathrm{dom}(\phi) \\ d'(
 
 > **约定**：后续凡提及 $L$ 或 Lipschitz 常数，均指此广义定义（取值于 $\bar{\mathbb{R}}_+$），不隐含 $L < \infty$。需要有限性时显式标注。
 
-### 1.6 算子的分量分划
-
-**定义（分量分划，Component Decomposition）**：设 $\phi \in \Omega$，$\mathcal{G} = \{d_i\}_{i \in I}$ 为 $(\mathcal{X}, d)$ 上的规范结构。定义：
-
-- **恒等分量** $I_{\mathrm{id}}(\phi) = \{i \in I : \forall x \in \mathrm{dom}(\phi),\; d_i(\phi(x), x) = 0\}$。
-- **常值分量** $I_{\mathrm{const}}(\phi) = \{i \in I \setminus I_{\mathrm{id}}(\phi) : \forall x, y \in \mathrm{dom}(\phi),\; d_i(\phi(x), \phi(y)) = 0\}$。
-- **活跃分量** $I_{\mathrm{act}}(\phi) = I \setminus (I_{\mathrm{id}}(\phi) \cup I_{\mathrm{const}}(\phi))$。
-
-三者互斥且穷尽：$I = I_{\mathrm{id}} \sqcup I_{\mathrm{const}} \sqcup I_{\mathrm{act}}$。若 $i$ 同时满足恒等与常值条件（$\mathrm{dom}(\phi)$ 中所有点在 $d_i$ 下不可区分且 $\phi$ 在 $d_i$ 上为恒等），优先归入 $I_{\mathrm{id}}$。$\mathcal{G} = \{d\}$ 时，分划退化为 $I_{\mathrm{act}} = \{d\}$（除非 $\phi = \mathrm{id}$ 或 $\phi$ 为常值映射）。
-
-### 1.7 算子链与复合度量
+### 1.6 算子链与复合度量
 
 $\Omega$ 中有限个算子的复合 $c_\phi = \phi_k \circ \cdots \circ \phi_1$（$\phi_j \in \Omega$，$k \geq 1$）称为**算子链**（operator chain），$k$ 为其**长度**（$k = 0$ 对应幺元 $\mathrm{id}_{\mathcal{X}}$）。由 $\Omega$ 的幺半群封闭性，$c_\phi \in \Omega$，§1.5 的广义 Lip 常数 $L_{c_\phi, d'}$ 直接适用。
 
