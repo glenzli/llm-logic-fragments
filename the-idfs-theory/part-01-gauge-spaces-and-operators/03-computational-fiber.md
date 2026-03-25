@@ -35,7 +35,7 @@ $$\underline{\alpha}_{\phi, d_{in}, d_{out}} \;\triangleq\; \inf_{y \in \mathrm{
 
 $\alpha_{\phi, d_{in}, d_{out}}(y)$ 度量纤维在 $y$ 处的**局部厚度**：在此 $d_{in}$-半径内的输入扰动不改变输出在 $d_{out}$ 下的等价类。当 $\phi$ 为单射且 $d_{in}, d_{out}$ 均为分离度量时，$\alpha_{\phi, d_{in}, d_{out}}(y) = 0$（无纤维结构）。
 
-> **注（双度量的意义）**：允许 $d_{in} \neq d_{out}$ 刻画了跨分量的鲁棒性——输入在分量 $d_{in}$ 上的扰动是否被输出在分量 $d_{out}$ 上的纤维吸收。这直接与 §2.2 的跨分量 Lip 矩阵对偶：$L_{\phi, d_{in} \to d_{out}}$ 刻画放大上界，$\alpha_{\phi, d_{in}, d_{out}}$ 刻画吸收下界。
+> **注（双度量的意义）**：允许 $d_{in} \neq d_{out}$ 刻画了跨分量的鲁棒性——输入在分量 $d_{in}$ 上的扰动是否被输出在分量 $d_{out}$ 上的纤维吸收。这直接与 §1.4 的 Lip 矩阵对偶：Lip 矩阵刻画放大上界，$\alpha_{\phi, d_{in}, d_{out}}$ 刻画吸收下界。
 
 
 ### 3.3 局部横截 Lipschitz 常数
