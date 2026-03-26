@@ -22,11 +22,11 @@
 
 ### 1.2 空间度量熵
 
-**定义（度量熵，Metric Entropy）**：对精度 $\varepsilon > 0$、分量伪度量 $d_i$ 与子集 $A \subseteq \mathcal{X}$，定义：
+**定义（度量熵，Metric Entropy）**：对精度 $\varepsilon > 0$、分量伪度量 $d_i$ 与子集 $U \subseteq \mathcal{X}$，定义：
 
-$$I_{\varepsilon, d_i}(A) \;\triangleq\; \log \mathcal{N}_{d_i}\bigl(\varepsilon,\, A\bigr)$$
+$$I_{\varepsilon, d_i}(U) \;\triangleq\; \log \mathcal{N}_{d_i}\bigl(\varepsilon,\, U\bigr)$$
 
-其中 $\mathcal{N}_{d_i}(\varepsilon, A)$ 为在 $d_i$ 下覆盖 $A$ 所需的最小 $\varepsilon$-球数量。$I_{\varepsilon, d_i}$ 取值于 $\bar{\mathbb{R}}_+$：若 $A$ 不可有限覆盖则 $I_{\varepsilon, d_i}(A) = +\infty$；对 $A = \emptyset$ 约定 $I_{\varepsilon, d_i}(\emptyset) = 0$。
+其中 $\mathcal{N}_{d_i}(\varepsilon, U)$ 为在 $d_i$ 下覆盖 $U$ 所需的最小 $\varepsilon$-球数量。$I_{\varepsilon, d_i}$ 取值于 $\bar{\mathbb{R}}_+$：若 $U$ 不可有限覆盖则 $I_{\varepsilon, d_i}(U) = +\infty$；对 $U = \emptyset$ 约定 $I_{\varepsilon, d_i}(\emptyset) = 0$。
 
 ### 1.3 算子与吸收元空间
 
@@ -48,11 +48,11 @@ $\Omega$ 在函数复合下构成**幺半群**：$\phi_2 \circ \phi_1 \in \Omega
 
 ### 1.4 算子空间上的度量
 
-对分量伪度量 $d_i \in \mathcal{G}$ 与子集 $S \subseteq \mathcal{X}$，定义 $\Omega$ 上的 **sup-范数距离**：
+对分量伪度量 $d_i \in \mathcal{G}$ 与子集 $U \subseteq \mathcal{X}$，定义 $\Omega$ 上的 **sup-范数距离**：
 
-$$d_{\Omega, d_i}(\phi, \psi)\big|_S \;\triangleq\; \sup_{x \in S} d_i(\phi(x), \psi(x))$$
+$$d_{\Omega, d_i}(\phi, \psi)\big|_U \;\triangleq\; \sup_{x \in U} d_i(\phi(x), \psi(x))$$
 
-取 $S = \mathcal{X}$ 时简记 $d_{\Omega, d_i}(\phi, \psi) \triangleq d_{\Omega, d_i}(\phi, \psi)\big|_\mathcal{X}$。$d_{\Omega, d_i}$ 是 $\Omega$ 上的扩展伪度量（$d_{\Omega,d_i}(\phi,\phi) = 0$ 由公理 1 得到；对称性与三角不等式由 $d_i$ 的对应性质逐点继承后取 $\sup$ 保持）。$\mathcal{G}$ 在 $\Omega$ 上诱导规范结构 $\mathcal{G}_\Omega = \{d_{\Omega, d_i}\}_{i \in I}$。
+取 $U = \mathcal{X}$ 时简记 $d_{\Omega, d_i}(\phi, \psi) \triangleq d_{\Omega, d_i}(\phi, \psi)\big|_\mathcal{X}$。$d_{\Omega, d_i}$ 是 $\Omega$ 上的扩展伪度量（$d_{\Omega,d_i}(\phi,\phi) = 0$ 由公理 1 得到；对称性与三角不等式由 $d_i$ 的对应性质逐点继承后取 $\sup$ 保持）。$\mathcal{G}$ 在 $\Omega$ 上诱导规范结构 $\mathcal{G}_\Omega = \{d_{\Omega, d_i}\}_{i \in I}$。
 
 ### 1.5 Lipschitz 矩阵
 
@@ -70,15 +70,15 @@ $$d_j(\phi(x), \phi(y)) \;\leq\; \sum_{i \in I} L_{i \to j} \cdot d_i(x, y)$$
 
 > **注（退化情形）**：取 $|I| = 1$（单分量），Lip 矩阵退化为标量 Lipschitz 常数。
 
-**定义（子集受限 Lip 矩阵，Set-Restricted Lip Matrix）**：对子集 $S \subseteq \mathrm{dom}(\phi)$，如果在 $S$ 上对任意 $x, y \in S$ 均满足上述距离放缩不等式，则称 $\mathbf{L}$ 为 $\phi$ 在 $S$ 上的一个受限 Lip 矩阵，记其合法矩阵集为 $\mathscr{L}(\phi)\big|_S$。显然 $\mathscr{L}(\phi) \subseteq \mathscr{L}(\phi)\big|_S$，即评估域越小，其界限可能越紧致。
+**定义（子集受限 Lip 矩阵，Set-Restricted Lip Matrix）**：对子集 $U \subseteq \mathrm{dom}(\phi)$，如果在 $U$ 上对任意 $x, y \in U$ 均满足上述距离放缩不等式，则称 $\mathbf{L}$ 为 $\phi$ 在 $U$ 上的一个受限 Lip 矩阵，记其合法矩阵集为 $\mathscr{L}(\phi)\big|_U$。显然 $\mathscr{L}(\phi) \subseteq \mathscr{L}(\phi)\big|_U$，即评估域越小，其界限可能越紧致。
 
-**命题 1.1（Lip 矩阵复合律）**：若对于算子链 $\phi_2 \circ \phi_1$，设其交互截面为 $S_{12} = \mathrm{Im}(\phi_1) \cap \mathrm{dom}(\phi_2)$。若 $\mathbf{L}_1 \in \mathscr{L}(\phi_1)$，且 $\mathbf{L}_2 \in \mathscr{L}(\phi_2)\big|_{S_{12}}$，则 $\mathbf{L}_2 \cdot \mathbf{L}_1 \in \mathscr{L}(\phi_2 \circ \phi_1)$（标准矩阵乘法）。
+**命题 1.1（Lip 矩阵复合律）**：若对于算子链 $\phi_2 \circ \phi_1$，设其交互截面为 $U_{12} = \mathrm{Im}(\phi_1) \cap \mathrm{dom}(\phi_2)$。若 $\mathbf{L}_1 \in \mathscr{L}(\phi_1)$，且 $\mathbf{L}_2 \in \mathscr{L}(\phi_2)\big|_{U_{12}}$，则 $\mathbf{L}_2 \cdot \mathbf{L}_1 \in \mathscr{L}(\phi_2 \circ \phi_1)$（标准矩阵乘法）。
 
-**证明**：对任意 $x, y \in \mathrm{dom}(\phi_2 \circ \phi_1)$，必有 $\phi_1(x), \phi_1(y) \in S_{12}$。因此对所有 $j \in I$：
+**证明**：对任意 $x, y \in \mathrm{dom}(\phi_2 \circ \phi_1)$，必有 $\phi_1(x), \phi_1(y) \in U_{12}$。因此对所有 $j \in I$：
 
 $$\begin{aligned}
 d_j((\phi_2 \circ \phi_1)(x), (\phi_2 \circ \phi_1)(y)) 
-&\leq \sum_{k \in I} L^{(2)}_{k \to j} \cdot d_k(\phi_1(x), \phi_1(y)) \quad (\text{因 } \phi_1(x), \phi_1(y) \in S_{12}) \\
+&\leq \sum_{k \in I} L^{(2)}_{k \to j} \cdot d_k(\phi_1(x), \phi_1(y)) \quad (\text{因 } \phi_1(x), \phi_1(y) \in U_{12}) \\
 &\leq \sum_{k \in I} L^{(2)}_{k \to j} \sum_{i \in I} L^{(1)}_{i \to k} \cdot d_i(x, y) \\
 &= \sum_{i \in I} \biggl(\sum_{k \in I} L^{(2)}_{k \to j} \cdot L^{(1)}_{i \to k}\biggr) d_i(x, y)
 \end{aligned}$$
