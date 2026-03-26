@@ -72,7 +72,7 @@ $$d_j(\phi(x), \phi(y)) \;\leq\; \sum_{i \in I} L_{i \to j} \cdot d_i(x, y)$$
 
 **定义（子集受限 Lip 矩阵，Set-Restricted Lip Matrix）**：对子集 $S \subseteq \mathrm{dom}(\phi)$，如果在 $S$ 上对任意 $x, y \in S$ 均满足上述距离放缩不等式，则称 $\mathbf{L}$ 为 $\phi$ 在 $S$ 上的一个受限 Lip 矩阵，记其合法矩阵集为 $\mathscr{L}(\phi)\big|_S$。显然 $\mathscr{L}(\phi) \subseteq \mathscr{L}(\phi)\big|_S$，即评估域越小，其界限可能越紧致。
 
-**命题 1.1（Lip 矩阵复合律）**：若对于算子链 $\phi_2 \circ \phi_1$，设其几何交互截面为 $S_{12} = \mathrm{Im}(\phi_1) \cap \mathrm{dom}(\phi_2)$。若 $\mathbf{L}_1 \in \mathscr{L}(\phi_1)$，且 $\mathbf{L}_2 \in \mathscr{L}(\phi_2)\big|_{S_{12}}$，则 $\mathbf{L}_2 \cdot \mathbf{L}_1 \in \mathscr{L}(\phi_2 \circ \phi_1)$（标准矩阵乘法）。
+**命题 1.1（Lip 矩阵复合律）**：若对于算子链 $\phi_2 \circ \phi_1$，设其交互截面为 $S_{12} = \mathrm{Im}(\phi_1) \cap \mathrm{dom}(\phi_2)$。若 $\mathbf{L}_1 \in \mathscr{L}(\phi_1)$，且 $\mathbf{L}_2 \in \mathscr{L}(\phi_2)\big|_{S_{12}}$，则 $\mathbf{L}_2 \cdot \mathbf{L}_1 \in \mathscr{L}(\phi_2 \circ \phi_1)$（标准矩阵乘法）。
 
 **证明**：对任意 $x, y \in \mathrm{dom}(\phi_2 \circ \phi_1)$，必有 $\phi_1(x), \phi_1(y) \in S_{12}$。因此对所有 $j \in I$：
 
