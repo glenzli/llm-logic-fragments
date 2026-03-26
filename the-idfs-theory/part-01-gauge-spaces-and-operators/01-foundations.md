@@ -96,4 +96,4 @@ $$\mathbf{L}_k \cdot \cdots \cdot \mathbf{L}_1 \;\in\; \mathscr{L}(c_\phi)$$
 由于 Lip 矩阵的非唯一性，上述全域标准乘积仅指出了一组代数存续的合法边界，它通常是**极为松散**的。因此，如何根据算子链内部真实的拓扑信息通路来剥离这种虚拟膨胀、寻找更加紧致的系统界限，构成了后续算子控制分析的核心课题。
 
 ----
-*[IDFS] ⊢ [GLENZLI] ⊢ [Part 01] ⊢ [01-foundations]*
+*[IDFS] ⊢ [GLENZLI] ⊢ [Part 01] ⊢ [01-foundations] ⊢ [473db5669183db54]*
