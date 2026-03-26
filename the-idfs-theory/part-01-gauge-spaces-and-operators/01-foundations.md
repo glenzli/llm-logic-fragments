@@ -1,6 +1,6 @@
 ## 基础
 
-### 1.1 规范空间与算子空间
+### 1.1 扩展规范空间
 
 **定义（扩展规范空间，Extended Gauge Space）**：设 $\mathcal{X}$ 为非空集合。$\mathcal{X}$ 上的一个**规范结构** $\mathcal{G} = \{d_i\}_{i \in I}$（$I$ 为有限指标集）是一族**扩展伪度量**（extended pseudometric），每个 $d_i: \mathcal{X} \times \mathcal{X} \to \bar{\mathbb{R}}_+ = [0, +\infty]$ 满足：
 
@@ -20,27 +20,7 @@
 
 > **注（与度量空间的关系）**：度量空间 $(\mathcal{X}, d)$ 是扩展规范空间的特例，取 $\mathcal{G} = \{d\}$（单分量、分离、有限值 $d: \mathcal{X}^2 \to [0, \infty)$）。后续理论中，若需度量空间的特化结果，通过对 $\mathcal{G}$ 施加额外条件得到，而非作为基础假设。
 
-**定义（算子空间，Operator Space）**：指定**吸收元** $\bot \in \mathcal{X}$，要求 $d_i(\bot, \bot) = 0$ 对所有 $i$（由公理 1 自动满足）。定义：
-
-$$\Omega = \{\, \phi : \mathcal{X} \to \mathcal{X} \;\big|\; \phi(\bot) = \bot \,\}$$
-
-$\phi \in \Omega$ 称为 $\mathcal{X}$ 上的一个**算子**。$\phi(x) = \bot$ 表示 $\phi$ 在 $x$ 处未定义。定义其**定义域**：
-
-$$\mathrm{dom}(\phi) \;\triangleq\; \bigl\{\, x \in \mathcal{X} \;\big|\; \phi(x) \neq \bot \,\bigr\}$$
-
-由 $\phi(\bot) = \bot$，对所有 $\phi \in \Omega$（包括 $\mathrm{id}_\mathcal{X}$）均有 $\bot \notin \mathrm{dom}(\phi)$。这是吸收元编码的自然结果：$\bot$ 的作用是将偏函数统一为全函数，$\mathrm{dom}(\phi)$ 刻画 $\phi$ 给出有意义输出的区域。
-
-$\Omega$ 在函数复合下构成**幺半群**：$\phi_2 \circ \phi_1 \in \Omega$，$\mathrm{id}_{\mathcal{X}} \in \Omega$。
-
-### 1.2 算子空间上的度量
-
-对分量伪度量 $d_i \in \mathcal{G}$ 与子集 $S \subseteq \mathcal{X}$，定义 $\Omega$ 上的 **sup-范数距离**：
-
-$$d_{\Omega, d_i}(\phi, \psi)\big|_S \;\triangleq\; \sup_{x \in S} d_i(\phi(x), \psi(x))$$
-
-取 $S = \mathcal{X}$ 时简记 $d_{\Omega, d_i}(\phi, \psi) \triangleq d_{\Omega, d_i}(\phi, \psi)\big|_\mathcal{X}$。$d_{\Omega, d_i}$ 是 $\Omega$ 上的扩展伪度量（$d_{\Omega,d_i}(\phi,\phi) = 0$ 由公理 1 得到；对称性与三角不等式由 $d_i$ 的对应性质逐点继承后取 $\sup$ 保持）。$\mathcal{G}$ 在 $\Omega$ 上诱导规范结构 $\mathcal{G}_\Omega = \{d_{\Omega, d_i}\}_{i \in I}$。
-
-### 1.3 度量熵
+### 1.2 空间度量熵
 
 **定义（度量熵，Metric Entropy）**：对精度 $\varepsilon > 0$、分量伪度量 $d_i$ 与子集 $A \subseteq \mathcal{X}$，定义：
 
@@ -48,7 +28,33 @@ $$I_{\varepsilon, d_i}(A) \;\triangleq\; \log \mathcal{N}_{d_i}\bigl(\varepsilon
 
 其中 $\mathcal{N}_{d_i}(\varepsilon, A)$ 为在 $d_i$ 下覆盖 $A$ 所需的最小 $\varepsilon$-球数量。$I_{\varepsilon, d_i}$ 取值于 $\bar{\mathbb{R}}_+$：若 $A$ 不可有限覆盖则 $I_{\varepsilon, d_i}(A) = +\infty$；对 $A = \emptyset$ 约定 $I_{\varepsilon, d_i}(\emptyset) = 0$。
 
-### 1.4 Lipschitz 矩阵
+### 1.3 算子与吸收元空间
+
+**定义（算子空间，Operator Space）**：指定**吸收元** $\bot \in \mathcal{X}$，要求 $d_i(\bot, \bot) = 0$ 对所有 $i$（由公理 1 自动满足）。定义：
+
+$$\Omega = \{\, \phi : \mathcal{X} \to \mathcal{X} \;\big|\; \phi(\bot) = \bot \,\}$$
+
+$\phi \in \Omega$ 称为 $\mathcal{X}$ 上的一个**算子**。$\phi(x) = \bot$ 表示 $\phi$ 在 $x$ 处未定义。
+
+> **注（正常态与崩溃态的拓扑隔离）**：补充要求对所有 $x \in \mathcal{X} \setminus \{\bot\}$ 和 $i \in I$，规定 $d_i(x, \bot) = +\infty$。这一无穷势垒约定补全了测度定义：当全局核算两个算子的差分时，若对于同一输入其一正常收敛而另一触发吸收态崩溃，它们的作动距离将自然被核定为正无穷。这在理论上严格割裂了具有不同定义域的算子分支。
+
+定义其**定义域**：
+
+$$\mathrm{dom}(\phi) \;\triangleq\; \bigl\{\, x \in \mathcal{X} \;\big|\; \phi(x) \neq \bot \,\bigr\}$$
+
+由 $\phi(\bot) = \bot$，对所有 $\phi \in \Omega$（包括 $\mathrm{id}_\mathcal{X}$）均有 $\bot \notin \mathrm{dom}(\phi)$。这是吸收元编码的自然结果：$\bot$ 的作用是将偏函数统一为全函数，$\mathrm{dom}(\phi)$ 刻画 $\phi$ 给出有意义输出的区域。
+
+$\Omega$ 在函数复合下构成**幺半群**：$\phi_2 \circ \phi_1 \in \Omega$，$\mathrm{id}_{\mathcal{X}} \in \Omega$。
+
+### 1.4 算子空间上的度量
+
+对分量伪度量 $d_i \in \mathcal{G}$ 与子集 $S \subseteq \mathcal{X}$，定义 $\Omega$ 上的 **sup-范数距离**：
+
+$$d_{\Omega, d_i}(\phi, \psi)\big|_S \;\triangleq\; \sup_{x \in S} d_i(\phi(x), \psi(x))$$
+
+取 $S = \mathcal{X}$ 时简记 $d_{\Omega, d_i}(\phi, \psi) \triangleq d_{\Omega, d_i}(\phi, \psi)\big|_\mathcal{X}$。$d_{\Omega, d_i}$ 是 $\Omega$ 上的扩展伪度量（$d_{\Omega,d_i}(\phi,\phi) = 0$ 由公理 1 得到；对称性与三角不等式由 $d_i$ 的对应性质逐点继承后取 $\sup$ 保持）。$\mathcal{G}$ 在 $\Omega$ 上诱导规范结构 $\mathcal{G}_\Omega = \{d_{\Omega, d_i}\}_{i \in I}$。
+
+### 1.5 Lipschitz 矩阵
 
 **定义（Lipschitz 矩阵，Lipschitz Matrix）**：对 $\phi \in \Omega$，称非负矩阵 $\mathbf{L} = (L_{i \to j})_{i, j \in I}$（$L_{i \to j} \in \bar{\mathbb{R}}_+$）为 $\phi$ 的一个**合法 Lipschitz 矩阵**，若对所有 $x, y \in \mathrm{dom}(\phi)$ 和所有 $j \in I$：
 
@@ -64,16 +70,22 @@ $$d_j(\phi(x), \phi(y)) \;\leq\; \sum_{i \in I} L_{i \to j} \cdot d_i(x, y)$$
 
 > **注（退化情形）**：取 $|I| = 1$（单分量），Lip 矩阵退化为标量 Lipschitz 常数。
 
-**命题 1.1（Lip 矩阵复合律）**：若 $\mathbf{L}_1 \in \mathscr{L}(\phi_1)$，$\mathbf{L}_2 \in \mathscr{L}(\phi_2)$，则 $\mathbf{L}_2 \cdot \mathbf{L}_1 \in \mathscr{L}(\phi_2 \circ \phi_1)$（标准矩阵乘法）。
+**定义（子集受限 Lip 矩阵，Set-Restricted Lip Matrix）**：对子集 $S \subseteq \mathrm{dom}(\phi)$，如果在 $S$ 上对任意 $x, y \in S$ 均满足上述距离放缩不等式，则称 $\mathbf{L}$ 为 $\phi$ 在 $S$ 上的一个受限 Lip 矩阵，记其合法矩阵集为 $\mathscr{L}(\phi)\big|_S$。显然 $\mathscr{L}(\phi) \subseteq \mathscr{L}(\phi)\big|_S$，即评估域越小，其界限可能越紧致。
 
-**证明**：对任意 $x, y \in \mathrm{dom}(\phi_2 \circ \phi_1)$ 和 $j \in I$：
+**命题 1.1（Lip 矩阵复合律）**：若对于算子链 $\phi_2 \circ \phi_1$，设其几何交互截面为 $S_{12} = \mathrm{Im}(\phi_1) \cap \mathrm{dom}(\phi_2)$。若 $\mathbf{L}_1 \in \mathscr{L}(\phi_1)$，且 $\mathbf{L}_2 \in \mathscr{L}(\phi_2)\big|_{S_{12}}$，则 $\mathbf{L}_2 \cdot \mathbf{L}_1 \in \mathscr{L}(\phi_2 \circ \phi_1)$（标准矩阵乘法）。
 
-$$d_j((\phi_2 \circ \phi_1)(x), (\phi_2 \circ \phi_1)(y)) \leq \sum_{k \in I} L^{(2)}_{k \to j} \cdot d_k(\phi_1(x), \phi_1(y)) \leq \sum_{k \in I} L^{(2)}_{k \to j} \sum_{i \in I} L^{(1)}_{i \to k} \cdot d_i(x, y) = \sum_{i \in I} \biggl(\sum_{k \in I} L^{(2)}_{k \to j} \cdot L^{(1)}_{i \to k}\biggr) d_i(x, y)$$
+**证明**：对任意 $x, y \in \mathrm{dom}(\phi_2 \circ \phi_1)$，必有 $\phi_1(x), \phi_1(y) \in S_{12}$。因此对所有 $j \in I$：
+
+$$\begin{aligned}
+d_j((\phi_2 \circ \phi_1)(x), (\phi_2 \circ \phi_1)(y)) 
+&\leq \sum_{k \in I} L^{(2)}_{k \to j} \cdot d_k(\phi_1(x), \phi_1(y)) \quad (\text{因 } \phi_1(x), \phi_1(y) \in S_{12}) \\
+&\leq \sum_{k \in I} L^{(2)}_{k \to j} \sum_{i \in I} L^{(1)}_{i \to k} \cdot d_i(x, y) \\
+&= \sum_{i \in I} \biggl(\sum_{k \in I} L^{(2)}_{k \to j} \cdot L^{(1)}_{i \to k}\biggr) d_i(x, y)
+\end{aligned}$$
 
 括号内即 $(\mathbf{L}_2 \cdot \mathbf{L}_1)_{i \to j}$。$\square$
 
-
-### 1.5 算子链
+### 1.6 算子链
 
 $\Omega$ 中有限个算子的复合 $c_\phi = \phi_k \circ \cdots \circ \phi_1$（$\phi_j \in \Omega$，$k \geq 0$）称为**算子链**（operator chain），$k$ 为其**长度**；$k = 0$ 时约定 $c_\phi = \mathrm{id}_{\mathcal{X}}$。由 $\Omega$ 的幺半群封闭性，$c_\phi \in \Omega$。
 
@@ -81,7 +93,7 @@ $\Omega$ 中有限个算子的复合 $c_\phi = \phi_k \circ \cdots \circ \phi_1$
 
 $$\mathbf{L}_k \cdot \cdots \cdot \mathbf{L}_1 \;\in\; \mathscr{L}(c_\phi)$$
 
-链的端到端 Lip 矩阵由各步矩阵的**标准乘积**给出。
+由于 Lip 矩阵的非唯一性，上述全域标准乘积仅指出了一组代数存续的合法边界，它通常是**极为松散**的。因此，如何根据算子链内部真实的拓扑信息通路来剥离这种虚拟膨胀、寻找更加紧致的系统界限，构成了后续算子控制分析的核心课题。
 
 ----
 *[IDFS] ⊢ [GLENZLI] ⊢ [Part 01] ⊢ [01-foundations]*
