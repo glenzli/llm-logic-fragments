@@ -71,7 +71,7 @@ $$L^{(1)}_{i \to k} = 0 \quad \text{或} \quad L^{(2)}_{k \to j} = 0$$
 $$d_{\Omega, d_j}(\psi \circ \phi_1,\; \psi \circ \phi_2) \;\leq\; \sum_{i \in I} L_{i \to j} \cdot d_{\Omega, d_i}(\phi_1, \phi_2)$$
 此操作使得全域空间上算子间的测度差异，在各个分量上受制于外层受限矩阵组合包络。由于上确界的脱钩现象（见下注），在形式化方程中作为代数乘子的 $\mathbf{L}$ 并不能被直接定义为具备全域极值可达性的严格映射参数。
 
-**(ii) 部分退耦**：当该受限矩阵的指定通路存在 $L_{i \to j} = 0$ 时，复合操作 $d_{\Omega, d_j}(\psi \circ \phi_1, \psi \circ \phi_2)$ 的距离放缩上界**仅依赖于**正交子集 $\{d_{\Omega, d_k}(\phi_1, \phi_2) \mid k \in I \setminus \{i\}\}$，而不受 $d_{\Omega, d_i}(\phi_1, \phi_2)$ 绝对偏导值的影响。这证明了：即使算子的全域测度上 $i \to j$ 存在强耦合关联，只要内侧算子的实际像集截面未触发该发散区域，系统在局部连通拓扑中依然会呈现绝对断接。
+**(ii) 部分退耦**：当该受限矩阵的指定通路存在 $L_{i \to j} = 0$ 时，复合操作 $d_{\Omega, d_j}(\psi \circ \phi_1, \psi \circ \phi_2)$ 的距离放缩上界**仅依赖于**正交子集 $\{d_{\Omega, d_k}(\phi_1, \phi_2) \mid k \in I \setminus \{i\}\}$，而不受 $d_{\Omega, d_i}(\phi_1, \phi_2)$ 的绝对量值影响。这证明了：即使外层算子 $\psi$ 在全域 Lip 矩阵上 $i \to j$ 存在强耦合（$L_{i \to j} > 0$），只要内侧算子 $\phi_1, \phi_2$ 的实际像集落入 $\psi$ 的局部退耦区域（即受限矩阵 $\mathbf{L}\big|_{U_{12}}$ 在该通路上归零），系统在受限截面上依然呈现绝对断接。
 
 **(iii) 完全退耦**：更进一步地，若该受限矩阵 $\mathbf{L}$ 在像集子流形上已剥离为一枚非负对角矩阵，则针对每个独立分量 $i \in I$，距离极值必定遵循一维形式的不互扰不等式：
 $$d_{\Omega, d_i}(\psi \circ \phi_1,\; \psi \circ \phi_2) \;\leq\; L_{i \to i} \cdot d_{\Omega, d_i}(\phi_1, \phi_2)$$
@@ -118,43 +118,43 @@ $$\sup_{y \in \mathrm{Im}(\psi)} d_i(\phi_1(y), \phi_2(y)) \;\leq\; \sup_{y \in 
 
 #### 左右复合的结构性对比
 
-综合命题 2.4–2.6 的结论，算子空间 $(\Omega, \circ, \mathcal{G}_\Omega)$ 中左右复合对测度的作用表现出根本性的非交换结构：左乘 $\ell_\psi: \phi \mapsto \psi \circ \phi$ 构成以受限 Lip 矩阵 $\mathbf{L}\big|_U$ 为系数的广义 Lipschitz 映射（命题 2.4），对于非对角阵 $\mathbf{L}$，可通过 $L_{i \to j} > 0$ 将分量 $i$ 上的算子差异耦合放大至分量 $j$；右乘 $r_\psi: \phi \mapsto \phi \circ \psi$ 在每个独立分量 $d_{\Omega, d_i}$ 上均为 $1$-Lipschitz 映射（命题 2.6），其效应等价于将距离核算区域限定至 $\mathrm{Im}(\psi) \subseteq \mathcal{X}$，不引入任何跨分量项。
+综合命题 2.4–2.6，左右复合在 $(\Omega, \mathcal{G}_\Omega)$ 上的度量行为具有根本性非对称：
 
-> **注（内部算子的对偶射影属性）**：在链 $c_\phi = \phi_k \circ \cdots \circ \phi_1$ 中，任取中间元素 $\phi_m$（$1 < m < k$）：相对于其上游 $\phi_{m-1} \circ \cdots \circ \phi_1$ 而言，它是**左乘因子**，所以其内部的 Lip 因子直接决定了上游差异在此段的乘性放大上限；相对于其下游 $\phi_{m+1}$ 而言，它是**右乘因子**，故其累积产生的像集 $\mathrm{Im}(\phi_m \circ \cdots \circ \phi_1)$ 直接构成了下游后续测距的有效几何评价域上限。
+- **左乘** $\ell_\psi: \phi \mapsto \psi \circ \phi$：以受限 Lip 矩阵 $\mathbf{L}\big|_U$ 为系数的广义 Lipschitz 映射（命题 2.4）。非对角元 $L_{i \to j} > 0$ 引入跨分量耦合放大。
+- **右乘** $r_\psi: \phi \mapsto \phi \circ \psi$：在每个分量 $d_{\Omega, d_i}$ 上均为 $1$-Lipschitz 映射（命题 2.6），等价于将距离评估域限制至 $\mathrm{Im}(\psi) \subseteq \mathcal{X}$，无跨分量项。
 
-> **注（前端算子对极差的条件截断）**：将宏观复合链视作一个演化管线时，处于下游的中间或末端算子仅在既存的前驱管线测度内执行依序放缩；而前端首发算子 $\phi_1$ 作为输入始基，直接承接全域空间 $\mathcal{X}$ 并定义了初始有效像集 $\mathrm{Im}(\phi_1)$，该像集构成了后续一切下游核算的理论最大流形基底。
-> 若 $\phi_1$ 的初级映射在特定伪度量分量 $d_i$ 上发生了状态坍缩（即 $\sup d_i(\phi_1(x), \phi_1(y)) = 0$），该分量上的原始极差将转为零。然而，由于规范空间中各个伪度量族并无先验的正交隔离假定，这种坍缩**并不必然意味着该分量在后续演化链中永久归零**。如果下游的受限矩阵阵列 $\mathbf{L}^{(p)}\big|_{U_p}$ 存在从其他未坍缩分量向分量 $i$ 的满射（即存在 $m \neq i$ 使得矩阵元素 $L_{m \to i} > 0$），那么跨分量的耦合放缩就能将系统其他分量上的残余本征差异重新“注入”该测度。因此，前端首发阶段的局部极差归零，**仅在当前分量局部退耦（例如后续传递矩阵该列为空集）或所有存在潜在耦合前驱的分量群均被同步坍缩的严苛条件下**，才是单向且代数不可逆的。这进一步警示：在处理高度交织的复杂复合算子链时，对少数极差分量的强压并不能彻底切断全局不确定性在管线中的代数反渗。
+> **注（链内算子的对偶角色）**：在链 $c_\phi = \phi_k \circ \cdots \circ \phi_1$ 中，$\phi_m$（$1 < m < k$）同时扮演两个角色：作为上游 $\phi_{m-1} \circ \cdots \circ \phi_1$ 的**左乘因子**，其 Lip 矩阵决定上游差异的乘性放大上界；作为下游 $\phi_{m+1}$ 的**右乘因子**，其累积像集 $\mathrm{Im}(\phi_m \circ \cdots \circ \phi_1)$ 限定下游的距离评估域。
+
+> **注（首发算子的像集约束与跨分量再激活）**：$\phi_1$ 直接作用于全域 $\mathcal{X}$，其像集 $\mathrm{Im}(\phi_1)$ 构成后续全部下游评估域的初始上界。若 $\phi_1$ 在某分量 $d_i$ 上产生常值坍缩（$d_i(\phi_1(x), \phi_1(y)) = 0$，$\forall x, y \in \mathrm{dom}(\phi_1)$），则 $d_i^{(1)} = 0$。然而此归零**不必然持续**：若下游受限 Lip 矩阵存在非对角元 $L_{l \to i}^{(p)}\big|_{U_p} > 0$（$l \neq i$），其他未坍缩分量的残余测距可通过跨分量耦合重新注入分量 $i$（命题 2.13(i)）。$d_i$ 归零的不可逆性仅在以下条件下成立：后续连积矩阵 $\mathbf{L}_{\mathrm{down}}$ 的第 $i$ 列满足 $(\mathbf{L}_{\mathrm{down}})_{l \to i} = 0$（$\forall l \neq i$），即下游不存在向分量 $i$ 的跨分量耦合（命题 2.13(iii)）。
 
 #### 算子链内部摄动的双端隔离
 
-**命题 2.7（单步摄动隔离）**：对于任意长度为 $k \geq 2$ 的级联算子链 $c_\phi = \phi_k \circ \cdots \circ \phi_1$，若在链条中途第 $m$ 步（$1 < m < k$）发生单步操作差分/摄动，导致替换为新链 $c_{\phi'} = (\phi_k \circ \cdots \circ \phi_{m+1}) \circ \psi_m \circ (\phi_{m-1} \circ \cdots \circ \phi_1)$。局部单步偏差 $(\phi_m, \psi_m)$ 对系统最终输出的分量测度 $j$ 的放缩影响，在代数结构上表现出严格的双端退耦切断特性：
+**命题 2.7（单步摄动隔离）**：设 $c_\phi = \phi_k \circ \cdots \circ \phi_1$（$k \geq 2$），在第 $m$ 步（$1 < m < k$）将 $\phi_m$ 替换为 $\psi_m$，得 $c_{\phi'} = \phi_k \circ \cdots \circ \phi_{m+1} \circ \psi_m \circ \phi_{m-1} \circ \cdots \circ \phi_1$。记 $R_{\mathrm{up}} = \phi_{m-1} \circ \cdots \circ \phi_1$，$L_{\mathrm{down}} = \phi_k \circ \cdots \circ \phi_{m+1}$。则对任意分量 $j \in I$：
 
-**(i) 上游约化**：误差的初始激发测度，被上游空间严格限制在其前置算子链 $R_{\text{up}} = \phi_{m-1} \circ \cdots \circ \phi_1$ 传导而来的像集子流形上。若 $d_{\Omega, d_i}(\phi_m, \psi_m)\big|_{\mathrm{Im}(R_{\text{up}})} = 0$（即原副算子仅在输入盲区流形上存在偏离），该项极差即因未被触发而**直接归零**。
+$$d_{\Omega, d_j}(c_\phi, c_{\phi'}) \;\leq\; \sum_{i \in I} \left( \mathbf{L}^{(k)}\big|_{U_k} \cdots \mathbf{L}^{(m+1)}\big|_{U_{m+1}} \right)_{i \to j} \cdot d_{\Omega, d_i}(\phi_m, \psi_m)\Big|_{\mathrm{Im}(R_{\mathrm{up}})}$$
 
-**(ii) 下游受限传递**：即便局部误差产生非零偏置，其向外层网络蔓延的代数测度扩散路径，已被强制锁定为下游各后续链路在实际像集截面 $U_p = \mathrm{Im}(\phi_{p-1} \circ \cdots \circ \phi_1) \cap \mathrm{dom}(\phi_p)$ 上的受限算子矩阵的连乘包络 $\mathbf{L}_{\text{down}} = \prod_{p=m+1}^{k} \mathbf{L}^{(p)}\big|_{U_p}$。一旦在这条受限传递路径内，发散通量触及了特定降层像集或引发了测度不关联，导致对应系数项 $(\mathbf{L}^{(p)}\big|_{U_p})_{i \to j} = 0$，代数上的乘法零元传递将彻底阻断剩余极差的一切传递，使该偏差项**彻底归零**。
+该上界的结构由两个独立机制控制：
 
-因此对任意分量 $j \in I$，基于上述双端切断特性的宏观距离上限被数学锁定为以下乘积强约束形式：
-$$d_{\Omega, d_j}(c_\phi, c_{\phi'}) \;\leq\; \sum_{i \in I} \left( \mathbf{L}^{(k)}\big|_{U_k} \cdots \mathbf{L}^{(m+1)}\big|_{U_{m+1}} \right)_{i \to j} \cdot d_{\Omega, d_i}(\phi_m, \psi_m)\Big|_{\mathrm{Im}(\phi_{m-1} \circ \cdots \circ \phi_1)}$$
+**(i) 上游评估域截断**：替换差异 $d_{\Omega, d_i}(\phi_m, \psi_m)$ 仅在 $\mathrm{Im}(R_{\mathrm{up}})$ 上评估（而非全域 $\mathcal{X}$）。若 $\phi_m$ 与 $\psi_m$ 在 $\mathrm{Im}(R_{\mathrm{up}})$ 上一致（$d_{\Omega, d_i}(\phi_m, \psi_m)\big|_{\mathrm{Im}(R_{\mathrm{up}})} = 0$），则该分量的贡献为零——上游链路未到达的输入区域上的差异不影响复合输出。
 
-**证明**：定义下游包含一切外层后置步骤的群左乘复合操作 $L_{\text{down}} = \phi_k \circ \cdots \circ \phi_{m+1}$，上游包含一切前置条件状态的群右乘复合操作 $R_{\text{up}} = \phi_{m-1} \circ \cdots \circ \phi_1$。此时系统等价于 $c_\phi = L_{\text{down}} \circ \phi_m \circ R_{\text{up}}$ 且 $c_{\phi'} = L_{\text{down}} \circ \psi_m \circ R_{\text{up}}$。
-首先处理左端包络，由于 $L_{\text{down}}$ 构成单侧级联组系，利用前文**推论 2.5（算子链左复合多级拉伸）**，其天然的最紧代数上限界限直接退化为内部各个特化算子局部受限矩阵的左乘连积 $\mathbf{L}_{\text{down}}$：
-$$d_{\Omega, d_j}(L_{\text{down}} \circ (\phi_m \circ R_{\text{up}}),\; L_{\text{down}} \circ (\psi_m \circ R_{\text{up}})) \;\leq\; \sum_{i \in I} (\mathbf{L}_{\text{down}})_{i \to j} \cdot d_{\Omega, d_i}(\phi_m \circ R_{\text{up}},\; \psi_m \circ R_{\text{up}})$$
-随后锁定对上述连加式括号内各项基础极差残量进行内部化约。沿管线直接套用**命题 2.6（右复合收缩）**的核心结论，将原本的宽泛全域差异收缩至 $R_{\text{up}}$ 的输出截断面：
-$$d_{\Omega, d_i}(\phi_m \circ R_{\text{up}},\; \psi_m \circ R_{\text{up}}) \;=\; d_{\Omega, d_i}(\phi_m, \psi_m)\Big|_{\mathrm{Im}(R_{\text{up}})}$$
-将该缩量的像集距离重写入方程，结合乘法零元吸收法则，上述 (i)(ii) 所述之双端退耦切断特性与公式完全同态。$\square$
+**(ii) 下游受限放缩**：非零的替换差异经下游链路 $L_{\mathrm{down}}$ 的受限 Lip 矩阵连积 $\mathbf{L}_{\mathrm{down}} = \prod_{p=m+1}^{k} \mathbf{L}^{(p)}\big|_{U_p}$ 放缩。若连积矩阵在某通路 $(i, j)$ 上为零（$(\mathbf{L}_{\mathrm{down}})_{i \to j} = 0$），则分量 $i$ 上的替换差异不传播至分量 $j$。
 
-**命题 2.8（全局漂移界）**：对于任意长度为 $k \geq 2$ 的基准算子链 $c_\phi = \phi_k \circ \cdots \circ \phi_1$ 与全新的平行算子链 $c_\psi = \psi_k \circ \cdots \circ \psi_1$。在规范测度下全量替换的全局漂移偏置，严格界定为各单向演化断面加权摄动差之和：
+**证明**：$c_\phi = L_{\mathrm{down}} \circ \phi_m \circ R_{\mathrm{up}}$，$c_{\phi'} = L_{\mathrm{down}} \circ \psi_m \circ R_{\mathrm{up}}$。对 $L_{\mathrm{down}}$ 应用推论 2.5（左复合链拉伸）：
+$$d_{\Omega, d_j}(c_\phi, c_{\phi'}) \;\leq\; \sum_{i \in I} (\mathbf{L}_{\mathrm{down}})_{i \to j} \cdot d_{\Omega, d_i}(\phi_m \circ R_{\mathrm{up}},\; \psi_m \circ R_{\mathrm{up}})$$
+对右乘 $R_{\mathrm{up}}$ 应用命题 2.6（右复合收缩）：
+$$d_{\Omega, d_i}(\phi_m \circ R_{\mathrm{up}},\; \psi_m \circ R_{\mathrm{up}}) \;=\; d_{\Omega, d_i}(\phi_m, \psi_m)\Big|_{\mathrm{Im}(R_{\mathrm{up}})}$$
+代入即得。$\square$
+
+**命题 2.8（等长链距离界）**：设 $c_\phi = \phi_k \circ \cdots \circ \phi_1$ 与 $c_\psi = \psi_k \circ \cdots \circ \psi_1$ 为等长算子链。则对任意分量 $j \in I$：
 $$d_{\Omega, d_j}(c_\phi, c_\psi) \;\leq\; \sum_{m=1}^k \sum_{i \in I} \left( \prod_{p=m+1}^{k} \mathbf{L}^{(p)}[\phi] \right)_{i \to j} \cdot d_{\Omega, d_i}(\phi_m, \psi_m)\Big|_{\mathrm{Im}(\psi_{m-1} \circ \cdots \circ \psi_1)}$$
-*(约定：当 $m=k$ 时，左侧连积退化为恒等测度；当 $m=1$ 时，局部像集限定拓展为全域 $\mathcal{X}$)*
+*（约定：$m=k$ 时连积为单位矩阵；$m=1$ 时像集限定为 $\mathcal{X}$）*
 
-**证明**：构造套叠的中间态序列 $H_m$（$0 \leq m \leq k$）：
-设 $H_0 = c_\phi$，$H_m = \phi_k \circ \cdots \circ \phi_{m+1} \circ \psi_m \circ \cdots \circ \psi_1$，$H_k = c_\psi$。
-由扩展伪度量 $d_{\Omega, d_j}$ 固有的三角不等式，全局偏差可平展开为：
-$$d_{\Omega, d_j}(H_0, H_k) \;\leq\; \sum_{m=1}^k d_{\Omega, d_j}(H_{m-1}, H_m)$$
-考察第 $m$ 步单次漂移差分。依定义：$H_{m-1} = L_{\text{down}}^{(m)} \circ \phi_m \circ R_{\text{up}}^{(m)}$ 且 $H_m = L_{\text{down}}^{(m)} \circ \psi_m \circ R_{\text{up}}^{(m)}$，其中 $L_{\text{down}}^{(m)} = \phi_k \circ \cdots \circ \phi_{m+1}$ 而 $R_{\text{up}}^{(m)} = \psi_{m-1} \circ \cdots \circ \psi_1$。
-根据命题 2.7，在对下游应用 $L_{\text{down}}^{(m)}$ 放缩时，由于前端算子已全部替换，新链的像集不再必然内含于原 $\phi$ 链对应的受限截面 $U_p(\phi)$ 内。此时必须退回调用未受限的全域 Lip 矩阵 $\mathbf{L}^{(p)}[\phi]$ 承接乘积演化；而基于右侧，其前驱输入依然严格等效限制于 $\mathrm{Im}(R_{\text{up}}^{(m)})$。单项代回求和即获本命题。$\square$
+**证明**：构造中间链序列 $H_m = \phi_k \circ \cdots \circ \phi_{m+1} \circ \psi_m \circ \cdots \circ \psi_1$（$0 \leq m \leq k$），则 $H_0 = c_\phi$，$H_k = c_\psi$。由三角不等式：
+$$d_{\Omega, d_j}(c_\phi, c_\psi) \;\leq\; \sum_{m=1}^k d_{\Omega, d_j}(H_{m-1}, H_m)$$
+$H_{m-1}$ 与 $H_m$ 仅在第 $m$ 步不同：$H_{m-1} = L_{\mathrm{down}}^{(m)} \circ \phi_m \circ R_{\mathrm{up}}^{(m)}$，$H_m = L_{\mathrm{down}}^{(m)} \circ \psi_m \circ R_{\mathrm{up}}^{(m)}$，其中 $L_{\mathrm{down}}^{(m)} = \phi_k \circ \cdots \circ \phi_{m+1}$，$R_{\mathrm{up}}^{(m)} = \psi_{m-1} \circ \cdots \circ \psi_1$。对每一项应用命题 2.7 的结构：右侧像集限定于 $\mathrm{Im}(R_{\mathrm{up}}^{(m)})$；下游放缩使用 $\mathbf{L}^{(p)}[\phi]$（全域 Lip 矩阵而非受限矩阵，因为 $R_{\mathrm{up}}^{(m)}$ 来自 $\psi$ 链，其像集未必落在 $\phi$ 链的受限截面内）。代回求和即得。$\square$
 
-> **注（像集逸出与泛化矩阵退化）**：上述演化界揭示了全链路平移替换过程中的测度不对称性：当用新算子群 $c_\psi$ 整体替换旧群 $c_\phi$ 时，新前置级联体系 $\psi_{<m}$ 生成的流形依然服从前置收缩（受限于 $\mathrm{Im}(R_{\text{up}})$ 极差截面）；然而，由于新激发的像集点极易发生“像集逸出（Image Escape）”，不再被旧有的受限相空间截面 $U_p(\phi)$ 完全包含，该放缩估值将被迫全价代入未经局部限制的全域放缩矩阵阵列 $\mathbf{L}^{(p)}[\phi]$。这种测度域的边界逃逸，直接造成了下游原本依赖特定极差零点面所构筑的交叉乘性退耦发生全面失效。其代数必然性表明：在不满足纯对角化强隔离的复杂算子网络中执行基础算系换轨，由于不可避免地穿透原局部截面的零元限制区，系统将在几何量纲上大概率面临总体极差偏置的剧烈乘性上溢。
+> **注（受限矩阵与全域矩阵的退化）**：命题 2.7 中下游放缩使用受限 Lip 矩阵 $\mathbf{L}^{(p)}\big|_{U_p}$，可利用特定通路上的局部归零获得更紧界。命题 2.8 中由于中间链的前置部分来自 $\psi$ 而非 $\phi$，像集 $\mathrm{Im}(R_{\mathrm{up}}^{(m)})$ 可能超出 $\phi$ 链原有的受限域，迫使下游退回全域 Lip 矩阵 $\mathbf{L}^{(p)}[\phi]$。这是两条链之间距离估计较单步替换更为宽松的代数原因。
+
 
 **推论 2.9（交换子界，Commutator Bound）**：对任意 $\phi, \psi \in \Omega$，设 $U = (\mathrm{Im}(\phi) \cup \mathrm{Im}(\psi)) \cap \mathrm{dom}(\psi)$。复合的非交换偏差在各分量 $j \in I$ 上严格界定为：
 $$d_{\Omega, d_j}(\psi \circ \phi,\; \phi \circ \psi) \;\leq\; \sum_{i \in I} L^{(\psi)}_{i \to j}\big|_U \cdot d_{\Omega, d_i}(\phi, \psi) \;+\; d_{\Omega, d_j}(\phi, \psi)\Big|_{\mathrm{Im}(\psi)}$$
@@ -221,7 +221,7 @@ $$d_j(\psi(x_0), x_0) \;\leq\; \sum_{i \in I} L^{(\psi)}_{i \to j}\big|_{\{x_0\}
 在确立了算子复合对空间测度极差放缩的各种代数约束（2.3 节）及其点态退化形式（2.4 节）之后，我们需回溯剖析算子内禀特征在级联下的布尔态演化（即 2.2 节所定义的透明 $I_{\mathrm{id}}$、遮蔽 $I_{\mathrm{const}}$ 与活跃 $I_{\mathrm{act}}$ 分划）。
 当处于不同局部拓扑相态的前后算子发生链式闭合时，宏观系统 $\phi_2 \circ \phi_1$ 在各个隔离伪度量分量 $i \in I$ 上的测度命运绝非两者的简单线性拼接。以下的命题群严格框定了这三种信息通道状态在复合运算下的代数继承约束。
 
-**命题 2.12（活跃分量包含律）**：
+**命题 2.11（活跃分量包含律）**：
 
 **(i)** 对任意复合 $\phi_2 \circ \phi_1 \in \Omega$：
 $$I_{\mathrm{act}}(\phi_2 \circ \phi_1) \;\subseteq\; I_{\mathrm{act}}(\phi_1) \cup I_{\mathrm{act}}(\phi_2)$$
@@ -254,7 +254,7 @@ $$d_i(\phi_2(\phi_1(x)), \phi_2(\phi_1(y))) = 0$$
 
 > **注（包含可能严格）**：即使 $i \in I_{\mathrm{act}}(\phi_1) \cap I_{\mathrm{act}}(\phi_2)$，复合后 $\phi_2 \circ \phi_1$ 在 $d_i$ 上也可能退化为恒等或常值——两步活跃变换可能互相抵消。
 
-**命题 2.13（恒等分量保留律）**：$I_{\mathrm{id}}(\phi_1) \cap I_{\mathrm{id}}(\phi_2) \subseteq I_{\mathrm{id}}(\phi_2 \circ \phi_1)$。
+**命题 2.12（恒等分量保留律）**：$I_{\mathrm{id}}(\phi_1) \cap I_{\mathrm{id}}(\phi_2) \subseteq I_{\mathrm{id}}(\phi_2 \circ \phi_1)$。
 
 **证明**：设 $i$ 包含于交集，即 $\phi_1, \phi_2$ 均在 $d_i$ 分量上为恒等映射。对所有可复合输入 $x \in \mathrm{dom}(\phi_2 \circ \phi_1)$，由三角不等式公设：
 $$d_i(\phi_2(\phi_1(x)), x) \leq d_i(\phi_2(\phi_1(x)), \phi_1(x)) + d_i(\phi_1(x), x) = 0 + 0 = 0$$
@@ -262,7 +262,7 @@ $$d_i(\phi_2(\phi_1(x)), x) \leq d_i(\phi_2(\phi_1(x)), \phi_1(x)) + d_i(\phi_1(
 
 > **注（恒等分量非严格单调）**：互为逆元的操作可复合出新的恒等分量。若 $\phi_2 = \phi_1^{-1}$ 且二者能够发生定义域接驳，即便各自在 $d_i$ 上皆非透明操作，其复合算子链 $\phi_2 \circ \phi_1 = \mathrm{id}$ 亦必定在 $d_i$ 上触发透明特征。这印证了 $I_{\mathrm{id}}$ 随操作链路深化**不强制**保持单向缩减。
 
-**命题 2.14（常值分量的反渗与退化）**：设 $i \in I_{\mathrm{const}}(\phi_m)$，算子链 $c_\phi = \phi_k \circ \cdots \circ \phi_1$（$k > m$）。
+**命题 2.13（常值分量的反渗与退化）**：设 $i \in I_{\mathrm{const}}(\phi_m)$，算子链 $c_\phi = \phi_k \circ \cdots \circ \phi_1$（$k > m$）。
 **(i)（代数耦合反渗情形）** $\phi_m$ 虽在分量 $d_i$ 上使输入极差测度归零，但若后续下游存在非对角的受限 Lip 矩阵（即在相应子集截面上满足存在 $j \neq i$ 使得 $L_{j \to i} > 0$），且前驱分量 $j$ 依然残存不为零的极差，则该残余测度将在乘法约束下重新映射回分量 $i$ 方向，引致 $i \in I_{\mathrm{act}}(c_\phi)$。
 
 **(ii)（严格解耦退化情形）** 若后续所有算子 $\phi_{m+1}, \ldots, \phi_k$ 在对应的像集演化交面 $U_p$ 上均持有**纯对角阵**构型的受限 Lip 矩阵，则 $i \in I_{\mathrm{const}}(c_\phi) \cup I_{\mathrm{id}}(c_\phi)$。

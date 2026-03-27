@@ -1,0 +1,348 @@
+## 算子链代数
+
+算子链 $c_\phi = \phi_k \circ \cdots \circ \phi_1$（§1.6）的系统行为由两组对偶机制共同控制：Lip 矩阵的跨分量乘性放缩（§2）与纤维结构的等价类截断（§3）。本章将二者在链级统合为一个代数框架。
+
+### 4.1 赋距幺半群
+
+$(\Omega, \circ, \mathrm{id}_\mathcal{X})$ 构成幺半群（§1.3）。结合 §1.4 定义的规范结构 $\mathcal{G}_\Omega = \{d_{\Omega, d_i}\}_{i \in I}$，$\Omega$ 成为**赋距幺半群**——其复合运算在度量上的行为受 Lip 矩阵约束。
+
+#### 定义（赋距幺半群，Metrized Monoid）
+
+称幺半群 $(M, \cdot, e)$ 配备扩展规范结构 $\mathcal{G}_M$ 为**赋距幺半群**，若存在映射 $\Lambda: M \to \bar{\mathbb{R}}_+^{|I| \times |I|}$ 使得对所有 $a, b_1, b_2 \in M$ 和 $j \in I$：
+
+$$d_{M, d_j}(a \cdot b_1,\; a \cdot b_2) \;\leq\; \sum_{i \in I} [\Lambda(a)]_{i \to j} \cdot d_{M, d_i}(b_1, b_2)$$
+
+$\Lambda$ 称为左乘代价映射。
+
+对 $\Omega$，取 $\Lambda(\phi) = \mathbf{L} \in \mathscr{L}(\phi)$（任一合法 Lip 矩阵）。命题 2.4 即证 $(\Omega, \mathcal{G}_\Omega, \Lambda)$ 为赋距幺半群。右乘则由命题 2.6 约束——每个右平移 $r_\psi$ 均为分量 $1$-Lipschitz 映射。
+
+> **注（左右非对称性的代数根源）**：左乘引入矩阵系数的跨分量放缩（命题 2.4），右乘仅执行定义域截断而无放大（命题 2.6）。此非对称性是 $\Omega$ 作为赋距幺半群的固有结构，而非特定算子的性质。
+
+> **注（与 Lawvere 度量空间的关联）**：每个分量 $(\mathcal{X}, d_i)$ 可视为 $([0,+\infty], \geq, +)$-enriched category（Lawvere 度量空间）的对象。$\Omega$ 中的算子即该 enriched category 的自态射。赋距幺半群结构精确刻画了自态射复合的度量代价。
+
+### 4.2 距离向量动力系统
+
+固定两个输入 $x, x' \in \mathrm{dom}(c_\phi)$。定义各步中间态像点的**测距向量**：
+
+$$\mathbf{d}^{(m)} \;\triangleq\; \bigl(d_j(x_m, x'_m)\bigr)_{j \in I} \;\in\; \bar{\mathbb{R}}_+^{|I|}$$
+
+其中 $x_m = (\phi_m \circ \cdots \circ \phi_1)(x)$，$x'_m = (\phi_m \circ \cdots \circ \phi_1)(x')$；$\mathbf{d}^{(0)} = (d_j(x, x'))_{j \in I}$。
+
+由命题 3.7（截断迭代律），$\mathbf{d}^{(m)}$ 到 $\mathbf{d}^{(m+1)}$ 的逐步演化为分段映射：对每个输出分量 $j \in I$，
+
+$$d_j^{(m+1)} = \begin{cases} 0 & \text{若存在 } i \in I \text{ 使得 } d_i^{(m)} < [\mathbf{A}(\phi_{m+1})]_{ji} \\ \sum_{i \in I} [\mathbf{L}(\phi_{m+1})]_{ji} \cdot d_i^{(m)} & \text{否则} \end{cases}$$
+
+这在 $\bar{\mathbb{R}}_+^{|I|}$ 上定义了一个**分段线性-截断动力系统**。每一步的演化由算子 $\phi_{m+1}$ 的 Lip 矩阵和吸收矩阵共同决定，二者在相空间中划分出截断区域（测距 $\leq \underline{\alpha}$）与放缩区域（测距 $> \underline{\alpha}$）的几何分界。
+
+**命题 4.1（吸收收敛）**：设链 $c_\phi = \phi_k \circ \cdots \circ \phi_1$。若存在步骤 $m^* \in \{1, \ldots, k\}$ 和输入分量 $i^* \in I$ 使得：
+
+$$\sum_{i \in I} \left(\prod_{p=1}^{m^*-1} \mathbf{L}^{(p)}\right)_{i \to i^*} \cdot d_i^{(0)} \;<\; \min_{j \in I}\, [\mathbf{A}(\phi_{m^*})]_{ji^*}$$
+
+则对所有 $j \in I$：$d_j^{(m)} = 0$（$m \geq m^*$）。即两输入经过 $m^*$ 步后在全部分量上合流——后续链级演化对此点对不可区分。
+
+**证明**：左侧即 $d_{i^*}^{(m^*-1)}$ 的 Lip 上界（由 §1.6 连乘律）。满足条件时 $d_{i^*}^{(m^*-1)} < \min_j [\mathbf{A}(\phi_{m^*})]_{ji^*}$，故对所有 $j \in I$ 均有 $d_{i^*}^{(m^*-1)} < [\mathbf{A}(\phi_{m^*})]_{ji^*}$。由命题 3.7 的吸收分支（其条件为严格不等式 $d_i^{(m)} < [\mathbf{A}]_{ji}$），对每个 $j$ 分别触发截断，$d_j^{(m^*)} = 0$。后续各步由 $\sum L \cdot 0 = 0$（§1.1 $\bar{\mathbb{R}}_+$ 约定）保持全零。$\square$
+
+**命题 4.2（放大逃逸）**：设链 $c_\phi = \phi_k \circ \cdots \circ \phi_1$。若对某分量 $j \in I$，全链中每一步的吸收半径均为零（$[\mathbf{A}(\phi_m)]_{ji} = 0$，$\forall m \in \{1, \ldots, k\}$，$\forall i \in I$），则吸收机制在分量 $j$ 的通路上从不触发。此时该分量测距的演化完全由 Lip 放缩主导：
+
+$$d_j^{(m)} \;\leq\; \sum_{i \in I} \left(\prod_{p=1}^{m} \mathbf{L}^{(p)}\right)_{i \to j} \cdot d_i^{(0)}$$
+
+特别地，若连乘矩阵的 $(\cdot, j)$ 列向量 $\sum_{i \in I} [\prod_p \mathbf{L}^{(p)}]_{i \to j} > 1$，则 Lip 上界允许 $d_j^{(m)}$ 的估计值随步数增长——纤维截断在该通路上始终无法被保证激活。
+
+**证明**：吸收条件要求 $d_i^{(m)} \leq [\mathbf{A}(\phi_{m+1})]_{ji} = 0$，即 $d_i^{(m)} = 0$。若 $d_i^{(m)} > 0$，则吸收条件不满足，演化退回 Lip 放缩分支。由命题 3.7 反复应用得 Lip 连乘上界。$\square$
+
+> **注（收敛与逃逸的相空间分界）**：$\bar{\mathbb{R}}_+^{|I|}$ 中的截断阈值面 $\{d_i < [\mathbf{A}]_{ji}\}$ 将相空间分为两个区域。落入截断区域的轨线在一步内归零（命题 4.1）；始终位于截断区域之外的轨线则服从纯 Lip 矩阵连乘（命题 4.2）。实际的链级演化可能在两个区域间交替——部分分量被截断而另一些持续放大。
+
+#### $(\alpha, L)$-相分类
+
+每个算子 $\phi \in \Omega$ 在每条分量通路 $(d_i, d_j)$ 上的动力学行为，由二维特征对 $(\underline{\alpha}_{\phi, d_i, d_j},\; L_{\phi, d_i \to d_j})$ 唯一标定。
+
+**命题 4.3（分量通路的相分类）**：对 $\phi \in \Omega$、分量对 $(d_i, d_j) \in \mathcal{G}^2$，通路 $(d_i, d_j)$ 恰属于以下四相之一：
+
+| 相 | 条件 | 行为 |
+|------|------|------|
+| **全坍缩** | $j \in I_{\mathrm{const}}(\phi)$ | $[\mathbf{A}(\phi)]_{ji} = +\infty$，全输入归零 |
+| **吸收** | $\underline{\alpha}_{\phi, d_i, d_j} > 0$，$j \notin I_{\mathrm{const}}(\phi)$ | 小扰动截断；大扰动受 $L_{\phi, d_i \to d_j}$ 放缩（含 $L = +\infty$ 无界情形） |
+| **透明** | $\underline{\alpha}_{\phi, d_i, d_j} = 0$，$L_{\phi, d_i \to d_j} \leq 1$ | 无截断，非扩张 |
+| **放大** | $\underline{\alpha}_{\phi, d_i, d_j} = 0$，$L_{\phi, d_i \to d_j} > 1$ | 无截断，扩张 |
+
+特别地，分量分划（§2.1）与相分类具有以下对应：
+
+**(i)** $j \in I_{\mathrm{const}}(\phi)$ $\Rightarrow$ 通路 $(d_i, d_j)$ 属于全坍缩相（$\forall\, i \in I$）。
+
+**(ii)** $i \in I_{\mathrm{id}}(\phi)$ 且 $d_i$ 为分离伪度量 $\Rightarrow$ 通路 $(d_i, d_i)$ 不属于吸收相或全坍缩相。
+
+**证明**：四相的穷尽性：$j \in I_{\mathrm{const}}$ 优先检测；否则 $\underline{\alpha} > 0$ 或 $\underline{\alpha} = 0$，后者再按 $L \leq 1$ 或 $L > 1$ 分支（此处 $L$ 取值于 $\bar{\mathbb{R}}_+$，含 $+\infty$）。互斥性：全坍缩相由 $I_{\mathrm{const}}$ 成员资格独占判定；$\underline{\alpha} > 0$ 与 $\underline{\alpha} = 0$ 互斥；$L \leq 1$ 与 $L > 1$ 互斥。**(i)** $j \in I_{\mathrm{const}}(\phi)$ 蕴含对所有 $x, y \in \mathrm{dom}(\phi)$，$d_j(\phi(x), \phi(y)) = 0$，故 $\mathrm{dom}(\phi)$ 整体构成单一纤维，$\alpha_{\phi, d_i, d_j}(y) = +\infty$（$\forall y, i$）。**(ii)** $i \in I_{\mathrm{id}}(\phi)$ 加 $d_i$ 分离性蕴含 $\phi(x) = x$（$\forall x \in \mathrm{dom}(\phi)$），纤维 $\mathfrak{F}_{\phi, d_i}(\phi(y)) = \{y\}$，$\alpha_{\phi, d_i, d_i}(y) = 0$，故 $[\mathbf{A}(\phi)]_{ii} = 0$，排除吸收相与全坍缩相。$\square$
+
+> **注（链级相变轨迹）**：在 $k$-步链中，固定点对 $(x, x')$ 与分量 $j$，测距 $d_j^{(m)}$ 的轨线在各步的 $(\alpha, L)$-相区间穿越。命题 4.1 对应轨线落入吸收相或全坍缩相并锁定于零；命题 4.2 对应轨线被困在放大相中。两相交替出现时，链级行为由相区的逐步竞赛决定。
+
+### 4.3 分量-纤维交叉分析
+
+§2.1 的分量分划 $(I_{\mathrm{id}}, I_{\mathrm{const}}, I_{\mathrm{act}})$ 与 §3.2 的吸收矩阵 $\mathbf{A}(\phi)$ 之间存在严格的代数关联。此外，吸收矩阵的复合下界（命题 3.1）可与 Lip 矩阵联合使用，在单分量情形下给出更紧的结合界。
+
+**命题 4.4（常值分量诱导全域吸收）**：设 $\phi \in \Omega$。若 $j \in I_{\mathrm{const}}(\phi)$，则对所有 $i \in I$：
+
+$$[\mathbf{A}(\phi)]_{ji} \;=\; +\infty$$
+
+即常值分量在吸收矩阵中对应的**整行**为 $+\infty$——任意量级的输入 $d_i$-扰动，经 $\phi$ 映射后在 $d_j$ 输出上的差异均精确为零。
+
+**证明**：$j \in I_{\mathrm{const}}(\phi)$ 意味着对所有 $x, y \in \mathrm{dom}(\phi)$，$d_j(\phi(x), \phi(y)) = 0$。因此 $\mathrm{dom}(\phi)$ 整体构成单一纤维 $\mathfrak{F}_{\phi, d_j}(\phi(x))$。对任意 $y \in \mathrm{dom}(\phi)$ 和 $r \geq 0$，$B_{d_i}(y, r) \cap \mathrm{dom}(\phi) \subseteq \mathfrak{F}_{\phi, d_j}(\phi(y))$。故 $\alpha_{\phi, d_i, d_j}(y) = +\infty$，取下确界仍为 $+\infty$。$\square$
+
+**命题 4.5（恒等分量在分离规范下的零吸收）**：设 $\phi \in \Omega$，$d_i$ 为分离伪度量（即 $d_i(x,y) = 0 \Rightarrow x = y$，$\forall x, y \in \mathrm{dom}(\phi)$）。若 $i \in I_{\mathrm{id}}(\phi)$，则：
+
+$$[\mathbf{A}(\phi)]_{ii} \;=\; 0$$
+
+**证明**：$i \in I_{\mathrm{id}}(\phi)$ 蕴含 $d_i(\phi(x), x) = 0$ 对所有 $x \in \mathrm{dom}(\phi)$。加上 $d_i$ 的分离性，$\phi(x) = x$。对任意 $y \in \mathrm{dom}(\phi)$，纤维 $\mathfrak{F}_{\phi, d_i}(\phi(y)) = \{x : d_i(\phi(x), \phi(y)) = 0\} = \{x : d_i(x, y) = 0\} = \{y\}$（由分离性）。故 $B_{d_i}(y, r) \subseteq \{y\}$ 仅当 $r = 0$，$\alpha_{\phi, d_i, d_i}(y) = 0$。$\square$
+
+**命题 4.6（纤维维数的活跃分量局部化）**：对 $\phi \in \Omega$、精度 $\varepsilon > 0$、分量 $d \in \mathcal{G}$：
+
+**(i)** 若 $d = d_j$ 且 $j \in I_{\mathrm{const}}(\phi)$：$\mathrm{FI}_{\varepsilon, d_j}(\phi) = I_{\varepsilon, d_j}(\mathrm{dom}(\phi))$（全部输入复杂度被纤维坍缩吸收）。
+
+**(ii)** 若 $d = d_i$ 且 $i \in I_{\mathrm{id}}(\phi)$，且 $d_i$ 为分离伪度量：$\mathrm{FI}_{\varepsilon, d_i}(\phi) = 0$（恒等映射不产生纤维坍缩）。
+
+**(iii)** 对 $k$-步算子链 $c_\phi = \phi_k \circ \cdots \circ \phi_1$（逐步满足定义域无损耗），推论 3.5 的可加分解中，仅 $I_{\mathrm{act}}(\phi_m)$ 中的分量能贡献非平凡的纤维膨胀项。
+
+**证明**：**(i)** $j \in I_{\mathrm{const}}(\phi)$ 蕴含 $\mathrm{Im}(\phi)$ 在 $d_j$ 下不可区分，故 $\mathcal{N}_{d_j}(\varepsilon, \mathrm{Im}(\phi)) = 1$，$I_{\varepsilon, d_j}(\mathrm{Im}(\phi)) = 0$。代入纤维膨胀量定义即得。**(ii)** $i \in I_{\mathrm{id}}(\phi)$ 且 $d_i$ 分离，则 $\phi$ 在 $d_i$ 上为恒等（由命题 4.5 证明中已推导），故 $\mathrm{Im}(\phi)$ 在 $d_i$ 下与 $\mathrm{dom}(\phi)$ 具有相同的覆盖数。**(iii)** 由 (i)(ii) 及分划 $I = I_{\mathrm{id}} \sqcup I_{\mathrm{const}} \sqcup I_{\mathrm{act}}$ 的穷尽性，对固定分量 $d$，$\phi_m$ 对分量 $d$ 的纤维膨胀贡献仅在 $d$ 为 $\phi_m$ 的活跃分量时非平凡。$\square$
+
+#### 纤维划分的格层精细化
+
+纤维等价类的精细程度随子族 $J$ 的选取而变化。这一依赖关系具有严格的格论结构。
+
+**命题 4.7（纤维划分的格层分解）**：对 $\phi \in \Omega$，定义映射 $\pi: 2^I \setminus \{\emptyset\} \to \mathrm{Part}(\mathrm{dom}(\phi))$，$\pi_J(\phi) = \{\mathfrak{F}_{\phi, J}(y)\}_{y \in \mathrm{Im}(\phi)}$，将非空指标子族映射到其诱导的定义域分划。则：
+
+**(i)（单调性）** 对所有 $J_1 \subseteq J_2 \subseteq I$（$J_1 \neq \emptyset$）：$\pi_{J_2}(\phi) \preceq \pi_{J_1}(\phi)$，即 $J_2$ 的分划精细化 $J_1$ 的分划（$\preceq$ 为分划精细化序）。
+
+**(ii)（交保持性）** 对所有非空 $J_1, J_2 \subseteq I$：$\pi_{J_1 \cup J_2}(\phi) = \pi_{J_1}(\phi) \wedge \pi_{J_2}(\phi)$，其中 $\wedge$ 为分划格的交（公共精细化）。
+
+**(iii)（极值层级）** $\pi_{\{j\}}(\phi)$ 为最粗单分量分划；$\pi_I(\phi)$ 为最精全分量分划。当 $\mathcal{G}$ 满足族分离性（§1.1）时，$\pi_I(\phi)$ 退化为标准原像划分 $\{\phi^{-1}(y)\}$。
+
+**证明**：
+
+**(i)** 由 §3.1：$\mathfrak{F}_{\phi, J}(y) = \bigcap_{j \in J} \mathfrak{F}_{\phi, d_j}(y)$。$J_1 \subseteq J_2$ 蕴含 $\mathfrak{F}_{\phi, J_2}(y) \subseteq \mathfrak{F}_{\phi, J_1}(y)$——交集取更多集合只可能更小。故 $J_2$ 的每个等价类包含于 $J_1$ 的某个等价类，即 $\pi_{J_2} \preceq \pi_{J_1}$。
+
+**(ii)** 需证对所有 $x, x' \in \mathrm{dom}(\phi)$：$x, x'$ 在 $\pi_{J_1 \cup J_2}$ 中同类当且仅当在 $\pi_{J_1}$ 与 $\pi_{J_2}$ 中均同类。
+
+充分性：若 $d_{J_1}(\phi(x), \phi(x')) = 0$ 且 $d_{J_2}(\phi(x), \phi(x')) = 0$，则
+$$d_{J_1 \cup J_2}(\phi(x), \phi(x')) = \max_{j \in J_1 \cup J_2} d_j(\phi(x), \phi(x')) = \max\bigl(\max_{j \in J_1} d_j,\, \max_{j \in J_2} d_j\bigr) = \max(0, 0) = 0$$
+
+必要性：$d_{J_1 \cup J_2} = 0$ 蕴含 $\max_{j \in J_1 \cup J_2} d_j = 0$，故对所有 $j \in J_1$ 及 $j \in J_2$ 均有 $d_j = 0$，即 $d_{J_1} = 0$ 且 $d_{J_2} = 0$。
+
+**(iii)** 由 §3.1 注（计算纤维的极值形态）直接成立。$\square$
+
+> **注（多尺度纤维分析）**：命题 4.7 将单一算子 $\phi$ 的纤维结构组织为布尔格 $(2^I \setminus \{\emptyset\}, \subseteq)$ 上的一族分划。该格层结构支持“多尺度”纤维分析：从单分量的粗粒度划分（$|J| = 1$）到全分量的精细划分（$J = I$）的逐级精细化。由 (ii) 的交保持性，任意两个子族层级的纤维信息可通过格交运算精确合成，无需回溯到底层定义。
+
+#### 吸收矩阵的 Lip-吸收结合复合界
+
+命题 3.1（吸收矩阵的复合下界）给出了仅依赖 $\phi_1$ 吸收的纯纤维下界。当联合使用 Lip 矩阵时，可在单分量情形下获得更紧的结合界。
+
+**命题 4.8（单分量吸收的 Lip-吸收复合界）**：设 $|I| = 1$（单分量，标量 Lip 常数与吸收半径）。记 $L = L_{\phi_1}$，$\alpha_1 = \underline{\alpha}_{\phi_1}$，$\alpha_2 = \underline{\alpha}_{\phi_2}$。则：
+
+$$\underline{\alpha}_{\phi_2 \circ \phi_1} \;\geq\; \max\bigl(\alpha_1,\;\; \alpha_2 / L\bigr)$$
+
+其中约定 $\alpha_2 / 0 = +\infty$（$L = 0$ 时 $\phi_1$ 为常值映射，复合吸收为 $+\infty$）、$\alpha_2 / (+\infty) = 0$。
+
+**证明**：需证 $\alpha_{\phi_2 \circ \phi_1}(y) \geq R \triangleq \max(\alpha_1, \alpha_2/L)$，即 $B(y, R) \subseteq \mathfrak{F}_{\phi_2 \circ \phi_1}(\phi_2(\phi_1(y)))$。取任意 $x \in B(y, R)$，即 $d(x, y) < R$。
+
+- 若 $R = \alpha_1$：$d(x, y) < \alpha_1 = \underline{\alpha}_{\phi_1} \leq \alpha_{\phi_1}(y)$，故 $x \in B(y, \alpha_{\phi_1}(y)) \subseteq \mathfrak{F}_{\phi_1}(\phi_1(y))$，$d(\phi_1(x), \phi_1(y)) = 0$。因此 $d(\phi_2(\phi_1(x)), \phi_2(\phi_1(y))) \leq L_{\phi_2} \cdot 0 = 0$。
+- 若 $R = \alpha_2 / L$：$d(\phi_1(x), \phi_1(y)) \leq L \cdot d(x,y) < L \cdot \alpha_2/L = \alpha_2 = \underline{\alpha}_{\phi_2} \leq \alpha_{\phi_2}(\phi_1(y))$，故 $\phi_1(x) \in B(\phi_1(y), \alpha_{\phi_2}(\phi_1(y))) \subseteq \mathfrak{F}_{\phi_2}(\phi_2(\phi_1(y)))$，$d(\phi_2(\phi_1(x)), \phi_2(\phi_1(y))) = 0$。
+
+两种情况下 $x \in \mathfrak{F}_{\phi_2 \circ \phi_1}(\phi_2(\phi_1(y)))$，故 $\alpha_{\phi_2 \circ \phi_1}(y) \geq R$。取下确界即得。$\square$
+
+> **注（结合界的结构解读）**：$\max(\alpha_1, \alpha_2/L)$ 由两个竞争机制构成。$\alpha_1$ 项反映 $\phi_1$ 自身的吸收容限——输入差异在到达 $\phi_2$ 之前就被截断。$\alpha_2/L$ 项反映 $\phi_2$ 的吸收容限被 $\phi_1$ 的 Lip 常数“稀释”后的结果：$\phi_1$ 将输入差异放大 $L$ 倍后传递给 $\phi_2$，因此 $\phi_2$ 能容纳的原始输入差异被缩小为 $\alpha_2/L$。当 $L$ 很大时（$\phi_1$ 强放大），$\alpha_2/L \to 0$，$\phi_2$ 的吸收容限被冲淡；当 $L < 1$ 时（$\phi_1$ 收缩），$\alpha_2/L > \alpha_2$，$\phi_1$ 的收缩效应反而放大了 $\phi_2$ 的有效吸收范围。
+
+> **注（多分量的障碍）**：当 $|I| > 1$ 时，类似的结合界不可直接推广。吸收半径 $[\mathbf{A}]_{ji}$ 仅控制 $d_i$-球内的行为，而 Lip 不等式 $d_k(\phi_1(x), \phi_1(y)) \leq \sum_l L_{l \to k} \cdot d_l(x,y)$ 涉及**所有**输入分量。$B_{d_i}(y, r)$ 仅约束 $d_i(x,y)$ 而不约束 $d_l(x,y)$（$l \neq i$），因此无法仅从 $r$ 和 $L_{i \to k}$ 推导 $d_k(\phi_1(x), \phi_1(y))$ 的上界。纯吸收下界（命题 3.1）仍是多分量情形下的最佳可用结果。
+
+### 4.4 算子链的代数替换理论
+
+§3.6 定义的纤维同构 $\sim_{J,D}$（两个算子对公共定义域施加完全相同的等价类剖分）在算子复合下的代数行为，是算子链中算子替换的理论基础。
+
+#### 纤维等价的单侧同余性
+
+在泛代数（Universal Algebra）中，若要在算子空间 $\Omega$ 上商出良定义的复合代数结构，等价关系须满足**双向同余**（Two-sided Congruence）。然而，纤维同构在复合下仅具备单侧同余性。
+
+**定理 4.9（纤维等价的右同余与左破缺）**：
+设 $\phi, \psi \in \Omega$，$D = \mathrm{dom}(\phi) \cap \mathrm{dom}(\psi)$，$\phi \sim_{J,D} \psi$。
+
+1. **右同余（前置闭合）**：对任意 $C_R \in \Omega$ 满足 $\mathrm{Im}(C_R) \subseteq D$，恒有 $\phi \circ C_R \sim_{J, \mathrm{dom}(C_R)} \psi \circ C_R$。
+2. **左破缺（后置不闭合）**：存在 $\phi, \psi, C_L \in \Omega$ 使得 $\phi \sim_{J,D} \psi$ 但 $C_L \circ \phi \not\sim_{J,D} C_L \circ \psi$。
+
+**证明**：
+
+1. **右同余**：对所有 $x, x' \in \mathrm{dom}(C_R)$，令 $z = C_R(x),\, z' = C_R(x')$。由 $\mathrm{Im}(C_R) \subseteq D$ 知 $z, z' \in D$，故由 $\phi \sim_{J,D} \psi$ 的定义直接得 $d_J(\phi(z), \phi(z')) = 0 \iff d_J(\psi(z), \psi(z')) = 0$。
+
+2. **左破缺（反例）**：取 $|I| = 1$（单分量，$J = I = \{1\}$）。设 $\mathcal{X} = \{a, b, c, \bot\}$，$d$ 为分离伪度量：$d(a,b) = 1,\; d(b,c) = 1,\; d(a,c) = 2$，$d(x, \bot) = +\infty$（$x \neq \bot$）。定义算子（均满足 $(\cdot)(\bot) = \bot$）：
+
+$$\phi(a) = a,\;\; \phi(b) = a,\;\; \phi(c) = b$$
+$$\psi(a) = b,\;\; \psi(b) = b,\;\; \psi(c) = c$$
+$$C_L(a) = c,\;\; C_L(b) = c,\;\; C_L(c) = a$$
+
+**验证 $\phi \sim \psi$**：两者的纤维划分均为 $\{\{a,b\},\, \{c\}\}$。逐对检验——$(a,b)$：$d(\phi(a),\phi(b)) = 0 = d(\psi(a),\psi(b))$；$(a,c)$：$d(\phi(a),\phi(c)) = d(a,b) = 1 > 0$，$d(\psi(a),\psi(c)) = d(b,c) = 1 > 0$；$(b,c)$：$d(\phi(b),\phi(c)) = d(a,b) = 1 > 0$，$d(\psi(b),\psi(c)) = d(b,c) = 1 > 0$。故 $\phi \sim \psi$。
+
+**验证 $C_L \circ \phi \not\sim C_L \circ \psi$**：$C_L \circ \phi$：$a \mapsto c,\; b \mapsto c,\; c \mapsto c$（常值映射）。$C_L \circ \psi$：$a \mapsto c,\; b \mapsto c,\; c \mapsto a$。考察点对 $(a, c)$：$d((C_L \circ \phi)(a),\, (C_L \circ \phi)(c)) = d(c, c) = 0$，但 $d((C_L \circ \psi)(a),\, (C_L \circ \psi)(c)) = d(c, a) = 2 > 0$。等价条件的 $\Rightarrow$ 方向失败，故 $C_L \circ \phi \not\sim C_L \circ \psi$。$\square$
+
+> **注（商空间的代数受限性）**：定理 4.9 证明了纤维同构等价关系在复合运算下仅构成**右同余**。商集 $\Omega / \sim_{J,D}$ 可作为集合存在，但**无法自然继承 $\Omega$ 的复合幺半群结构**。在算子链中，等价类 $[\phi]$ 内的替换仅在**链末端**（无后续复合）时保持纤维等价性；在中间位置替换时，虽被替换算子的纤维结构一致，但其在非零测距区域的输出差异经后续算子的纤维截断后可能破坏等价性（如上述反例所示）。
+
+**推论 4.10（链级纤维等价的不可约性）**：逐步纤维同构**不蕴含**链级纤维同构。即：存在等长算子链 $c_\phi = \phi_k \circ \cdots \circ \phi_1$ 与 $c_\psi = \psi_k \circ \cdots \circ \psi_1$（$k \geq 2$），使得对所有 $m \in \{1, \ldots, k\}$ 均有 $\phi_m \sim_{J, D_m} \psi_m$（逐步纤维同构），但 $c_\phi \not\sim_J c_\psi$（链级纤维不等价）。
+
+**证明**：取 $k = 3$。沿用定理 4.9 左破缺反例中的构造（$|I| = 1$，$\mathcal{X} = \{a, b, c, \bot\}$，$d(a,b) = 1,\, d(b,c) = 1,\, d(a,c) = 2$）。定义三步链：
+
+$$c_\phi = C_L \circ \phi \circ \mathrm{id}, \qquad c_\psi = C_L \circ \psi \circ \mathrm{id}$$
+
+其中 $\phi, \psi, C_L$ 如定理 4.9 反例所定义。逐步检验：
+- 步骤 1：$\mathrm{id} \sim \mathrm{id}$（自反性）。
+- 步骤 2：$\phi \sim \psi$（已在定理 4.9 中验证）。
+- 步骤 3：$C_L \sim C_L$（自反性）。
+
+但链级：$c_\phi = C_L \circ \phi$，$c_\psi = C_L \circ \psi$。定理 4.9 已证 $C_L \circ \phi \not\sim C_L \circ \psi$（点对 $(a,c)$：$d((C_L \circ \phi)(a), (C_L \circ \phi)(c)) = 0$ 但 $d((C_L \circ \psi)(a), (C_L \circ \psi)(c)) = 2 > 0$）。故 $c_\phi \not\sim c_\psi$。$\square$
+
+> **注（不可约性的结构根源）**：链级纤维等价不可从逐步等价推导，根本原因在于定理 4.9 (2) 的左破缺在链内部的每个边界处积累。在单纯同佦的语言中，逐步替换定义了链空间中的“局部同佦”，但左破缺构成了全局相容性的障碍——局部同佦无法被黏合为全局同佦。这意味着链级纤维结构是**不可约的整体性质**，需要直接在链级分析，不可还原为各步骤的独立分析。
+
+#### 右 $\Omega$-集结构
+
+定理 4.9 的代数后果是：商集 $\Omega / \sim_{J,D}$ 虽不继承幺半群结构，但自然继承右作用。
+
+**定义（右 $\Omega$-集）**：固定 $J \subseteq I$（$J \neq \emptyset$）与 $D \subseteq \mathcal{X}$（$D \neq \emptyset$）。令 $\Omega_D = \{\phi \in \Omega : D \subseteq \mathrm{dom}(\phi)\}$。定义右作用：
+
+$$[\phi] \cdot C_R \;\triangleq\; [\phi \circ C_R] \quad \text{对所有 } C_R \in \Omega \text{ 满足 } \mathrm{Im}(C_R) \subseteq D$$
+
+由定理 4.9 (1)，此定义与代表元选取无关，故 $(\Omega_D / \sim_{J,D},\; \cdot)$ 构成良定义的**右 $\Omega$-集**。
+
+#### 吸收调制的精确可替换性
+
+定理 4.9 确立了左破缺的**可能性**。以下定理给出左破缺**不发生**的精确充分条件——当下游算子的吸收半径足够宽时，替换引入的度量差异被纤维截断立即消化。
+
+**定理 4.11（吸收调制精确可替换性）**：设算子链 $c = \phi_k \circ \cdots \circ \phi_1$（$k \geq 2$），令 $R_{\mathrm{up}} = \phi_{m-1} \circ \cdots \circ \phi_1$（$m > 1$；$m = 1$ 时 $R_{\mathrm{up}} = \mathrm{id}$）。若 $\psi_m \sim_{I, D_m} \phi_m$（全纤维同构，$D_m = \mathrm{dom}(\phi_m) \cap \mathrm{dom}(\psi_m)$，$\mathrm{Im}(R_{\mathrm{up}}) \subseteq D_m$），且存在输入分量 $i \in I$ 使得：
+
+$$d_{\Omega, d_i}(\phi_m, \psi_m)\big|_{\mathrm{Im}(R_{\mathrm{up}})} \;<\; \underline{\alpha}_{\phi_{m+1}, d_i, I}$$
+
+则替换后的链 $c' = \phi_k \circ \cdots \circ \phi_{m+1} \circ \psi_m \circ R_{\mathrm{up}}$ 满足：
+
+$$d_j(c(x), c'(x)) = 0 \quad \forall\, x \in \mathrm{dom}(c),\; \forall\, j \in I$$
+
+**证明**：对任意 $x \in \mathrm{dom}(c)$，令 $z = R_{\mathrm{up}}(x) \in \mathrm{Im}(R_{\mathrm{up}}) \subseteq D_m$。设 $y = \phi_m(z)$，$y' = \psi_m(z)$。由假设：
+
+$$d_i(y, y') \;\leq\; d_{\Omega, d_i}(\phi_m, \psi_m)\big|_{\mathrm{Im}(R_{\mathrm{up}})} \;<\; \underline{\alpha}_{\phi_{m+1}, d_i, I}$$
+
+由全纤维吸收半径定义（§3.2），$\underline{\alpha}_{\phi_{m+1}, d_i, I} \leq \alpha_{\phi_{m+1}, d_i, I}(y)$，故 $d_i(y, y') < \alpha_{\phi_{m+1}, d_i, I}(y)$，$y' \in B_{d_i}(y, \alpha_{\phi_{m+1}, d_i, I}(y)) \subseteq \mathfrak{F}_{\phi_{m+1}, I}(\phi_{m+1}(y))$（开球包含由吸收半径 $\sup$ 定义保证：$d_i(y,y') < \alpha(y)$ 蕴含存在 $r > d_i(y,y')$ 使得 $B(y,r) \subseteq \mathfrak{F}$）。由计算纤维定义（§3.1），$d_j(\phi_{m+1}(y), \phi_{m+1}(y')) = 0$ 对所有 $j \in I$ 成立。
+
+后续各步 $\phi_p$（$p > m+1$）：所有分量的输入测距均为零。由 Lip 不等式 $d_j(\phi_p(\cdot), \phi_p(\cdot)) \leq \sum_{i \in I} L_{i \to j} \cdot 0 = 0$（遵循 §1.1 $\bar{\mathbb{R}}_+$ 约定 $L \cdot 0 = 0$，包括 $+\infty \cdot 0 = 0$），零测距沿全部分量逐步传播至链尾。$\square$
+
+> **注（定理 4.9 与 4.11 的互补性）**：定理 4.9 证明了纤维等价替换的左破缺**存在性**；定理 4.11 给定了左破缺**不发生**的精确充分条件。二者共同界定了算子链中纤维可替换性的边界：当下游首个算子的全纤维吸收半径严格大于替换距离（$\underline{\alpha}_{\phi_{m+1}} > d_\Omega(\phi_m, \psi_m)|_{\mathrm{Im}(R_{\mathrm{up}})}$），替换引入的度量差异被纤维截断一步消化，输出恢复全分量精确一致。
+
+> **注（$J \subsetneq I$ 的受限可替换性）**：当仅在子族 $J \subsetneq I$ 上要求输出一致时，纤维截断在 $J$ 上归零，但 $J$ 补集上的非零测距可通过下游 Lip 矩阵的非对角元反渗回 $J$。此时需追加条件：下游连积矩阵 $\mathbf{L}_{\mathrm{down}} = \prod_{p=m+2}^{k} \mathbf{L}^{(p)}\big|_{U_p}$ 满足 $(\mathbf{L}_{\mathrm{down}})_{l \to j} = 0$ 对所有 $l \in I \setminus J$、$j \in J$——即下游不存在从 $J$ 补集向 $J$ 的跨分量耦合。
+
+#### 纤维维数的分级性
+
+**命题 4.12（$\bar{\mathbb{R}}_+$-分级幺半群）**：固定分量 $d \in \mathcal{G}$ 与精度 $\varepsilon > 0$。定义分级函数 $\mathrm{gr}_\varepsilon: \Omega \to \bar{\mathbb{R}}_+$，$\mathrm{gr}_\varepsilon(\phi) = \mathrm{FI}_{\varepsilon, d}(\phi)$。在满足 $\mathrm{Im}(\phi_1) \subseteq \mathrm{dom}(\phi_2)$ 的复合下：
+
+$$\mathrm{gr}_\varepsilon(\phi_2 \circ \phi_1) \;=\; \mathrm{gr}_\varepsilon(\phi_1) \;+\; \mathrm{gr}_\varepsilon(\phi_2\big|_{\mathrm{Im}(\phi_1)})$$
+
+此可加性赋予 $(\Omega, \circ)$ 以 $(\bar{\mathbb{R}}_+, +)$-分级幺半群结构。由此诱导的滤链 $\Omega_{\leq D} = \{\phi \in \Omega : \mathrm{gr}_\varepsilon(\phi) \leq D\}$ 满足 $\Omega_{\leq D_1} \circ \Omega_{\leq D_2} \subseteq \Omega_{\leq D_1 + D_2}$。
+
+$\Omega_{\leq 0}$ 即"无纤维坍缩"算子子幺半群——在分量 $d$ 上单射的算子。
+
+**证明**：可加性即推论 3.5 的重述。滤链的复合封闭性由可加性直接得出。$\square$
+
+> **注（纤维维数在商集上的良定义性）**：若 $\phi \sim_{J,D} \psi$，则 $\phi$ 与 $\psi$ 对 $D$ 施加了相同的等价类剖分，故在 $D$ 上的覆盖数一致：$\mathcal{N}_{d_J}(\varepsilon, \mathrm{Im}(\phi)|_D) = \mathcal{N}_{d_J}(\varepsilon, \mathrm{Im}(\psi)|_D)$。因此纤维膨胀量 $\mathrm{FI}_{\varepsilon, d_J}$ 在商集 $\Omega / \sim_{J,D}$ 上良定义，构成等价类的 $\bar{\mathbb{R}}_+$ 标量不变量。
+
+### 4.5 链级表达力界限
+
+综合 Lip 矩阵的放缩上界（§2，命题 3.2）与纤维维数的链级可加性（推论 3.5），可推导算子链输出多样性的全局约束。
+
+**命题 4.13（深度-多样性上界）**：设 $c_\phi = \phi_k \circ \cdots \circ \phi_1$，固定分量 $d \in \mathcal{G}$ 与 $\varepsilon > 0$。若逐步满足 $\mathrm{Im}(\phi_{m-1} \circ \cdots \circ \phi_1) \subseteq \mathrm{dom}(\phi_m)$，则：
+
+$$\mathrm{CD}_{\varepsilon, d}(c_\phi) \;\leq\; I_{\varepsilon, d}\bigl(\mathrm{dom}(\phi_1)\bigr) \;-\; \sum_{m=1}^{k} \mathrm{FI}_{\varepsilon, d}(\phi_m\big|_{\mathrm{Im}(\phi_{m-1} \circ \cdots \circ \phi_1)})$$
+
+**证明**：由纤维膨胀量定义 $\mathrm{FI} = I_\varepsilon(\mathrm{dom}) - I_\varepsilon(\mathrm{Im})$。推论 3.5 给出纤维膨胀量的逐步可加性。因此：
+
+$$\sum_{m=1}^{k} \mathrm{FI}(\phi_m|_\cdot) \;=\; I_{\varepsilon, d}(\mathrm{dom}(\phi_1)) - I_{\varepsilon, d}(\mathrm{Im}(c_\phi))$$
+
+即 $\mathrm{CD}_{\varepsilon, d}(c_\phi) = I_{\varepsilon, d}(\mathrm{Im}(c_\phi)) = I_{\varepsilon, d}(\mathrm{dom}(\phi_1)) - \sum \mathrm{FI}$。$\square$
+
+**推论 4.14（深度视界）**：若链中每步的最小纤维膨胀量满足 $\mathrm{FI}_{\varepsilon, d}(\phi_m|_\cdot) \geq \delta > 0$（$\forall\, m$），则当链深 $k$ 超过临界步数
+
+$$k^* \;=\; \left\lfloor \frac{I_{\varepsilon, d}(\mathrm{dom}(\phi_1))}{\delta} \right\rfloor$$
+
+时，$\mathrm{CD}_{\varepsilon, d}(c_\phi) = 0$——链输出在 $d$ 分量下坍缩至单一 $\varepsilon$-等价类。
+
+**证明**：$\mathrm{CD} \leq I_\varepsilon(\mathrm{dom}) - k\delta$。当 $k > k^*$ 时右侧 $< 0$，由 $\mathrm{CD} \geq 0$ 知 $\mathrm{CD} = 0$。$\square$
+
+> **注（深度视界的物理意义）**：$k^*$ 界定了算子链在给定精度下的**最大有效深度**。超过 $k^*$ 步后，无论后续算子如何选取，链输出的 $d$-可区分态数已衰减至 $1$——所有输入在 $d$ 分量上映射至不可区分的输出。这给出了链级系统的基本表达力极限：输入复杂度（度量熵）有限时，每步的最小纤维坍缩量构成了深度的硬性容量约束。
+
+### 4.6 长链的渐近分析
+
+§4.5 的深度视界（推论 4.14）给出了有限链的表达力极限。本节进一步分析链深 $k \to \infty$ 时的渐近行为——揭示有限链尚不可见的极限趋势。
+
+#### 外部定理引用
+
+> **Perron-Frobenius 定理**（引用）：设 $\mathbf{M}$ 为非负实矩阵（$M_{ij} \geq 0$），$\rho(\mathbf{M})$ 为其谱半径。则：(a) $\rho(\mathbf{M})$ 本身是 $\mathbf{M}$ 的一个特征值；(b) $\|\mathbf{M}^k\|$ 的增长率由 $\rho(\mathbf{M})$ 精确决定——当 $\rho < 1$ 时 $\|\mathbf{M}^k\| \to 0$，当 $\rho > 1$ 时 $\|\mathbf{M}^k\| \to \infty$。后续命题的证明中将直接引用此定理。
+
+> **约定**：本节中，对 Lip 矩阵条目取值于 $+\infty$ 的情形，谱分析适用于**有限值 Lip 矩阵**（$\mathbf{L} \in [0, +\infty)^{|I| \times |I|}$）。若算子唯一的合法 Lip 矩阵包含 $+\infty$ 条目，则下述谱判据不适用。
+
+#### 自复合链的谱三分法
+
+**命题 4.15（自复合的谱三分法）**：设 $\phi \in \Omega$，$\mathbf{L} \in \mathscr{L}(\phi) \cap [0, +\infty)^{|I| \times |I|}$（有限值合法 Lip 矩阵）。对自复合链 $\phi^k = \phi \circ \cdots \circ \phi$（$k$ 次），其复合 Lip 矩阵 $\mathbf{L}^k \in \mathscr{L}(\phi^k)$。则对任意输入对 $x, x' \in \mathrm{dom}(\phi^k)$ 和分量 $j \in I$，测距上界满足：
+
+$$d_j(\phi^k(x), \phi^k(x')) \;\leq\; \sum_{i \in I} [\mathbf{L}^k]_{i \to j} \cdot d_i(x, x')$$
+
+该上界的渐近行为分为三种体制：
+
+**(i)（收缩体制，$\rho(\mathbf{L}) < 1$）** $[\mathbf{L}^k]_{i \to j} \to 0$（$k \to \infty$），对所有 $i, j \in I$。Lip 放缩本身即保证全分量测距的指数衰减，收敛率为 $\rho(\mathbf{L})$。
+
+**(ii)（临界体制，$\rho(\mathbf{L}) = 1$）** $[\mathbf{L}^k]_{i \to j}$ 以至多多项式速率增长。测距不自动衰减，长期行为由 $\mathbf{L}$ 的 Jordan 结构决定。
+
+**(iii)（膨胀体制，$\rho(\mathbf{L}) > 1$）** $[\mathbf{L}^k]_{i \to j}$ 指数增长。存在初始测距使得 $d_j(\phi^k(x), \phi^k(x'))$ 随 $k$ 单调递增（至 $+\infty$）。
+
+**证明**：Lip 不等式由 §1.6 连乘律直接得出。三种体制的渐近行为由 Perron-Frobenius 定理（引用）对非负矩阵幂 $\mathbf{L}^k$ 的谱分析直接给出。$\square$
+
+> **注（谱半径的内禀性）**：$\rho(\mathbf{L})$ 依赖于 $\mathbf{L}$ 的选取。由于 $\mathscr{L}(\phi)$ 一般不存在逐条目最小元（§1.5），不同的合法 Lip 矩阵可能给出不同的谱半径。渐近判据应取 $\inf_{\mathbf{L} \in \mathscr{L}(\phi)} \rho(\mathbf{L})$——最优 Lip 矩阵下的谱半径是 $\phi$ 的固有量。
+
+#### 最终像与渐近吸引子
+
+**命题 4.16（最终像的单调收敛）**：设 $\phi \in \Omega$。序列 $\{\mathrm{Im}(\phi^k)\}_{k \geq 1}$ 在集合包含序下单调非增：
+
+$$\mathrm{Im}(\phi^{k+1}) \;\subseteq\; \mathrm{Im}(\phi^k) \quad \forall\, k \geq 1$$
+
+定义**最终像** $\mathrm{Im}^\infty(\phi) \triangleq \bigcap_{k=1}^{\infty} \mathrm{Im}(\phi^k)$。则 $\mathrm{Im}^\infty(\phi)$ 为 $\phi$-不变集：$\phi(\mathrm{Im}^\infty(\phi)) \subseteq \mathrm{Im}^\infty(\phi)$。
+
+**证明**：单调性：对任意 $y \in \mathrm{Im}(\phi^{k+1})$，存在 $x \in \mathrm{dom}(\phi^{k+1})$ 使得 $y = \phi^{k+1}(x) = \phi^k(\phi(x))$。由 $x \in \mathrm{dom}(\phi^{k+1})$ 知 $\phi(x) \in \mathrm{dom}(\phi^k)$，故 $y = \phi^k(\phi(x)) \in \mathrm{Im}(\phi^k)$。即 $\mathrm{Im}(\phi^{k+1}) \subseteq \mathrm{Im}(\phi^k)$。$\phi$-不变性：设 $y \in \mathrm{Im}^\infty(\phi)$，则对所有 $k$，$y \in \mathrm{Im}(\phi^k)$，故存在 $x_k$ 使得 $\phi^k(x_k) = y$。则 $\phi(y) = \phi(\phi^k(x_k)) = \phi^{k+1}(x_k) \in \mathrm{Im}(\phi^{k+1})$，对所有 $k$ 成立，故 $\phi(y) \in \mathrm{Im}^\infty(\phi)$。$\square$
+
+> **注（最终像与纤维坍缩的关系）**：若 $\mathrm{FI}_{\varepsilon, d}(\phi) > 0$（$\phi$ 在分量 $d$ 上有非零纤维坍缩），则由推论 4.14，$\mathrm{CD}_{\varepsilon, d}(\phi^k) \to 0$（$k \to \infty$）。这意味着 $\mathrm{Im}^\infty(\phi)$ 在 $d$ 下的度量熵为零——最终像在精度 $\varepsilon$ 下坍缩至单一等价类。
+
+#### Lip-吸收的协同收敛
+
+收缩体制（$\rho < 1$）与吸收机制（$\underline{\alpha} > 0$）的组合产生了一个比二者单独更强的收敛结论。
+
+**定理 4.17（Lip-吸收协同收敛）**：设 $\phi \in \Omega$，$\mathbf{L} \in \mathscr{L}(\phi) \cap [0, +\infty)^{|I| \times |I|}$，$\rho(\mathbf{L}) < 1$。若对某对 $(i^*, j^*) \in I^2$ 满足 $\underline{\alpha}_{\phi, d_{i^*}, d_{j^*}} = \alpha > 0$，则对任意 $x, x' \in \mathrm{dom}(\phi^\infty) \triangleq \bigcap_{k \geq 0} \mathrm{dom}(\phi^k)$（若 $\mathrm{dom}(\phi^\infty) = \emptyset$ 则结论空成立），存在有限步 $k^*$ 使得：
+
+$$d_{j^*}(\phi^k(x), \phi^k(x')) = 0 \quad \forall\, k \geq k^*$$
+
+即所有能被无限次迭代的输入对，必在有限步后在分量 $d_{j^*}$ 上精确纤维合流。
+
+**证明**：由 $\rho(\mathbf{L}) < 1$，Perron-Frobenius 定理（引用）保证 $\|\mathbf{L}^k\| \to 0$。因此对任意初始测距向量 $\mathbf{d}^{(0)}$，Lip 上界给出 $d_{i^*}^{(k)} \leq \sum_{i \in I} [\mathbf{L}^k]_{i \to i^*} \cdot d_i^{(0)} \to 0$。取 $k^*$ 为满足
+
+$$\sum_{i \in I} [\mathbf{L}^{k^*}]_{i \to i^*} \cdot d_i^{(0)} \;<\; \alpha$$
+
+的最小整数（由收敛性保证存在）。此时 $d_{i^*}^{(k^*)} \leq \sum \cdots < \alpha = \underline{\alpha}_{\phi, d_{i^*}, d_{j^*}}$，由命题 3.7 的吸收分支（严格不等式 $d_{i^*}^{(k^*)} < [\mathbf{A}]_{j^* i^*}$）触发纤维截断：$d_{j^*}(\phi^{k^*+1}(x), \phi^{k^*+1}(x')) = 0$。后续由 $\sum L \cdot 0 = 0$ 保持。$\square$
+
+> **注（协同机制的非平凡性）**：单独的 $\rho < 1$ 仅保证测距**趋向零**但不保证**精确为零**（极限可能是渐近的而非有限步达到的）。单独的 $\alpha > 0$ 仅保证**当前测距足够小时**截断触发，但不保证测距会自动缩小到门槛以下。二者的协同作用是：Lip 收缩负责将测距"搬运"到吸收门槛以内，吸收负责将其"锁定"为精确零——前者提供动力，后者提供终止性。
+
+#### 纤维膨胀密度
+
+**命题 4.18（纤维膨胀密度的收敛）**：设算子链 $c_k = \phi_k \circ \cdots \circ \phi_1$，固定分量 $d \in \mathcal{G}$ 与 $\varepsilon > 0$。若逐步满足定义域无损耗（$\mathrm{Im}(\phi_{m-1} \circ \cdots \circ \phi_1) \subseteq \mathrm{dom}(\phi_m)$），则纤维膨胀密度
+
+$$\lambda_k \;\triangleq\; \frac{\mathrm{FI}_{\varepsilon, d}(c_k)}{k} \;=\; \frac{1}{k} \sum_{m=1}^{k} \mathrm{FI}_{\varepsilon, d}(\phi_m\big|_{\mathrm{Im}(\phi_{m-1} \circ \cdots \circ \phi_1)})$$
+
+满足以下性质：
+
+**(i)** 若各步纤维膨胀量存在一致界 $0 \leq \mathrm{FI}(\phi_m|_\cdot) \leq B < \infty$（$\forall m$），则 $\lambda_k \in [0, B]$ 对所有 $k$ 成立。
+
+**(ii)** 若各步纤维膨胀量为确定常数 $\delta$（$\mathrm{FI}(\phi_m|_\cdot) = \delta$，$\forall m$），则 $\lambda_k = \delta$ 恒成立。特别地，自复合链 $\phi^k$ 在像集稳定后（$\mathrm{Im}(\phi^k) = \mathrm{Im}^\infty(\phi)$）满足此条件。
+
+**(iii)** 与深度视界的联合：$\mathrm{CD}_{\varepsilon, d}(c_k) = I_{\varepsilon, d}(\mathrm{dom}(\phi_1)) - k \lambda_k$。当 $\lambda_k > 0$ 保持正下界时，$\mathrm{CD}$ 在 $k = \lfloor I_\varepsilon / \lambda_k \rfloor$ 步必归零。
+
+**证明**：**(i)** 由可加性（推论 3.5），$\mathrm{FI}(c_k) = \sum_{m=1}^k \mathrm{FI}(\phi_m|_\cdot) \leq kB$。除以 $k$ 即得。**(ii)** $\mathrm{FI}(c_k) = k\delta$，$\lambda_k = \delta$。**(iii)** 由命题 4.13 直接重写。$\square$
+
+> **注（纤维膨胀密度的统计解读）**：在实际系统中，若额外假设各步算子从某概率空间独立同分布抽取，$\lambda_k$ 即各步 $\mathrm{FI}$ 的经验均值。由大数定律，$\lambda_k \to \mathbb{E}[\mathrm{FI}]$（几乎必然）。这意味着：**在上述统计假设下，无论链中具体选取了哪些算子，只要它们在统计上是平稳的，单位链深的信息损失率就收敛到一个确定常数**。该常数与深度视界（推论 4.14）共同确立了长链系统的基本容量约束——输入度量熵的有限性加上每步的正膨胀密度，使得链的有效深度必然有限。
+
+----
+*[IDFS] ⊢ [GLENZLI] ⊢ [Part 01] ⊢ [04-chain-algebra] ⊢ [draft]*
