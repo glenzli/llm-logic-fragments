@@ -279,4 +279,4 @@ $$d_i(c_\phi(x), c_\phi(y)) \leq \sum_{j \in I} (\mathbf{L}_{\text{down}})_{j \t
 故 $c_\phi$ 在分量 $d_i$ 上退归恒等或常值。$\square$
 
 ----
-*[IDFS] ⊢ [GLENZLI] ⊢ [Part 01] ⊢ [02-component-analysis] ⊢ [a9218fc7d77eb56f]*
+*[IDFS] ⊢ [GLENZLI] ⊢ [Part 01] ⊢ [02-component-analysis] ⊢ [6d792afb104baafb]*
