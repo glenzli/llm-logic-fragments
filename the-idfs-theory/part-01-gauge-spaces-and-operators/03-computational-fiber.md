@@ -2,9 +2,9 @@
 
 ### 3.1 算子的计算纤维
 
-设 $\phi \in \Omega$。算子 $\phi$ 将输入空间中的若干不同点映射为在伪度量下不可区分的输出——这种多对一坍缩诱导出一组等价类，即**计算纤维**。纤维是算子固有的离散拓扑结构，与 §1.5 定义的 Lip 矩阵所刻画的连续放缩行为形成对偶：Lip 矩阵约束算子定性复合下的**极差传播上界**，而纤维结构刻画算子将输入差异**精确缩减为零**的截断面聚类及其后果。
+设 $\phi \in \Omega$。算子 $\phi$ 将输入空间中的若干不同点映射为在伪度量下不可区分的输出——这种多对一坍缩诱导出一组等价类，即**计算纤维**。纤维是算子固有的离散拓扑结构，与 §1.5 定义的 Lip 矩阵所刻画的连续放缩行为形成对偶：Lip 矩阵约束算子复合下的**极差传播上界**，而纤维结构刻画算子将输入差异**精确缩减为零**的等价类聚类及其后果。
 
-在多分量规范体系中，既然系统必然会沿不同信息管线呈现出非对称的局域坍缩与贯通相态演化，算符纤维拓扑测度的本源等价类核算，天然就应当直接构建、且必然统摄衍生于全系统任意维度的提取特征指标集子族之上。
+在多分量规范体系中，算子沿不同分量呈现非对称的坍缩行为，因此纤维的等价类判定天然应建立在任意分量子族之上。
 
 #### 定义（子族复合伪度量，Sub-family Pseudometric）
 
@@ -12,99 +12,95 @@
 
 $$d_J(x, y) \;\triangleq\; \max_{j \in J} d_j(x, y)$$
 
-由于有限项 $\max$ 算则的封闭性可知，$d_J$ 严格保持扩展伪度量的对称性与三角不等式（即特征测度上的 $L_\infty$ 范数式收敛）。距离核定 $d_J(x, y) = 0$ 意味着输入状态 $x$ 与 $y$ 在所限定子族 $J$ 的**每一个分量伪度量下皆完全不可区分**。
+$d_J$ 保持扩展伪度量的对称性与三角不等式。$d_J(x, y) = 0$ 意味着 $x$ 与 $y$ 在子族 $J$ 的**每一个分量伪度量下皆不可区分**。
 
 #### 定义（计算纤维，Computational Fiber）
 
 设 $\phi \in \Omega$，$y \in \mathrm{Im}(\phi)$。指定非空指标集子族 $J \subseteq I$。定义 $y$ 在 $\phi$ 下关于规范子族 $\mathcal{G}_J$ 的**计算纤维**：
 
-$$\mathfrak{F}_{\phi, J}(y) \;\triangleq\; \bigcap_{j \in J} \mathfrak{F}_{\phi, d_j}(y) \;=\; \bigl\{x \in \mathrm{dom}(\phi) \;\big|\; d_J(\phi(x), y) = 0\bigr\}$$
+$$\mathfrak{F}_{\phi, J}(y) \;\triangleq\; \bigl\{x \in \mathrm{dom}(\phi) \;\big|\; d_J(\phi(x), y) = 0\bigr\}$$
 
-即所有在 $J$ 分量族的复合确界测度 $d_J$ 下，与映射目标 $y$ 发生完全等价坍缩的源生输入点几何集合。$\{\mathfrak{F}_{\phi, J}(y)\}_{y \in \mathrm{Im}(\phi)}$ 构成包含测度的 $\mathrm{dom}(\phi)$ 超覆盖。
+即所有在复合伪度量 $d_J$ 下与映射目标 $y$ 完全等价的输入点集合。$\{\mathfrak{F}_{\phi, J}(y)\}_{y \in \mathrm{Im}(\phi)}$ 构成 $\mathrm{dom}(\phi)$ 的超覆盖。当 $J = \{j\}$ 时，记单分量纤维为 $\mathfrak{F}_{\phi, d_j}(y)$。由 $d_J = \max_{j \in J} d_j$ 的定义直接得 $\mathfrak{F}_{\phi, J}(y) = \bigcap_{j \in J} \mathfrak{F}_{\phi, d_j}(y)$。
 
-> **注（计算纤维演化的极值形态）**：
-> 作为同源子族嵌套在度量维数势集上限与下确界域处的自然极值端点，计算纤维天然展现出两种纯粹的测度孤立形态：
-> 1. **单分量纤维（Single-Component Fiber）**：当评估特征子族势被向极小化剥除至不可约下限 $|J| = 1$（受限于单一特征通道族 $J = \{i\}$）时，计算纤维展现出最底层的信道孤立单维坍缩退化态，此时直接记为 $\mathfrak{F}_{\phi, d_i}(y)$。
-> 2. **全纤维（Full Fiber）**：当系统指标子族势向上延展至全集管线满载边界态 $J = I$ 时，计算纤维核算条件 $\mathfrak{F}_{\phi, I}(y)$ 施加了全约束势垒：要求在所有被观测的独立维度响应面上均绝对一致重合。在此刚性极域状态下，当且仅当底层基础规范结构 $\mathcal{G}$ 具备**族分离性**（§1.1）支持时，此全架构等价态才能无损地收缩至标准集论纯粹映射拓扑中的绝对原像定义域点集 $\phi^{-1}(y)$。
-> 依据交集聚类的单调代数收敛同态特性可知，该特征集合域必定遵循严格的向心包含偏序：任取系统内部的任意单一界别分量 $i \in I$ 作为基底定标，必然恒有 $\mathfrak{F}_{\phi, I}(y) \subseteq \mathfrak{F}_{\phi, d_i}(y)$ 严格成立。
+> **注（计算纤维的极值形态）**：
+> 计算纤维随子族 $J$ 的选取展现出两种极端形态：
+> 1. **单分量纤维**：$|J| = 1$（$J = \{i\}$）时，纤维退化为单分量坍缩态，记为 $\mathfrak{F}_{\phi, d_i}(y)$。
+> 2. **全纤维**：$J = I$ 时，$\mathfrak{F}_{\phi, I}(y)$ 要求在所有分量上均完全一致。当且仅当规范结构 $\mathcal{G}$ 具备**族分离性**（§1.1）时，全纤维退化为标准原像 $\phi^{-1}(y)$。
+> 由交集的单调性，对任意 $i \in I$ 恒有 $\mathfrak{F}_{\phi, I}(y) \subseteq \mathfrak{F}_{\phi, d_i}(y)$。
 
-> **注（单分量极值与分量分划的退化关系）**：
-> 当评估限界退化至唯一的单分量纤维极值状态（即 $|J|=1$, 考察特定映射轨线 $j \in I$）时，此独立底层信道纤维受到算子 $\phi$ 在该单分量上的宏观相态决定：
-> - 若 $j \in I_{\mathrm{id}}(\phi)$（恒等分量）：$\mathfrak{F}_{\phi, d_j}(y) = \{x : d_j(x, y) = 0\}$，纤维退化为 $y$ 在 $d_j$ 下的本原等价类，不再包含由操作 $\phi$ 施加的附加测度压缩；
-> - 若 $j \in I_{\mathrm{const}}(\phi)$（常值分量）：$\mathfrak{F}_{\phi, d_j}(y) = \mathrm{dom}(\phi)$ 对所有可达 $y \in \mathrm{Im}(\phi)$ 均等式成立——该方向的演化定义域测度差异被整体化简为常数零分布；
-> 综上排他性逻辑可知：在多维组合推演中，算子所诱发的一切具备跨维度理论价值的非平凡几何收缩演化，在测度上均必然且唯一地收敛于**活跃特征簇** $j \in I_{\mathrm{act}}(\phi)$ 的代数范畴内。
+> **注（单分量纤维与分量分划的关系）**：
+> 当 $|J|=1$（$J = \{j\}$）时，单分量纤维的结构由算子 $\phi$ 在该分量上的分划类型决定：
+> - 若 $j \in I_{\mathrm{id}}(\phi)$（恒等分量）：$\mathfrak{F}_{\phi, d_j}(y) = \{x : d_j(x, y) = 0\}$，纤维退化为 $y$ 在 $d_j$ 下的原始等价类，不包含 $\phi$ 引入的额外坍缩；
+> - 若 $j \in I_{\mathrm{const}}(\phi)$（常值分量）：$\mathfrak{F}_{\phi, d_j}(y) = \mathrm{dom}(\phi)$，全定义域构成单一纤维；
+> 因此，算子诱导的非平凡纤维收缩仅发生在**活跃分量** $j \in I_{\mathrm{act}}(\phi)$ 上。
 
-### 3.2 吸收半径
+### 3.2 吸收半径与吸收矩阵
 
-纤维的厚度由**局部吸收半径**刻画——即以某点为中心，能被完全包含在目标纤维结构内部的最大伪度量开球半径。
+纤维的度量厚度由**局部吸收半径**刻画——以某点为中心，能被完全包含在纤维内部的最大伪度量开球半径。
 
 #### 定义（吸收半径，Absorption Radius）
 
-设 $\phi \in \Omega$，$y \in \mathrm{dom}(\phi)$。指定输入端单一测距分量 $i \in I$ 与输出端特征子族 $J \subseteq I$（$J \neq \emptyset$）。定义算子 $\phi$ 在点 $y$ 处关于特征映射对 $(d_i, J)$ 的**吸收半径**：
+设 $\phi \in \Omega$，$y \in \mathrm{dom}(\phi)$。指定输入端分量 $i \in I$ 与输出端子族 $J \subseteq I$（$J \neq \emptyset$）。定义算子 $\phi$ 在点 $y$ 处关于 $(d_i, J)$ 的**吸收半径**：
 
 $$\alpha_{\phi, d_i, J}(y) \;\triangleq\; \sup\bigl\{r \geq 0 \;\big|\; B_{d_i}(y, r) \subseteq \mathfrak{F}_{\phi, J}(\phi(y))\bigr\}$$
 
-即以 $y$ 为中心，在输入分量 $d_i$ 的测度下，能被完全包含于输出端特征子族 $J$ 的计算纤维 $\mathfrak{F}_{\phi, J}(\phi(y))$ 内的最大开球截面半径。由此提取定义该域上的**最小吸收半径**（极小化阈值）：
+即以 $y$ 为中心，在输入分量 $d_i$ 下能被完全包含于纤维 $\mathfrak{F}_{\phi, J}(\phi(y))$ 内的最大开球半径。定义全域**最小吸收半径**：
 
 $$\underline{\alpha}_{\phi, d_i, J} \;\triangleq\; \inf_{y \in \mathrm{dom}(\phi)} \alpha_{\phi, d_i, J}(y)$$
 
-$\alpha_{\phi, d_i, J}(y)$ 直接表征了计算纤维在流形 $y$ 处的**局部度量厚度**：任何受限于此 $d_i$-半径内的输入侧独立扰动，在历经算子 $\phi$ 映射后，在子族 $J$ 的局部等价类集合上均表现为零测度差异收敛。当输出子族退化为单分量 $|J|=1$（即 $J=\{j\}$）时，判定条件退化为最初的单通道相态 $\alpha_{\phi, d_i, d_j}(y)$。特别地，当映射 $\phi$ 在子族 $J$ 上满足局部单射性，且 $d_i$ 满足分离伪度量条件时，局部吸收半径必然坍缩收敛至 $\alpha_{\phi, d_i, J}(y) = 0$。
+$\alpha_{\phi, d_i, J}(y)$ 表征纤维在点 $y$ 处的局部 $d_i$-厚度：此半径内的任何 $d_i$-扰动，经 $\phi$ 映射后在子族 $J$ 上的输出差异均精确归零。当 $J = \{j\}$ 时，记为 $\alpha_{\phi, d_i, d_j}(y)$。当 $\phi$ 在子族 $J$ 上局部单射且 $d_i$ 为分离伪度量时，$\alpha_{\phi, d_i, J}(y) = 0$。
 
-> **注（向同性初界与纤维的异构形态）**：数学上，局部吸收半径 $\alpha_{\phi, d_i, J}(y)$ 限定了一个以 $y$ 为中心的各向同性测度开球，它仅为该域局部等价态的成立提供了一个最保守的单向解析下界。但在非线性算子 $\phi$ 的多维映射投影下，真实的计算纤维 $\mathfrak{F}_{\phi, J}(y)$ 往往呈现出非凸、非连通及高度非向同性的复杂拓扑形态。此开球半径仅构成该等价类集合在特定维度上的内部逼近，而涵盖跨维度几何特征的测度等价连续（或离散）全集，才是算符相态同伦重组在流形上的真实拓扑全貌。
+> **注（吸收半径的各向同性限制）**：吸收半径 $\alpha_{\phi, d_i, J}(y)$ 给出以 $y$ 为中心的各向同性 $d_i$-开球内接估计。真实的纤维 $\mathfrak{F}_{\phi, J}(\phi(y))$ 可呈现非凸、非连通的复杂形态，开球半径仅构成该等价类集合在 $d_i$ 方向上的内接下界。
 
 #### 定义（吸收矩阵，Absorption Matrix）
 
-基于单分量最小吸收半径 $\underline{\alpha}_{\phi, d_i, d_j}$，针对算子 $\phi \in \Omega$ 定义其全测度相态下、与 Lip 矩阵共轭对等的**吸收矩阵** $\mathbf{A}(\phi) \in \bar{\mathbb{R}}_+^{|I| \times |I|}$：
+基于单分量最小吸收半径，定义算子 $\phi \in \Omega$ 的**吸收矩阵** $\mathbf{A}(\phi) \in \bar{\mathbb{R}}_+^{|I| \times |I|}$：
 
 $$[\mathbf{A}(\phi)]_{ji} \;\triangleq\; \underline{\alpha}_{\phi, d_i, d_j}$$
 
-（注：采用 $[ \cdot ]_{ji}$ 标记以确保行索引对应输出特征 $j$，列索引对应输入特征 $i$，此转置记法与标准矩阵特征流向算子左乘状态列向量的代数拓扑严格同构）。
+行索引 $j$ 对应输出分量，列索引 $i$ 对应输入分量，与 Lip 矩阵的索引约定一致。
 
-吸收矩阵 $\mathbf{A}(\phi)$ 是算子内禀的客观存在，它独立于由外部观察者任意指定的主观观测子族 $J$。网络中所有维度的底层相界无论是否被末端截取，其吞噬折叠的几何能力均被显式地客观封存在此矩阵之中。
+吸收矩阵是算子的内禀属性，独立于外部观察者选取的子族 $J$。所有分量通路上的纤维截断容限均被封存在此矩阵中。
 
-> **注（吸收矩阵与 Lip 矩阵的拓扑对偶性）**：全局连续放缩矩阵 $\mathbf{L}(\phi)$ 刻画了输入散度向各输出散度扩散的**极差放大上界**；作为正交对偶，离散等价矩阵 $\mathbf{A}(\phi)$ 则严格定量设定了输入波动被各分支**同伦吸收的容限下界**。一者从线性度量的无限扩张侧，一者从非线性测度的等价归零死锁侧，共同闭合并界定了同一算子网络在局部流形上的全系统限界相态。
+> **注（吸收矩阵与 Lip 矩阵的对偶性）**：Lip 矩阵 $\mathbf{L}(\phi)$ 刻画输入散度向各输出散度扩散的**极差放大上界**；吸收矩阵 $\mathbf{A}(\phi)$ 则界定输入波动被各分量**纤维截断的容限下界**。二者从放大与归零两侧共同界定同一算子的测度传播行为。
 
-### 3.3 标量 Lip 常数
+### 3.3 计算多样性与纤维维数
 
-#### 约定（标量 Lip 常数与 Lip 矩阵的关系）
+算子 $\phi$ 输入空间的测度复杂度由源空间度量熵（§1.2）标定；$\phi$ 实际导出的有效输出差异分布则由 $\mathrm{Im}(\phi)$ 的受限度量熵判定。二者之差揭示了被纤维结构归零的拓扑冗余量。
+
+#### 约定（标量 Lip 常数）
 
 对固定的分量对 $(d_i, d_j) \in \mathcal{G}^2$，定义算子 $\phi$ 在该分量对上的**标量 Lip 常数**：
 
 $$L_{\phi, d_i \to d_j} \;\triangleq\; \inf\bigl\{L_{i \to j} \;:\; \exists\, \mathbf{L} \in \mathscr{L}(\phi),\; L_{i \to j} \text{ 为 } \mathbf{L} \text{ 的 } (i, j) \text{ 条目}\bigr\}$$
 
-即 $\phi$ 的全体合法 Lip 矩阵在 $(i, j)$ 条目上的下确界。$L_{\phi, d_i \to d_j} \in \bar{\mathbb{R}}_+$。纤维内部 $\phi$ 在 $d_j$ 下的输出不可区分（$d_j$-Lip $= 0$），标量 Lip 常数仅反映跨纤维的输出变化率。
-
-### 3.4 多量子族计算多样性与纤维维数
-
-算符 $\phi$ 初始接驳入定义域时的测度复杂度上限由源空间度量熵（§1.2）标定；而 $\phi$ 实际向目标域导出的宏观有效物理差异分布，则由 $\mathrm{Im}(\phi)$ 承载的受限度量熵独立判定。两者之度量偏差即揭示了被算符内部纤维构型彻底化解并代数归零的拓扑冗余量。配合前文维度的子族域扩展，此处各项测定公式与维数核算均严格原生定型于任意复合指标族之上。
+即 $\phi$ 的全体合法 Lip 矩阵在 $(i, j)$ 条目上的下确界。纤维内部 $\phi$ 在 $d_j$ 下的输出不可区分，标量 Lip 常数仅反映跨纤维的输出变化率。
 
 #### 定义（计算多样性，Computational Diversity）
 
-对 $\phi \in \Omega$、特设接收端复合隔离特征子族 $J \subseteq I$ 及探测精度容忍度 $\varepsilon > 0$：
+对 $\phi \in \Omega$、子族 $J \subseteq I$ 及精度 $\varepsilon > 0$：
 
 $$\mathrm{CD}_{\varepsilon, J}(\phi) \;\triangleq\; \log \mathcal{N}_{d_J}\bigl(\varepsilon,\, \mathrm{Im}(\phi)\bigr)$$
 
-使用多径上确界极值度量 $d_J$ 要求每一孤立输出向皆必须同时被容置在 $\varepsilon$ 切比雪夫球内，由此核算目标集合 $\mathrm{Im}(\phi)$ 抵御跨分支耦合扩散的最紧独立可解析网点基础底座规模。
+即 $\mathrm{Im}(\phi)$ 在复合伪度量 $d_J$ 下的 $\varepsilon$-覆盖数的对数，衡量输出空间的有效可区分态数。
 
 #### 定义（纤维膨胀量，Fiber Inflation）
 
-指定用于标定最初空间位姿的输入测度特征限定子族 $K \subseteq I$、用于下游重取采样的输出测度特征提取子族 $J \subseteq I$ 及统一容错极值精度 $\varepsilon > 0$：
+指定输入端子族 $K \subseteq I$、输出端子族 $J \subseteq I$ 及精度 $\varepsilon > 0$：
 
 $$\mathrm{FI}_{\varepsilon, K, J}(\phi) \;\triangleq\; I_{\varepsilon, d_K}\bigl(\mathrm{dom}(\phi)\bigr) - I_{\varepsilon, d_J}\bigl(\mathrm{Im}(\phi)\bigr)$$
 
-*(式中 $I_{\varepsilon, \cdot}$ 依据 §1.2 空间度量熵取定。为代数便捷，同源等族跨接（当 $K = J$ 时）可收缩简记为原生子族内部本征膨胀量 $\mathrm{FI}_{\varepsilon, J}(\phi)$)*。膨胀核心原理：只有当 $\phi$ 在跨系非线性射影传输执行阶段内，通过内部不可逆纤维结构强制合并碾平了原本能并在 $d_K$ 前场观测坐标中清楚离析甄别的独立等价极差态，致使其转化为低纬 $d_J$ 复合等效态进而绝缘消弭，测度 $I$ 才会基于后置受限区间的信息骤缩效应直接显现出正负抵消后的截面正值突跃。
+*(式中 $I_{\varepsilon, \cdot}$ 为 §1.2 定义的度量熵。当 $K = J$ 时简记为 $\mathrm{FI}_{\varepsilon, J}(\phi)$)*。纤维膨胀量度量了 $\phi$ 通过纤维坍缩将输入端 $d_K$-可区分态压缩为输出端 $d_J$-等价态的信息损失量。
 
-> **注（探索精度 $\varepsilon$ 的拓扑探针基底限制）**：上述测度的核心衍生参数 $\varepsilon$ 提供了一把测量极差尺度的浮标工具标尺。必须彻底理清的是：度量熵 $I_{\varepsilon}$ 所固有的动态极值属性是针对 $\varepsilon$-紧包络外壳本身的覆盖网眼，它并不能反向修改决定绝对方程式 $\mathfrak{F}_{\phi, J}$ 存在状态的核心根骨依据：等价全同收敛必定且唯一归因于极差代数锁死 $d = 0$。
+> **注（$\varepsilon$ 的探测尺度角色）**：度量熵 $I_\varepsilon$ 依赖于精度参数 $\varepsilon$，但纤维成员资格由严格等式 $d_J(\phi(x), y) = 0$ 决定，不受 $\varepsilon$ 影响。$\varepsilon$ 仅作为度量复杂度的探测尺度参加计算。
 
-#### 定义（纤维维数，Fiber Dimension / 零化拓扑维数）
-
-运用经典分形信息几何中对 Minkowski 等势体（计盒模型）的基础对数量纲降维推衍生成原则提取内核指数：
+#### 定义（纤维维数，Fiber Dimension）
 
 $$\mathrm{dim}_{F,\varepsilon, K, J}(\phi) \;\triangleq\; \frac{\mathrm{FI}_{\varepsilon, K, J}(\phi)}{\log(1/\varepsilon)}$$
 
-该项物理降阶算则精确计算了被执行算符 $\phi$ 在当前系统有效探针截面分辨率尺度 $\varepsilon$ 评估下，在自前端输入特征参考簇系 $K$ 暴力传导至系统末端输出响应特征提取簇系 $J$ 的跨流形交互变动过程中，遭到实质性截留、解耦或压缩归零而永久坏死散失掉的**原生等效拓扑自由度维数**总量。
+纤维维数衡量了算子 $\phi$ 在精度 $\varepsilon$ 下，从输入子族 $K$ 到输出子族 $J$ 的跨分量传导过程中，被纤维结构截断归零的等效拓扑自由度数。
 
-**命题 3.1（对孤立单分量之 Lipschitz 局域映射维距退化的极限限界）**：严格约束条件在单向孤立度量接驳限定对 $(d_i, d_j)$ 之上时，预设其满足系统所准允的最宽泛标量常数值界 $L_{\phi, d_i \to d_j} < \infty$。则：
+**命题 3.1（Lip 常数与膨胀界）**：设 $L_{\phi, d_i \to d_j} < \infty$。则：
 
 $$\mathrm{FI}_{\varepsilon, d_i, d_j}(\phi) \;\geq\; I_{\varepsilon, d_i}\bigl(\mathrm{dom}(\phi)\bigr) - I_{\varepsilon / L_{\phi, d_i \to d_j},\, d_i}\bigl(\mathrm{dom}(\phi)\bigr)$$
 
@@ -116,74 +112,100 @@ $$\mathrm{CD}_{\varepsilon, d_j}(\phi) \;\leq\; I_{\alpha, d_i}\bigl(\mathrm{dom
 
 **证明**：取 $\mathrm{dom}(\phi)$ 在 $d_i$ 下的 $\alpha$-覆盖 $\{c_1, \ldots, c_M\}$（$M = \mathcal{N}_{d_i}(\alpha, \mathrm{dom}(\phi))$）。由吸收半径定义，$B_{d_i}(c_m, \alpha) \subseteq \mathfrak{F}_{\phi, d_j}(\phi(c_m))$，故 $\phi$ 的全部输出可被 $\{\phi(c_1), \ldots, \phi(c_M)\}$ 在 $d_j$ 下 $\varepsilon$-覆盖（因纤维内输出 $d_j$-不可区分）。$\square$
 
-### 3.5 纤维吸收
-
-在算子链中，前一步的输出偏差可能被后一步的纤维结构吸收——若偏差不足以使输出点跨越纤维边界，后一步在该分量上的输出差异**精确归零**。
-
-#### 基本纤维吸收
-
-**定理 3.3（纤维吸收定理）**：设 $\phi_2 \circ \phi_1 \in \Omega$ 为两步复合。设 $\phi_1$ 在 $x$ 处的输出为 $\hat{y} = \phi_1(x)$，$y \in \mathrm{dom}(\phi_2)$ 为某参考点，偏差 $\delta = d_i(\hat{y}, y)$。
-
-若 $\hat{y} \in \mathfrak{F}_{\phi_2, d_j}(\phi_2(y))$——即 $\hat{y}$ 与 $y$ 落入 $\phi_2$ 关于 $d_j$ 的同一根纤维——则：
-
-$$d_j\bigl(\phi_2(\hat{y}),\, \phi_2(y)\bigr) = 0$$
-
-前步偏差 $\delta$ 在分量 $d_j$ 上被**精确吸收**，不向后续传播。
-
-**证明**：$\hat{y} \in \mathfrak{F}_{\phi_2, d_j}(\phi_2(y))$ 意味着 $d_j(\phi_2(\hat{y}), \phi_2(y)) = 0$（由纤维定义直接得出）。$\square$
-
-> **注（吸收条件与吸收半径的关系）**：当 $\delta \leq \alpha_{\phi_2, d_i, d_j}(y)$ 时，$\hat{y} \in B_{d_i}(y, \delta) \subseteq \mathfrak{F}_{\phi_2, d_j}(\phi_2(y))$，吸收定理的前提自动满足。吸收半径给出了吸收发生的**充分条件**。
-
-#### 算子链中的吸收矩阵非线性迭代
-
-在绝对确定性的级联算子链 $c_\phi = \phi_k \circ \cdots \circ \phi_1$ 中，取定义域内任意两个初始空间测度点 $x, x' \in \mathrm{dom}(c_\phi)$。由于系统流形映射的唯一确定性，它们在算子网第 $m$ 步（$1 \leq m \leq k$）必然具有唯一确定的演化像点 $x_m \triangleq (\phi_m \circ \cdots \circ \phi_1)(x)$ 与 $x'_m \triangleq (\phi_m \circ \cdots \circ \phi_1)(x')$。
-
-**命题 3.4（算子链的非线性截断迭代律）**：在复合测度网络全景中，点对像点序列在跨步测距上的拓展摆脱了单纯标量的孤立推演，完全受控于 $\mathbf{L}$ 与 $\mathbf{A}$ 两大内禀代数矩阵的结构性对冲。对于目标演化步 $\phi_{m+1}$，任意观测特征 $d_j$ 下的像点局部极差测距严格满足如下迭代界限方程式：
-
-$$d_j(x_{m+1}, x'_{m+1}) \;\leq\; \begin{cases} 0 & \text{若仅存在单一活跃前置分量 } i \text{ 满足 } d_i(x_m, x'_m) \leq [\mathbf{A}(\phi_{m+1})]_{ji} \text{，且对其余 } p \neq i \text{ 均有 } d_p(x_m, x'_m) = 0 \\ \sum\limits_{i \in I} [\mathbf{L}(\phi_{m+1})]_{ji} \cdot d_i(x_m, x'_m) & \text{否则} \end{cases}$$
-
-该复合界限方程直白地解构了算子链底层传导的代数对冲实质：前序节点累积的系统测距哪怕依凭 $\mathbf{L}_{m+1}$ 阵列进行了跨分量的累加扩溢，也绝不可能绕开原生 $\mathbf{A}$ 矩阵（即全域非线性“等价底线断路器”）的客观测度截断。一旦前置信道内的单边测距未能击穿特定的局部吸收底线，针对该目标信道 $d_j$ 上的任何高倍代数放缩都会即刻阶跃归零。端到端复合运算体系正是凭借流形底部的这道不可见的结构性吸收断层，彻底勒阻了经典分析中仅凭 $\prod \mathbf{L}_{\phi_m}$ 链式连乘模型所带来的无脑代数发散偏压。
-
-> **注（与连续矩阵放缩的关系）**：该纯拓扑降元断层模型缝合了传统测度放缩理论的残缺。单纯的 Lip 矩阵只能界定系统散度的发散上限（膨胀）；而引入吸收矩阵后的非线性过滤推演，才真正在代数方程层面上赋予了理论架构一个能让微小波动发生孤立闭环等价（$\vec{\delta} \to 0$）的收敛下垫面底座。
-
-#### 链级纤维膨胀的可加性
-
-**命题 3.5（链级纤维膨胀的可加性）**：设 $\psi = \phi_2 \circ \phi_1$，取 $d_i = d_j = d \in \mathcal{G}$。若 $\mathrm{Im}(\phi_1) \subseteq \mathrm{dom}(\phi_2)$（即复合定义域无损耗），则：
+**命题 3.3（链级纤维膨胀的可加性）**：设 $\psi = \phi_2 \circ \phi_1$，取 $d \in \mathcal{G}$。若 $\mathrm{Im}(\phi_1) \subseteq \mathrm{dom}(\phi_2)$（复合定义域无损耗），则：
 
 $$\mathrm{FI}_{\varepsilon, d}(\psi) \;=\; \mathrm{FI}_{\varepsilon, d}(\phi_1) \;+\; \mathrm{FI}_{\varepsilon, d}(\phi_2\big|_{\mathrm{Im}(\phi_1)})$$
 
 **证明**：由假设 $\mathrm{dom}(\psi) = \mathrm{dom}(\phi_1)$，$\mathrm{Im}(\psi) = \phi_2(\mathrm{Im}(\phi_1))$。加减中间项 $I_{\varepsilon, d}(\mathrm{Im}(\phi_1))$ 即得。$\square$
 
-**推论 3.6（$k$-步链的纤维膨胀与余维可加）**：设 $c_\phi = \phi_k \circ \cdots \circ \phi_1$，若逐步满足 $\mathrm{Im}(\phi_{m-1} \circ \cdots \circ \phi_1) \subseteq \mathrm{dom}(\phi_m)$（$2 \leq m \leq k$），则：
+**推论 3.4（$k$-步链的纤维膨胀可加）**：设 $c_\phi = \phi_k \circ \cdots \circ \phi_1$，若逐步满足 $\mathrm{Im}(\phi_{m-1} \circ \cdots \circ \phi_1) \subseteq \mathrm{dom}(\phi_m)$（$2 \leq m \leq k$），则：
 
 $$\mathrm{FI}_{\varepsilon, d}(c_\phi) \;=\; \sum_{m=1}^{k} \mathrm{FI}_{\varepsilon, d}(\phi_m\big|_{\mathrm{Im}(\phi_{m-1} \circ \cdots \circ \phi_1)})$$
 
 每步复合贡献一项纤维膨胀。总坍缩维数等于逐步坍缩维数之和——链越长，累积纤维坍缩越深。
 
-### 3.6 纤维冲突
+### 3.4 纤维截断
+
+在算子链中，两个不同输入经前置步骤映射后的像点测距，可能被后续步骤的纤维结构截断为零——若两像点落入同一纤维内，则后续步骤在该分量上的输出差异**精确归零**，无论前步测距的绝对量值如何。
+
+#### 单步纤维截断
+
+**命题 3.5（纤维截断）**：设 $c = \phi_2 \circ \phi_1 \in \Omega$，$x, x' \in \mathrm{dom}(c)$。令 $y = \phi_1(x)$，$y' = \phi_1(x')$。若 $y$ 与 $y'$ 落入 $\phi_2$ 关于 $d_j$ 的同一纤维（即 $y' \in \mathfrak{F}_{\phi_2, d_j}(\phi_2(y))$），则：
+
+$$d_j(c(x), c(x')) = d_j(\phi_2(y), \phi_2(y')) = 0$$
+
+即 $\phi_1$ 产生的像点测距 $d_i(y, y')$（无论其量值）在分量 $d_j$ 上被 $\phi_2$ 的纤维结构**精确截断为零**，不向后续传播。
+
+**证明**：$y' \in \mathfrak{F}_{\phi_2, d_j}(\phi_2(y))$ 意味着 $d_j(\phi_2(y'), \phi_2(y)) = 0$（由纤维定义直接得出）。$\square$
+
+> **注（吸收半径作为截断的充分条件）**：若 $d_i(y, y') \leq \alpha_{\phi_2, d_i, d_j}(y)$，则由吸收半径定义有 $y' \in B_{d_i}(y, \alpha) \subseteq \mathfrak{F}_{\phi_2, d_j}(\phi_2(y))$，命题 3.5 的前提自动满足。因此，吸收半径给出了纤维截断发生的**可计算充分条件**。
+
+#### 算子链中的逐步截断迭代
+
+在级联算子链 $c_\phi = \phi_k \circ \cdots \circ \phi_1$ 中，取任意两个输入 $x, x' \in \mathrm{dom}(c_\phi)$。由于映射的确定性，它们在第 $m$ 步的像点 $x_m \triangleq (\phi_m \circ \cdots \circ \phi_1)(x)$ 与 $x'_m \triangleq (\phi_m \circ \cdots \circ \phi_1)(x')$ 唯一确定。
+
+**命题 3.6（截断迭代律）**：对于第 $m+1$ 步算子 $\phi_{m+1}$，任意输出分量 $d_j$ 下的像点测距满足：
+
+$$d_j(x_{m+1}, x'_{m+1}) \;\leq\; \begin{cases} 0 & \text{若存在 } i \in I \text{ 使得 } d_i(x_m, x'_m) \leq [\mathbf{A}(\phi_{m+1})]_{ji} \\ \sum\limits_{i \in I} [\mathbf{L}(\phi_{m+1})]_{ji} \cdot d_i(x_m, x'_m) & \text{否则} \end{cases}$$
+
+**证明**：对第一种情况：若存在 $i \in I$ 使得 $d_i(x_m, x'_m) \leq [\mathbf{A}(\phi_{m+1})]_{ji} = \underline{\alpha}_{\phi_{m+1}, d_i, d_j}$，由最小吸收半径定义有 $x'_m \in B_{d_i}(x_m, \underline{\alpha}) \subseteq \mathfrak{F}_{\phi_{m+1}, d_j}(\phi_{m+1}(x_m))$。由命题 3.5 直接得 $d_j(x_{m+1}, x'_{m+1}) = 0$。对第二种情况：由 Lip 矩阵定义直接得上界。$\square$
+
+该迭代律表明：即便 $\mathbf{L}$ 矩阵允许前步测距发生跨分量的乘性放大，只要在某一输入分量 $d_i$ 上，两像点的当前测距未超过 $\phi_{m+1}$ 在 $(d_i, d_j)$ 通路上的最小吸收半径，则 $d_j$ 上的输出测距即被纤维截断为零。Lip 矩阵界定测距的**放大上限**，吸收矩阵提供测距的**归零下限**，二者共同决定了算子链中点对测距的逐步演化。
+
+> **注（吸收条件的单分量充分性）**：截断条件仅需在**某一个**输入分量 $i$ 上满足即可触发 $d_j$ 输出归零。这是因为吸收半径的定义本身就是单输入分量的开球包含条件（$B_{d_i}(y, r) \subseteq \mathfrak{F}$），与其他分量上的测距无关。不同输入分量可独立提供截断通道。
+
+### 3.5 纤维冲突
 
 当一个算子将两个输入坍缩至同一纤维，而另一个算子要求区分这两个输入时，产生**纤维冲突**。
 
 #### 定义（纤维冲突，Fiber Conflict）
 
-设 $\phi, \psi \in \Omega$，$\tau > 0$，$d_j \in \mathcal{G}$。若存在 $x', x'' \in \mathrm{dom}(\phi) \cap \mathrm{dom}(\psi)$ 使得：
+设 $\phi, \psi \in \Omega$，$\tau > 0$，$d_j \in \mathcal{G}$。若存在 $x, x' \in \mathrm{dom}(\phi) \cap \mathrm{dom}(\psi)$ 使得：
 
-$$d_j(\phi(x'), \phi(x'')) = 0 \quad \text{但} \quad d_j(\psi(x'), \psi(x'')) > 2\tau$$
+$$d_j(\phi(x), \phi(x')) = 0 \quad \text{但} \quad d_j(\psi(x), \psi(x')) > 2\tau$$
 
-则称 $\phi$ 与 $\psi$ 在点对 $(x', x'')$ 上关于 $(d_j, \tau)$ 发生**纤维冲突**——$\phi$ 将 $x', x''$ 坍缩至同一 $d_j$-纤维，而 $\psi$ 要求它们在 $d_j$ 下保持超过 $2\tau$ 的距离。
+则称 $\phi$ 与 $\psi$ 在点对 $(x, x')$ 上关于 $(d_j, \tau)$ 发生**纤维冲突**——$\phi$ 将 $x, x'$ 坍缩至同一 $d_j$-纤维，而 $\psi$ 要求它们在 $d_j$ 下保持超过 $2\tau$ 的距离。
 
-> **注（精确纤维冲突的拓扑不变性）**：纤维冲突的条件 $d_j(\phi(x'), \phi(x'')) = 0$ 是等价类结构的性质，不随连续扰动而消失。这使得纤维冲突产生的逼近下界是**结构性的**，而非仅仅是度量估计。
+> **注（纤维冲突的结构性）**：纤维冲突的条件 $d_j(\phi(x), \phi(x')) = 0$ 是等价类结构的性质，不随连续扰动而消失。这使得纤维冲突产生的偏离下界是**结构性的**，而非仅仅是度量估计。
 
-**命题 3.7（纤维冲突的不可逼近性）**：设算子链 $\hat{\psi} = \phi_k \circ \cdots \circ \phi_1$ 尝试逼近目标 $\psi$。若在第 $m$ 步发生与 $\psi$ 的纤维冲突，即存在 $x', x'' \in \mathrm{dom}(\hat{\psi}) \cap \mathrm{dom}(\psi)$ 使得 $d_j(\phi_m(h'_{m-1}), \phi_m(h''_{m-1})) = 0$（其中 $h'_{m-1}, h''_{m-1}$ 为 $x', x''$ 经前 $m-1$ 步的中间态），则：
+**命题 3.7（纤维冲突的固有偏离下界）**：设复合算子链 $\hat{\psi} = \phi_k \circ \cdots \circ \phi_1$ 与一般算子 $\psi$ 共定义域。若 $\hat{\psi}$ 在内部传导的第 $m$ 步与 $\psi$ 发生纤维冲突，即存在 $x, x' \in \mathrm{dom}(\hat{\psi}) \cap \mathrm{dom}(\psi)$ 使得 $d_j(\phi_m(x_{m-1}), \phi_m(x'_{m-1})) = 0$（其中 $x_{m-1}, x'_{m-1}$ 为 $x, x'$ 经前 $m-1$ 步的中间态），则这两个算子在 $x$ 与 $x'$ 上的输出测距必然满足极小下界：
 
-$$\max\bigl\{d_j(\hat{\psi}(x'), \psi(x')),\; d_j(\hat{\psi}(x''), \psi(x''))\bigr\} \;\geq\; \frac{d_j(\psi(x'), \psi(x''))}{2}$$
+$$\max\bigl\{d_j(\hat{\psi}(x), \psi(x)),\; d_j(\hat{\psi}(x'), \psi(x'))\bigr\} \;\geq\; \frac{d_j(\psi(x), \psi(x'))}{2}$$
 
-**证明**：$d_j(\phi_m(h'_{m-1}), \phi_m(h''_{m-1})) = 0$ 蕴含 $d_j(\hat{\psi}_{\mathrm{tail}}(\phi_m(h'_{m-1})), \hat{\psi}_{\mathrm{tail}}(\phi_m(h''_{m-1}))) = 0$（其中 $\hat{\psi}_{\mathrm{tail}} = \phi_k \circ \cdots \circ \phi_{m+1}$；由 Lip 不等式 $L \cdot 0 = 0$，遵循 §1.1 $\bar{\mathbb{R}}_+$ 约定），即 $d_j(\hat{\psi}(x'), \hat{\psi}(x'')) = 0$。由三角不等式：
-$$d_j(\psi(x'), \psi(x'')) \leq d_j(\hat{\psi}(x'), \psi(x')) + d_j(\hat{\psi}(x'), \hat{\psi}(x'')) + d_j(\hat{\psi}(x''), \psi(x''))$$
-$$= d_j(\hat{\psi}(x'), \psi(x')) + 0 + d_j(\hat{\psi}(x''), \psi(x''))$$
-两项中至少一项 $\geq d_j(\psi(x'), \psi(x''))/2$。$\square$
+**证明**：$d_j(\phi_m(x_{m-1}), \phi_m(x'_{m-1})) = 0$ 蕴含 $d_j(\hat{\psi}_{\mathrm{tail}}(\phi_m(x_{m-1})), \hat{\psi}_{\mathrm{tail}}(\phi_m(x'_{m-1}))) = 0$（其中 $\hat{\psi}_{\mathrm{tail}} = \phi_k \circ \cdots \circ \phi_{m+1}$；由 Lip 不等式 $L \cdot 0 = 0$，遵循 §1.1 $\bar{\mathbb{R}}_+$ 约定），即 $d_j(\hat{\psi}(x), \hat{\psi}(x')) = 0$。由三角不等式：
+$$d_j(\psi(x), \psi(x')) \leq d_j(\hat{\psi}(x), \psi(x)) + d_j(\hat{\psi}(x), \hat{\psi}(x')) + d_j(\hat{\psi}(x'), \psi(x'))$$
+$$= d_j(\hat{\psi}(x), \psi(x)) + 0 + d_j(\hat{\psi}(x'), \psi(x'))$$
+两项中至少一项 $\geq d_j(\psi(x), \psi(x'))/2$。$\square$
 
-> **注（纤维吸收与纤维冲突的对偶性）**：§3.5 的纤维吸收——偏差落入纤维内被精确消除——是有利的多对一坍缩。纤维冲突——需要区分的信号被坍缩至同一纤维——是不利的多对一坍缩。两者是同一纤维结构的两面：吸收半径同时决定了算子的**鲁棒性**（吸收容限）和**分辨率极限**（冲突阈值）。
+> **注（纤维截断与纤维冲突的对偶性）**：§3.4 的纤维截断——两像点落入同一纤维后测距被精确截断为零——是有利的多对一坍缩。纤维冲突——需要区分的输入被坍缩至同一纤维——是不利的多对一坍缩。两者是同一纤维结构的两面：吸收半径同时决定了算子的**鲁棒性**（截断容限）和**分辨率极限**（冲突阈值）。
+### 3.6 算子链的纤维同构与单侧同余性
+
+前叙定理（特别是纤维截断与纤维冲突）揭示了一个核心事实：算子在复合网络中的关键隔离效能，根本上取决于它对输入空间实施的**离散网格化划分（等价类切割）**边界。这自然地诱导出了宏观算子空间的一类拓扑等价关系。
+
+#### 定义（局部纤维同构，Local Fiber Isomorphism）
+
+设 $\phi, \psi \in \Omega$，且其定义域交集 $D = \mathrm{dom}(\phi) \cap \mathrm{dom}(\psi) \neq \emptyset$。指定指标集子族 $J \subseteq I$。若对交集 $D$ 内任意两点 $x, x'$，恒有：
+
+$$d_J(\phi(x), \phi(x')) = 0 \iff d_J(\psi(x), \psi(x')) = 0$$
+
+则称算子 $\phi$ 与 $\psi$ 在限定子族 $J$ 及交集 $D$ 上**局部纤维同构**，记作 $\phi \sim_{J,D} \psi$。
+
+*(在等价类图景上，此条件直接等价于：两者的计算纤维集族 $\mathfrak{F}_{\phi, J}$ 与 $\mathfrak{F}_{\psi, J}$ 对公共有效定义域 $D$ 实施了完全相同的拓扑剖分与商集化。)*
+
+#### 算子链的复合破缺与单侧同余
+
+在泛代数（Universal Algebra）与算畴理论（Operad Theory）中，若要在算子空间 $\Omega$ 上商出一个良定义的复合代数结构（Quotient Operad 或 Quotient Category），其等价关系必须是**双向同余的（Two-sided Congruence）**。然而，基于纤维同构的等价类在此展现出了纯拓扑域极其深刻的非对称性。
+
+**定理 3.8（纤维等价的右同余与左破缺）**：
+设 $\phi, \psi \in \Omega$ 且 $\phi \sim_{J,D} \psi$。对于任意满足定义域复合条件的前置算子 $C_R$ 与后置算子 $C_L$：
+1. **右同余（前置闭合）**：$\phi \circ C_R \sim_{J, \mathrm{dom}(C_R)} \psi \circ C_R$ 恒成立。前置算子的任意非线性映射不会破坏两者的纤维等价性。
+2. **左破缺（后置撕裂）**：$C_L \circ \phi \sim_{J, D} C_L \circ \psi$ **通常不成立**。后置算子 $C_L$ 自身的计算纤维将大概率撕裂两者原始的等价结构。
+
+**证明**：
+1. **右同余**：对于任意 $x, x' \in \mathrm{dom}(C_R)$，令复合转移态 $z = C_R(x), z' = C_R(x')$。因 $z, z'$ 必属于二者的公共有效定义域，由前提 $\phi \sim_{J,D} \psi$ 的定义天然得保：$d_J(\phi(z), \phi(z')) = 0 \iff d_J(\psi(z), \psi(z')) = 0$。
+2. **左破缺（构造反例）**：纤维同构仅仅约束了算子将输入距离精确化为 $0$ 的等价判定能力。对于那些未受截断的点对（$d_J>0$），$\phi$ 与 $\psi$ 会产生度量坐标（绝对输出位置与非零差异极差）截然不同的像对。当这组像对作为输入沿定义域继续复合进后置算子 $C_L$ 时，两组测距可能落入 $C_L$ 在状态空间中相异的局部吸收半径 $\alpha$ 内。例如 $C_L$ 的纤维内部恰好涵盖了 $\phi$ 的输出变化量导致 $d_J(C_L \circ \phi) = 0$，却未能涵盖 $\psi$ 拉伸后的距离界导致 $d_J(C_L \circ \psi) > 0$。等价性质随之破裂。$\square$
+
+> **注（商空间的代数受限性）**：定理 3.8 证明了宏观纤维等价关系在代数结构上仅仅构成了一个**右同余类**。这意味着商集 $\Omega / \sim_{J,D}$ 本质上只能作为等价划分的单纯集合而存在，**无法自然继承 $\Omega$ 原本的复合算子代数结构**。在任意长链级联映射中，等价类 $[\phi]$ 内的同构替换仅在**系统输出最末端**绝对合法；若在中间管线进行替换，即使被换掉的两个算符截断零位全等，但其余数非零连续谱经过极小扰动后，遭遇下游不连续的强纤维截断屏障时，均会引发全域状态发散变轨。
 
 ----
 *[IDFS] ⊢ [GLENZLI] ⊢ [Part 01] ⊢ [03-computational-fiber] ⊢ [b8867d6753c81282]*
