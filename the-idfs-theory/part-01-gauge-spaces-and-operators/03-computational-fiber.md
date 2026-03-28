@@ -70,7 +70,12 @@ $$[\mathbf{A}(\phi_2 \circ \phi_1)]_{ji} \;\geq\; \min_{l \in I}\, [\mathbf{A}(\
 
 即复合算子的吸收半径不弱于 $\phi_1$ 在全分量上同时吸收的最短通道。
 
-**证明**：设 $r \leq \min_{l \in I} [\mathbf{A}(\phi_1)]_{li}$。对任意 $x \in B_{d_i}(y, r)$（$y \in \mathrm{dom}(\phi_2 \circ \phi_1)$），由 $r \leq [\mathbf{A}(\phi_1)]_{li}$ 对所有 $l \in I$ 成立，吸收半径定义给出 $d_l(\phi_1(x), \phi_1(y)) = 0$ 对所有 $l \in I$。因此 $d_j(\phi_2(\phi_1(x)), \phi_2(\phi_1(y))) \leq \sum_{l \in I} L_{l \to j}^{(2)} \cdot d_l(\phi_1(x), \phi_1(y)) = \sum_{l \in I} L_{l \to j}^{(2)} \cdot 0 = 0$（遵循 §1.1 $\bar{\mathbb{R}}_+$ 约定）。故 $B_{d_i}(y, r) \subseteq \mathfrak{F}_{\phi_2 \circ \phi_1, d_j}(\phi_2(\phi_1(y)))$，取下确界即得。$\square$
+**证明**：任取 $r < \min_{l \in I} [\mathbf{A}(\phi_1)]_{li}$。对任意处于复合定义域的点 $y \in \mathrm{dom}(\phi_2 \circ \phi_1) \subseteq \mathrm{dom}(\phi_1)$ 及任意扰动输入 $x \in B_{d_i}(y, r)$，由于 $r < [\mathbf{A}(\phi_1)]_{li} \leq \alpha_{\phi_1, d_i, d_l}(y)$ 对所有 $l \in I$ 严格成立，依据局部吸收半径的定义，必有输出在全分量上的完全坍缩：$d_l(\phi_1(x), \phi_1(y)) = 0$（$\forall l \in I$）。
+
+选取外层算子 $\phi_2$ 的任意合法 Lip 矩阵 $\mathbf{L}^{(2)}$（即便其包含 $+\infty$ 条目），由基础 Lip 放缩不等式与 $\bar{\mathbb{R}}_+$ 算术约定（$0 \cdot \infty = 0$）：
+$$d_j(\phi_2(\phi_1(x)), \phi_2(\phi_1(y))) \leq \sum_{l \in I} L_{l \to j}^{(2)} \cdot d_l(\phi_1(x), \phi_1(y)) = \sum_{l \in I} L_{l \to j}^{(2)} \cdot 0 = 0$$
+
+因此开球 $B_{d_i}(y, r)$ 完全包含于复合算子的零效纤维 $\mathfrak{F}_{\phi_2 \circ \phi_1, d_j}(\phi_2(\phi_1(y)))$ 内。这蕴含局部吸收半径 $\alpha_{\phi_2 \circ \phi_1, d_i, d_j}(y) \geq r$。对所有 $y$ 取下确界，再令 $r \to \min_{l \in I} [\mathbf{A}(\phi_1)]_{li}$ 即得复合矩阵下界。$\square$
 
 > **注（与 Lip 复合律的结构对比）**：Lip 矩阵在复合下满足**矩阵乘法**（命题 1.1）——上界在线性放缩下保持可累积性。吸收矩阵则无类似的矩阵乘法结构：纤维吸收要求输出在指定分量上**精确为零**，而这在多分量下是全分量的联合条件——$\phi_1$ 必须在**每一个**中间分量 $l$ 上同时归零，才能保证 $\phi_2$ 的 Lip 不等式输出为零。此联合条件导致复合律取 $\min$（最弱通道瓶颈），而非 Lip 复合律中的 $\sum \cdot$ 积。
 
