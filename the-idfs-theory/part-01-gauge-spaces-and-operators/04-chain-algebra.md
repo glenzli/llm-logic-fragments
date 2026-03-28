@@ -28,7 +28,7 @@ $$\mathbf{d}^{(m)} \;\triangleq\; \bigl(d_j(x_m, x'_m)\bigr)_{j \in I} \;\in\; \
 
 其中 $x_m = (\phi_m \circ \cdots \circ \phi_1)(x)$，$x'_m = (\phi_m \circ \cdots \circ \phi_1)(x')$；$\mathbf{d}^{(0)} = (d_j(x, x'))_{j \in I}$。
 
-由命题 3.7（截断迭代律），$\mathbf{d}^{(m)}$ 到 $\mathbf{d}^{(m+1)}$ 的逐步演化为分段映射：对每个输出分量 $j \in I$，
+由命题 3.4（截断迭代律），$\mathbf{d}^{(m)}$ 到 $\mathbf{d}^{(m+1)}$ 的逐步演化为分段映射：对每个输出分量 $j \in I$，
 
 $$d_j^{(m+1)} = \begin{cases} 0 & \text{若存在 } i \in I \text{ 使得 } d_i^{(m)} < [\mathbf{A}(\phi_{m+1})]_{ji} \\ \sum_{i \in I} [\mathbf{L}(\phi_{m+1})]_{ji} \cdot d_i^{(m)} & \text{否则} \end{cases}$$
 
@@ -40,7 +40,7 @@ $$\sum_{i \in I} \left(\prod_{p=1}^{m^*-1} \mathbf{L}^{(p)}\right)_{i \to i^*} \
 
 则对所有 $j \in I$：$d_j^{(m)} = 0$（$m \geq m^*$）。即两输入经过 $m^*$ 步后在全部分量上合流——后续链级演化对此点对不可区分。
 
-**证明**：左侧即 $d_{i^*}^{(m^*-1)}$ 的 Lip 上界（由 §1.6 连乘律）。满足条件时 $d_{i^*}^{(m^*-1)} < \min_j [\mathbf{A}(\phi_{m^*})]_{ji^*}$，故对所有 $j \in I$ 均有 $d_{i^*}^{(m^*-1)} < [\mathbf{A}(\phi_{m^*})]_{ji^*}$。由命题 3.7 的吸收分支（其条件为严格不等式 $d_i^{(m)} < [\mathbf{A}]_{ji}$），对每个 $j$ 分别触发截断，$d_j^{(m^*)} = 0$。后续各步由 $\sum L \cdot 0 = 0$（§1.1 $\bar{\mathbb{R}}_+$ 约定）保持全零。$\square$
+**证明**：左侧即 $d_{i^*}^{(m^*-1)}$ 的 Lip 上界（由 §1.6 连乘律）。满足条件时 $d_{i^*}^{(m^*-1)} < \min_j [\mathbf{A}(\phi_{m^*})]_{ji^*}$，故对所有 $j \in I$ 均有 $d_{i^*}^{(m^*-1)} < [\mathbf{A}(\phi_{m^*})]_{ji^*}$。由命题 3.4 的吸收分支（其条件为严格不等式 $d_i^{(m)} < [\mathbf{A}]_{ji}$），对每个 $j$ 分别触发截断，$d_j^{(m^*)} = 0$。后续各步由 $\sum L \cdot 0 = 0$（§1.1 $\bar{\mathbb{R}}_+$ 约定）保持全零。$\square$
 
 **命题 4.2（放大逃逸）**：设链 $c_\phi = \phi_k \circ \cdots \circ \phi_1$。若对某分量 $j \in I$，全链中每一步的吸收半径均为零（$[\mathbf{A}(\phi_m)]_{ji} = 0$，$\forall m \in \{1, \ldots, k\}$，$\forall i \in I$），则吸收机制在分量 $j$ 的通路上从不触发。此时该分量测距的演化完全由 Lip 放缩主导：
 
@@ -48,7 +48,7 @@ $$d_j^{(m)} \;\leq\; \sum_{i \in I} \left(\prod_{p=1}^{m} \mathbf{L}^{(p)}\right
 
 特别地，若连乘矩阵的 $(\cdot, j)$ 列向量 $\sum_{i \in I} [\prod_p \mathbf{L}^{(p)}]_{i \to j} > 1$，则 Lip 上界允许 $d_j^{(m)}$ 的估计值随步数增长——纤维截断在该通路上始终无法被保证激活。
 
-**证明**：吸收条件要求 $d_i^{(m)} \leq [\mathbf{A}(\phi_{m+1})]_{ji} = 0$，即 $d_i^{(m)} = 0$。若 $d_i^{(m)} > 0$，则吸收条件不满足，演化退回 Lip 放缩分支。由命题 3.7 反复应用得 Lip 连乘上界。$\square$
+**证明**：吸收条件要求 $d_i^{(m)} \leq [\mathbf{A}(\phi_{m+1})]_{ji} = 0$，即 $d_i^{(m)} = 0$。若 $d_i^{(m)} > 0$，则吸收条件不满足，演化退回 Lip 放缩分支。由命题 3.4 反复应用得 Lip 连乘上界。$\square$
 
 > **注（收敛与逃逸的相空间分界）**：$\bar{\mathbb{R}}_+^{|I|}$ 中的截断阈值面 $\{d_i < [\mathbf{A}]_{ji}\}$ 将相空间分为两个区域。落入截断区域的轨线在一步内归零（命题 4.1）；始终位于截断区域之外的轨线则服从纯 Lip 矩阵连乘（命题 4.2）。实际的链级演化可能在两个区域间交替——部分分量被截断而另一些持续放大。
 
@@ -99,7 +99,7 @@ $$[\mathbf{A}(\phi)]_{ii} \;=\; 0$$
 
 **(ii)** 若 $d = d_i$ 且 $i \in I_{\mathrm{id}}(\phi)$，且 $d_i$ 为分离伪度量：$\mathrm{FI}_{\varepsilon, d_i}(\phi) = 0$（恒等映射不产生纤维坍缩）。
 
-**(iii)** 对 $k$-步算子链 $c_\phi = \phi_k \circ \cdots \circ \phi_1$（逐步满足定义域无损耗），推论 3.5 的可加分解中，仅 $I_{\mathrm{act}}(\phi_m)$ 中的分量能贡献非平凡的纤维膨胀项。
+**(iii)** 对 $k$-步算子链 $c_\phi = \phi_k \circ \cdots \circ \phi_1$（逐步满足定义域无损耗），纤维膨胀的链式可加分解中，仅 $I_{\mathrm{act}}(\phi_m)$ 中的分量能贡献非平凡的纤维膨胀项。
 
 **证明**：**(i)** $j \in I_{\mathrm{const}}(\phi)$ 蕴含 $\mathrm{Im}(\phi)$ 在 $d_j$ 下不可区分，故 $\mathcal{N}_{d_j}(\varepsilon, \mathrm{Im}(\phi)) = 1$，$I_{\varepsilon, d_j}(\mathrm{Im}(\phi)) = 0$。代入纤维膨胀量定义即得。**(ii)** $i \in I_{\mathrm{id}}(\phi)$ 且 $d_i$ 分离，则 $\phi$ 在 $d_i$ 上为恒等（由命题 4.5 证明中已推导），故 $\mathrm{Im}(\phi)$ 在 $d_i$ 下与 $\mathrm{dom}(\phi)$ 具有相同的覆盖数。**(iii)** 由 (i)(ii) 及分划 $I = I_{\mathrm{id}} \sqcup I_{\mathrm{const}} \sqcup I_{\mathrm{act}}$ 的穷尽性，对固定分量 $d$，$\phi_m$ 对分量 $d$ 的纤维膨胀贡献仅在 $d$ 为 $\phi_m$ 的活跃分量时非平凡。$\square$
 
@@ -240,19 +240,19 @@ $$\mathrm{gr}_\varepsilon(\phi_2 \circ \phi_1) \;=\; \mathrm{gr}_\varepsilon(\ph
 
 $\Omega_{\leq 0}$ 即"无纤维坍缩"算子子幺半群——在分量 $d$ 上单射的算子。
 
-**证明**：可加性即推论 3.5 的重述。滤链的复合封闭性由可加性直接得出。$\square$
+**证明**：可加性即由链式可加性所得的推论的重述。滤链的复合封闭性由可加性直接得出。$\square$
 
 > **注（纤维维数在商集上的良定义性）**：若 $\phi \sim_{J,D} \psi$，则 $\phi$ 与 $\psi$ 对 $D$ 施加了相同的等价类剖分，故在 $D$ 上的覆盖数一致：$\mathcal{N}_{d_J}(\varepsilon, \mathrm{Im}(\phi)|_D) = \mathcal{N}_{d_J}(\varepsilon, \mathrm{Im}(\psi)|_D)$。因此纤维膨胀量 $\mathrm{FI}_{\varepsilon, d_J}$ 在商集 $\Omega / \sim_{J,D}$ 上良定义，构成等价类的 $\bar{\mathbb{R}}_+$ 标量不变量。
 
 ### 4.5 链级表达力界限
 
-综合 Lip 矩阵的放缩上界（§2，命题 3.2）与纤维维数的链级可加性（推论 3.5），可推导算子链输出多样性的全局约束。
+综合 Lip 矩阵的放缩上界（§2，命题 3.2）与纤维维数的链级可加性（§3.3），可推导算子链输出多样性的全局约束。
 
 **命题 4.13（深度-多样性上界）**：设 $c_\phi = \phi_k \circ \cdots \circ \phi_1$，固定分量 $d \in \mathcal{G}$ 与 $\varepsilon > 0$。若逐步满足 $\mathrm{Im}(\phi_{m-1} \circ \cdots \circ \phi_1) \subseteq \mathrm{dom}(\phi_m)$，则：
 
 $$\mathrm{CD}_{\varepsilon, d}(c_\phi) \;\leq\; I_{\varepsilon, d}\bigl(\mathrm{dom}(\phi_1)\bigr) \;-\; \sum_{m=1}^{k} \mathrm{FI}_{\varepsilon, d}(\phi_m\big|_{\mathrm{Im}(\phi_{m-1} \circ \cdots \circ \phi_1)})$$
 
-**证明**：由纤维膨胀量定义 $\mathrm{FI} = I_\varepsilon(\mathrm{dom}) - I_\varepsilon(\mathrm{Im})$。推论 3.5 给出纤维膨胀量的逐步可加性。因此：
+**证明**：由纤维膨胀量定义 $\mathrm{FI} = I_\varepsilon(\mathrm{dom}) - I_\varepsilon(\mathrm{Im})$。纤维膨胀量的定义分解给出其逐步可加性。因此：
 
 $$\sum_{m=1}^{k} \mathrm{FI}(\phi_m|_\cdot) \;=\; I_{\varepsilon, d}(\mathrm{dom}(\phi_1)) - I_{\varepsilon, d}(\mathrm{Im}(c_\phi))$$
 
@@ -322,7 +322,7 @@ $$d_{j^*}(\phi^k(x), \phi^k(x')) = 0 \quad \forall\, k \geq k^*$$
 
 $$\sum_{i \in I} [\mathbf{L}^{k^*}]_{i \to i^*} \cdot d_i^{(0)} \;<\; \alpha$$
 
-的最小整数（由收敛性保证存在）。此时 $d_{i^*}^{(k^*)} \leq \sum \cdots < \alpha = \underline{\alpha}_{\phi, d_{i^*}, d_{j^*}}$，由命题 3.7 的吸收分支（严格不等式 $d_{i^*}^{(k^*)} < [\mathbf{A}]_{j^* i^*}$）触发纤维截断：$d_{j^*}(\phi^{k^*+1}(x), \phi^{k^*+1}(x')) = 0$。后续由 $\sum L \cdot 0 = 0$ 保持。$\square$
+的最小整数（由收敛性保证存在）。此时 $d_{i^*}^{(k^*)} \leq \sum \cdots < \alpha = \underline{\alpha}_{\phi, d_{i^*}, d_{j^*}}$，由命题 3.4 的吸收分支（严格不等式 $d_{i^*}^{(k^*)} < [\mathbf{A}]_{j^* i^*}$）触发纤维截断：$d_{j^*}(\phi^{k^*+1}(x), \phi^{k^*+1}(x')) = 0$。后续由 $\sum L \cdot 0 = 0$ 保持。$\square$
 
 > **注（协同机制的非平凡性）**：单独的 $\rho < 1$ 仅保证测距**趋向零**但不保证**精确为零**（极限可能是渐近的而非有限步达到的）。单独的 $\alpha > 0$ 仅保证**当前测距足够小时**截断触发，但不保证测距会自动缩小到门槛以下。二者的协同作用是：Lip 收缩负责将测距"搬运"到吸收门槛以内，吸收负责将其"锁定"为精确零——前者提供动力，后者提供终止性。
 
@@ -340,7 +340,7 @@ $$\lambda_k \;\triangleq\; \frac{\mathrm{FI}_{\varepsilon, d}(c_k)}{k} \;=\; \fr
 
 **(iii)** 与深度视界的联合：$\mathrm{CD}_{\varepsilon, d}(c_k) = I_{\varepsilon, d}(\mathrm{dom}(\phi_1)) - k \lambda_k$。当 $\lambda_k > 0$ 保持正下界时，$\mathrm{CD}$ 在 $k = \lfloor I_\varepsilon / \lambda_k \rfloor$ 步必归零。
 
-**证明**：**(i)** 由可加性（推论 3.5），$\mathrm{FI}(c_k) = \sum_{m=1}^k \mathrm{FI}(\phi_m|_\cdot) \leq kB$。除以 $k$ 即得。**(ii)** $\mathrm{FI}(c_k) = k\delta$，$\lambda_k = \delta$。**(iii)** 由命题 4.13 直接重写。$\square$
+**证明**：**(i)** 由可加性（§3.3），$\mathrm{FI}(c_k) = \sum_{m=1}^k \mathrm{FI}(\phi_m|_\cdot) \leq kB$。除以 $k$ 即得。**(ii)** $\mathrm{FI}(c_k) = k\delta$，$\lambda_k = \delta$。**(iii)** 由命题 4.13 直接重写。$\square$
 
 > **注（纤维膨胀密度的统计解读）**：在实际系统中，若额外假设各步算子从某概率空间独立同分布抽取，$\lambda_k$ 即各步 $\mathrm{FI}$ 的经验均值。由大数定律，$\lambda_k \to \mathbb{E}[\mathrm{FI}]$（几乎必然）。这意味着：**在上述统计假设下，无论链中具体选取了哪些算子，只要它们在统计上是平稳的，单位链深的信息损失率就收敛到一个确定常数**。该常数与深度视界（推论 4.14）共同确立了长链系统的基本容量约束——输入度量熵的有限性加上每步的正膨胀密度，使得链的有效深度必然有限。
 
