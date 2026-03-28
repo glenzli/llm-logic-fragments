@@ -125,7 +125,7 @@ $$\sup_{y \in \mathrm{Im}(\psi)} d_i(\phi_1(y), \phi_2(y)) \;\leq\; \sup_{y \in 
 
 > **注（链内算子的对偶角色）**：在链 $c_\phi = \phi_k \circ \cdots \circ \phi_1$ 中，$\phi_m$（$1 < m < k$）同时扮演两个角色：作为上游 $\phi_{m-1} \circ \cdots \circ \phi_1$ 的**左乘因子**，其 Lip 矩阵决定上游差异的乘性放大上界；作为下游 $\phi_{m+1}$ 的**右乘因子**，其累积像集 $\mathrm{Im}(\phi_m \circ \cdots \circ \phi_1)$ 限定下游的距离评估域。
 
-> **注（首发算子的像集约束与跨分量再激活）**：$\phi_1$ 直接作用于全域 $\mathcal{X}$，其像集 $\mathrm{Im}(\phi_1)$ 构成后续全部下游评估域的初始上界。若 $\phi_1$ 在某分量 $d_i$ 上产生常值坍缩（$d_i(\phi_1(x), \phi_1(y)) = 0$，$\forall x, y \in \mathrm{dom}(\phi_1)$），则 $d_i^{(1)} = 0$。然而此归零**不必然持续**：若下游受限 Lip 矩阵存在非对角元 $L_{l \to i}^{(p)}\big|_{U_p} > 0$（$l \neq i$），其他未坍缩分量的残余测距可通过跨分量耦合重新注入分量 $i$（命题 2.13(i)）。$d_i$ 归零的不可逆性仅在以下条件下成立：后续连积矩阵 $\mathbf{L}_{\mathrm{down}}$ 的第 $i$ 列满足 $(\mathbf{L}_{\mathrm{down}})_{l \to i} = 0$（$\forall l \neq i$），即下游不存在向分量 $i$ 的跨分量耦合（命题 2.13(iii)）。
+> **注（首发算子的像集约束与跨分量再激活）**：$\phi_1$ 直接作用于全域 $\mathcal{X}$，其像集 $\mathrm{Im}(\phi_1)$ 构成后续全部下游评估域的初始上界。若 $\phi_1$ 在某分量 $d_i$ 上产生常值坍缩（$d_i(\phi_1(x), \phi_1(y)) = 0$，$\forall x, y \in \mathrm{dom}(\phi_1)$），则 $d_i^{(1)} = 0$。然而此归零**不必然持续**：若下游受限 Lip 矩阵存在非对角元 $L_{l \to i}^{(p)}\big|_{U_p} > 0$（$l \neq i$），其他未坍缩分量的残余测距可通过跨分量耦合重新注入分量 $i$（命题 2.12(i)）。$d_i$ 归零的不可逆性仅在以下条件下成立：后续连积矩阵 $\mathbf{L}_{\mathrm{down}}$ 的第 $i$ 列满足 $(\mathbf{L}_{\mathrm{down}})_{l \to i} = 0$（$\forall l \neq i$），即下游不存在向分量 $i$ 的跨分量耦合（命题 2.12(iii)）。
 
 #### 算子链内部摄动的双端隔离
 
@@ -145,18 +145,8 @@ $$d_{\Omega, d_j}(c_\phi, c_{\phi'}) \;\leq\; \sum_{i \in I} (\mathbf{L}_{\mathr
 $$d_{\Omega, d_i}(\phi_m \circ R_{\mathrm{up}},\; \psi_m \circ R_{\mathrm{up}}) \;=\; d_{\Omega, d_i}(\phi_m, \psi_m)\Big|_{\mathrm{Im}(R_{\mathrm{up}})}$$
 代入即得。$\square$
 
-**命题 2.8（等长链距离界）**：设 $c_\phi = \phi_k \circ \cdots \circ \phi_1$ 与 $c_\psi = \psi_k \circ \cdots \circ \psi_1$ 为等长算子链。则对任意分量 $j \in I$：
-$$d_{\Omega, d_j}(c_\phi, c_\psi) \;\leq\; \sum_{m=1}^k \sum_{i \in I} \left( \prod_{p=m+1}^{k} \mathbf{L}^{(p)}[\phi] \right)_{i \to j} \cdot d_{\Omega, d_i}(\phi_m, \psi_m)\Big|_{\mathrm{Im}(\psi_{m-1} \circ \cdots \circ \psi_1)}$$
-*（约定：$m=k$ 时连积为单位矩阵；$m=1$ 时像集限定为 $\mathcal{X}$）*
 
-**证明**：构造中间链序列 $H_m = \phi_k \circ \cdots \circ \phi_{m+1} \circ \psi_m \circ \cdots \circ \psi_1$（$0 \leq m \leq k$），则 $H_0 = c_\phi$，$H_k = c_\psi$。由三角不等式：
-$$d_{\Omega, d_j}(c_\phi, c_\psi) \;\leq\; \sum_{m=1}^k d_{\Omega, d_j}(H_{m-1}, H_m)$$
-$H_{m-1}$ 与 $H_m$ 仅在第 $m$ 步不同：$H_{m-1} = L_{\mathrm{down}}^{(m)} \circ \phi_m \circ R_{\mathrm{up}}^{(m)}$，$H_m = L_{\mathrm{down}}^{(m)} \circ \psi_m \circ R_{\mathrm{up}}^{(m)}$，其中 $L_{\mathrm{down}}^{(m)} = \phi_k \circ \cdots \circ \phi_{m+1}$，$R_{\mathrm{up}}^{(m)} = \psi_{m-1} \circ \cdots \circ \psi_1$。对每一项应用命题 2.7 的结构：右侧像集限定于 $\mathrm{Im}(R_{\mathrm{up}}^{(m)})$；下游放缩使用 $\mathbf{L}^{(p)}[\phi]$（全域 Lip 矩阵而非受限矩阵，因为 $R_{\mathrm{up}}^{(m)}$ 来自 $\psi$ 链，其像集未必落在 $\phi$ 链的受限截面内）。代回求和即得。$\square$
-
-> **注（受限矩阵与全域矩阵的退化）**：命题 2.7 中下游放缩使用受限 Lip 矩阵 $\mathbf{L}^{(p)}\big|_{U_p}$，可利用特定通路上的局部归零获得更紧界。命题 2.8 中由于中间链的前置部分来自 $\psi$ 而非 $\phi$，像集 $\mathrm{Im}(R_{\mathrm{up}}^{(m)})$ 可能超出 $\phi$ 链原有的受限域，迫使下游退回全域 Lip 矩阵 $\mathbf{L}^{(p)}[\phi]$。这是两条链之间距离估计较单步替换更为宽松的代数原因。
-
-
-**推论 2.9（交换子界，Commutator Bound）**：对任意 $\phi, \psi \in \Omega$，设 $U = (\mathrm{Im}(\phi) \cup \mathrm{Im}(\psi)) \cap \mathrm{dom}(\psi)$。复合的非交换偏差在各分量 $j \in I$ 上严格界定为：
+**推论 2.8（交换子界，Commutator Bound）**：对任意 $\phi, \psi \in \Omega$，设 $U = (\mathrm{Im}(\phi) \cup \mathrm{Im}(\psi)) \cap \mathrm{dom}(\psi)$。复合的非交换偏差在各分量 $j \in I$ 上严格界定为：
 $$d_{\Omega, d_j}(\psi \circ \phi,\; \phi \circ \psi) \;\leq\; \sum_{i \in I} L^{(\psi)}_{i \to j}\big|_U \cdot d_{\Omega, d_i}(\phi, \psi) \;+\; d_{\Omega, d_j}(\phi, \psi)\Big|_{\mathrm{Im}(\psi)}$$
 第一项为左乘 $\psi$ 对算子差异的矩阵耦合放大，第二项为右乘 $\psi$ 提供的像集域限制截断，二者分别源于复合的左右不对称性。
 
@@ -182,9 +172,9 @@ $$d_{\Omega, d_j}(\phi_{x_0}, \phi_{y_0}) = \sup_{z \in \mathcal{X}} d_j(x_0, y_
 
 $$d_j(\phi(x_0), \psi(x_0)) \;\leq\; d_{\Omega, d_j}(\phi, \psi)$$
 
-该不等式在以下 (ii)-(iv) 中作为从泛函界限向逐点界限的直接下降通道。
+该不等式在以下 (ii)-(iii) 中作为从泛函界限向逐点界限的直接下降通道。
 
-**推论 2.10（算子空间界限的点态退化）**：
+**推论 2.9（算子空间界限的点态退化）**：
 
 **(i)（点对的级联极差界限，对应推论 2.5）**：设 $c_\psi = \psi_k \circ \cdots \circ \psi_1$，令 $\phi_1 = \phi_{x_0}$，$\phi_2 = \phi_{y_0}$。推论 2.5 中逐层截面退化为 $U_m = \{\psi_{m-1} \circ \cdots \circ \psi_1(x_0),\; \psi_{m-1} \circ \cdots \circ \psi_1(y_0)\} \cap \mathrm{dom}(\psi_m)$（两点集或其子集）。代入推论 2.5 并利用上述退化等式，得：
 
@@ -200,28 +190,19 @@ $$d_{\Omega, d_i}(\phi_m, \psi_m)\Big|_{\mathrm{Im}(R_{\text{up}})} \;\geq\; d_i
 
 需注意此逐点下降产生的是上界的进一步松弛而非收紧：$u_m$ 处的映射一致性仅保证该点位贡献为零，泛函界限仍可能由 $\mathrm{Im}(R_{\text{up}})$ 中其他点的偏差主导。
 
-**(iii)（全链替换的轨迹离散差分和，对应命题 2.8）**：设旧链 $c_\phi$ 与新链 $c_\psi$ 等长。对任意固定输入 $x_0 \in \mathcal{X}$，同样由逐点下降直接从命题 2.8 得：
-
-$$d_j(c_\phi(x_0), c_\psi(x_0)) \;\leq\; d_{\Omega, d_j}(c_\phi, c_\psi) \;\leq\; \sum_{m=1}^k \sum_{i \in I} \left( \prod_{p=m+1}^{k} \mathbf{L}^{(p)}[\phi] \right)_{i \to j} \cdot d_{\Omega, d_i}(\phi_m, \psi_m)\Big|_{\mathrm{Im}(R_{\text{up}}^{(m)})}$$
-
-其中 $R_{\text{up}}^{(m)} = \psi_{m-1} \circ \cdots \circ \psi_1$。令 $u_m^{(\psi)} = R_{\text{up}}^{(m)}(x_0)$，各项受限算子距离均可进一步逐点松弛至 $d_i(\phi_m(u_m^{(\psi)}), \psi_m(u_m^{(\psi)}))$，给出沿新链轨迹各步中间态实点处新旧算子映射差异的加权离散求和的单点下界估计。
-
-**(iv)（交换子偏差的单点位移界限，对应推论 2.9）**：对任意 $\phi, \psi \in \Omega$ 和固定点 $x_0 \in \mathcal{X}$，由逐点下降直接从推论 2.9 得：
+**(iii)（交换子偏差的单点位移界限，对应推论 2.8）**：对任意 $\phi, \psi \in \Omega$ 和固定点 $x_0 \in \mathcal{X}$，由逐点下降直接从推论 2.8 得：
 
 $$d_j(\psi(\phi(x_0)),\; \phi(\psi(x_0))) \;\leq\; \sum_{i \in I} L^{(\psi)}_{i \to j}\big|_U \cdot d_{\Omega, d_i}(\phi, \psi) \;+\; d_{\Omega, d_j}(\phi, \psi)\Big|_{\mathrm{Im}(\psi)}$$
 
-其中 $U = (\mathrm{Im}(\phi) \cup \mathrm{Im}(\psi)) \cap \mathrm{dom}(\psi)$。特别地，令 $\phi = \phi_{x_0}$（常值算子），则 $\psi \circ \phi_{x_0}$ 为常值映射 $z \mapsto \psi(x_0)$，$\phi_{x_0} \circ \psi$ 为常值映射 $z \mapsto x_0$。交换子界退化为算子 $\psi$ 在单点 $x_0$ 上的位移量界限：
-
-$$d_j(\psi(x_0), x_0) \;\leq\; \sum_{i \in I} L^{(\psi)}_{i \to j}\big|_{\{x_0\}} \cdot d_i(x_0, \psi(x_0)) \;+\; d_j(x_0, \psi(x_0))\Big|_{\mathrm{Im}(\psi)}$$
-
-> **注（(i) 与 (ii)-(iv) 的退化机制差异）**：(i) 通过将常值算子 $\phi_{x_0}, \phi_{y_0}$ 代入推论 2.5 的内侧位置实现严格代数退化——这是唯一需要常值算子构造的子项，因为推论 2.5 要求对两个不同的内侧算子求取泛函距离。(ii)-(iv) 的退化则更为直接：泛函上确界天然地逐点支配，故对于固定的 $x_0$，逐点值直接不超过已有的泛函界限，无需引入额外的代数构造。
+其中 $U = (\mathrm{Im}(\phi) \cup \mathrm{Im}(\psi)) \cap \mathrm{dom}(\psi)$。
+> **注（(i) 与 (ii)-(iii) 的退化机制差异）**：(i) 通过将常值算子 $\phi_{x_0}, \phi_{y_0}$ 代入推论 2.5 的内侧位置实现严格代数退化——这是唯一需要常值算子构造的子项，因为推论 2.5 要求对两个不同的内侧算子求取泛函距离。(ii)-(iii) 的退化则更为直接：泛函上确界天然地逐点支配，故对于固定的 $x_0$，逐点值直接不超过已有的泛函界限，无需引入额外的代数构造。
 
 ### 2.5 复合系统中的分量传递律
 
-在确立了算子复合对空间测度极差放缩的各种代数约束（2.3 节）及其点态退化形式（2.4 节）之后，我们需回溯剖析算子内禀特征在级联下的布尔态演化（即 2.2 节所定义的透明 $I_{\mathrm{id}}$、遮蔽 $I_{\mathrm{const}}$ 与活跃 $I_{\mathrm{act}}$ 分划）。
-当处于不同局部拓扑相态的前后算子发生链式闭合时，宏观系统 $\phi_2 \circ \phi_1$ 在各个隔离伪度量分量 $i \in I$ 上的测度命运绝非两者的简单线性拼接。以下的命题群严格框定了这三种信息通道状态在复合运算下的代数继承约束。
+本节分析分量分划 $(I_{\mathrm{id}}, I_{\mathrm{const}}, I_{\mathrm{act}})$ 在算子复合下的传递规律。
 
-**命题 2.11（活跃分量包含律）**：
+
+**命题 2.10（活跃分量包含律）**：
 
 **(i)** 对任意复合 $\phi_2 \circ \phi_1 \in \Omega$：
 $$I_{\mathrm{act}}(\phi_2 \circ \phi_1) \;\subseteq\; I_{\mathrm{act}}(\phi_1) \cup I_{\mathrm{act}}(\phi_2)$$
@@ -238,23 +219,23 @@ $$d_i((\phi_2 \circ \phi_1)(x), x) \leq d_i(\phi_2(\phi_1(x)), \phi_1(x)) + d_i(
 
 **(b)** $i \in I_{\mathrm{id}}(\phi_1)$ 且 $i \in I_{\mathrm{const}}(\phi_2)$：
 $$d_i(\phi_2(\phi_1(x)), \phi_2(\phi_1(y))) = 0$$
-故复合在 $d_i$ 上非活跃。
+故 $i \notin I_{\mathrm{act}}(\phi_2 \circ \phi_1)$。
 
 **(c)** $i \in I_{\mathrm{const}}(\phi_1)$ 且 $i \in I_{\mathrm{id}}(\phi_2)$：
 两次应用三角不等式得：
 $$d_i(\phi_2(\phi_1(x)), \phi_2(\phi_1(y))) \leq d_i(\phi_2(\phi_1(x)), \phi_1(x)) + d_i(\phi_1(x), \phi_1(y)) + d_i(\phi_1(y), \phi_2(\phi_1(y)))$$
 其中：$d_i(\phi_2(\phi_1(x)), \phi_1(x)) = 0$（由 $i \in I_{\mathrm{id}}(\phi_2)$，令 $z = \phi_1(x)$）；$d_i(\phi_1(x), \phi_1(y)) = 0$（由 $i \in I_{\mathrm{const}}(\phi_1)$）；$d_i(\phi_1(y), \phi_2(\phi_1(y))) = d_i(\phi_2(\phi_1(y)), \phi_1(y)) = 0$（由伪度量对称性与 $i \in I_{\mathrm{id}}(\phi_2)$）。
-故复合在 $d_i$ 上非活跃。
+故 $i \notin I_{\mathrm{act}}(\phi_2 \circ \phi_1)$。
 
 **(d)** $i \in I_{\mathrm{const}}(\phi_1)$ 且 $i \in I_{\mathrm{const}}(\phi_2)$：
 $$d_i(\phi_2(\phi_1(x)), \phi_2(\phi_1(y))) = 0$$
-故复合在 $d_i$ 上非活跃。
+故 $i \notin I_{\mathrm{act}}(\phi_2 \circ \phi_1)$。
 
 **(ii)** 对 (i) 施加链长 $k$ 的数学归纳即得。$\square$
 
 > **注（包含可能严格）**：即使 $i \in I_{\mathrm{act}}(\phi_1) \cap I_{\mathrm{act}}(\phi_2)$，复合后 $\phi_2 \circ \phi_1$ 在 $d_i$ 上也可能退化为恒等或常值——两步活跃变换可能互相抵消。
 
-**命题 2.12（恒等分量保留律）**：$I_{\mathrm{id}}(\phi_1) \cap I_{\mathrm{id}}(\phi_2) \subseteq I_{\mathrm{id}}(\phi_2 \circ \phi_1)$。
+**命题 2.11（恒等分量保留律）**：$I_{\mathrm{id}}(\phi_1) \cap I_{\mathrm{id}}(\phi_2) \subseteq I_{\mathrm{id}}(\phi_2 \circ \phi_1)$。
 
 **证明**：设 $i$ 包含于交集，即 $\phi_1, \phi_2$ 均在 $d_i$ 分量上为恒等映射。对所有可复合输入 $x \in \mathrm{dom}(\phi_2 \circ \phi_1)$，由三角不等式公设：
 $$d_i(\phi_2(\phi_1(x)), x) \leq d_i(\phi_2(\phi_1(x)), \phi_1(x)) + d_i(\phi_1(x), x) = 0 + 0 = 0$$
@@ -262,20 +243,22 @@ $$d_i(\phi_2(\phi_1(x)), x) \leq d_i(\phi_2(\phi_1(x)), \phi_1(x)) + d_i(\phi_1(
 
 > **注（恒等分量非严格单调）**：互为逆元的操作可复合出新的恒等分量。若 $\phi_2 = \phi_1^{-1}$ 且二者能够发生定义域接驳，即便各自在 $d_i$ 上皆非透明操作，其复合算子链 $\phi_2 \circ \phi_1 = \mathrm{id}$ 亦必定在 $d_i$ 上触发透明特征。这印证了 $I_{\mathrm{id}}$ 随操作链路深化**不强制**保持单向缩减。
 
-**命题 2.13（常值分量的反渗与退化）**：设 $i \in I_{\mathrm{const}}(\phi_m)$，算子链 $c_\phi = \phi_k \circ \cdots \circ \phi_1$（$k > m$）。
-**(i)（代数耦合反渗情形）** $\phi_m$ 虽在分量 $d_i$ 上使输入极差测度归零，但若后续下游存在非对角的受限 Lip 矩阵（即在相应子集截面上满足存在 $j \neq i$ 使得 $L_{j \to i} > 0$），且前驱分量 $j$ 依然残存不为零的极差，则该残余测度将在乘法约束下重新映射回分量 $i$ 方向，引致 $i \in I_{\mathrm{act}}(c_\phi)$。
+**命题 2.12（常值分量的反渗与退化）**：设 $i \in I_{\mathrm{const}}(\phi_m)$，算子链 $c_\phi = \phi_k \circ \cdots \circ \phi_1$（$k > m$）。
 
-**(ii)（严格解耦退化情形）** 若后续所有算子 $\phi_{m+1}, \ldots, \phi_k$ 在对应的像集演化交面 $U_p$ 上均持有**纯对角阵**构型的受限 Lip 矩阵，则 $i \in I_{\mathrm{const}}(c_\phi) \cup I_{\mathrm{id}}(c_\phi)$。
+**(i)（跨分量再激活）** $\phi_m$ 在分量 $d_i$ 上使输出差异归零，但若下游受限 Lip 矩阵存在非对角元 $L_{l \to i}^{(p)}\big|_{U_p} > 0$（$l \neq i$），且分量 $l$ 上的残余测距非零，则跨分量耦合可使 $i \in I_{\mathrm{act}}(c_\phi)$。
 
-**(iii)（连积矩阵列零判据）** 更一般地，提取下游全部有效演化连积矩阵 $\mathbf{L}_{\text{down}} = \prod_{p=m+1}^{k} \mathbf{L}^{(p)}\big|_{U_p}$。若该合并矩阵的第 $i$ 列满足 $(\mathbf{L}_{\text{down}})_{j \to i} = 0$ 对所有 $j \in I \setminus \{i\}$ 成立，则 $i \in I_{\mathrm{const}}(c_\phi) \cup I_{\mathrm{id}}(c_\phi)$。
+**(ii)（严格解耦退化）** 若后续所有算子 $\phi_{m+1}, \ldots, \phi_k$ 在对应的像集截面 $U_p$ 上均持有纯对角 Lip 矩阵，则 $i \in I_{\mathrm{const}}(c_\phi) \cup I_{\mathrm{id}}(c_\phi)$。
+
+**(iii)（连积矩阵列零判据）** 更一般地，设下游连积矩阵 $\mathbf{L}_{\text{down}} = \prod_{p=m+1}^{k} \mathbf{L}^{(p)}\big|_{U_p}$。若 $(\mathbf{L}_{\text{down}})_{l \to i} = 0$ 对所有 $l \in I \setminus \{i\}$ 成立，则 $i \in I_{\mathrm{const}}(c_\phi) \cup I_{\mathrm{id}}(c_\phi)$。
 
 **证明**：
-**(i)** 利用非对角特化矩阵跨分量乘积的加法分配即可直接构造出正值极差结论反例。
-**(ii)** $\phi_m$ 在 $d_i$ 上为常值映射，由此对所有 $x, y \in \mathrm{dom}(\phi_m)$ 恒有 $d_i(\phi_m(x), \phi_m(y)) = 0$。后续的对角化受限算则等效于：对任意 $p \in [m+1, k]$，除 $j=i$ 外不存在 $L_{j \to i} > 0$。利用 $\bar{\mathbb{R}}_+$ 下的零元乘法消去：
-$$d_i(\phi_{m+1}(\phi_m(x)), \phi_{m+1}(\phi_m(y))) \leq L^{(m+1)}_{i \to i} \cdot 0 = 0$$
-逐环递推即得 $d_i(c_\phi(x), c_\phi(y)) \equiv 0$。
-**(iii)** 令 $R_{\text{up}} = \phi_{m-1} \circ \cdots \circ \phi_1$，对 $x, y \in \mathrm{dom}(c_\phi)$ 取 $u = R_{\text{up}}(x), v = R_{\text{up}}(y)$，已知 $d_i(\phi_m(u), \phi_m(v)) = 0$。展开：
-$$d_i(c_\phi(x), c_\phi(y)) \leq \sum_{j \in I} (\mathbf{L}_{\text{down}})_{j \to i} \cdot d_j(\phi_m(u), \phi_m(v)) = (\mathbf{L}_{\text{down}})_{i \to i} \cdot 0 + \sum_{j \neq i} 0 \cdot d_j(\phi_m(u), \phi_m(v)) = 0$$
+
+**(i)** 构造反例。取 $|I| = 2$，$\mathcal{X} = \{a, b, c, \bot\}$，伪度量 $d_1(a,b) = 1,\, d_1(b,c) = 0,\, d_1(a,c) = 1$；$d_2(a,b) = 0,\, d_2(b,c) = 1,\, d_2(a,c) = 1$。设 $\phi_1(a) = b,\, \phi_1(b) = b,\, \phi_1(c) = c$。则 $d_1(\phi_1(\cdot), \phi_1(\cdot)) \equiv 0$，故 $1 \in I_{\mathrm{const}}(\phi_1)$；但 $d_2(\phi_1(a), \phi_1(c)) = d_2(b,c) = 1 > 0$。设 $\phi_2(b) = a,\, \phi_2(c) = c$。在 $\mathrm{Im}(\phi_1) = \{b,c\}$ 上，$d_1(\phi_2(b), \phi_2(c)) = d_1(a,c) = 1$ 而 $d_1(b,c) = 0$，故合法 Lip 矩阵必有 $L_{2 \to 1}^{(2)} \geq 1 > 0$。验证复合：$(\phi_2 \circ \phi_1)(a) = a,\, (\phi_2 \circ \phi_1)(b) = a,\, (\phi_2 \circ \phi_1)(c) = c$，$d_1((\phi_2 \circ \phi_1)(a), (\phi_2 \circ \phi_1)(c)) = d_1(a,c) = 1 > 0$，故 $1 \in I_{\mathrm{act}}(\phi_2 \circ \phi_1)$。
+
+**(ii)** $i \in I_{\mathrm{const}}(\phi_m)$ 蕴含 $d_i(\phi_m(x), \phi_m(y)) = 0$（$\forall x, y$）。后续对角化受限 Lip 矩阵意味着 $L_{l \to i}^{(p)}\big|_{U_p} = 0$（$\forall l \neq i$, $\forall p > m$）。逐步递推：$d_i(\phi_{m+1}(\phi_m(x)), \phi_{m+1}(\phi_m(y))) \leq L_{i \to i}^{(m+1)} \cdot 0 = 0$（§1.1 $\bar{\mathbb{R}}_+$ 约定）。归纳即得 $d_i(c_\phi(x), c_\phi(y)) = 0$。
+
+**(iii)** 令 $R_{\text{up}} = \phi_{m-1} \circ \cdots \circ \phi_1$，$u = R_{\text{up}}(x)$，$v = R_{\text{up}}(y)$。由 $i \in I_{\mathrm{const}}(\phi_m)$ 知 $d_i(\phi_m(u), \phi_m(v)) = 0$。展开：
+$$d_i(c_\phi(x), c_\phi(y)) \leq \sum_{l \in I} (\mathbf{L}_{\text{down}})_{l \to i} \cdot d_l(\phi_m(u), \phi_m(v)) = (\mathbf{L}_{\text{down}})_{i \to i} \cdot 0 + \sum_{l \neq i} 0 \cdot d_l(\phi_m(u), \phi_m(v)) = 0$$
 故 $c_\phi$ 在分量 $d_i$ 上退归恒等或常值。$\square$
 
 ----
