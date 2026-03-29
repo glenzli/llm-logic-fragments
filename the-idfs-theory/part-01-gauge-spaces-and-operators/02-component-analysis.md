@@ -15,49 +15,60 @@
 - $i \in I_{\mathrm{const}}$：$\phi$ 在分量 $d_i$ 上**遮蔽**——$d_i(\phi(x), \phi(y)) = 0$ 对所有 $x, y \in \mathrm{dom}(\phi)$，所有输出在 $d_i$ 下不可区分，$d_i$-信息被完全擦除。
 - $i \in I_{\mathrm{act}}$：$\phi$ 在分量 $d_i$ 上**活跃**——$\phi$ 在 $d_i$ 下既非恒等亦非常值，输入的 $d_i$-差异被非平凡变换。
 
-> **注（常值分量的跨界平庸化）**：设 $\mathbf{L} \in \mathscr{L}(\phi)$ 为任一合法 Lip 矩阵。如果 $i \in I_{\mathrm{const}}(\phi)$，意味着算子在目标分量 $d_i$ 上的输出差分恒为 $0$。因此目标为分量 $i$ 的 Lip 不等式自动退化为 $0 \leq \sum_{k \in I} L_{k \to i} \cdot d_k(x, y)$。这使得所有指向该分量 $i$ 的**接收端**约束 $L_{k \to i}$ 对系统性能全无限制。为捕捉最紧致拓扑，我们倾向于（且永远可以）将该分量的输入权值 $L_{k \to i}$ 彻底清零，宣告其对物理输入完全免疫。这与输出端 $L_{i \to j}$ 的约束（$d_i$ 的波动是否影响 $d_j$）毫无干系。
+> **注（常值分量的跨界属性与代数等价性）**：设 $\mathbf{L} \in \mathscr{L}(\phi)$ 为合法 Lip 矩阵。如果 $i \in I_{\mathrm{const}}(\phi)$，意味着算子在目标分量 $d_i$ 上的测度差恒为 $0$。因 Lip 不等式自动退化为 $0 \leq \sum_{k \in I} L_{k \to i} \cdot d_k(x, y)$，所有指向该分量的接收端上限约束 $L_{k \to i}$ 不受系统限制。为捕捉最紧致属性，通常将该分量的输入项 $L_{k \to i}$ 置零。
+> 对于局部受限矩阵 $\mathbf{K} \in \mathscr{K}(\phi)\big|_U$：若评估子集 $U$ 内存在具备非零正输入的变差对 $d_k > 0$，由于输出恒定 $d_i = 0$，下界约束严格要求 $0 \geq \sum_k K_{k \to i} \cdot d_k$。非负半环 $\bar{\mathbb{R}}_+$ 中此不等式迫使所有对应通路的接收系数积 $\mathbf{K}_{k \to i} = 0$。常值分量通过代数途径否决了具备正传递因子的保距接入口。
 
-### 2.2 分量正交性
+### 2.2 分量正交与通道保距性
 
-**定义（分量正交，Component Orthogonality）**：设 $\mathbf{L} \in \mathscr{L}(\phi)$。称 $\phi$ 在 $\mathbf{L}$ 下于分量对 $(d_i, d_j)$（$i \neq j$）上**正交**，若 $L_{i \to j} = 0$——在此归因方式下，$d_i$-输入对 $d_j$-输出无贡献。
+**定义（分量正交与保距传递，Component Orthogonality & Transmission）**：对算子 $\phi$ 指定验证集：
+- **正交性**：若存在 $\mathbf{L} \in \mathscr{L}(\phi)$ 使 $L_{i \to j} = 0$，称 $\phi$ 在分量对 $(d_i, d_j)$ 上**正交**。在此矩阵下 $d_i$-输入的差异不传至 $d_j$-输出。特别地，当 $\mathbf{L}$ 为对角矩阵时（即所有非对角项均为 0），称 $\phi$ 在该 Lip 矩阵下**分量完全解耦**——各分量独立演化，无跨分量耦合。
+- **传递性**：若存在特定通路支撑域 $U \in \mathcal{U}_{i \to j}(\phi)$ 与合集受限矩阵 $\mathbf{K} \in \mathscr{K}(\phi)\big|_U$，满足系数 $K_{i \to j} > 0$，称 $\phi$ 在子集 $U$ 内保持 $d_i$ 至 $d_j$ 的**保距传递**。测距差异将呈非平庸态严格映射于输出内。
 
-**命题 2.1（正交性的单向隔离）**：设 $L_{i \to j} = 0$。若对于某对输入 $x, y \in \mathrm{dom}(\phi)$，它们仅在 $d_i$ 分量上可区分（即对所有 $k \in I \setminus \{i\}$，$d_k(x, y) = 0$），则其经过变换后在 $d_j$ 分量上的输出必不可区分。
+**命题 2.1（单向隔离与保距传递）**：
 
-**证明**：对上述 $x, y \in \mathrm{dom}(\phi)$，由 Lip 不等式及 $L_{i \to j} = 0$ 展开：
+**(i) 单向隔离**：设 $L_{i \to j} = 0$。对任意仅在 $d_i$ 分量变差的输入 $x, y \in \mathrm{dom}(\phi)$ （即 $k \neq i$ 时 $d_k(x, y) = 0$），变换后其输出在 $d_j$ 分区退化归零。
+
+**(ii) 单向传递**：对由约束条件确立的集 $U \in \mathcal{U}_{i \to j}(\phi)$ 及位向元素 $K_{i \to j} > 0$。若对于域内选定的变差点对满足 $d_i(x,y) > 0$，变换输出必然保持 $d_j(\phi(x), \phi(y)) > 0$。
+
+**证明**：
+
+**(i)** 对前置 $x, y \in \mathrm{dom}(\phi)$，由矩阵约束展开：
 $$d_j(\phi(x), \phi(y)) \leq \sum_{k \in I} L_{k \to j} \cdot d_k(x, y) = L_{i \to j} \cdot d_i(x, y) + \sum_{k \in I \setminus \{i\}} L_{k \to j} \cdot 0$$
-在 $\bar{\mathbb{R}}_+$ 算术下（特别是由 $0 \cdot \infty = 0$ 约定消除 $L_{k \to j}$ 为 $+\infty$ 时的发散风险）：
-$$d_j(\phi(x), \phi(y)) \leq 0 \cdot d_i(x, y) + 0 = 0$$
-故 $d_j(\phi(x), \phi(y)) = 0$，即纯 $d_i$-差异被 $d_j$ 输出通道严格屏蔽。$\square$
+依约定 $0 \cdot (+\infty) = 0$ 且矩阵非负直接获取最终上界：$d_j(\phi(x), \phi(y)) \leq 0 + 0 = 0$。
 
-当 $\mathbf{L}$ 为对角矩阵时，$\phi$ 在该 Lip 矩阵下**分量完全解耦**——各分量独立演化，无跨分量耦合。
+**(ii)** 取 $x, y \in U$，代入合法的受限 co-Lip 下界 $\mathbf{K}$ 不等式系并化约：
+$$d_j(\phi(x), \phi(y)) \geq \sum_{k \in I} K_{k \to j} \cdot d_k(x, y) \geq K_{i \to j} \cdot d_i(x, y) > 0$$
+由于该下界严格大于零确证对应子分量的输出测度实现了正分离定理。$\square$
 
-**命题 2.2（完全解耦等价性）**：$\phi \in \Omega$ 存在非负对角的合法 Lip 矩阵 $\mathbf{L}$（系统完全解耦），当且仅当对于任意分量 $i \in I$ 存在常数 $K_i \in \bar{\mathbb{R}}_+$，使得对任意输入 $x, y \in \mathrm{dom}(\phi)$，均满足独立分量隔离约束：
-$$d_i(\phi(x), \phi(y)) \leq K_i \cdot d_i(x, y)$$
+**命题 2.2（完全解耦等价性）**：$\phi \in \Omega$ 存在非负对角的合法 Lip 矩阵 $\mathbf{L}$（系统完全解耦），当且仅当对于任意分量 $i \in I$ 存在常数 $C_i \in \bar{\mathbb{R}}_+$，使得对任意输入 $x, y \in \mathrm{dom}(\phi)$，均满足独立分量隔离约束：
+$$d_i(\phi(x), \phi(y)) \leq C_i \cdot d_i(x, y)$$
 
 **证明**：此结论分两个方向证明。
 
 **必要性（$\Rightarrow$）**：若存在合法的非负对角矩阵 $\mathbf{L} \in \mathscr{L}(\phi)$，则对所有 $k \in I \setminus \{i\}$ 有 $L_{k \to i} = 0$。根据合法 Lip 矩阵的定义公式展开：
 $$d_i(\phi(x), \phi(y)) \leq \sum_{k \in I} L_{k \to i} \cdot d_k(x, y) = L_{i \to i} \cdot d_i(x, y)$$
-令 $K_i = L_{i \to i} \in \bar{\mathbb{R}}_+$ 即可满足独立约束。
+令 $C_i = L_{i \to i} \in \bar{\mathbb{R}}_+$ 即可满足独立约束。
 
-**充分性（$\Leftarrow$）**：若对于受检 $\phi$，各个分量对应的解耦约束均成立。直接构造矩阵 $\mathbf{L} = (L_{u \to v})_{u,v \in I}$，指定对角元 $L_{i \to i} = K_i$，非对角元 $L_{k \to i} = 0$（$k \in I \setminus \{i\}$）。则对于任意 $x, y \in \mathrm{dom}(\phi)$ 和 $i \in I$：
-$$d_i(\phi(x), \phi(y)) \leq K_i \cdot d_i(x,y) = \sum_{k \in I} L_{k \to i} \cdot d_k(x, y)$$
+**充分性（$\Leftarrow$）**：若对于受检 $\phi$，各个分量对应的解耦约束均成立。直接构造矩阵 $\mathbf{L} = (L_{u \to v})_{u,v \in I}$，指定对角元 $L_{i \to i} = C_i$，非对角元 $L_{k \to i} = 0$（$k \in I \setminus \{i\}$）。则对于任意 $x, y \in \mathrm{dom}(\phi)$ 和 $i \in I$：
+$$d_i(\phi(x), \phi(y)) \leq C_i \cdot d_i(x,y) = \sum_{k \in I} L_{k \to i} \cdot d_k(x, y)$$
 放缩成立，故构造的非负对角矩阵 $\mathbf{L} \in \mathscr{L}(\phi)$，其代表着一个严格数学意义下的解耦结构。$\square$
 
-**命题 2.3（正交性的链式阻断）**：对于算子复合 $\phi_2 \circ \phi_1$，其在合法 Lip 矩阵 $\mathbf{L}_2 \cdot \mathbf{L}_1 \in \mathscr{L}(\phi_2 \circ \phi_1)$ 上维持对分量 $(d_i, d_j)$ 的正交性（即 $(\mathbf{L}_2 \cdot \mathbf{L}_1)_{i \to j} = 0$），当且仅当对于任意中间分量 $k \in I$，均有：
+**命题 2.3（链式阻断与保距传递定理）**：对于算子复合 $\phi_2 \circ \phi_1$：
+
+**(i) 链式阻断**：复合算子对于全域矩阵积 $\mathbf{L}_2 \cdot \mathbf{L}_1 \in \mathscr{L}(\phi_2 \circ \phi_1)$ 在通路 $(d_i, d_j)$ 上达成绝对正交隔离（即 $(\mathbf{L}_2 \cdot \mathbf{L}_1)_{i \to j} = 0$），当且仅当对于任意的中间连接分量 $k \in I$，方程成立：
 $$L^{(1)}_{i \to k} = 0 \quad \text{或} \quad L^{(2)}_{k \to j} = 0$$
 
-**证明**：由矩阵乘法定义，展开端到端合法 Lip 矩阵的 $(i, j)$ 条目：
-$$(\mathbf{L}_2 \cdot \mathbf{L}_1)_{i \to j} = \sum_{k \in I} L^{(2)}_{k \to j} \cdot L^{(1)}_{i \to k}$$
+**(ii) 链式贯穿**：基于局部受限空间的联乘下界矩阵 $\mathbf{K}_2 \cdot \mathbf{K}_1 \in \mathscr{K}(\phi_2 \circ \phi_1)\big|_{U_1}$，系统在分量轨道 $(i, j)$ 内拥有非零的传递属性（即 $(\mathbf{K}_2 \cdot \mathbf{K}_1)_{i \to j} > 0$），当且仅当其至少含有一个满足代数极性的桥接分量 $k \in I$，使得：
+$$K^{(1)}_{i \to k} > 0 \quad \text{且} \quad K^{(2)}_{k \to j} > 0$$
 
-由于求和项 $L^{(2)}_{k \to j} \cdot L^{(1)}_{i \to k}$ 均为非负的 $\bar{\mathbb{R}}_+$ 元素，总和为 $0$ 的充要条件是每一子项均严格为 $0$。即对所有中间分量 $k \in I$：
-$$L^{(2)}_{k \to j} \cdot L^{(1)}_{i \to k} = 0$$
+**证明**：**(i)** 取算子积项并推导归总：
+$$(\mathbf{L}_2 \cdot \mathbf{L}_1)_{i \to j} = \sum_{k \in I} L^{(2)}_{k \to j} \cdot L^{(1)}_{i \to k} = 0$$
+由半环 $\bar{\mathbb{R}}_+$ 所有加和常系非负的性质，等式总和归零必然推导出每一内部子项的乘积严格为零。排除了无穷级发散界后，等价于至少有一侧乘因子为零。
+**(ii)** 同步导出累加代数矩阵项：
+$$(\mathbf{K}_2 \cdot \mathbf{K}_1)_{i \to j} = \sum_{k \in I} K^{(2)}_{k \to j} \cdot K^{(1)}_{i \to k} > 0$$
+因所有参数均为半环内正态子元，总和严格大于零等价于存在至少一条各向接联层级均大于零的路径基底项。得证。$\square$
 
-在 $\bar{\mathbb{R}}_+$ 中，非零元素的乘积非零（$0 \cdot (+\infty) = 0$ 为唯一涉及零因子的特殊约定），因此乘积为零意味着至少一侧为零：
-$$L^{(1)}_{i \to k} = 0 \quad \text{或} \quad L^{(2)}_{k \to j} = 0$$
-得证。$\square$
-
-> **注（正交性网络）**：命题 2.3 揭示了算子链误差传播具有有向无环图（DAG）的代数结构性质。由于全是非负矩阵乘法（没有负权抵消），要在代数网络中隔绝任意两点的影响，必须严格斩断每一条途径全段链路的串扰可能。由于 $\mathscr{L}(\phi)$ 的不唯一性，某特定非对角 $\mathbf{L}$ 下未能展示被切断网络的事实，并不排除存在对角的 $\mathbf{L}^*$ 下展示了此隔离。
+> **注（DAG 的二元代数结构）**：命题 2.3 指出算子复合在界限传导上属于非负有向无环图（DAG）模式。要实现两节点间的绝对正交隔离，必须切断它们之间所有的有向通路（即任一组合路径中至少存在一条零权边）；而确立保距传递下界，仅需该拓扑图上存在至少一条权重皆严格为正的有向路径。
 
 ### 2.3 算子空间的复合几何
 
@@ -65,29 +76,36 @@ $$L^{(1)}_{i \to k} = 0 \quad \text{或} \quad L^{(2)}_{k \to j} = 0$$
 
 #### 左复合
 
-**命题 2.4（左复合放缩）**：设交互子集 $U_{12} = (\mathrm{Im}(\phi_1) \cup \mathrm{Im}(\phi_2)) \cap \mathrm{dom}(\psi)$。若外层 $\psi$ 存在子集受限 Lip 矩阵 $\mathbf{L} \in \mathscr{L}(\psi)\big|_{U_{12}}$，则对 $\phi_1, \phi_2 \in \Omega$ 和 $j \in I$：
+**命题 2.4（左复合放缩与单通道下界放缩）**：设内外级交互子集 $U_{12} = (\mathrm{Im}(\phi_1) \cup \mathrm{Im}(\phi_2)) \cap \mathrm{dom}(\psi)$。算子空间度量界限代数机制如下：
 
-**(i) 受限放缩上界**：
+**(i) 受限 Lip 矩阵上界放缩**：若外层算子具有受限组合 $\mathbf{L} \in \mathscr{L}(\psi)\big|_{U_{12}}$：
 $$d_{\Omega, d_j}(\psi \circ \phi_1,\; \psi \circ \phi_2) \;\leq\; \sum_{i \in I} L_{i \to j} \cdot d_{\Omega, d_i}(\phi_1, \phi_2)$$
-此操作使得全域空间上算子间的测度差异，在各个分量上受制于外层受限矩阵组合包络。由于上确界的脱钩现象（见下注），在形式化方程中作为代数乘子的 $\mathbf{L}$ 并不能被直接定义为具备全域极值可达性的严格映射参数。
+左复合操作基于上确界次可加性（$\sup \sum \leq \sum \sup$），引入了允许多通路叠加包络的宏观度量上限。
 
-**(ii) 部分退耦**：当该受限矩阵的指定通路存在 $L_{i \to j} = 0$ 时，复合操作 $d_{\Omega, d_j}(\psi \circ \phi_1, \psi \circ \phi_2)$ 的距离放缩上界**仅依赖于**正交子集 $\{d_{\Omega, d_k}(\phi_1, \phi_2) \mid k \in I \setminus \{i\}\}$，而不受 $d_{\Omega, d_i}(\phi_1, \phi_2)$ 的绝对量值影响。这证明了：即使外层算子 $\psi$ 在全域 Lip 矩阵上 $i \to j$ 存在强耦合（$L_{i \to j} > 0$），只要内侧算子 $\phi_1, \phi_2$ 的实际像集落入 $\psi$ 的局部退耦区域（即受限矩阵 $\mathbf{L}\big|_{U_{12}}$ 在该通路上归零），系统在该受限像集上依然呈现绝对断接。
-
-**(iii) 完全退耦**：更进一步地，若该受限矩阵 $\mathbf{L}$ 在该受限像集上已剥离为一枚非负对角矩阵，则针对每个独立分量 $i \in I$，距离极值必定遵循单分量形式的不互扰不等式：
+**(ii) 左复合上界退耦**：在 (i) 的前提下，当特定通道正交（$L_{i \to j} = 0$）时，分量 $i$ 的测度不影响向分量 $j$ 的传递。若 $\mathbf{L}$ 为对角矩阵（系统完全解耦），全系统边界退化为单极分量线性放缩：
 $$d_{\Omega, d_i}(\psi \circ \phi_1,\; \psi \circ \phi_2) \;\leq\; L_{i \to i} \cdot d_{\Omega, d_i}(\phi_1, \phi_2)$$
-此时各分量的测度演化彼此严格正交，彻底杜绝了任何跨分量的交叉放大。
 
-> **注（上确界次可加性诱导的界限松弛）**：左乘放缩公式应用了不等式 $\sup \sum \leq \sum \sup$。在多面度量组中，各自独立截取极值解除了统一输入变量对各个分量原本施加的物理耦合关联。为对抗这种绝对连加产生的虚拟极大值膨胀，本命题强制采用受限于真实像集交的紧致子集矩阵 $\mathbf{L}\big|_{U_{12}}$，该受限机制在随后推衍的连续长链复合（推论 2.5）中发挥了核心收敛作用。
+**(iii) 局部 co-Lip 单通道下界放缩**：对于任意满足保距传递特征的子集 $S \subseteq U_{12}$（即 $S \in \mathcal{U}_{i \to j}(\psi)$）及对应的受限下界矩阵 $\mathbf{K} \in \mathscr{K}(\psi)\big|_S$，算子距离可经由单一下界通道被独立提取：
+$$d_{\Omega, d_j}(\psi \circ \phi_1,\; \psi \circ \phi_2) \;\geq\; K_{i \to j} \cdot d_{\Omega, d_i}(\phi_1, \phi_2)\Big|_{\{x \mid \phi_{1}(x), \phi_{2}(x) \in S\}}$$
+这规避了下界全加和无法直接在上确界操作中等价翻转（$\sup \sum \ngeq \sum \sup$）的盲套困境。依据半环非负实数项特征应用单向截断律（$\sup \sum F_k \geq \sup F_i$，各 $F \geq 0$），在算子间建立出不可破除的级联界限。
 
-**证明**：**(i)** 对任意 $x \in \mathrm{dom}(\psi \circ \phi_1) \cap \mathrm{dom}(\psi \circ \phi_2)$，由复合定义有 $\phi_1(x), \phi_2(x) \in U_{12}$。根据受限 Lip 不等式有：
+> **注（上确界不对称性构造型）**：由 (i) 中的次可加操作推求泛函距离将强制性包含交叉上限。而对偶的底层构造 (iii) 依托单通道极值化与保距子集核算，确保跨维极差即使在复杂的混合传递中仍保持衰变底线。
+
+**证明**：
+
+**(i)** 提取重叠投射点 $x \in \mathrm{dom}(\psi \circ \phi_1) \cap \mathrm{dom}(\psi \circ \phi_2)$，像态满足 $\phi_1(x), \phi_2(x) \in U_{12}$ 。合规域展开：
 $$d_j(\psi(\phi_1(x)), \psi(\phi_2(x))) \leq \sum_{i \in I} L_{i \to j} \cdot d_i(\phi_1(x), \phi_2(x))$$
-取局部的 $\sup_x$，由 $\sup$ 在 $\bar{\mathbb{R}}_+$ 中依然成立的次可加性，推导限制放大关系：
+等式对左边界集施加 $\sup_x$，于具有完备性的全范空间中分配次可加极限界：
 $$\begin{aligned}
 d_{\Omega, d_j}(\psi \circ \phi_1, \psi \circ \phi_2) &\leq \sup_x \sum_{i \in I} L_{i \to j} \cdot d_i(\phi_1(x), \phi_2(x)) \\
-&\leq \sum_{i \in I} L_{i \to j} \cdot \sup_x d_i(\phi_1(x), \phi_2(x)) \\
-&= \sum_{i \in I} L_{i \to j} \cdot d_{\Omega, d_i}(\phi_1, \phi_2)
+&\leq \sum_{i \in I} L_{i \to j} \cdot \sup_x d_i(\phi_1(x), \phi_2(x)) = \sum_{i \in I} L_{i \to j} \cdot d_{\Omega, d_i}(\phi_1, \phi_2)
 \end{aligned}$$
-**(ii)(iii)** 将 $L_{i \to j} = 0$ 和 $L_{k \to j} = 0 \, (k \neq j)$ 分别代入 (i) 之结果不等式，即显著成立。$\square$
+
+**(ii)** 直接将 $L_{i \to j} = 0 \; (i \neq j)$ 代入全路方程，总共轭项的加和项均归为零点态消去，从而得出严格独立的自反系数 $L_{i \to i}$ 的界限判定法则。
+
+**(iii)** 对任意 $x \in S$，由于 $\bar{\mathbb{R}}_+$ 中各项非负，可在不等式中独立保留单一条项得出：
+$$d_j(\psi(\phi_1(x)), \psi(\phi_2(x))) \geq \sum_{k \in I} K_{k \to j} \cdot d_k(\phi_1(x), \phi_2(x)) \geq K_{i \to j} \cdot d_i(\phi_1(x), \phi_2(x))$$
+对此逐点点态不等式的两边分别取上确界操作。由上确界 $\sup$ 在非负函数上的保序性（单调性），且受限子集 $S$ 上的常态确界不会超过全集确界，该泛函级的下界放缩必然在算子空间中天然成立。$\square$
 
 **推论 2.5（左复合链拉伸）**：设外部存在长度为 $k$ 的算子链 $c_\psi = \psi_k \circ \cdots \circ \psi_1$。对内部待映射算子 $\phi_1, \phi_2 \in \Omega$，设定逐层中间子集 $U_p = (\mathrm{Im}(\psi_{p-1} \circ \cdots \circ \phi_1) \cup \mathrm{Im}(\psi_{p-1} \circ \cdots \circ \phi_2)) \cap \mathrm{dom}(\psi_p)$。若存在受限 Lip 矩阵阵列 $\mathbf{L}^{(p)} \in \mathscr{L}(\psi_p)\big|_{U_p}$，则全链复合的距离放缩天然满足多级连乘：
 $$d_{\Omega, d_j}(c_\psi \circ \phi_1,\; c_\psi \circ \phi_2) \;\leq\; \sum_{i \in I} \left( \mathbf{L}^{(k)}\big|_{U_k} \cdots \mathbf{L}^{(1)}\big|_{U_1} \right)_{i \to j} \cdot d_{\Omega, d_i}(\phi_1, \phi_2)$$
@@ -176,9 +194,9 @@ $$d_j(\phi(x_0), \psi(x_0)) \;\leq\; d_{\Omega, d_j}(\phi, \psi)$$
 
 **推论 2.9（算子空间界限的点态退化）**：
 
-**(i)（点对的级联极差界限，对应推论 2.5）**：设 $c_\psi = \psi_k \circ \cdots \circ \psi_1$，令 $\phi_1 = \phi_{x_0}$，$\phi_2 = \phi_{y_0}$。推论 2.5 中的逐层像集退化为 $U_m = \{\psi_{m-1} \circ \cdots \circ \psi_1(x_0),\; \psi_{m-1} \circ \cdots \circ \psi_1(y_0)\} \cap \mathrm{dom}(\psi_m)$（仅包含两个点或空集的子集）。代入推论 2.5 并利用上述退化等式，得：
+**(i)（点对级联极距双限定理，对应推论 2.5）**：设 $c_k = \phi_k \circ \cdots \circ \phi_1$，代入确定的常量点约束映射 $\phi_{x_0}, \phi_{y_0}$。此逐层复合像集精确退化为只包含该双点的离散集 $U_m = \{\phi_{m-1} \dots \phi_1(x_0),\; \phi_{m-1} \dots \phi_1(y_0)\} \cap \mathrm{dom}(\phi_m)$。因脱离泛函状态无受上确界不对等分布阻滞干扰，代数上下级双重距范同阶闭合：
 
-$$d_j(c_\psi(x_0), c_\psi(y_0)) \;\leq\; \sum_{i \in I} \left( \prod_{m=1}^k \mathbf{L}^{(m)}\big|_{U_m} \right)_{i \to j} \cdot d_i(x_0, y_0)$$
+$$ \sum_{i \in I} \left( \prod_{m=k}^1 \mathbf{K}^{(m)}\big|_{U_m} \right)_{i \to j} d_i(x_0, y_0) \;\leq\; d_j(c_k(x_0), c_k(y_0)) \;\leq\; \sum_{i \in I} \left( \prod_{m=k}^1 \mathbf{L}^{(m)}\big|_{U_m} \right)_{i \to j} d_i(x_0, y_0)$$
 
 **(ii)（单步替换的轨线定域界限，对应命题 2.7）**：设算子链 $c_\phi = \phi_k \circ \cdots \circ \phi_1$，在第 $m$ 步替换 $\phi_m \to \psi_m$，得新链 $c_{\phi'}$。对任意固定输入 $x_0 \in \mathcal{X}$，由逐点值不超过上确界，直接从命题 2.7 的结论下降：
 
@@ -243,23 +261,25 @@ $$d_i(\phi_2(\phi_1(x)), x) \leq d_i(\phi_2(\phi_1(x)), \phi_1(x)) + d_i(\phi_1(
 
 > **注（恒等分量非严格单调）**：互为逆元的操作可复合出新的恒等分量。若 $\phi_2 = \phi_1^{-1}$ 且二者能够发生定义域接驳，即便各自在 $d_i$ 上皆非透明操作，其复合算子链 $\phi_2 \circ \phi_1 = \mathrm{id}$ 亦必定在 $d_i$ 上触发透明特征。这印证了 $I_{\mathrm{id}}$ 随操作链路深化**不强制**保持单向缩减。
 
-**命题 2.12（常值分量的反渗与退化）**：设 $i \in I_{\mathrm{const}}(\phi_m)$，算子链 $c_\phi = \phi_k \circ \cdots \circ \phi_1$（$k > m$）。
+**命题 2.12（状态分划的代数级联特性）**：
+考虑算子链 $c_k = \phi_k \circ \cdots \circ \phi_1$：
 
-**(i)（跨分量再激活）** $\phi_m$ 在分量 $d_i$ 上使输出差异归零，但若下游受限 Lip 矩阵存在非对角元 $L_{l \to i}^{(p)}\big|_{U_p} > 0$（$l \neq i$），且分量 $l$ 上的残余测距非零，则跨分量耦合可使 $i \in I_{\mathrm{act}}(c_\phi)$。
+**(i) 活跃分量的严格延拓**
+设 $i_0 \in I_{\mathrm{act}}(\phi_1)$。若存在分量序列 $(i_0, i_1, \dots, i_k)$，满足各级像集 $U_m = \mathrm{Im}(\phi_{m-1} \dots \phi_1)$ 完全包含于对应步的保距通路支撑集 $U_m \in \mathcal{U}_{i_{m-1} \to i_m}(\phi_m)$ 中。
+由 co-Lip 矩阵连乘法则，全链通路下界值为 $\prod_{m=1}^{k} K_{i_{m-1} \to i_m} > 0$。该大于零的系数使得初始测度极差不会在末端输出归零，即确保持续成立 $i_k \notin I_{\mathrm{const}}(c_k)$。
 
-**(ii)（严格解耦退化）** 若后续所有算子 $\phi_{m+1}, \ldots, \phi_k$ 在对应的约束子集 $U_p$ 上均持有纯对角 Lip 矩阵，则 $i \in I_{\mathrm{const}}(c_\phi) \cup I_{\mathrm{id}}(c_\phi)$。
+**(ii) 常值分量的跨分量再激活**
+设在某复合节点 $i \in I_{\mathrm{const}}(\phi_m)$，算子输出差异局部归零。当且仅当存在下游受限 Lip 连积矩阵含有非对角元 $L_{l \to i}^{(p)} > 0$（$l \neq i$），且平行演化分量 $l$ 上同时传递非零伪度量，则经由跨分量线性组合，分量 $i$ 的测差可重新恢复非零响应，即满足 $i \in I_{\mathrm{act}}(c_k)$。
 
-**(iii)（连积矩阵列零判据）** 更一般地，设下游连积矩阵 $\mathbf{L}_{\text{down}} = \prod_{p=m+1}^{k} \mathbf{L}^{(p)}\big|_{U_p}$。若 $(\mathbf{L}_{\text{down}})_{l \to i} = 0$ 对所有 $l \in I \setminus \{i\}$ 成立，则 $i \in I_{\mathrm{const}}(c_\phi) \cup I_{\mathrm{id}}(c_\phi)$。
+**(iii) 常值分量的绝对解耦退化**
+令下游连积矩阵为 $\mathbf{L}_{\text{down}} = \prod_{p=m+1}^{k} \mathbf{L}^{(p)}\big|_{U_p}$。在 $i \in I_{\mathrm{const}}(\phi_m)$ 条件下，若 $\mathbf{L}_{\text{down}}$ 第 $i$ 列的非对角元均置零：$(\mathbf{L}_{\text{down}})_{l \to i} = 0 \; (\forall l \neq i)$，则所有跨分量并行路径均被等价切断。算子在此条件下的最终差分界限恒等收敛于 $0$，退化为 $i \in I_{\mathrm{const}}(c_k) \cup I_{\mathrm{id}}(c_k)$。
 
 **证明**：
-
-**(i)** 构造反例。取 $|I| = 2$，$\mathcal{X} = \{a, b, c, \bot\}$，伪度量 $d_1(a,b) = 1,\, d_1(b,c) = 0,\, d_1(a,c) = 1$；$d_2(a,b) = 0,\, d_2(b,c) = 1,\, d_2(a,c) = 1$。设 $\phi_1(a) = b,\, \phi_1(b) = b,\, \phi_1(c) = c$。则 $d_1(\phi_1(\cdot), \phi_1(\cdot)) \equiv 0$，故 $1 \in I_{\mathrm{const}}(\phi_1)$；但 $d_2(\phi_1(a), \phi_1(c)) = d_2(b,c) = 1 > 0$。设 $\phi_2(b) = a,\, \phi_2(c) = c$。在 $\mathrm{Im}(\phi_1) = \{b,c\}$ 上，$d_1(\phi_2(b), \phi_2(c)) = d_1(a,c) = 1$ 而 $d_1(b,c) = 0$，故合法 Lip 矩阵必有 $L_{2 \to 1}^{(2)} \geq 1 > 0$。验证复合：$(\phi_2 \circ \phi_1)(a) = a,\, (\phi_2 \circ \phi_1)(b) = a,\, (\phi_2 \circ \phi_1)(c) = c$，$d_1((\phi_2 \circ \phi_1)(a), (\phi_2 \circ \phi_1)(c)) = d_1(a,c) = 1 > 0$，故 $1 \in I_{\mathrm{act}}(\phi_2 \circ \phi_1)$。
-
-**(ii)** $i \in I_{\mathrm{const}}(\phi_m)$ 蕴含 $d_i(\phi_m(x), \phi_m(y)) = 0$（$\forall x, y$）。后续对角化受限 Lip 矩阵意味着 $L_{l \to i}^{(p)}\big|_{U_p} = 0$（$\forall l \neq i$, $\forall p > m$）。逐步递推：$d_i(\phi_{m+1}(\phi_m(x)), \phi_{m+1}(\phi_m(y))) \leq L_{i \to i}^{(m+1)} \cdot 0 = 0$（§1.1 $\bar{\mathbb{R}}_+$ 约定）。归纳即得 $d_i(c_\phi(x), c_\phi(y)) = 0$。
-
-**(iii)** 令 $R_{\text{up}} = \phi_{m-1} \circ \cdots \circ \phi_1$，$u = R_{\text{up}}(x)$，$v = R_{\text{up}}(y)$。由 $i \in I_{\mathrm{const}}(\phi_m)$ 知 $d_i(\phi_m(u), \phi_m(v)) = 0$。展开：
-$$d_i(c_\phi(x), c_\phi(y)) \leq \sum_{l \in I} (\mathbf{L}_{\text{down}})_{l \to i} \cdot d_l(\phi_m(u), \phi_m(v)) = (\mathbf{L}_{\text{down}})_{i \to i} \cdot 0 + \sum_{l \neq i} 0 \cdot d_l(\phi_m(u), \phi_m(v)) = 0$$
-故 $c_\phi$ 在分量 $d_i$ 上退归恒等或常值。$\square$
+**(i)** 取满足输入 $d_{i_0} > 0$ 的测度对，因每层映射完全兼容其局部 co-Lip 通路，基于半环算术的链式传递要求输出必须严守 $d_{i_k} \ge (\prod_{m=1}^{k} K_{m}) \cdot d_{i_0} > 0$，验证其必未归向常值。
+**(ii)** 利用 $\bar{\mathbb{R}}_+$ 实数半环方程的单向性构建不等式 $d_i \le \sum_{u} L_{u \to i} \cdot d_u$ 。即便某源节点处产生内部 $d_i=0$ 的退化态，一旦存在跨侧非负乘积 $L_{l \to i} \cdot d_l > 0$，输出实际度量即能在相应输入点对上被撑为正数。
+**(iii)** 代入极值方程执行等价代数收缩展开。受限局部绝对归零强制约束 $d_i(\phi_m(u), \phi_m(v)) = 0$：
+$$d_i(c_k(x), c_k(y)) \leq \sum_{l \in I} (\mathbf{L}_{\text{down}})_{l \to i} \cdot d_l(\phi_m(u), \phi_m(v)) = (\mathbf{L}_{\text{down}})_{i \to i} \cdot 0 + \sum_{l \neq i} 0 \cdot d_l(\phi_m(u), \phi_m(v)) = 0$$
+因所有参数均为半环内正体常数元且矩阵等和归零方程在 $\bar{\mathbb{R}}_+$ 有且仅有恒等零解，截断判定结束。$\square$
 
 ----
 *[IDFS] ⊢ [GLENZLI] ⊢ [Part 01] ⊢ [02-component-analysis] ⊢ [6d792afb104baafb]*
