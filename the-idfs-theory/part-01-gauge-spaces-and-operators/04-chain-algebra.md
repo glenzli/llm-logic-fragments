@@ -14,15 +14,14 @@ $$d_{M, d_j}(a \cdot b_1,\; a \cdot b_2) \;\leq\; \sum_{i \in I} [\Lambda(a)]_{i
 
 $\Lambda$ 称为左乘代价映射。
 
-对 $\Omega$，取 $\Lambda(\phi) = \mathbf{L} \in \mathscr{L}(\phi)$（任一合法 Lip 矩阵）。命题 2.4 即证 $(\Omega, \mathcal{G}_\Omega, \Lambda)$ 为赋距幺半群。右乘则由命题 2.6 约束——每个右平移 $r_\psi$ 均为分量 $1$-Lipschitz 映射。
+对 $\Omega$，定义左乘代价映射 $\Lambda(\phi) = \mathbf{L} \in \mathscr{L}(\phi)$（取任一合法 Lip 矩阵）。由命题 2.4 知左乘操作满足依 $\Lambda$ 权重的放缩不等式，故 $(\Omega, \mathcal{G}_\Omega, \Lambda)$ 构成赋距幺半群。同时由命题 2.6，右乘操作天然具备各分量 $1$-Lipschitz 特性。
 
-> **注（左右非对称性的代数根源）**：左乘引入矩阵系数的跨分量放缩（命题 2.4），右乘仅执行定义域截断而无放大（命题 2.6）。此非对称性是 $\Omega$ 作为赋距幺半群的固有结构，而非特定算子的性质。
+> **注（代数非对称性的几何诱导）**：上述代价分配的左右非对称性——左乘受制于张量矩阵的耦合放大，右乘仅产生测距平庸的定义域截断——源于映射复合空间 $(\mathcal{X}^{\mathcal{X}}, \circ)$ 中测度极差传播的内生拓扑偏斜。这一底层几何事实决定了算子的代数建模必须采用单侧有界的赋距结构，而非具有平移不变性的对称度量群。
 
-> **注（与 Lawvere 度量空间的关联）**：每个分量 $(\mathcal{X}, d_i)$ 可视为 $([0,+\infty], \geq, +)$-enriched category（Lawvere 度量空间）的对象。$\Omega$ 中的算子即该 enriched category 的自态射。赋距幺半群结构精确刻画了自态射复合的度量代价。
 
 ### 4.2 距离向量动力系统
 
-固定两个输入 $x, x' \in \mathrm{dom}(c_\phi)$。定义各步中间态像点的**测距向量**：
+对于给定的 $k$-步级联算子链 $c_\phi = \phi_k \circ \cdots \circ \phi_1$，固定任意两个合法初始输入 $x, x' \in \mathrm{dom}(c_\phi)$。为了追踪测度在整个前向链路中的传播，定义两端点在计算链各节点的中继**测距向量**：
 
 $$\mathbf{d}^{(m)} \;\triangleq\; \bigl(d_j(x_m, x'_m)\bigr)_{j \in I} \;\in\; \bar{\mathbb{R}}_+^{|I|}$$
 
@@ -32,25 +31,12 @@ $$\mathbf{d}^{(m)} \;\triangleq\; \bigl(d_j(x_m, x'_m)\bigr)_{j \in I} \;\in\; \
 
 $$d_j^{(m+1)} = \begin{cases} 0 & \text{若存在 } i \in I \text{ 使得 } d_i^{(m)} < [\mathbf{A}(\phi_{m+1})]_{ji} \\ \sum_{i \in I} [\mathbf{L}(\phi_{m+1})]_{ji} \cdot d_i^{(m)} & \text{否则} \end{cases}$$
 
-这在 $\bar{\mathbb{R}}_+^{|I|}$ 上定义了一个**分段线性-截断动力系统**。每一步的演化由算子 $\phi_{m+1}$ 的 Lip 矩阵和吸收矩阵共同决定，二者在相空间中划分出截断区域（测距 $\leq \underline{\alpha}$）与放缩区域（测距 $> \underline{\alpha}$）的几何分界。
+这在 $\bar{\mathbb{R}}_+^{|I|}$ 上定义了一个以各个中间态测距为状态变量的**分段动力系统**。其轨道 $\mathbf{d}^{(m)}$ 的长程演化受截断与放缩机制复合作用，产生两种典型渐近边界：
 
-**命题 4.1（吸收收敛）**：设链 $c_\phi = \phi_k \circ \cdots \circ \phi_1$。若存在步骤 $m^* \in \{1, \ldots, k\}$ 和输入分量 $i^* \in I$ 使得：
+1. **测距归零（吸收机制触发）**：若存在 $m^*$ 与输入分量 $i^*$ 使得 Lip 连乘上界触发全局吸收条件（即对所有 $j \in I$，有 $\sum_{i \in I} (\prod_{p=1}^{m^*-1} \mathbf{L}^{(p)})_{i \to i^*} d_i^{(0)} < [\mathbf{A}(\phi_{m^*})]_{ji^*}$），则依据命题 3.4 触发截断。由 $\bar{\mathbb{R}}_+$ 的乘法特性 $L \cdot 0 = 0$，轨道后续永续为零：对于 $m \geq m^*$ 恒有 $\mathbf{d}^{(m)} = \mathbf{0}$。
+2. **上界演化（吸收机制失效）**：若在特定的分量通路上始终未满足吸收条件（例如局部吸收半径 $\mathbf{A} \equiv \mathbf{0}$），则测距 $\mathbf{d}^{(m)}$ 的上界完全由 Lip 连乘 $\prod_{p=1}^m \mathbf{L}^{(p)}$ 决定。但须注意，矩阵谱半径诱导的连乘发散（$\|\prod \mathbf{L}\| \to \infty$）**只意味上界发散**，这表明系统在拓扑放缩上失去上限敛束，但不蕴含真实测距轨迹必然趋向无穷（除非算子序列在该局部等距使得上界严格可达）。
 
-$$\sum_{i \in I} \left(\prod_{p=1}^{m^*-1} \mathbf{L}^{(p)}\right)_{i \to i^*} \cdot d_i^{(0)} \;<\; \min_{j \in I}\, [\mathbf{A}(\phi_{m^*})]_{ji^*}$$
-
-则对所有 $j \in I$：$d_j^{(m)} = 0$（$m \geq m^*$）。即两输入经过 $m^*$ 步后在全部分量上合流——后续链级演化对此点对不可区分。
-
-**证明**：左侧即 $d_{i^*}^{(m^*-1)}$ 的 Lip 上界（由 §1.6 连乘律）。满足条件时 $d_{i^*}^{(m^*-1)} < \min_j [\mathbf{A}(\phi_{m^*})]_{ji^*}$，故对所有 $j \in I$ 均有 $d_{i^*}^{(m^*-1)} < [\mathbf{A}(\phi_{m^*})]_{ji^*}$。由命题 3.4 的吸收分支（其条件为严格不等式 $d_i^{(m)} < [\mathbf{A}]_{ji}$），对每个 $j$ 分别触发截断，$d_j^{(m^*)} = 0$。后续各步由 $\sum L \cdot 0 = 0$（§1.1 $\bar{\mathbb{R}}_+$ 约定）保持全零。$\square$
-
-**命题 4.2（放大逃逸）**：设链 $c_\phi = \phi_k \circ \cdots \circ \phi_1$。若对某分量 $j \in I$，全链中每一步的吸收半径均为零（$[\mathbf{A}(\phi_m)]_{ji} = 0$，$\forall m \in \{1, \ldots, k\}$，$\forall i \in I$），则吸收机制在分量 $j$ 的通路上从不触发。此时该分量测距的演化完全由 Lip 放缩主导：
-
-$$d_j^{(m)} \;\leq\; \sum_{i \in I} \left(\prod_{p=1}^{m} \mathbf{L}^{(p)}\right)_{i \to j} \cdot d_i^{(0)}$$
-
-特别地，若连乘矩阵的 $(\cdot, j)$ 列向量 $\sum_{i \in I} [\prod_p \mathbf{L}^{(p)}]_{i \to j} > 1$，则 Lip 上界允许 $d_j^{(m)}$ 的估计值随步数增长——纤维截断在该通路上始终无法被保证激活。
-
-**证明**：吸收条件要求 $d_i^{(m)} \leq [\mathbf{A}(\phi_{m+1})]_{ji} = 0$，即 $d_i^{(m)} = 0$。若 $d_i^{(m)} > 0$，则吸收条件不满足，演化退回 Lip 放缩分支。由命题 3.4 反复应用得 Lip 连乘上界。$\square$
-
-> **注（收敛与逃逸的相空间分界）**：$\bar{\mathbb{R}}_+^{|I|}$ 中的截断阈值面 $\{d_i < [\mathbf{A}]_{ji}\}$ 将相空间分为两个区域。落入截断区域的轨线在一步内归零（命题 4.1）；始终位于截断区域之外的轨线则服从纯 Lip 矩阵连乘（命题 4.2）。实际的链级演化可能在两个区域间交替——部分分量被截断而另一些持续放大。
+上述零点平庸化与上界解束的二元对立，引导出了任意单步算子根据其内蕴张量在特定分量道路上引发的本原结构相分离：
 
 #### $(\alpha, L)$-相分类
 

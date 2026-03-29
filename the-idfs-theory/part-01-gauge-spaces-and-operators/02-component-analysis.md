@@ -65,15 +65,15 @@ $$L^{(1)}_{i \to k} = 0 \quad \text{或} \quad L^{(2)}_{k \to j} = 0$$
 
 #### 左复合
 
-**命题 2.4（左复合放缩）**：设交互截面 $U_{12} = (\mathrm{Im}(\phi_1) \cup \mathrm{Im}(\phi_2)) \cap \mathrm{dom}(\psi)$。若外层 $\psi$ 存在子集受限 Lip 矩阵 $\mathbf{L} \in \mathscr{L}(\psi)\big|_{U_{12}}$，则对 $\phi_1, \phi_2 \in \Omega$ 和 $j \in I$：
+**命题 2.4（左复合放缩）**：设交互子集 $U_{12} = (\mathrm{Im}(\phi_1) \cup \mathrm{Im}(\phi_2)) \cap \mathrm{dom}(\psi)$。若外层 $\psi$ 存在子集受限 Lip 矩阵 $\mathbf{L} \in \mathscr{L}(\psi)\big|_{U_{12}}$，则对 $\phi_1, \phi_2 \in \Omega$ 和 $j \in I$：
 
 **(i) 受限放缩上界**：
 $$d_{\Omega, d_j}(\psi \circ \phi_1,\; \psi \circ \phi_2) \;\leq\; \sum_{i \in I} L_{i \to j} \cdot d_{\Omega, d_i}(\phi_1, \phi_2)$$
 此操作使得全域空间上算子间的测度差异，在各个分量上受制于外层受限矩阵组合包络。由于上确界的脱钩现象（见下注），在形式化方程中作为代数乘子的 $\mathbf{L}$ 并不能被直接定义为具备全域极值可达性的严格映射参数。
 
-**(ii) 部分退耦**：当该受限矩阵的指定通路存在 $L_{i \to j} = 0$ 时，复合操作 $d_{\Omega, d_j}(\psi \circ \phi_1, \psi \circ \phi_2)$ 的距离放缩上界**仅依赖于**正交子集 $\{d_{\Omega, d_k}(\phi_1, \phi_2) \mid k \in I \setminus \{i\}\}$，而不受 $d_{\Omega, d_i}(\phi_1, \phi_2)$ 的绝对量值影响。这证明了：即使外层算子 $\psi$ 在全域 Lip 矩阵上 $i \to j$ 存在强耦合（$L_{i \to j} > 0$），只要内侧算子 $\phi_1, \phi_2$ 的实际像集落入 $\psi$ 的局部退耦区域（即受限矩阵 $\mathbf{L}\big|_{U_{12}}$ 在该通路上归零），系统在受限截面上依然呈现绝对断接。
+**(ii) 部分退耦**：当该受限矩阵的指定通路存在 $L_{i \to j} = 0$ 时，复合操作 $d_{\Omega, d_j}(\psi \circ \phi_1, \psi \circ \phi_2)$ 的距离放缩上界**仅依赖于**正交子集 $\{d_{\Omega, d_k}(\phi_1, \phi_2) \mid k \in I \setminus \{i\}\}$，而不受 $d_{\Omega, d_i}(\phi_1, \phi_2)$ 的绝对量值影响。这证明了：即使外层算子 $\psi$ 在全域 Lip 矩阵上 $i \to j$ 存在强耦合（$L_{i \to j} > 0$），只要内侧算子 $\phi_1, \phi_2$ 的实际像集落入 $\psi$ 的局部退耦区域（即受限矩阵 $\mathbf{L}\big|_{U_{12}}$ 在该通路上归零），系统在该受限像集上依然呈现绝对断接。
 
-**(iii) 完全退耦**：更进一步地，若该受限矩阵 $\mathbf{L}$ 在像集子流形上已剥离为一枚非负对角矩阵，则针对每个独立分量 $i \in I$，距离极值必定遵循一维形式的不互扰不等式：
+**(iii) 完全退耦**：更进一步地，若该受限矩阵 $\mathbf{L}$ 在该受限像集上已剥离为一枚非负对角矩阵，则针对每个独立分量 $i \in I$，距离极值必定遵循单分量形式的不互扰不等式：
 $$d_{\Omega, d_i}(\psi \circ \phi_1,\; \psi \circ \phi_2) \;\leq\; L_{i \to i} \cdot d_{\Omega, d_i}(\phi_1, \phi_2)$$
 此时各分量的测度演化彼此严格正交，彻底杜绝了任何跨分量的交叉放大。
 
@@ -89,7 +89,7 @@ d_{\Omega, d_j}(\psi \circ \phi_1, \psi \circ \phi_2) &\leq \sup_x \sum_{i \in I
 \end{aligned}$$
 **(ii)(iii)** 将 $L_{i \to j} = 0$ 和 $L_{k \to j} = 0 \, (k \neq j)$ 分别代入 (i) 之结果不等式，即显著成立。$\square$
 
-**推论 2.5（左复合链拉伸）**：设外部存在长度为 $k$ 的算子链 $c_\psi = \psi_k \circ \cdots \circ \psi_1$。对内部待映射算子 $\phi_1, \phi_2 \in \Omega$，设定逐层截面 $U_p = (\mathrm{Im}(\psi_{p-1} \circ \cdots \circ \phi_1) \cup \mathrm{Im}(\psi_{p-1} \circ \cdots \circ \phi_2)) \cap \mathrm{dom}(\psi_p)$。若存在受限 Lip 矩阵阵列 $\mathbf{L}^{(p)} \in \mathscr{L}(\psi_p)\big|_{U_p}$，则全链复合的距离放缩天然满足多级连乘：
+**推论 2.5（左复合链拉伸）**：设外部存在长度为 $k$ 的算子链 $c_\psi = \psi_k \circ \cdots \circ \psi_1$。对内部待映射算子 $\phi_1, \phi_2 \in \Omega$，设定逐层中间子集 $U_p = (\mathrm{Im}(\psi_{p-1} \circ \cdots \circ \phi_1) \cup \mathrm{Im}(\psi_{p-1} \circ \cdots \circ \phi_2)) \cap \mathrm{dom}(\psi_p)$。若存在受限 Lip 矩阵阵列 $\mathbf{L}^{(p)} \in \mathscr{L}(\psi_p)\big|_{U_p}$，则全链复合的距离放缩天然满足多级连乘：
 $$d_{\Omega, d_j}(c_\psi \circ \phi_1,\; c_\psi \circ \phi_2) \;\leq\; \sum_{i \in I} \left( \mathbf{L}^{(k)}\big|_{U_k} \cdots \mathbf{L}^{(1)}\big|_{U_1} \right)_{i \to j} \cdot d_{\Omega, d_i}(\phi_1, \phi_2)$$
 此推论揭示了：当左侧发生连续多级算子复合时，外侧算子链的**特化矩阵连乘展开**共同构成了对内侧算子极差的级联放大矩阵包络。
 
@@ -112,7 +112,7 @@ $$d_{\Omega, d_i}(\phi_1 \circ c_\psi,\; \phi_2 \circ c_\psi) \;\leq\; d_{\Omega
 $$d_{\Omega, d_i}(\phi_1 \circ \psi, \phi_2 \circ \psi) = \sup_{x \in \mathrm{dom}(\phi_1 \circ \psi) \cap \mathrm{dom}(\phi_2 \circ \psi)} d_i(\phi_1(\psi(x)), \phi_2(\psi(x)))$$
 令 $y = \psi(x)$。当 $x$ 遍历定义域时，$y$ 仅遍历 $\mathrm{Im}(\psi)$ 的有效子集。因该子集 $\subseteq \mathcal{X}$，故局部层面的上确界绝无可能突破全域极值界限：
 $$\sup_{y \in \mathrm{Im}(\psi)} d_i(\phi_1(y), \phi_2(y)) \;\leq\; \sup_{y \in \mathcal{X}} d_i(\phi_1(y), \phi_2(y)) \;=\; d_{\Omega, d_i}(\phi_1, \phi_2)$$
-**(ii)** 利用集合依序嵌套 $\mathrm{Im}(c_\psi) \subseteq \mathrm{Im}(\psi_1)$ 代入即得。随着前置处理链路越发深长，极值评估的截面集合不断缩小，目标上确界 $\sup$ 理应呈现逐级单调非增的退缩趋势。$\square$
+**(ii)** 利用集合依序嵌套 $\mathrm{Im}(c_\psi) \subseteq \mathrm{Im}(\psi_1)$ 代入即得。随着前置处理链路越发深长，评估上界极值所在的像集范围不断缩小，目标上确界 $\sup$ 理应呈现逐级单调非增的退缩趋势。$\square$
 
 > **注（探测域截断）**：右乘复合 $r_\psi$ 等价于对目标算子族施加了**前置输入域截断**。既然内层映射将状态点压缩至 $\mathrm{Im}(\psi)$，那么外层算子 $\phi_1, \phi_2$ 仅在该子集上的映射行为会被系统触及。它们在补集 $\mathcal{X} \setminus \mathrm{Im}(\psi)$（即那些永远无法被 $\psi$ 抵达的孤立输入区域）上无论存在何种极端的映射规则分裂，这些差异都将对复合系统的评估绝对隔离（不可见）。
 
@@ -176,7 +176,7 @@ $$d_j(\phi(x_0), \psi(x_0)) \;\leq\; d_{\Omega, d_j}(\phi, \psi)$$
 
 **推论 2.9（算子空间界限的点态退化）**：
 
-**(i)（点对的级联极差界限，对应推论 2.5）**：设 $c_\psi = \psi_k \circ \cdots \circ \psi_1$，令 $\phi_1 = \phi_{x_0}$，$\phi_2 = \phi_{y_0}$。推论 2.5 中逐层截面退化为 $U_m = \{\psi_{m-1} \circ \cdots \circ \psi_1(x_0),\; \psi_{m-1} \circ \cdots \circ \psi_1(y_0)\} \cap \mathrm{dom}(\psi_m)$（两点集或其子集）。代入推论 2.5 并利用上述退化等式，得：
+**(i)（点对的级联极差界限，对应推论 2.5）**：设 $c_\psi = \psi_k \circ \cdots \circ \psi_1$，令 $\phi_1 = \phi_{x_0}$，$\phi_2 = \phi_{y_0}$。推论 2.5 中的逐层像集退化为 $U_m = \{\psi_{m-1} \circ \cdots \circ \psi_1(x_0),\; \psi_{m-1} \circ \cdots \circ \psi_1(y_0)\} \cap \mathrm{dom}(\psi_m)$（仅包含两个点或空集的子集）。代入推论 2.5 并利用上述退化等式，得：
 
 $$d_j(c_\psi(x_0), c_\psi(y_0)) \;\leq\; \sum_{i \in I} \left( \prod_{m=1}^k \mathbf{L}^{(m)}\big|_{U_m} \right)_{i \to j} \cdot d_i(x_0, y_0)$$
 
@@ -247,7 +247,7 @@ $$d_i(\phi_2(\phi_1(x)), x) \leq d_i(\phi_2(\phi_1(x)), \phi_1(x)) + d_i(\phi_1(
 
 **(i)（跨分量再激活）** $\phi_m$ 在分量 $d_i$ 上使输出差异归零，但若下游受限 Lip 矩阵存在非对角元 $L_{l \to i}^{(p)}\big|_{U_p} > 0$（$l \neq i$），且分量 $l$ 上的残余测距非零，则跨分量耦合可使 $i \in I_{\mathrm{act}}(c_\phi)$。
 
-**(ii)（严格解耦退化）** 若后续所有算子 $\phi_{m+1}, \ldots, \phi_k$ 在对应的像集截面 $U_p$ 上均持有纯对角 Lip 矩阵，则 $i \in I_{\mathrm{const}}(c_\phi) \cup I_{\mathrm{id}}(c_\phi)$。
+**(ii)（严格解耦退化）** 若后续所有算子 $\phi_{m+1}, \ldots, \phi_k$ 在对应的约束子集 $U_p$ 上均持有纯对角 Lip 矩阵，则 $i \in I_{\mathrm{const}}(c_\phi) \cup I_{\mathrm{id}}(c_\phi)$。
 
 **(iii)（连积矩阵列零判据）** 更一般地，设下游连积矩阵 $\mathbf{L}_{\text{down}} = \prod_{p=m+1}^{k} \mathbf{L}^{(p)}\big|_{U_p}$。若 $(\mathbf{L}_{\text{down}})_{l \to i} = 0$ 对所有 $l \in I \setminus \{i\}$ 成立，则 $i \in I_{\mathrm{const}}(c_\phi) \cup I_{\mathrm{id}}(c_\phi)$。
 
