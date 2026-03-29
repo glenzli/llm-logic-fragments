@@ -196,4 +196,4 @@ $$d_J(\phi(x), \phi(x')) = 0 \iff d_J(\psi(x), \psi(x')) = 0$$
 > 纤维同构等价关系 $\sim_{J,D}$ 在算子复合下的代数行为见 §4.4。
 
 ----
-*[IDFS] ⊢ [GLENZLI] ⊢ [Part 01] ⊢ [03-computational-fiber] ⊢ [b3ba13bdc02a7e94]*
+*[IDFS] ⊢ [GLENZLI] ⊢ [Part 01] ⊢ [03-computational-fiber] ⊢ [a6ae5c7974189fa6]*

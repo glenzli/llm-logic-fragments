@@ -331,4 +331,4 @@ $$\lambda_k \;\triangleq\; \frac{\mathrm{FI}_{\varepsilon, d}(c_k)}{k} \;=\; \fr
 > **注（纤维膨胀密度的统计解读）**：在实际系统中，若额外假设各步算子从某概率空间独立同分布抽取，$\lambda_k$ 即各步 $\mathrm{FI}$ 的经验均值。由大数定律，$\lambda_k \to \mathbb{E}[\mathrm{FI}]$（几乎必然）。这意味着：**在上述统计假设下，无论链中具体选取了哪些算子，只要它们在统计上是平稳的，单位链深的信息损失率就收敛到一个确定常数**。该常数与深度视界（推论 4.14）共同确立了长链系统的基本容量约束——输入度量熵的有限性加上每步的正膨胀密度，使得链的有效深度必然有限。
 
 ----
-*[IDFS] ⊢ [GLENZLI] ⊢ [Part 01] ⊢ [04-chain-algebra] ⊢ [88c0a950cf962ab7]*
+*[IDFS] ⊢ [GLENZLI] ⊢ [Part 01] ⊢ [04-chain-algebra] ⊢ [f6da676fe0ddeb35]*

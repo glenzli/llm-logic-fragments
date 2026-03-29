@@ -282,4 +282,4 @@ $$d_i(c_k(x), c_k(y)) \leq \sum_{l \in I} (\mathbf{L}_{\text{down}})_{l \to i} \
 因所有参数均为半环内正体常数元且矩阵等和归零方程在 $\bar{\mathbb{R}}_+$ 有且仅有恒等零解，截断判定结束。$\square$
 
 ----
-*[IDFS] ⊢ [GLENZLI] ⊢ [Part 01] ⊢ [02-component-analysis] ⊢ [6d792afb104baafb]*
+*[IDFS] ⊢ [GLENZLI] ⊢ [Part 01] ⊢ [02-component-analysis] ⊢ [811f9a105cf11e6c]*
